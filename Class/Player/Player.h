@@ -6,34 +6,34 @@
 
 class Player : public ICharacter {
 public:
-	// ƒRƒ“ƒXƒgƒ‰ƒNƒ^
+	// ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 	Player() = default;
-	// ƒfƒXƒgƒ‰ƒNƒ^
+	// ãƒ‡ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 	~Player() override = default;
 
 	/// <summary>
-	/// ‰Šú‰»
+	/// åˆæœŸåŒ–
 	/// </summary>
 	void Initialize() override;
 	/// <summary>
-	/// XVˆ—
+	/// æ›´æ–°å‡¦ç†
 	/// </summary>
 	void Update() override;
 
 	/// <summary>
-	/// ‘S‚Ä‚Ì”’l‚ğƒŠƒZƒbƒg‚·‚é
+	/// å…¨ã¦ã®æ•°å€¤ã‚’ãƒªã‚»ãƒƒãƒˆã™ã‚‹
 	/// </summary>
 	void Reset();
 
 private:
 	/// <summary>
-	/// ©‹@‹@”\‚ğ‘S‚Ä¶¬
+	/// è‡ªæ©Ÿæ©Ÿèƒ½ã‚’å…¨ã¦ç”Ÿæˆ
 	/// </summary>
 	void CreateSystems();
 
 private:
-	// ˆÚ“®‹@”\
+	// ç§»å‹•æ©Ÿèƒ½
 	std::unique_ptr<MoveSystem> moveSystem_;
-	// ƒpƒŠƒB‹@”\
+	// ãƒ‘ãƒªã‚£æ©Ÿèƒ½
 	std::unique_ptr<ParrySystem> parrySystem_;
 };

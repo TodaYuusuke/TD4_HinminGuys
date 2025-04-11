@@ -1,32 +1,32 @@
 #include "Player.h"
 
 void Player::Initialize() {
-	// ƒ‚ƒfƒ‹‚ð“Ç‚Ýž‚Þ
+	// ãƒ¢ãƒ‡ãƒ«ã‚’èª­ã¿è¾¼ã‚€
 	model_.LoadCube();
 
-	// Ž©‹@‹@”\‚ð¶¬
+	// è‡ªæ©Ÿæ©Ÿèƒ½ã‚’ç”Ÿæˆ
 	CreateSystems();
 }
 
 void Player::Update() {
-	// ˆÚ“®‹@”\
+	// ç§»å‹•æ©Ÿèƒ½
 	moveSystem_->Update();
-	// ƒpƒŠƒB‹@”\
+	// ãƒ‘ãƒªã‚£æ©Ÿèƒ½
 	parrySystem_->Update();
 }
 
 void Player::Reset() {
-	// ˆÚ“®‹@”\
+	// ç§»å‹•æ©Ÿèƒ½
 	moveSystem_->Reset();
-	// ƒpƒŠƒB‹@”\
+	// ãƒ‘ãƒªã‚£æ©Ÿèƒ½
 	parrySystem_->Reset();
 }
 
 void Player::CreateSystems() {
-	// ˆÚ“®‹@”\
+	// ç§»å‹•æ©Ÿèƒ½
 	moveSystem_ = std::make_unique<MoveSystem>();
 	moveSystem_->Initialize();
-	// ƒpƒŠƒB‹@”\
+	// ãƒ‘ãƒªã‚£æ©Ÿèƒ½
 	parrySystem_ = std::make_unique<ParrySystem>();
 	parrySystem_->Initialize();
 }

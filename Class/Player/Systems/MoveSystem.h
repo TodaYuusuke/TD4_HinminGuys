@@ -2,38 +2,38 @@
 #include "ISystem.h"
 
 /// <summary>
-/// ©‹@‚ÌˆÚ“®‹@”\‚ğ‚Ü‚Æ‚ß‚½ƒNƒ‰ƒX
+/// è‡ªæ©Ÿã®ç§»å‹•æ©Ÿèƒ½ã‚’ã¾ã¨ã‚ãŸã‚¯ãƒ©ã‚¹
 /// </summary>
 class MoveSystem : public ISystem {
 public:
-	// ƒRƒ“ƒXƒgƒ‰ƒNƒ^
+	// ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 	MoveSystem() = default;
-	// ƒfƒXƒgƒ‰ƒNƒ^
+	// ãƒ‡ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 	~MoveSystem() override = default;
 
 	/// <summary>
-	/// ‰Šú‰»
+	/// åˆæœŸåŒ–
 	/// </summary>
 	void Initialize() override;
 	/// <summary>
-	/// XVˆ—
+	/// æ›´æ–°å‡¦ç†
 	/// </summary>
 	void Update() override;
 
 	/// <summary>
-	/// ‘S‚Ä‚Ì”’l‚ğƒŠƒZƒbƒg
+	/// å…¨ã¦ã®æ•°å€¤ã‚’ãƒªã‚»ãƒƒãƒˆ
 	/// </summary>
 	void Reset() override;
 
 public:// Getter, Setter
 #pragma region Getter
 	/// <summary>
-	/// ˆÚ“®‘¬“x‚ğæ“¾
+	/// ç§»å‹•é€Ÿåº¦ã‚’å–å¾—
 	/// </summary>
 	/// <returns></returns>
-	Vector3 GetMoveVel() { return moveVel_; }
+	LWP::Math::Vector3 GetMoveVel() { return moveVel_; }
 	/// <summary>
-	/// Œü‚¢‚Ä‚¢‚é•ûŒü‚ğæ“¾
+	/// å‘ã„ã¦ã„ã‚‹æ–¹å‘ã‚’å–å¾—
 	/// </summary>
 	/// <returns></returns>
 	LWP::Math::Quaternion GetRotate() { return rotate_; }
@@ -41,20 +41,20 @@ public:// Getter, Setter
 
 #pragma region Setter
 	/// <summary>
-	/// ˆÚ“®‘¬“x‚ğİ’è
+	/// ç§»å‹•é€Ÿåº¦ã‚’è¨­å®š
 	/// </summary>
-	/// <param name="moveVel">ˆÚ“®‘¬“x</param>
+	/// <param name="moveVel">ç§»å‹•é€Ÿåº¦</param>
 	void SetMoveVel(const LWP::Math::Vector3& moveVel) { moveVel_ = moveVel; }
 	/// <summary>
-	/// Œü‚¢‚Ä‚¢‚é•ûŒü‚ğİ’è
+	/// å‘ã„ã¦ã„ã‚‹æ–¹å‘ã‚’è¨­å®š
 	/// </summary>
-	/// <param name="rotate">Œü‚©‚¹‚é•ûŒü</param>
+	/// <param name="rotate">å‘ã‹ã›ã‚‹æ–¹å‘</param>
 	void SetRotate(const LWP::Math::Quaternion& rotate) { rotate_ = rotate; }
 #pragma endregion
 
-private:// ƒvƒ‰ƒCƒx[ƒg‚È•Ï”
-	// ˆÚ“®‘¬“x
+private:// ãƒ—ãƒ©ã‚¤ãƒ™ãƒ¼ãƒˆãªå¤‰æ•°
+	// ç§»å‹•é€Ÿåº¦
 	LWP::Math::Vector3 moveVel_;
-	// Œü‚¢‚Ä‚¢‚éŠp“x
+	// å‘ã„ã¦ã„ã‚‹è§’åº¦
 	LWP::Math::Quaternion rotate_;
 };

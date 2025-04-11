@@ -2,26 +2,26 @@
 #include "../Adapter/Adapter.h"
 
 /// <summary>
-/// ©‹@‚Ì‹@”\ƒNƒ‰ƒX‚ÌŠî’êƒNƒ‰ƒX
+/// è‡ªæ©Ÿã®æ©Ÿèƒ½ã‚¯ãƒ©ã‚¹ã®åŸºåº•ã‚¯ãƒ©ã‚¹
 /// </summary>
 class ISystem {
 public:
-	// ƒRƒ“ƒXƒgƒ‰ƒNƒ^
+	// ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 	ISystem() = default;
-	// ƒfƒXƒgƒ‰ƒNƒ^
-	virtual ~ISystem() = 0;
+	// ãƒ‡ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
+	virtual ~ISystem() = default;
 
 	/// <summary>
-	/// ‰Šú‰»
+	/// åˆæœŸåŒ–
 	/// </summary>
 	virtual void Initialize() = 0;
 	/// <summary>
-	/// XVˆ—
+	/// æ›´æ–°å‡¦ç†
 	/// </summary>
 	virtual void Update() = 0;
 
 	/// <summary>
-	/// ‘S‚Ä‚Ì”’l‚ğƒŠƒZƒbƒg
+	/// å…¨ã¦ã®æ•°å€¤ã‚’ãƒªã‚»ãƒƒãƒˆ
 	/// </summary>
 	virtual void Reset() = 0;
 

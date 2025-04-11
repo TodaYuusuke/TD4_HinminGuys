@@ -2,26 +2,26 @@
 #include "ISystem.h"
 
 /// <summary>
-/// ©‹@‚ÌƒpƒŠƒB‹@”\‚ğ‚Ü‚Æ‚ß‚½ƒNƒ‰ƒX
+/// è‡ªæ©Ÿã®ãƒ‘ãƒªã‚£æ©Ÿèƒ½ã‚’ã¾ã¨ã‚ãŸã‚¯ãƒ©ã‚¹
 /// </summary>
 class ParrySystem : public ISystem {
 public:
-	// ƒRƒ“ƒXƒgƒ‰ƒNƒ^
+	// ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 	ParrySystem() = default;
-	// ƒfƒXƒgƒ‰ƒNƒ^
+	// ãƒ‡ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 	~ParrySystem() override = default;
 
 	/// <summary>
-	/// ‰Šú‰»
+	/// åˆæœŸåŒ–
 	/// </summary>
 	void Initialize() override;
 	/// <summary>
-	/// XVˆ—
+	/// æ›´æ–°å‡¦ç†
 	/// </summary>
 	void Update() override;
 
 	/// <summary>
-	/// ‘S‚Ä‚Ì”’l‚ğƒŠƒZƒbƒg
+	/// å…¨ã¦ã®æ•°å€¤ã‚’ãƒªã‚»ãƒƒãƒˆ
 	/// </summary>
 	void Reset() override;
 
