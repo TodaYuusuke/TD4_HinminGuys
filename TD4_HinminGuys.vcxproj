@@ -160,6 +160,9 @@
     <ClCompile Include="Class\Scene\GameScene.cpp" />
     <ClCompile Include="Class\Scene\Title.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Class\Player\Player.cpp" />
+    <ClCompile Include="Class\Player\Systems\MoveSystem.cpp" />
+    <ClCompile Include="Class\Player\Systems\ParrySystem.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Class\Enemy\Boss\BossEnemy.h" />
@@ -173,8 +176,13 @@
     <ClInclude Include="Class\Enemy\Normal\State\NormalEnemyAttack.h" />
     <ClInclude Include="Class\Enemy\Normal\State\NormalEnemyIdle.h" />
     <ClInclude Include="Class\Enemy\Normal\State\NormalEnemyMove.h" />
+    <ClInclude Include="Class\Player\ICharacter.h" />
+    <ClInclude Include="Class\Player\Systems\ISystem.h" />
     <ClInclude Include="Class\Scene\GameScene.h" />
     <ClInclude Include="Class\Scene\Title.h" />
+    <ClInclude Include="Class\Player\Player.h" />
+    <ClInclude Include="Class\Player\Systems\MoveSystem.h" />
+    <ClInclude Include="Class\Player\Systems\ParrySystem.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />
