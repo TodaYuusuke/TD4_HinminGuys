@@ -9,6 +9,12 @@ void BossEnemy::Initialize(Player* player, const Vector3& position)
 
 void BossEnemy::Update()
 {
+
+	//デルタタイムが0.0f以下の時、更新しない
+	if (LWP::Info::GetDeltaTime() <= 0.0f) {
+		return;
+	}
+
 }
 
 void BossEnemy::SetState(std::unique_ptr<IEnemyState> state)

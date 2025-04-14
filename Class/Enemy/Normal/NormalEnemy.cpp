@@ -1,5 +1,6 @@
 #include "NormalEnemy.h"
 
+
 void NormalEnemy::Initialize(Player* player, const Vector3& position)
 {
 	model_.LoadCube();
@@ -9,6 +10,12 @@ void NormalEnemy::Initialize(Player* player, const Vector3& position)
 
 void NormalEnemy::Update()
 {
+
+	//デルタタイムが0.0f以下の時、更新しない
+	if (LWP::Info::GetDeltaTime() <= 0.0f) {
+		return;
+	}
+
 }
 
 void NormalEnemy::SetState(std::unique_ptr<IEnemyState> state)
