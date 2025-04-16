@@ -1,11 +1,23 @@
 #include "NormalEnemy.h"
 #include "../../Player/Player.h"
+#include "State/NormalEnemyIdle.h"
+#include "../../DirectXGame/Engine/primitive/model/Material.h"
+
+using namespace LWP::Primitive;
 
 void NormalEnemy::Initialize(Player* player, const Vector3& position)
 {
-	model_.LoadCube();
+	model_.LoadShortPath("player/Player_Simple.gltf");
+	model_.materials["material"].color = { 1.0f,0.0f,0.0f,1.0f };
+	//アニメーションロード
+	animation_.LoadFullPath("resources/model/player/Player_Simple.gltf", &model_);
 	SetPlayer(player);
 	position_ = position;
+	model_.worldTF.translation = position_;
+	// 大きさを一時的に調整
+	model_.worldTF.scale = { 0.5f, 0.5f, 0.5f };
+	state_ = std::make_unique<NormalEnemyIdle>();
+	state_->Initialize(this);
 }
 
 void NormalEnemy::Update()
@@ -21,11 +33,3 @@ void NormalEnemy::Update()
 
 }
 
-void NormalEnemy::SetState(std::unique_ptr<IEnemyState> state)
-{
-	//前回の状態を開放、新しい状態に置き換える
-	state_.release();
-	state_ = std::move(state);
-	//初期化
-	state_->Initialize(this);
-}

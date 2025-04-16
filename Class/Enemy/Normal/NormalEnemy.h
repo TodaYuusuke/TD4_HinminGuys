@@ -15,11 +15,8 @@ public:
 
 	void Update() override;
 
-	void SetState(std::unique_ptr<IEnemyState> state);
-
 private:
-	//状態
-	std::unique_ptr<IEnemyState> state_;
+	
 
 };
 

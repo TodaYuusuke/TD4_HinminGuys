@@ -9,11 +9,19 @@ using namespace LWP::Utility;
 using namespace LWP::Object;
 using namespace LWP::Info;
 
+GameScene::~GameScene()
+{
+	enemyManager_.Finalize();
+}
+
 // 初期化
 void GameScene::Initialize() {
 	// 自機の動作確認のため生成
 	player_ = std::make_unique<Player>();
 	player_->Initialize();
+
+	enemyManager_.Initialize();
+	enemyManager_.SetPlayer(player_.get());
 
 	// 追従カメラの動作確認のため生成
 	followCamera_ = std::make_unique<FollowCamera>();
@@ -25,6 +33,8 @@ void GameScene::Initialize() {
 	// 一時的に平面を生成
 	plane.LoadShortPath("field/ground/SimpleStage.gltf");
 	plane.worldTF.translation = { 0,-5,0 };
+
+
 }
 
 // 更新
@@ -34,8 +44,17 @@ void GameScene::Update() {
 		nextSceneFunction = []() { return new Title(); };
 	}
 
+#ifdef _DEBUG
+
+	enemyManager_.Debug();
+
+#endif // _DEBUG
+
+
 	// 自機
 	player_->Update();
+	//敵全て
+	enemyManager_.Update();
 
 	//followCamera_->Update();
 

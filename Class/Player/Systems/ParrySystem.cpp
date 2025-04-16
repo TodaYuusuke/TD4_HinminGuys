@@ -5,7 +5,7 @@ void ParrySystem::Initialize() {
 }
 
 void ParrySystem::Update() {
-	// 機能を使えないなら早期リターン
+	// 讖溯�ｽ繧剃ｽｿ縺医↑縺�縺ｪ繧画掠譛溘Μ繧ｿ繝ｼ繝ｳ
 	if (!isActive_) { return; }
 }
 

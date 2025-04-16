@@ -4,6 +4,7 @@ void EnemyManager::Initialize()
 {
 	//リストをクリア
 	ClearList();
+	spawnPoint_ = { 0.0f,0.0f,0.0f };
 }
 
 void EnemyManager::Finalize()
@@ -59,4 +60,26 @@ void EnemyManager::ClearList()
 {
 	//リストを空にする
 	enemies_.clear();
+}
+
+void EnemyManager::Debug()
+{
+
+	ImGui::Begin("Enemy Manager");
+
+	//スポーンポイント設定
+	ImGui::DragFloat3("spawn point", &spawnPoint_.x, 0.1f);
+
+	//ボス召喚
+	if (ImGui::Button("Create Boss")) {
+		CreateEnemy(spawnPoint_, EnemyType::kBoss);
+	}
+
+	//ザコ召喚
+	if (ImGui::Button("Create Normal")) {
+		CreateEnemy(spawnPoint_, EnemyType::kNormal);
+	}
+
+	ImGui::End();
+
 }

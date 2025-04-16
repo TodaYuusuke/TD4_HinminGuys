@@ -1,11 +1,20 @@
 #include "BossEnemy.h"
 #include "../../Player/Player.h"
+#include "State/BossEnemyIdle.h"
 
 void BossEnemy::Initialize(Player* player, const Vector3& position)
 {
-	model_.LoadCube();
+	model_.LoadShortPath("player/Player_Simple.gltf");
+	model_.materials["material"].color = { 1.0f,0.0f,0.0f,1.0f };
+	animation_.LoadFullPath("resources/model/player/Player_Simple.gltf", &model_);
+	animation_.Play("Idle", true);
 	SetPlayer(player);
 	position_ = position;
+	model_.worldTF.translation = position_;
+	// 大きさを一時的に調整
+	model_.worldTF.scale = { 0.8f, 0.8f, 0.8f };
+	state_ = std::make_unique<BossEnemyIdle>();
+	state_->Initialize(this);
 }
 
 void BossEnemy::Update()
@@ -19,13 +28,4 @@ void BossEnemy::Update()
 	//現在の状態を更新
 	state_->Update();
 
-}
-
-void BossEnemy::SetState(std::unique_ptr<IEnemyState> state)
-{
-	//前回の状態を開放、新しい状態に置き換える
-	state_.release();
-	state_ = std::move(state);
-	//初期化
-	state_->Initialize(this);
 }

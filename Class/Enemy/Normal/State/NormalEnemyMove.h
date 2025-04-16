@@ -16,7 +16,10 @@ public:
 
 private:
 
-
+	//待機時間
+	int32_t runTime_;
+	//攻撃モーションに入る距離
+	float attackDist_ = 3.0f;
 
 };
 

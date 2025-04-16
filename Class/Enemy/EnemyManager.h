@@ -27,6 +27,8 @@ public:
 	void CreateEnemy(const Vector3& position, EnemyType type);
 	//リストのクリア
 	void ClearList();
+	//デバッグウィンドウ
+	void Debug();
 
 private:
 
@@ -34,6 +36,13 @@ private:
 
 	//全ての敵を管理するリスト
 	std::list<std::unique_ptr<IEnemy>> enemies_;
+
+#pragma region デバッグ用
+
+	//スポーン座標指定
+	Vector3 spawnPoint_;
+
+#pragma endregion
 
 };
 
