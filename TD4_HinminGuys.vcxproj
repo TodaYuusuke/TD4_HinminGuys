@@ -153,6 +153,7 @@
     <ClCompile Include="Class\Condition\child\Keyboard\PressKeyboardCondition.cpp" />
     <ClCompile Include="Class\Condition\child\Keyboard\ReleaseKeyboardCondition.cpp" />
     <ClCompile Include="Class\Condition\child\Controller\TriggerControllerButtonCondition.cpp" />
+    <ClCompile Include="Class\DeltaTimer\DeltaTimer.cpp" />
     <ClCompile Include="Class\Scene\GameScene.cpp" />
     <ClCompile Include="Class\Scene\Title.cpp" />
     <ClCompile Include="Class\ComboEditor\Combo.cpp" />
@@ -165,6 +166,7 @@
     <ClInclude Include="Class\Condition\child\Keyboard\PressKeyboardCondition.h" />
     <ClInclude Include="Class\Condition\child\Keyboard\ReleaseKeyboardCondition.h" />
     <ClInclude Include="Class\Condition\child\Controller\TriggerControllerButtonCondition.h" />
+    <ClInclude Include="Class\DeltaTimer\DeltaTimer.h" />
     <ClInclude Include="Class\Scene\GameScene.h" />
     <ClInclude Include="Class\Scene\Title.h" />
     <ClInclude Include="Class\ComboEditor\Combo.h" />
