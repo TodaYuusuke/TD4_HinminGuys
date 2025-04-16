@@ -16,6 +16,8 @@ public:
 
 private:
 
+	//待機時間
+	int32_t standTime_;
 
 
 };

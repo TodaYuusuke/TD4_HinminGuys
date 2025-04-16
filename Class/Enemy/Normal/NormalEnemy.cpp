@@ -1,5 +1,5 @@
 #include "NormalEnemy.h"
-
+#include "../../Player/Player.h"
 
 void NormalEnemy::Initialize(Player* player, const Vector3& position)
 {
@@ -15,6 +15,9 @@ void NormalEnemy::Update()
 	if (LWP::Info::GetDeltaTime() <= 0.0f) {
 		return;
 	}
+
+	//現在の状態を更新
+	state_->Update();
 
 }
 

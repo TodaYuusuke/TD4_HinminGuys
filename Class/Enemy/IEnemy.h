@@ -31,6 +31,10 @@ public:
 	void SetPlayer(Player* player) { player_ = player; }
 	//死亡フラグ取得
 	bool GetIsDead() const { return isDead_; }
+	//プレイヤー取得
+	Player* GetPlayer() { return player_; }
+	//プレイヤーの座標取得
+	Vector3 GetPlayerPosition() const { return playerPosition_; }
 
 protected:
 
@@ -38,6 +42,8 @@ protected:
 	RigidModel model_;
 	//プレイヤー情報
 	Player* player_;
+	//プレイヤー座標(仮)
+	Vector3 playerPosition_{};
 	//位置
 	Vector3 position_{};
 	//移動方向

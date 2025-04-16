@@ -1,4 +1,5 @@
 #include "BossEnemy.h"
+#include "../../Player/Player.h"
 
 void BossEnemy::Initialize(Player* player, const Vector3& position)
 {
@@ -14,6 +15,9 @@ void BossEnemy::Update()
 	if (LWP::Info::GetDeltaTime() <= 0.0f) {
 		return;
 	}
+
+	//現在の状態を更新
+	state_->Update();
 
 }
 
