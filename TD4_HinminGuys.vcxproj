@@ -150,11 +150,13 @@
   <ItemGroup>
     <ClCompile Include="Class\Scene\GameScene.cpp" />
     <ClCompile Include="Class\Scene\Title.cpp" />
+    <ClCompile Include="Class\ComboEditor\Combo.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Class\Scene\GameScene.h" />
     <ClInclude Include="Class\Scene\Title.h" />
+    <ClInclude Include="Class\ComboEditor\Combo.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
