@@ -157,6 +157,7 @@
     <ClCompile Include="Class\Enemy\Normal\State\NormalEnemyAttack.cpp" />
     <ClCompile Include="Class\Enemy\Normal\State\NormalEnemyIdle.cpp" />
     <ClCompile Include="Class\Enemy\Normal\State\NormalEnemyMove.cpp" />
+    <ClCompile Include="Class\Player\Systems\AttackSystem.cpp" />
     <ClCompile Include="Class\Scene\GameScene.cpp" />
     <ClCompile Include="Class\Scene\Title.cpp" />
     <ClCompile Include="Class\Camera\FollowCamera.cpp" />
