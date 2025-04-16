@@ -27,13 +27,22 @@
     <ClCompile Include="Class\ComboEditor\Combo.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Class\Condition\child\TriggerKeyboardCondition.cpp">
+    <ClCompile Include="Class\Condition\child\Keyboard\TriggerKeyboardCondition.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Class\Condition\child\PressKeyboardCondition.cpp">
+    <ClCompile Include="Class\Condition\child\Keyboard\PressKeyboardCondition.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Class\Condition\child\ReleaseKeyboardCondition.cpp">
+    <ClCompile Include="Class\Condition\child\Keyboard\ReleaseKeyboardCondition.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Class\Condition\child\Controller\TriggerControllerButtonCondition.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Class\Condition\child\Controller\PressControllerButtonCondition.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Class\Condition\child\Controller\ReleaseControllerButtonCondition.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
@@ -50,13 +59,22 @@
     <ClInclude Include="Class\Condition\ICondition.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Class\Condition\child\TriggerKeyboardCondition.h">
+    <ClInclude Include="Class\Condition\child\Keyboard\TriggerKeyboardCondition.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Class\Condition\child\PressKeyboardCondition.h">
+    <ClInclude Include="Class\Condition\child\Keyboard\PressKeyboardCondition.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Class\Condition\child\ReleaseKeyboardCondition.h">
+    <ClInclude Include="Class\Condition\child\Keyboard\ReleaseKeyboardCondition.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Class\Condition\child\Controller\TriggerControllerButtonCondition.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Class\Condition\child\Controller\PressControllerButtonCondition.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Class\Condition\child\Controller\ReleaseControllerButtonCondition.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>

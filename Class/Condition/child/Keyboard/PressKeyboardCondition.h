@@ -1,25 +1,25 @@
 #pragma once
-#include "../ICondition.h"
+#include "../../ICondition.h"
 
 namespace LWP::Utility {
 
 	/// <summary>
-	/// キーボードのトリガー入力による分岐条件
+	/// キーボードの長押し入力による分岐条件
 	/// </summary>
-	class TriggerKeyboardCondition : public LWP::Utility::ICondition
+	class PressKeyboardCondition : public LWP::Utility::ICondition
 	{
 	public: // コンストラクタ等
 
 		/// <summary>
 		/// デフォルトコンストラクタ
 		/// </summary>
-		TriggerKeyboardCondition() = delete;
+		PressKeyboardCondition() = delete;
 
 		/// <summary>
 		/// コンストラクタ
 		/// </summary>
 		/// <param name="id">キーID</param>
-		TriggerKeyboardCondition(int id) : kId_(id) {};
+		PressKeyboardCondition(int id) : kId_(id) {};
 
 	public: // アクセッサ等
 

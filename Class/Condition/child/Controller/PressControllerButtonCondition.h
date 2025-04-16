@@ -1,25 +1,25 @@
 #pragma once
-#include "../ICondition.h"
+#include "../../ICondition.h"
 
 namespace LWP::Utility {
 
 	/// <summary>
-	/// キーボードの長押し入力による分岐条件
+	/// コントローラーボタンの長押し入力による分岐条件
 	/// </summary>
-	class PressKeyboardCondition : public LWP::Utility::ICondition
+	class PressControllerButtonCondition : public LWP::Utility::ICondition
 	{
 	public: // コンストラクタ等
 
 		/// <summary>
 		/// デフォルトコンストラクタ
 		/// </summary>
-		PressKeyboardCondition() = delete;
+		PressControllerButtonCondition() = delete;
 
 		/// <summary>
 		/// コンストラクタ
 		/// </summary>
 		/// <param name="id">キーID</param>
-		PressKeyboardCondition(int id) : kId_(id) {};
+		PressControllerButtonCondition(int id) : kID_(id) {};
 
 	public: // アクセッサ等
 
@@ -32,7 +32,7 @@ namespace LWP::Utility {
 	private: // メンバ変数
 
 		// キーID
-		const int kId_;
+		const int kID_;
 
 	};
 

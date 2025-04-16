@@ -148,22 +148,28 @@
     </Manifest>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Class\Condition\child\PressKeyboardCondition.cpp" />
-    <ClCompile Include="Class\Condition\child\ReleaseKeyboardCondition.cpp" />
+    <ClCompile Include="Class\Condition\child\Controller\PressControllerButtonCondition.cpp" />
+    <ClCompile Include="Class\Condition\child\Controller\ReleaseControllerButtonCondition.cpp" />
+    <ClCompile Include="Class\Condition\child\Keyboard\PressKeyboardCondition.cpp" />
+    <ClCompile Include="Class\Condition\child\Keyboard\ReleaseKeyboardCondition.cpp" />
+    <ClCompile Include="Class\Condition\child\Controller\TriggerControllerButtonCondition.cpp" />
     <ClCompile Include="Class\Scene\GameScene.cpp" />
     <ClCompile Include="Class\Scene\Title.cpp" />
     <ClCompile Include="Class\ComboEditor\Combo.cpp" />
-    <ClCompile Include="Class\Condition\child\TriggerKeyboardCondition.cpp" />
+    <ClCompile Include="Class\Condition\child\Keyboard\TriggerKeyboardCondition.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Class\Condition\child\PressKeyboardCondition.h" />
-    <ClInclude Include="Class\Condition\child\ReleaseKeyboardCondition.h" />
+    <ClInclude Include="Class\Condition\child\Controller\PressControllerButtonCondition.h" />
+    <ClInclude Include="Class\Condition\child\Controller\ReleaseControllerButtonCondition.h" />
+    <ClInclude Include="Class\Condition\child\Keyboard\PressKeyboardCondition.h" />
+    <ClInclude Include="Class\Condition\child\Keyboard\ReleaseKeyboardCondition.h" />
+    <ClInclude Include="Class\Condition\child\Controller\TriggerControllerButtonCondition.h" />
     <ClInclude Include="Class\Scene\GameScene.h" />
     <ClInclude Include="Class\Scene\Title.h" />
     <ClInclude Include="Class\ComboEditor\Combo.h" />
     <ClInclude Include="Class\Condition\ICondition.h" />
-    <ClInclude Include="Class\Condition\child\TriggerKeyboardCondition.h" />
+    <ClInclude Include="Class\Condition\child\Keyboard\TriggerKeyboardCondition.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
