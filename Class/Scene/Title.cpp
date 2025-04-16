@@ -9,7 +9,9 @@ using namespace LWP::Utility;
 using namespace LWP::Object;
 using namespace LWP::Info;
 
-void Title::Initialize() {}
+void Title::Initialize() {
+	
+}
 
 void Title::Update() {
 	// シーン遷移

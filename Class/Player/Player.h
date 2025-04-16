@@ -2,6 +2,7 @@
 #include "ICharacter.h"
 #include "Systems/MoveSystem.h"
 #include "Systems/ParrySystem.h"
+#include "Systems/AttackSystem.h"
 #include <memory>
 
 class Player : public ICharacter {
@@ -31,9 +32,26 @@ private:
 	/// </summary>
 	void CreateSystems();
 
+	/// <summary>
+	/// デバッグ用のタブを表示(Debug時のみ)
+	/// </summary>
+	void DebugWindow();
+
+public:// Getter,Setter
+#pragma region Getter
+	LWP::Math::Vector3* GetModelPos() { return &model_.worldTF.translation; }
+	LWP::Object::TransformQuat* GetWorldTF() { return &model_.worldTF; }
+#pragma endregion
+
+#pragma region Setter
+
+#pragma endregion
+
 private:
 	// 移動機能
 	std::unique_ptr<MoveSystem> moveSystem_;
 	// パリィ機能
 	std::unique_ptr<ParrySystem> parrySystem_;
+	// 攻撃機能
+	std::unique_ptr<AttackSystem> attackSystem_;
 };

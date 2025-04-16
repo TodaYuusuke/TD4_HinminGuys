@@ -26,5 +26,6 @@ public:
 	virtual void Reset() = 0;
 
 protected:
-
+	// 機能が使える状態か
+	bool isActive_ = true;
 };

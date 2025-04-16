@@ -1,5 +1,7 @@
 #pragma once
 #include "scene/IScene.h"
+#include "../Player/Player.h"
+#include "../Camera/FollowCamera.h"
 
 class Title final
 	: public IScene {
