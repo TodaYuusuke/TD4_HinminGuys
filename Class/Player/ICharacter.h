@@ -1,9 +1,6 @@
 #pragma once
 #include "../Adapter/Adapter.h"
 
-using namespace LWP;
-using namespace LWP::Math;
-
 class ICharacter {
 public:
 	// コンストラクタ
@@ -21,6 +18,9 @@ public:
 	virtual void Update() = 0;
 
 protected:
+	// シーンで使用しているカメラのポインタ
+	LWP::Object::Camera* pCamera_;
+
 	// モデル
 	LWP::Resource::RigidModel model_;
 };

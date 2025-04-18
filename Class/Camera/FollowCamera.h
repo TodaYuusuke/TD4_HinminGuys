@@ -1,13 +1,30 @@
 #pragma once
 #include "../Adapter/Adapter.h"
+#include <numbers>
 
 /// <summary>
 /// 自機に追従するカメラ
 /// </summary>
 class FollowCamera {
 public:
+	struct LockOnData {
+		// ロックオン時のTransform
+		LWP::Object::TransformQuat lockOnTransform;
+		// ロックオン対象のTransformのポインタ
+		LWP::Object::TransformQuat* targetTransform;
+		// ロックオン対象の位置を球体で表示(デバッグ用)
+		LWP::Resource::RigidModel targetModel;
+		// ロックオン時のカメラの位置調整
+		LWP::Math::Vector3 rotateOffset;
+		// ロックオン対象とカメラとの方向ベクトル
+		LWP::Math::Vector3 t2cDir;
+		// ロックオンしているか
+		bool isLocked;
+	};
+
+public:
 	// コンストラクタ
-	FollowCamera() = default;
+	FollowCamera(LWP::Object::Camera* camera, LWP::Math::Vector3* targetPos);
 	// デストラクタ
 	~FollowCamera() = default;
 
@@ -21,15 +38,33 @@ public:
 	void Update();
 
 private:
+	/// <summary>
+	/// 入力処理
+	/// </summary>
 	void InputUpdate();
 
-	float LerpShortAngle(float a, float b, float t);
+	/// <summary>
+	/// ロックオンの更新処理
+	/// </summary>
+	void LockOnUpdate();
 
-	LWP::Math::Vector3 CalcOffset() const;
+	/// <summary>
+	/// 角度制限の処理
+	/// </summary>
+	/// <param name="target">制限対象</param>
+	/// <param name="distance">二点間の距離</param>
+	/// <param name="minLimitAngle">角度の下限値(単位:ラジアン)</param>
+	/// <param name="maxLimitAngle">角度の上限値(単位:ラジアン)</param>
+	void ClampAngle(float& target, LWP::Math::Vector3 distance, float minLimitAngle, float maxLimitAngle);
 
-	LWP::Math::Quaternion QuaternionLookRotation(LWP::Math::Vector3 from, LWP::Math::Vector3 to);
-
-	LWP::Math::Vector3 Rotate(LWP::Math::Quaternion q,const LWP::Math::Vector3& v) const;
+	/// <summary>
+	/// イージング(指数関数的に数値が上がる)
+	/// </summary>
+	/// <param name="current"></param>
+	/// <param name="target"></param>
+	/// <param name="damping"></param>
+	/// <returns></returns>
+	LWP::Math::Vector3 ExponentialInterpolate(const LWP::Math::Vector3& current, const LWP::Math::Vector3& target, float damping);
 
 public:// Getter,Setter
 #pragma region Getter
@@ -53,43 +88,38 @@ public:// Getter,Setter
 	/// <param name="camera"></param>
 	void SetCamera(LWP::Object::Camera* camera) { camera_ = camera; }
 
-	//void SetTarget(LWP::Object::TransformEuler* target) { target_ = target; }
+	/// <summary>
+	/// ロックオン対象のTransformQuatをアドレスで渡す
+	/// </summary>
+	/// <param name="lockOnTarget">ロックオン対象</param>
+	void SetLockOnTarget(LWP::Object::TransformQuat* lockOnTarget) { lockOnData_.targetTransform = lockOnTarget; }
 #pragma endregion
 
 private:// 定数
-	///
-	/// 視点操作の設定
-	/// 
-	
-	// x軸の最低値
-	const float kMinAxisX = 0.2f;
-	// x軸の最大値
-	const float kMaxAxisX = 0.4f;
-	// 入力感度
-	const LWP::Math::Vector2 kSensitivity = { 0.05f, 0.02f };
-	// 視点移動の滑らかさ(0~1の間で設定)
-	const float kRotationSmoothness = 0.2f;
-	// カメラの後追い速度(0~1の間で設定)
-	float kFollowRate = 1.0f;
-
 	// 追従対象との距離
-	LWP::Math::Vector3 kTargetDist = { 0.0f,0.0f,-50.0f };
-
+	LWP::Math::Vector3 kTargetDist = { 0.0f,0.0f,-20.0f };
 	// 初期角度 
 	LWP::Math::Vector3 kStartAngle = { 0.3f, 0.0f, 0.0f };
+	// x軸の下限値
+	const float kMinRotateX = (float)std::numbers::pi / 2.0f - 0.1f;
+	// x軸の上限値
+	const float kMaxRotateX = (float)std::numbers::pi / 2.0f + (float)std::numbers::pi / 4.0f;
 
 private:
 	// カメラ
 	LWP::Object::Camera* camera_;
 
-	LWP::Object::TransformEuler target_;
-
-	// 追従対象の残像座標
-	LWP::Math::Vector3 interTarget_;
-	// 目標角度
-	LWP::Math::Vector2 destinationAngle_;
-
 	// 追従対象の座標
 	const LWP::Math::Vector3* targetPos_;
+
+	// ロックオン時に使う情報
+	LockOnData lockOnData_;
+	LWP::Object::TransformQuat t;
+	//// ロックオンした敵の情報
+	//LWP::Object::TransformQuat* lockOnTarget_;
+	//// ロックオン対象の位置を球体で表示(デバッグ用)
+	//LWP::Resource::RigidModel lockOnTargetModel_;
+	//// ロックオンしているか
+	//bool isLocked_;
 };
 

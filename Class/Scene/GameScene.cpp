@@ -9,22 +9,25 @@ using namespace LWP::Utility;
 using namespace LWP::Object;
 using namespace LWP::Info;
 
+GameScene::GameScene() 
+	: player_(&mainCamera),
+	  followCamera_(&mainCamera, player_.GetModelPos())
+{}
+
 // 初期化
 void GameScene::Initialize() {
-	// 自機の動作確認のため生成
-	player_ = std::make_unique<Player>();
-	player_->Initialize();
 
 	// 追従カメラの動作確認のため生成
-	followCamera_ = std::make_unique<FollowCamera>();
-	followCamera_->Initialize();
-	followCamera_->SetTargetPos(player_->GetModelPos());
-	followCamera_->SetCamera(&mainCamera);
-	//followCamera_->SetTarget(&player_->GetWorldTF());
+	followCamera_.Initialize();
+
+	// 自機の動作確認のため生成
+	player_.Initialize();
 
 	// 一時的に平面を生成
 	plane.LoadShortPath("field/ground/SimpleStage.gltf");
 	plane.worldTF.translation = { 0,-5,0 };
+
+	directionLight_.worldTF.translation = { 0,10,0 };
 }
 
 // 更新
@@ -35,9 +38,9 @@ void GameScene::Update() {
 	}
 
 	// 自機
-	player_->Update();
+	player_.Update();
 
-	//followCamera_->Update();
+	followCamera_.Update();
 
 	mainCamera.DebugGUI();
 }

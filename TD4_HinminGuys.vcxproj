@@ -157,14 +157,15 @@
     <ClCompile Include="Class\Enemy\Normal\State\NormalEnemyAttack.cpp" />
     <ClCompile Include="Class\Enemy\Normal\State\NormalEnemyIdle.cpp" />
     <ClCompile Include="Class\Enemy\Normal\State\NormalEnemyMove.cpp" />
-    <ClCompile Include="Class\Player\Systems\AttackSystem.cpp" />
+    <ClCompile Include="Class\Player\Systems\Children\Attack.cpp" />
+    <ClCompile Include="Class\Player\Systems\Children\LockOn.cpp" />
     <ClCompile Include="Class\Scene\GameScene.cpp" />
     <ClCompile Include="Class\Scene\Title.cpp" />
     <ClCompile Include="Class\Camera\FollowCamera.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Class\Player\Player.cpp" />
-    <ClCompile Include="Class\Player\Systems\MoveSystem.cpp" />
-    <ClCompile Include="Class\Player\Systems\ParrySystem.cpp" />
+    <ClCompile Include="Class\Player\Systems\Children\Move.cpp" />
+    <ClCompile Include="Class\Player\Systems\Children\Parry.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Class\Enemy\Boss\BossEnemy.h" />
@@ -178,14 +179,15 @@
     <ClInclude Include="Class\Enemy\Normal\State\NormalEnemyAttack.h" />
     <ClInclude Include="Class\Enemy\Normal\State\NormalEnemyIdle.h" />
     <ClInclude Include="Class\Enemy\Normal\State\NormalEnemyMove.h" />
-    <ClInclude Include="Class\Player\Systems\AttackSystem.h" />
+    <ClInclude Include="Class\Player\Systems\Children\Attack.h" />
     <ClInclude Include="Class\Player\ICharacter.h" />
     <ClInclude Include="Class\Player\Systems\ISystem.h" />
+    <ClInclude Include="Class\Player\Systems\Children\LockOn.h" />
     <ClInclude Include="Class\Scene\GameScene.h" />
     <ClInclude Include="Class\Scene\Title.h" />
     <ClInclude Include="Class\Player\Player.h" />
-    <ClInclude Include="Class\Player\Systems\MoveSystem.h" />
-    <ClInclude Include="Class\Player\Systems\ParrySystem.h" />
+    <ClInclude Include="Class\Player\Systems\Children\Move.h" />
+    <ClInclude Include="Class\Player\Systems\Children\Parry.h" />
     <ClInclude Include="Class\Camera\FollowCamera.h" />
   </ItemGroup>
   <ItemGroup>

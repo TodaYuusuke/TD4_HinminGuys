@@ -1,15 +1,15 @@
 #pragma once
-#include "ISystem.h"
+#include "../ISystem.h"
 
 /// <summary>
 /// 自機の移動機能をまとめたクラス
 /// </summary>
-class MoveSystem : public ISystem {
+class Move : public ISystem {
 public:
 	// コンストラクタ
-	MoveSystem() = default;
+	Move(LWP::Object::Camera* camera);
 	// デストラクタ
-	~MoveSystem() override = default;
+	~Move() override = default;
 
 	/// <summary>
 	/// 初期化
@@ -30,6 +30,15 @@ private:
 	/// 入力処理
 	/// </summary>
 	void InputUpdate();
+
+	/// <summary>
+	/// 
+	/// </summary>
+	/// <param name="a"></param>
+	/// <param name="b"></param>
+	/// <param name="up"></param>
+	/// <returns></returns>
+	float GetAngle(const LWP::Math::Vector3& a, const LWP::Math::Vector3& b, const LWP::Math::Vector3& up);
 
 	/// <summary>
 	/// 指数関数的に目標の数値まで近づける
@@ -87,6 +96,7 @@ private:// プライベートな変数
 
 	// 移動速度
 	LWP::Math::Vector3 moveVel_;
+
 	// 向いている角度
 	LWP::Math::Quaternion rotate_ = {0.0f,0.0f,0.0f,1.0f};
 

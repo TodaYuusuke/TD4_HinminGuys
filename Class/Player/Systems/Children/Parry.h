@@ -1,15 +1,15 @@
 #pragma once
-#include "ISystem.h"
+#include "../ISystem.h"
 
 /// <summary>
-/// 自機の攻撃機能をまとめたクラス
+/// 自機のパリィ機能をまとめたクラス
 /// </summary>
-class AttackSystem : public ISystem{
+class Parry : public ISystem {
 public:
 	// コンストラクタ
-	AttackSystem() = default;
+	Parry(LWP::Object::Camera* camera);
 	// デストラクタ
-	~AttackSystem() override = default;
+	~Parry() override = default;
 
 	/// <summary>
 	/// 初期化
@@ -26,5 +26,4 @@ public:
 	void Reset() override;
 
 private:
-
 };

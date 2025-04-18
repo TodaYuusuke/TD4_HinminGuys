@@ -54,16 +54,19 @@
     <ClCompile Include="Class\Player\Player.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Class\Player\Systems\MoveSystem.cpp">
+    <ClCompile Include="Class\Player\Systems\Children\Move.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Class\Player\Systems\ParrySystem.cpp">
+    <ClCompile Include="Class\Player\Systems\Children\Parry.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Class\Player\Systems\AttackSystem.cpp">
+    <ClCompile Include="Class\Player\Systems\Children\Attack.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="Class\Camera\FollowCamera.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Class\Player\Systems\Children\LockOn.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
@@ -107,6 +110,9 @@
     <ClInclude Include="Class\Enemy\Boss\State\BossEnemyAttack.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
+    <ClInclude Include="Class\Player\Systems\Children\LockOn.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />
@@ -116,16 +122,16 @@
     <ClInclude Include="Class\Player\ICharacter.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Class\Player\Systems\MoveSystem.h">
+    <ClInclude Include="Class\Player\Systems\Children\Move.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Class\Player\Systems\ParrySystem.h">
+    <ClInclude Include="Class\Player\Systems\Children\Parry.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Class\Player\Systems\ISystem.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Class\Player\Systems\AttackSystem.h">
+    <ClInclude Include="Class\Player\Systems\Children\Attack.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Class\Camera\FollowCamera.h">

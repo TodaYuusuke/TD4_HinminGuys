@@ -1,15 +1,12 @@
 #pragma once
-#include "ISystem.h"
+#include "../ISystem.h"
 
-/// <summary>
-/// 自機のパリィ機能をまとめたクラス
-/// </summary>
-class ParrySystem : public ISystem {
+class LockOn : public ISystem {
 public:
 	// コンストラクタ
-	ParrySystem() = default;
+	LockOn(LWP::Object::Camera* camera);
 	// デストラクタ
-	~ParrySystem() override = default;
+	~LockOn() override = default;
 
 	/// <summary>
 	/// 初期化
@@ -26,4 +23,16 @@ public:
 	void Reset() override;
 
 private:
+	/// <summary>
+	/// 入力処理
+	/// </summary>
+	void InputUpdate();
+
+private:// 定数
+	
+
+private:
+	// 経過時間
+	float currentFrame_;
+
 };
