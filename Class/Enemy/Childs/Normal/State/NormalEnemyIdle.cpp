@@ -1,7 +1,7 @@
 #include "NormalEnemyIdle.h"
 #include "NormalEnemyMove.h"
-#include "../../../Player/Player.h"
-#include "../../IEnemy.h"
+#include "../../../../Player/Player.h"
+#include "../../../IEnemy.h"
 
 void NormalEnemyIdle::Initialize(IEnemy* enemy)
 {

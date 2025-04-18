@@ -148,16 +148,16 @@
     </Manifest>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Class\Enemy\Boss\BossEnemy.cpp" />
-    <ClCompile Include="Class\Enemy\Boss\State\BossEnemyAttack.cpp" />
-    <ClCompile Include="Class\Enemy\Boss\State\BossEnemyIdle.cpp" />
-    <ClCompile Include="Class\Enemy\Boss\State\BossEnemyMove.cpp" />
+    <ClCompile Include="Class\Enemy\Childs\Boss\BossEnemy.cpp" />
+    <ClCompile Include="Class\Enemy\Childs\Boss\State\BossEnemyAttack.cpp" />
+    <ClCompile Include="Class\Enemy\Childs\Boss\State\BossEnemyIdle.cpp" />
+    <ClCompile Include="Class\Enemy\Childs\Boss\State\BossEnemyMove.cpp" />
     <ClCompile Include="Class\Enemy\EnemyManager.cpp" />
     <ClCompile Include="Class\Enemy\IEnemy.cpp" />
-    <ClCompile Include="Class\Enemy\Normal\NormalEnemy.cpp" />
-    <ClCompile Include="Class\Enemy\Normal\State\NormalEnemyAttack.cpp" />
-    <ClCompile Include="Class\Enemy\Normal\State\NormalEnemyIdle.cpp" />
-    <ClCompile Include="Class\Enemy\Normal\State\NormalEnemyMove.cpp" />
+    <ClCompile Include="Class\Enemy\Childs\Normal\NormalEnemy.cpp" />
+    <ClCompile Include="Class\Enemy\Childs\Normal\State\NormalEnemyAttack.cpp" />
+    <ClCompile Include="Class\Enemy\Childs\Normal\State\NormalEnemyIdle.cpp" />
+    <ClCompile Include="Class\Enemy\Childs\Normal\State\NormalEnemyMove.cpp" />
     <ClCompile Include="Class\Player\Systems\AttackSystem.cpp" />
     <ClCompile Include="Class\Scene\GameScene.cpp" />
     <ClCompile Include="Class\Scene\Title.cpp" />
@@ -168,17 +168,17 @@
     <ClCompile Include="Class\Player\Systems\ParrySystem.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Class\Enemy\Boss\BossEnemy.h" />
-    <ClInclude Include="Class\Enemy\Boss\State\BossEnemyAttack.h" />
-    <ClInclude Include="Class\Enemy\Boss\State\BossEnemyIdle.h" />
-    <ClInclude Include="Class\Enemy\Boss\State\BossEnemyMove.h" />
+    <ClInclude Include="Class\Enemy\Childs\Boss\BossEnemy.h" />
+    <ClInclude Include="Class\Enemy\Childs\Boss\State\BossEnemyAttack.h" />
+    <ClInclude Include="Class\Enemy\Childs\Boss\State\BossEnemyIdle.h" />
+    <ClInclude Include="Class\Enemy\Childs\Boss\State\BossEnemyMove.h" />
     <ClInclude Include="Class\Enemy\EnemyManager.h" />
     <ClInclude Include="Class\Enemy\IEnemy.h" />
     <ClInclude Include="Class\Enemy\IEnemyState.h" />
-    <ClInclude Include="Class\Enemy\Normal\NormalEnemy.h" />
-    <ClInclude Include="Class\Enemy\Normal\State\NormalEnemyAttack.h" />
-    <ClInclude Include="Class\Enemy\Normal\State\NormalEnemyIdle.h" />
-    <ClInclude Include="Class\Enemy\Normal\State\NormalEnemyMove.h" />
+    <ClInclude Include="Class\Enemy\Childs\Normal\NormalEnemy.h" />
+    <ClInclude Include="Class\Enemy\Childs\Normal\State\NormalEnemyAttack.h" />
+    <ClInclude Include="Class\Enemy\Childs\Normal\State\NormalEnemyIdle.h" />
+    <ClInclude Include="Class\Enemy\Childs\Normal\State\NormalEnemyMove.h" />
     <ClInclude Include="Class\Player\Systems\AttackSystem.h" />
     <ClInclude Include="Class\Player\ICharacter.h" />
     <ClInclude Include="Class\Player\Systems\ISystem.h" />

@@ -51,8 +51,8 @@ void MoveSystem::InputUpdate() {
 	moveVel_ = direct;
 
 	// 移動速度から角度を求める
-	lwp::Vector3 cross = lwp::Vector3::Cross({ 0.0f,0.0f,1.0f }, moveVel_.Normalize()).Normalize();
-	float dot = lwp::Vector3::Dot({ 0.0f,0.0f,1.0f }, moveVel_);
+	lwp::Vector3 cross = lwp::Vector3::Cross({ 0.0f,1.0f,0.0f }, moveVel_.Normalize()).Normalize();
+	float dot = lwp::Vector3::Dot({ 0.0f,1.0f,0.0f }, moveVel_);
 	//行きたい方向のQuaternionの作成
 	rotate_ = lwp::Quaternion::CreateFromAxisAngle(cross, std::acos(dot));
 

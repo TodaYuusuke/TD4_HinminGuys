@@ -1,5 +1,5 @@
 #pragma once
-#include "../../IEnemyState.h"
+#include "../../../IEnemyState.h"
 
 /// <summary>
 /// 雑魚敵停止状態クラス

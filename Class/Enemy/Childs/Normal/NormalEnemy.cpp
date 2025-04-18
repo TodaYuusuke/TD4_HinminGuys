@@ -1,5 +1,5 @@
 #include "NormalEnemy.h"
-#include "../../Player/Player.h"
+#include "../../../Player/Player.h"
 #include "State/NormalEnemyIdle.h"
 #include "../../DirectXGame/Engine/primitive/model/Material.h"
 
@@ -12,8 +12,7 @@ void NormalEnemy::Initialize(Player* player, const Vector3& position)
 	//アニメーションロード
 	animation_.LoadFullPath("resources/model/player/Player_Simple.gltf", &model_);
 	SetPlayer(player);
-	position_ = position;
-	model_.worldTF.translation = position_;
+	model_.worldTF.translation = position;
 	// 大きさを一時的に調整
 	model_.worldTF.scale = { 0.5f, 0.5f, 0.5f };
 	state_ = std::make_unique<NormalEnemyIdle>();

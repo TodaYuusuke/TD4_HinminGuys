@@ -1,6 +1,6 @@
 #pragma once
-#include "../IEnemy.h"
-#include "../IEnemyState.h"
+#include "../../IEnemy.h"
+#include "../../IEnemyState.h"
 
 /// <summary>
 /// ボス敵クラス

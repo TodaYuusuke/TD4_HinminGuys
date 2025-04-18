@@ -1,5 +1,5 @@
 #include "BossEnemy.h"
-#include "../../Player/Player.h"
+#include "../../../Player/Player.h"
 #include "State/BossEnemyIdle.h"
 
 void BossEnemy::Initialize(Player* player, const Vector3& position)
@@ -9,8 +9,7 @@ void BossEnemy::Initialize(Player* player, const Vector3& position)
 	animation_.LoadFullPath("resources/model/player/Player_Simple.gltf", &model_);
 	animation_.Play("Idle", true);
 	SetPlayer(player);
-	position_ = position;
-	model_.worldTF.translation = position_;
+	model_.worldTF.translation = position;
 	// 大きさを一時的に調整
 	model_.worldTF.scale = { 0.8f, 0.8f, 0.8f };
 	state_ = std::make_unique<BossEnemyIdle>();

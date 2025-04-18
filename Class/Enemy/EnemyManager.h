@@ -1,8 +1,8 @@
 #pragma once
 #include "../Adapter/Adapter.h"
 #include "IEnemy.h"
-#include "Normal/NormalEnemy.h"
-#include "Boss/BossEnemy.h"
+#include "Childs/Normal/NormalEnemy.h"
+#include "Childs/Boss/BossEnemy.h"
 #include <list>
 #include <memory>
 

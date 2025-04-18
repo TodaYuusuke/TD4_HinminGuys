@@ -2,6 +2,22 @@
 #include "../Player/Player.h"
 #include "IEnemyState.h"
 
+//実体宣言
+uint32_t IEnemy::currentEnemyID_ = 0;
+
+IEnemy::IEnemy()
+{
+	//IDをセットして、ナンバーを加算
+	ID_ = currentEnemyID_;
+	currentEnemyID_++;
+}
+
+IEnemy::~IEnemy()
+{
+	//ナンバー減算
+	currentEnemyID_--;
+}
+
 Vector3 IEnemy::GetPlayerPosition()
 {
     return *player_->GetModelPos();

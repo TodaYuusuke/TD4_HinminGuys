@@ -1,6 +1,6 @@
 #include "BossEnemyAttack.h"
-#include "../../../Player/Player.h"
-#include "../../IEnemy.h"
+#include "../../../../Player/Player.h"
+#include "../../../IEnemy.h"
 
 void BossEnemyAttack::Initialize(IEnemy* enemy)
 {
