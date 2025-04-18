@@ -71,8 +71,49 @@ void NormalEnemyMove::Update()
 		//プレイヤーの方向を向く
 		if (velocity_.Length() != 0.0f) {
 
-			//行きたい方向のQuaternionの作成
-			enemy_->SetRotation(Quaternion::DirectionToDirection(Vector3{ 0.0f,0.0f,1.0f }, velocity_.Normalize()));
+			Vector3 from = { 0.0f,0.0f,1.0f };
+			Vector3 to = velocity_.Normalize();
+
+			// 回転軸をクロス積から求める
+			Vector3 axis = Vector3::Cross(from, to);
+			// 内積
+			float dot = Vector3::Dot(from, to);
+			// 完全に平行な場合、単位クォータニオンを返す
+			if (dot > 0.9999f) {
+
+				//行きたい方向のQuaternionの作成
+				enemy_->SetRotation(Quaternion{ 0.0f,0.0f,0.0f,1.0f });
+
+			}
+			else {
+
+				//逆向きのベクトルだった場合、垂直なベクトルを一つ選ぶ
+				if (dot <= -1.0f) {
+
+					if (from.x != 0.0f || from.y != 0.0f) {
+
+						axis = { from.y, -from.x,0.0f };
+						axis = axis.Normalize();
+					}
+					else if (from.x != 0.0f || from.z != 0.0f) {
+
+						axis = { 0.0f, -from.z, from.x };
+						axis = axis.Normalize();
+
+					}
+
+				}
+				else {
+					axis = Vector3::Cross(from, to).Normalize();
+				}
+
+				// θを求める
+				float theta = std::acos(Vector3::Dot(from, to) / (from.Length() * to.Length()));
+
+				//行きたい方向のQuaternionの作成
+				enemy_->SetRotation(Quaternion::CreateFromAxisAngle(axis, theta));
+
+			}
 
 		}
 
