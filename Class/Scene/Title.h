@@ -1,5 +1,6 @@
 #pragma once
 #include "scene/IScene.h"
+#include "../ComboEditor/ComboTree.h"
 
 class Title final
 	: public IScene {
@@ -16,4 +17,8 @@ public:
 
 
 private: // ** これより先に必要な処理や変数を記述 ** //
+
+	// コンボツリークラス
+	ComboTree tree_{};
+
 };

@@ -2,8 +2,7 @@
 #include "Class/Scene/Title.h"
 
 // Windowsアプリでのエントリーポイント(main関数)
-int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
-	LWP::System::StartUp(L"貧民Guys");
-	LWP::System::Run(new Title);
+int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {	
+	LWP::System::Run<Title>(L"貧民Guys");
 	return 0;
 }

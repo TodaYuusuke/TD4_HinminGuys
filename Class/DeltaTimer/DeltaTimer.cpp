@@ -20,14 +20,12 @@ bool LWP::Utility::DeltaTimer::Update()
 {
 	// 終了している場合
 	if (isFinish_) {
-		// このタイマーを非有効に
-		isActive_ = false;
 		// 実行中ではない
 		return false;
 	}
 
 	// フレームを加算
-	nowFlame_ += LWP::Info::GetDeltaTime() * speed_;
+	nowFlame_ += static_cast<float>(LWP::Info::GetDeltaTime()) * speed_;
 
 	// 経過秒数が終了秒数を超えていたら
 	if (nowFlame_ >= finishFlame_) {

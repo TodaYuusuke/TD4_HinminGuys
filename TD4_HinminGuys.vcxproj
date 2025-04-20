@@ -148,6 +148,7 @@
     </Manifest>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Class\ComboEditor\ComboTree.cpp" />
     <ClCompile Include="Class\Condition\child\Controller\PressControllerButtonCondition.cpp" />
     <ClCompile Include="Class\Condition\child\Controller\ReleaseControllerButtonCondition.cpp" />
     <ClCompile Include="Class\Condition\child\Keyboard\PressKeyboardCondition.cpp" />
@@ -161,6 +162,7 @@
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Class\ComboEditor\ComboTree.h" />
     <ClInclude Include="Class\Condition\child\Controller\PressControllerButtonCondition.h" />
     <ClInclude Include="Class\Condition\child\Controller\ReleaseControllerButtonCondition.h" />
     <ClInclude Include="Class\Condition\child\Keyboard\PressKeyboardCondition.h" />

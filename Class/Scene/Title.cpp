@@ -9,9 +9,14 @@ using namespace LWP::Utility;
 using namespace LWP::Object;
 using namespace LWP::Info;
 
-void Title::Initialize() {}
+void Title::Initialize() {
+	tree_.Init();
+}
 
 void Title::Update() {
+
+	tree_.DebugGUI();
+
 	// シーン遷移
 	if (Keyboard::GetTrigger(DIK_P)) {
 		nextSceneFunction = []() { return new GameScene(); };

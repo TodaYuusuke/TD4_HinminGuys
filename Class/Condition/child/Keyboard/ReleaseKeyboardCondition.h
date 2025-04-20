@@ -6,20 +6,20 @@ namespace LWP::Utility {
 	/// <summary>
 	/// キーボードのリリース入力による分岐条件
 	/// </summary>
-	class TriggerKeyboardCondition : public LWP::Utility::ICondition
+	class ReleaseKeyboardCondition : public LWP::Utility::ICondition
 	{
 	public: // コンストラクタ等
 
 		/// <summary>
 		/// デフォルトコンストラクタ
 		/// </summary>
-		TriggerKeyboardCondition() = delete;
+		ReleaseKeyboardCondition() = delete;
 
 		/// <summary>
 		/// コンストラクタ
 		/// </summary>
 		/// <param name="id">キーID</param>
-		TriggerKeyboardCondition(int id) : kId_(id) {};
+		ReleaseKeyboardCondition(int id) : kId_(id) {};
 
 	public: // アクセッサ等
 
