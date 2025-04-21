@@ -7,8 +7,8 @@
 class GameScene final
 	: public IScene {
 public:
-	GameScene() = default;
-	~GameScene();
+	GameScene();
+	~GameScene() = default;
 
 	// ** 純粋仮想関数の実体宣言 ** //
 

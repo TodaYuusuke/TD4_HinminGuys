@@ -20,7 +20,7 @@ GameScene::GameScene()
 void GameScene::Initialize() {
 
 	enemyManager_.Initialize();
-	enemyManager_.SetPlayer(player_.get());
+	enemyManager_.SetPlayer(&player_);
 
 	// 追従カメラの動作確認のため生成
 	followCamera_.Initialize();
@@ -32,7 +32,7 @@ void GameScene::Initialize() {
 	plane.LoadShortPath("field/ground/SimpleStage.gltf");
 	plane.worldTF.translation = { 0,-5,0 };
 
-	directionLight_.worldTF.translation = { 0,10,0 };
+	light_.worldTF.translation = { 0,10,0 };
 }
 
 // 更新
