@@ -12,10 +12,15 @@ using namespace LWP::Info;
 GameScene::GameScene() 
 	: player_(&mainCamera),
 	  followCamera_(&mainCamera, player_.GetModelPos())
-{}
+{
+	enemyManager_.Finalize();
+}
 
 // 初期化
 void GameScene::Initialize() {
+
+	enemyManager_.Initialize();
+	enemyManager_.SetPlayer(player_.get());
 
 	// 追従カメラの動作確認のため生成
 	followCamera_.Initialize();
@@ -37,8 +42,17 @@ void GameScene::Update() {
 		nextSceneFunction = []() { return new Title(); };
 	}
 
+#ifdef _DEBUG
+
+	enemyManager_.Debug();
+
+#endif // _DEBUG
+
+
 	// 自機
 	player_.Update();
+	//敵全て
+	enemyManager_.Update();
 
 	followCamera_.Update();
 

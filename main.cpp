@@ -1,5 +1,4 @@
 #include <Adapter.h>
-#include "Class/Scene/Title.h"
 #include "Class/Scene/GameScene.h"
 
 // Windowsアプリでのエントリーポイント(main関数)

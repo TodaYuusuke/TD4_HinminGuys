@@ -1,5 +1,5 @@
 #pragma once
-#include "../../IEnemyState.h"
+#include "../../../IEnemyState.h"
 
 /// <summary>
 /// 雑魚敵停止状態クラス
@@ -18,6 +18,8 @@ private:
 
 	//待機時間
 	int32_t standTime_;
+	//攻撃モーションに入る距離
+	float attackDist_ = 3.0f;
 
 
 };

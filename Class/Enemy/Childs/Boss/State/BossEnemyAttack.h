@@ -1,5 +1,5 @@
 #pragma once
-#include "../../IEnemyState.h"
+#include "../../../IEnemyState.h"
 
 /// <summary>
 /// ボス敵攻撃状態クラス
