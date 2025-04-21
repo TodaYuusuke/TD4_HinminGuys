@@ -1,14 +1,14 @@
 #pragma once
 #include "ICharacter.h"
-#include "Systems/MoveSystem.h"
-#include "Systems/ParrySystem.h"
-#include "Systems/AttackSystem.h"
+#include "Systems/Children/Move.h"
+#include "Systems/Children/Parry.h"
+#include "Systems/Children/Attack.h"
 #include <memory>
 
 class Player : public ICharacter {
 public:
 	// コンストラクタ
-	Player() = default;
+	Player(LWP::Object::Camera* camera);
 	// デストラクタ
 	~Player() override = default;
 
@@ -35,7 +35,7 @@ private:
 	/// <summary>
 	/// デバッグ用のタブを表示(Debug時のみ)
 	/// </summary>
-	void DebugWindow();
+	void DebugGui();
 
 public:// Getter,Setter
 #pragma region Getter
@@ -44,14 +44,18 @@ public:// Getter,Setter
 #pragma endregion
 
 #pragma region Setter
-
+	/// <summary>
+	/// シーンで使用しているカメラのポインタを設定
+	/// </summary>
+	/// <param name="camera">カメラのアドレス</param>
+	void SetCamera(LWP::Object::Camera* camera) { pCamera_ = camera; }
 #pragma endregion
 
 private:
 	// 移動機能
-	std::unique_ptr<MoveSystem> moveSystem_;
+	std::unique_ptr<Move> moveSystem_;
 	// パリィ機能
-	std::unique_ptr<ParrySystem> parrySystem_;
+	std::unique_ptr<Parry> parrySystem_;
 	// 攻撃機能
-	std::unique_ptr<AttackSystem> attackSystem_;
+	std::unique_ptr<Attack> attackSystem_;
 };

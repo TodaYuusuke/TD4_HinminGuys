@@ -1,15 +1,15 @@
 #pragma once
-#include "ISystem.h"
+#include "../ISystem.h"
 
 /// <summary>
 /// 自機の移動機能をまとめたクラス
 /// </summary>
-class MoveSystem : public ISystem {
+class Move : public ISystem {
 public:
 	// コンストラクタ
-	MoveSystem() = default;
+	Move(LWP::Object::Camera* camera);
 	// デストラクタ
-	~MoveSystem() override = default;
+	~Move() override = default;
 
 	/// <summary>
 	/// 初期化
@@ -32,15 +32,23 @@ private:
 	void InputUpdate();
 
 	/// <summary>
-	/// 指数関数的に目標の数値まで近づける
+	/// 
 	/// </summary>
-	/// <param name="current">現在の値</param>
-	/// <param name="target">目標の数値</param>
-	/// <param name="damping">減衰値</param>
+	/// <param name="a"></param>
+	/// <param name="b"></param>
+	/// <param name="up"></param>
 	/// <returns></returns>
-	LWP::Math::Quaternion ExponentialInterpolate(const LWP::Math::Quaternion& current, const LWP::Math::Quaternion& target, float damping = 1.0f);
-	LWP::Math::Vector3 ExponentialInterpolate(const LWP::Math::Vector3& current, const LWP::Math::Vector3& target, float damping = 1.0f);
-	float ExponentialInterpolate(const float& current, const float& target, float damping = 1.0f);
+	float GetAngle(const LWP::Math::Vector3& a, const LWP::Math::Vector3& b, const LWP::Math::Vector3& up);
+
+	// 絶対値に変換
+	LWP::Math::Vector3 Abs(LWP::Math::Vector3 value) {
+		LWP::Math::Vector3 result{
+			std::fabsf(value.x),
+			std::fabsf(value.y),
+			std::fabsf(value.z)
+		};
+		return result;
+	}
 
 public:// Getter, Setter
 #pragma region Getter
@@ -87,6 +95,7 @@ private:// プライベートな変数
 
 	// 移動速度
 	LWP::Math::Vector3 moveVel_;
+
 	// 向いている角度
 	LWP::Math::Quaternion rotate_ = {0.0f,0.0f,0.0f,1.0f};
 

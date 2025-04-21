@@ -1,16 +1,18 @@
 #include "Player.h"
 
-void Player::Initialize() {
+Player::Player(LWP::Object::Camera* camera) { 
+	pCamera_ = camera; 
+
 	// モデルを読み込む
-	//model_.LoadCube();
-
 	model_.LoadShortPath("player/Player_Simple.gltf");
-
-	// 大きさを一時的に調整
-	model_.worldTF.scale = { 0.5f, 0.5f, 0.5f };
 
 	// 自機機能を生成
 	CreateSystems();
+}
+
+void Player::Initialize() {
+	// 大きさを一時的に調整
+	model_.worldTF.scale = { 0.5f, 0.5f, 0.5f };
 }
 
 void Player::Update() {
@@ -25,6 +27,8 @@ void Player::Update() {
 	model_.worldTF.translation += moveSystem_->GetMoveVel();
 	// 角度を加算
 	model_.worldTF.rotation = moveSystem_->GetRotate();
+
+	DebugGui();
 }
 
 void Player::Reset() {
@@ -38,20 +42,20 @@ void Player::Reset() {
 
 void Player::CreateSystems() {
 	// 移動機能
-	moveSystem_ = std::make_unique<MoveSystem>();
+	moveSystem_ = std::make_unique<Move>(pCamera_);
 	moveSystem_->Initialize();
 	// パリィ機能
-	parrySystem_ = std::make_unique<ParrySystem>();
+	parrySystem_ = std::make_unique<Parry>(pCamera_);
 	parrySystem_->Initialize();
 	// 攻撃機能
-	attackSystem_ = std::make_unique<AttackSystem>();
+	attackSystem_ = std::make_unique<Attack>(pCamera_);
 	attackSystem_->Initialize();
 }
 
-void Player::DebugWindow() {
+void Player::DebugGui() {
 #ifdef _DEBUG
-	//ImGui::Begin("Player");
-	//ImGui::DragFloat3()
-	//ImGui::End();
+	ImGui::Begin("Player");
+	parrySystem_->DebugGui();
+	ImGui::End();
 #endif // DEBUG
 }

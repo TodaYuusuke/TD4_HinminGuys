@@ -7,8 +7,8 @@
 class GameScene final
 	: public IScene {
 public:
-	GameScene() = default;
-	~GameScene();
+	GameScene();
+	~GameScene() = default;
 
 	// ** 純粋仮想関数の実体宣言 ** //
 
@@ -20,10 +20,10 @@ public:
 
 private: // ** これより先に必要な処理や変数を記述 ** //
 	// 自機
-	std::unique_ptr<Player> player_;
+	Player player_;
 
 	// 追従カメラ
-	std::unique_ptr<FollowCamera> followCamera_;
+	FollowCamera followCamera_;
 
 	//敵マネージャー
 	EnemyManager enemyManager_;
