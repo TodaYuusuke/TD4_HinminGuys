@@ -73,13 +73,12 @@ protected:
 	Player* player_;
 	//互いに距離を取るときの反発力
 	Vector3 repulsiveForce_{};
-
-	//全体のID管理
-	static uint32_t currentEnemyID_;
-	//個々のID
-	uint32_t ID_;
 	//種類
 	EnemyType type_;
+	//全体のID管理
+	static uint16_t currentEnemyID_;
+	//個々のID
+	uint16_t ID_;
 	//死亡フラグ
 	bool isDead_ = false;
 
