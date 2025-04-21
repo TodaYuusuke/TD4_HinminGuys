@@ -3,7 +3,7 @@
 #include "IEnemyState.h"
 
 //実体宣言
-uint32_t IEnemy::currentEnemyID_ = 0;
+uint16_t IEnemy::currentEnemyID_ = 0;
 
 IEnemy::IEnemy()
 {
@@ -14,8 +14,7 @@ IEnemy::IEnemy()
 
 IEnemy::~IEnemy()
 {
-	//ナンバー減算
-	currentEnemyID_--;
+	
 }
 
 Vector3 IEnemy::GetPlayerPosition()

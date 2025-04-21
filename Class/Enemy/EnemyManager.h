@@ -29,6 +29,8 @@ public:
 	void ClearList();
 	//デバッグウィンドウ
 	void Debug();
+	//リスト取得
+	std::list<std::unique_ptr<IEnemy>>* GetEnemyListPtr() { return &enemies_; }
 
 private:
 

@@ -102,12 +102,12 @@ void NormalEnemyMove::Update()
 				//逆向きのベクトルだった場合、垂直なベクトルを一つ選ぶ
 				if (dot <= -1.0f) {
 
-					if (from.x != 0.0f || from.y != 0.0f) {
+					if (from.x != 0.0f or from.y != 0.0f) {
 
 						axis = { from.y, -from.x,0.0f };
 						axis = axis.Normalize();
 					}
-					else if (from.x != 0.0f || from.z != 0.0f) {
+					else if (from.x != 0.0f or from.z != 0.0f) {
 
 						axis = { 0.0f, -from.z, from.x };
 						axis = axis.Normalize();
