@@ -44,5 +44,8 @@ private:
 
 #pragma endregion
 
+	//敵が互いに取る距離
+	float enemyDist_ = 1.0f;
+
 };
 

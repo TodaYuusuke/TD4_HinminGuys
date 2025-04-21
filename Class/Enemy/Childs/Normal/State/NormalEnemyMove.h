@@ -27,7 +27,7 @@ private:
 	//攻撃モーションに入る距離
 	float attackDist_ = 0.5f;
 	//近づくかどうかを決める距離
-	float approachDist_ = 1.5f;
+	float approachDist_ = 2.0f;
 	//プレイヤーに近づくかどうか
 	bool isApproach_ = true;
 

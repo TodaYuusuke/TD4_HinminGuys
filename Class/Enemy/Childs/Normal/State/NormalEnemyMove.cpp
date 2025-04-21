@@ -1,5 +1,6 @@
 #include "NormalEnemyMove.h"
 #include "NormalEnemyAttack.h"
+#include "NormalEnemyIdle.h"
 #include "../../../../Player/Player.h"
 #include "../../../IEnemy.h"
 
@@ -47,10 +48,20 @@ void NormalEnemyMove::Update()
 					overRunTime_--;
 				}
 
-				//追加移動時間も超えたら強制的に攻撃へ移行
+				//追加移動時間を超えた場合
 				if (overRunTime_ <= 0) {
-					//攻撃状態に移行
-					enemy_->SetState(std::make_unique<NormalEnemyAttack>());
+
+					//プレイヤーとの距離が近いなら攻撃
+					if (Vector3::Distance(enemy_->GetPlayerPosition(), enemy_->GetPosition()) < attackDist_) {
+						//攻撃状態に移行
+						enemy_->SetState(std::make_unique<NormalEnemyAttack>());
+					}
+					//そうでないなら待機状態に戻す
+					else {
+						//待機状態に移行
+						enemy_->SetState(std::make_unique<NormalEnemyIdle>());
+					}
+
 				}
 
 			}
@@ -61,18 +72,19 @@ void NormalEnemyMove::Update()
 		velocity_ = enemy_->GetPlayerPosition() - enemy_->GetPosition();
 		//y軸の移動ベクトルを消す
 		velocity_.y = 0.0f;
+		//敵の向きをプレイヤーに向かせるため、ここで向きを保存
+		Vector3 to = velocity_.Normalize();
 		velocity_ = velocity_.Normalize() * LWP::Info::GetDeltaTime();
 		//近づかない場合、通常移動時間中は移動方向を逆にする
 		if (not isApproach_ and runTime_ > 0) {
 			velocity_ *= -1.0f;
 		}
-		enemy_->SetPosition(enemy_->GetPosition() + velocity_);
+		enemy_->SetPosition(enemy_->GetPosition() + velocity_ + (enemy_->GetRepulsiveForce() * LWP::Info::GetDeltaTime()));
 
 		//プレイヤーの方向を向く
 		if (velocity_.Length() != 0.0f) {
-
+			//敵の基本姿勢
 			Vector3 from = { 0.0f,0.0f,1.0f };
-			Vector3 to = velocity_.Normalize();
 
 			// 回転軸をクロス積から求める
 			Vector3 axis = Vector3::Cross(from, to);

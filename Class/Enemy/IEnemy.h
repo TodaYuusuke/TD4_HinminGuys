@@ -36,11 +36,11 @@ public:
 	//死亡フラグ取得
 	bool GetIsDead() const { return isDead_; }
 	//座標取得
-	const Vector3& GetPosition() { return model_.worldTF.translation; }
+	const Vector3& GetPosition() const { return model_.worldTF.translation; }
 	//座標セット
 	void SetPosition(const Vector3& position) { model_.worldTF.translation = position; }
 	//回転取得
-	const Quaternion& GetRotation() { return model_.worldTF.rotation; }
+	const Quaternion& GetRotation() const { return model_.worldTF.rotation; }
 	//回転セット
 	void SetRotation(const Quaternion& rotation) { model_.worldTF.rotation = rotation; }
 	//プレイヤー取得
@@ -55,6 +55,10 @@ public:
 	void SetState(std::unique_ptr<IEnemyState> state);
 	//ID取得
 	uint32_t GetID() const { return ID_; }
+	//反発力取得
+	const Vector3& GetRepulsiveForce() const { return repulsiveForce_; }
+	//反発力を加算
+	void AddRepulsiveForce(const Vector3& force) { repulsiveForce_ += force; }
 
 protected:
 
@@ -67,6 +71,9 @@ protected:
 
 	//プレイヤー情報
 	Player* player_;
+	//互いに距離を取るときの反発力
+	Vector3 repulsiveForce_{};
+
 	//全体のID管理
 	static uint32_t currentEnemyID_;
 	//個々のID

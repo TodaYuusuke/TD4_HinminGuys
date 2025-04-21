@@ -30,5 +30,8 @@ void NormalEnemy::Update()
 	//現在の状態を更新
 	state_->Update();
 
+	//反発力リセット
+	repulsiveForce_ = { 0.0f,0.0f,0.0f };
+
 }
 

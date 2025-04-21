@@ -17,8 +17,30 @@ void EnemyManager::Update()
 {
 
 	//全ての敵の更新
-	for (const std::unique_ptr<IEnemy>& enemy : enemies_) {
-		enemy->Update();
+	for (const std::unique_ptr<IEnemy>& enemyA : enemies_) {
+		//互いの情報を共有するためのループ
+		for (const std::unique_ptr<IEnemy>& enemyB : enemies_) {
+
+			//同一なら無視
+			if (enemyA == enemyB) {
+				continue;
+			}
+
+			//二人の距離を測る
+			Vector3 diff = enemyA->GetPosition() - enemyB->GetPosition();
+			//Y軸移動は考えない
+			diff.y = 0.0f;
+			//距離
+			float dist = diff.Length();
+
+			//距離が一定以上近い場合、押し出しベクトルを加算する
+			if (dist < enemyDist_ && dist > 0.0001f) {
+				enemyA->AddRepulsiveForce(diff.Normalize() * ((enemyDist_ - dist) / enemyDist_));
+			}
+
+		}
+
+		enemyA->Update();
 	}
 
 }
