@@ -40,16 +40,15 @@ private:
 	/// <returns></returns>
 	float GetAngle(const LWP::Math::Vector3& a, const LWP::Math::Vector3& b, const LWP::Math::Vector3& up);
 
-	/// <summary>
-	/// 指数関数的に目標の数値まで近づける
-	/// </summary>
-	/// <param name="current">現在の値</param>
-	/// <param name="target">目標の数値</param>
-	/// <param name="damping">減衰値</param>
-	/// <returns></returns>
-	LWP::Math::Quaternion ExponentialInterpolate(const LWP::Math::Quaternion& current, const LWP::Math::Quaternion& target, float damping = 1.0f);
-	LWP::Math::Vector3 ExponentialInterpolate(const LWP::Math::Vector3& current, const LWP::Math::Vector3& target, float damping = 1.0f);
-	float ExponentialInterpolate(const float& current, const float& target, float damping = 1.0f);
+	// 絶対値に変換
+	LWP::Math::Vector3 Abs(LWP::Math::Vector3 value) {
+		LWP::Math::Vector3 result{
+			std::fabsf(value.x),
+			std::fabsf(value.y),
+			std::fabsf(value.z)
+		};
+		return result;
+	}
 
 public:// Getter, Setter
 #pragma region Getter

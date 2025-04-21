@@ -9,7 +9,10 @@ Move::Move(LWP::Object::Camera* camera) {
 }
 
 void Move::Initialize() {
-
+	// 移動速度
+	moveVel_ = { 0.0f, 0.0f, 0.0f };
+	// 向いている角度
+	rotate_ = { 0.0f,0.0f,0.0f,1.0f };
 }
 
 void Move::Update() {
@@ -31,25 +34,25 @@ void Move::InputUpdate() {
 	// 方向を取得
 	LWP::Math::Vector3 dir{ 0.0f, 0.0f, 0.0f };
 
-#pragma region キーボード
-	if (lwp::Keyboard::GetPress(DIK_W)) {
-		dir.z += 1.0f;
-	}
-	else if (lwp::Keyboard::GetPress(DIK_S)) {
-		dir.z -= 1.0f;
-	}
-	if (lwp::Keyboard::GetPress(DIK_A)) {
-		dir.x -= 1.0f;
-	}
-	else if (lwp::Keyboard::GetPress(DIK_D)) {
-		dir.x += 1.0f;
-	}
-#pragma endregion
-
 #pragma region ゲームパッド
 	// y軸方向の移動をしないようにする
 	LWP::Math::Vector3 stickMovement = { LWP::Input::Controller::GetLStick().x, 0, LWP::Input::Controller::GetLStick().y };
-	dir += ExponentialInterpolate(moveVel_, stickMovement, 1.0f) * 0.1f;
+	dir = stickMovement;
+#pragma endregion
+
+#pragma region キーボード
+	if (lwp::Keyboard::GetPress(DIK_W)) {
+		dir.z = 1.0f;
+	}
+	if (lwp::Keyboard::GetPress(DIK_S)) {
+		dir.z = -1.0f;
+	}
+	if (lwp::Keyboard::GetPress(DIK_A)) {
+		dir.x = -1.0f;
+	}
+	if (lwp::Keyboard::GetPress(DIK_D)) {
+		dir.x = 1.0f;
+	}
 #pragma endregion
 
 	// カメラが向いている方向に進む
@@ -59,8 +62,9 @@ void Move::InputUpdate() {
 	moveVel_ = dir * rotMatrix;
 	moveVel_.y = 0;
 
-	// 移動速度からラジアンを求める(入力があるときのみ)
-	if (dir.x + dir.z != 0) {
+	// 移動ベクトルから体の向きを算出(入力があるときのみ処理する)
+	if (LWP::Math::Vector3::Dot(Abs(dir), LWP::Math::Vector3{ 1,1,1 }) != 0) {
+		// 移動速度からラジアンを求める
 		float y = GetAngle(LWP::Math::Vector3{ 0,0,1 }, moveVel_.Normalize(), LWP::Math::Vector3{ 0,1,0 });
 		rotate_ = LWP::Math::Quaternion::CreateFromAxisAngle(LWP::Math::Vector3{ 0, 1, 0 }, y);
 	}
@@ -82,25 +86,4 @@ float Move::GetAngle(const LWP::Math::Vector3& a, const LWP::Math::Vector3& b, c
 	}
 
 	return angle;
-}
-
-LWP::Math::Quaternion Move::ExponentialInterpolate(const LWP::Math::Quaternion& current, const LWP::Math::Quaternion& target, float damping) {
-	float factor = 1.0f - std::exp(-damping);
-	LWP::Math::Quaternion dist = {
-		target.x - current.x,
-		target.y - current.y,
-		target.z - current.z,
-		target.w - current.w
-	};
-	return current + dist * factor;
-}
-
-LWP::Math::Vector3 Move::ExponentialInterpolate(const LWP::Math::Vector3& current, const LWP::Math::Vector3& target, float damping) {
-	float factor = 1.0f - std::exp(-damping);
-	return current + (target - current) * factor;
-}
-
-float Move::ExponentialInterpolate(const float& current, const float& target, float damping) {
-	float factor = 1.0f - std::exp(-damping);
-	return current + (target - current) * factor;
 }
