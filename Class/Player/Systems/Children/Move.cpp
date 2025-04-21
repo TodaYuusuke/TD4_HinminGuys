@@ -60,7 +60,7 @@ void Move::InputUpdate() {
 	moveVel_.y = 0;
 
 	// 移動速度からラジアンを求める(入力があるときのみ)
-	if (LWP::Math::Vector3::Dot(dir, LWP::Math::Vector3{ 1,1,1 }) != 0) {
+	if (dir.x + dir.z != 0) {
 		float y = GetAngle(LWP::Math::Vector3{ 0,0,1 }, moveVel_.Normalize(), LWP::Math::Vector3{ 0,1,0 });
 		rotate_ = LWP::Math::Quaternion::CreateFromAxisAngle(LWP::Math::Vector3{ 0, 1, 0 }, y);
 	}

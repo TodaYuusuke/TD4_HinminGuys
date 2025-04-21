@@ -9,11 +9,14 @@ void LockOn::Initialize() {
 }
 
 void LockOn::Update() {
-	//if(isActive_){}
+	// 入力処理
+	InputUpdate();
+
+
 }
 
 void LockOn::Reset() {
-
+	lockOnDatas_.clear();
 }
 
 void LockOn::InputUpdate() {
@@ -24,6 +27,30 @@ void LockOn::InputUpdate() {
 		}
 		else {
 			isActive_ = false;
+			Reset();
 		}
 	}
+}
+
+void LockOn::SearchLockOnEnemy() {
+	for (LockOnData& lockOnData : lockOnDatas_) {
+		// 一度ロックオンしたらスキップ
+		if (lockOnData.isActive) { continue; }
+
+		// カメラの正面方向に敵がいるか
+
+		// ロックオン可能距離に敵がいるかを算出
+
+	}
+}
+
+void LockOn::SearchNearEnemy() {
+	// ロックオンリスト内の敵で自機に最も近い敵を最初にロックオン
+
+}
+
+void LockOn::ClearLockOnList() {
+	// ロックオン範囲外
+
+	// カメラの正面方向にいない
 }

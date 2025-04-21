@@ -27,6 +27,8 @@ void Player::Update() {
 	model_.worldTF.translation += moveSystem_->GetMoveVel();
 	// 角度を加算
 	model_.worldTF.rotation = moveSystem_->GetRotate();
+
+	DebugGui();
 }
 
 void Player::Reset() {
@@ -50,10 +52,10 @@ void Player::CreateSystems() {
 	attackSystem_->Initialize();
 }
 
-void Player::DebugWindow() {
+void Player::DebugGui() {
 #ifdef _DEBUG
-	//ImGui::Begin("Player");
-	//ImGui::DragFloat3()
-	//ImGui::End();
+	ImGui::Begin("Player");
+	parrySystem_->DebugGui();
+	ImGui::End();
 #endif // DEBUG
 }
