@@ -71,6 +71,15 @@ void Combo::Update()
 
 void Combo::NodeMenu(int& id, int& buttonID, Combo*& combo)
 {
+	// 削除するフラグが立っている派生コンボの削除をしておく
+	childs_.remove_if([](Combo*& c) {
+		if (c->GetIsDelete()) {
+			return true;
+		}
+		
+		return false;
+	});
+
 	// ボタンが選択されている場合色を変更する
 	if (imGuiSelected_) {
 		ImGui::PushStyleColor(ImGuiCol_FrameBg, ImVec4(0, 255, 0, 1.0f));
@@ -79,8 +88,12 @@ void Combo::NodeMenu(int& id, int& buttonID, Combo*& combo)
 		ImGui::PushStyleColor(ImGuiCol_CheckMark, ImVec4(0, 255, 0, 1.0f));
 	}
 
+	// 名前がない場合エラーを吐いてしまうので名前がない場合NoNameと表示する
+	std::string displayName = name_;
+	if (displayName == "") { displayName = "No Name!"; }
+
 	// ラジオボタンの表示
-	if (ImGui::RadioButton(name_.c_str(), &id, buttonID)) {
+	if (ImGui::RadioButton(displayName.c_str(), &id, buttonID)) {
 		// 編集対象のコンボとして自身を登録する
 		combo = this;
 	}
@@ -115,39 +128,30 @@ void Combo::DebugGUI()
 	// この処理に入っている場合選択されている
 	imGuiSelected_ = true;
 
+	ImGui::NewLine();
 	// コンボ編集メニュー
-	ImGui::Text("Combo Edit Menu");
+	ImGui::Separator();
+	ImGui::SeparatorText("Combo Edit Menu");
+	ImGui::Separator();
 
 	// コンボ名称の編集
 	ImGui::InputText("Name", imGuiName_, sizeof(imGuiName_));
 	name_ = imGuiName_;
 
-	// 再生されるアニメーションの設定
-	ImGui::InputText("AnimName", imGuiAnimName_, sizeof(imGuiAnimName_));
-	animName_ = imGuiAnimName_;
+	ImGui::NewLine();
 
-	// 攻撃判定関係の設定
-	if (ImGui::TreeNode("Attack Edit")) {
-		// 開始時間
-		ImGui::DragFloat("AttackStartTime", &attackStartTime_, 0.01f, 0.0f);
-		// 終了時間
-		ImGui::DragFloat("AttackEndTime", &attackEndTime_, 0.01f, 0.0f);
-		ImGui::TreePop();
-	}
+	// アニメーション関連の設定
+	AnimSettings();
 
-	// 硬直時間関係の設定
-	if (ImGui::TreeNode("Stifness Time Edit")) {
-		// 開始時間
-		ImGui::DragFloat("StifnessTime", &stifnessTime_, 0.01f, 0.0f);
-		ImGui::TreePop();
-	}
+	// 攻撃判定の設定
+	AttackSettings();
 
-	// 受付時間関係の設定
-	if (ImGui::TreeNode("Recept Time Edit")) {
-		// 開始時間
-		ImGui::DragFloat("ReceptTime", &receptTime_, 0.01f, 0.0f);
-		ImGui::TreePop();
-	}
+	// 硬直関係の設定
+	StifnessSetiings();
+
+	// コンボ受付関係の設定
+	ReceptSettings();
+
 }
 
 bool Combo::GetConditions()
@@ -236,4 +240,76 @@ Combo* Combo::ReceptUpdate()
 
 	// 遷移できるコンボがない場合nullptrを返す
 	return nullptr;
+}
+
+void Combo::AnimSettings()
+{
+	// アニメーション関係の設定
+	ImGui::SeparatorText("Animation Settings");
+
+	ImGui::Indent();
+
+	// 再生されるアニメーションの設定
+	ImGui::InputText("AnimName", imGuiAnimName_, sizeof(imGuiAnimName_));
+	animName_ = imGuiAnimName_;
+
+	ImGui::Unindent();
+	ImGui::NewLine();
+}
+
+void Combo::AttackSettings()
+{
+	// 攻撃判定関連の設定
+	ImGui::SeparatorText("Attack Settings");
+
+	ImGui::Indent();
+
+	// 開始時間
+	ImGui::DragFloat("StartTime", &attackStartTime_, 0.01f, 0.0f);
+	// 終了時間
+	ImGui::DragFloat("EndTime", &attackEndTime_, 0.01f, 0.0f);
+
+	ImGui::Unindent();
+	ImGui::NewLine();
+}
+
+void Combo::StifnessSetiings()
+{
+	// 硬直関連の設定
+	ImGui::SeparatorText("Stifness Settings");
+
+	ImGui::Indent();
+
+	// 硬直時間
+	ImGui::DragFloat("StifnessTime", &stifnessTime_, 0.01f, 0.0f);
+
+	ImGui::Unindent();
+	ImGui::NewLine();
+}
+
+void Combo::ReceptSettings()
+{
+	// 攻撃判定関連の設定
+	ImGui::SeparatorText("Recept Settings");
+
+	ImGui::Indent();
+
+	// 受付時間
+	ImGui::DragFloat("ReceptTime", &receptTime_, 0.01f, 0.0f);
+
+	ImGui::Unindent();
+	ImGui::NewLine();
+}
+
+void Combo::DeleteThis()
+{
+	// 派生コンボ配列内の要素削除
+	for (Combo* c : childs_) {
+		delete c;
+	}
+	// 配列の要素クリア
+	childs_.clear();
+
+	// このコンボの削除フラグをONにする
+	imGuiIsDelete_ = true;
 }

@@ -36,20 +36,31 @@ public: // メンバ関数
 	/// </summary>
 	void DebugGUI();
 
-public: // 機能関数群
-
-	/// <summary>
-	/// <エディタ用> 派生コンボ追加関数
-	/// </summary>
-	void CreateChild();
-
 public: // アクセッサ等
 
 
 
 private: // プライベートなメンバ関数
 
+	/// <summary>
+	/// 新規作成弥保存を行うメニュー
+	/// </summary>
+	void FileMenu();
 
+	/// <summary>
+	/// ノードエディタメニュー
+	/// </summary>
+	void NodeMenu();
+
+	/// <summary>
+	/// <エディタ用> 派生コンボ生成関数
+	/// </summary>
+	void CreateChildMenu();
+
+	/// <summary>
+	/// 削除メニュー
+	/// </summary>
+	void DeletePopUp();
 
 private: // メンバ変数
 
@@ -68,6 +79,12 @@ private: // メンバ変数
 
 	// 編集中のコンボ
 	Combo* editingCombo_ = nullptr;
+
+	// 生成する派生コンボ名称
+	char imGuiChildComboName_[64] = "Child";
+
+	// 削除確認用ポップアップフラグ
+	bool imGuiIsOpenPopUp_ = false;
 
 #pragma endregion
 

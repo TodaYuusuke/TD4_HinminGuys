@@ -82,10 +82,21 @@ public: // アクセッサ等
 public: // エディタ用関数群
 
 	/// <summary>
-	/// 派生コンボ生成関数
+	/// <エディタ用> 派生コンボ生成関数
 	/// </summary>
 	/// <param name="name">派生コンボ名</param>
 	void CreateChild(const std::string& name);
+	
+	/// <summary>
+	/// <エディタ用> 派生コンボ内の要素を全て削除する
+	/// </summary>
+	void DeleteThis();
+
+	/// <summary>
+	/// <エディタ用> 削除フラグゲッター
+	/// </summary>
+	/// <returns>削除するか</returns>
+	bool GetIsDelete() { return imGuiIsDelete_; }
 
 private: // プライベートなメンバ関数
 
@@ -108,6 +119,26 @@ private: // プライベートなメンバ関数
 	/// コンボ受付関数
 	/// </summary>
 	Combo* ReceptUpdate();
+
+	/// <summary>
+	/// <エディタ用>アニメーション関連の設定
+	/// </summary>
+	void AnimSettings();
+
+	/// <summary>
+	/// <エディタ用>攻撃判定関連の設定
+	/// </summary>
+	void AttackSettings();
+
+	/// <summary>
+	/// <エディタ用>硬直関連の設定
+	/// </summary>
+	void StifnessSetiings();
+
+	/// <summary>
+	/// <エディタ用>コンボ受付関連の設定
+	/// </summary>
+	void ReceptSettings();
 
 private: // メンバ変数
 
@@ -155,6 +186,9 @@ private: // メンバ変数
 	char imGuiName_[64] = "";
 	// 再生されるアニメーション名称
 	char imGuiAnimName_[64] = "";
+
+	// このコンボの削除フラグ
+	bool imGuiIsDelete_ = false;
 
 	#pragma endregion
 

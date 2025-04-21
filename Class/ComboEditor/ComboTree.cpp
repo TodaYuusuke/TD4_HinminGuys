@@ -31,13 +31,74 @@ void ComboTree::DebugGUI()
 
 	// メニューバーの開始
 	if (ImGui::BeginMenuBar()) {
-
+		// ファイルメニュー
+		FileMenu();
 		ImGui::EndMenuBar();
 	}
 
-	// 全オブジェクトのImGuiを描画
+	// ノード画面を格納するためのウィンドウを作る
 	ImGui::BeginChild(ImGui::GetID((void*)0), ImVec2(0, 300), ImGuiWindowFlags_NoTitleBar);
 	
+	// ノードメニューの展開
+	NodeMenu();
+
+	ImGui::EndChild();
+
+	// 編集中コンボのGUI情報表示
+	if (editingCombo_ != nullptr) {
+		editingCombo_->DebugGUI();
+
+		// 派生コンボの生成処理
+		CreateChildMenu();
+
+		// コンボの削除処理
+		DeletePopUp();
+	}
+
+	ImGui::End();
+}
+
+void ComboTree::CreateChildMenu()
+{
+	// 派生コンボの生成に関する処理
+	ImGui::SeparatorText("CreateChild");
+
+	// 生成する派生コンボの名称設定
+	ImGui::InputText("Child Name", imGuiChildComboName_, sizeof(imGuiChildComboName_));
+
+	// 派生コンボの生成処理
+	if (ImGui::Button("Create")) {
+		// 編集対象に派生コンボを追加する
+		editingCombo_->CreateChild(imGuiChildComboName_);
+
+		// 生成時点で名称をデフォルト設定に戻す
+		strncpy_s(imGuiChildComboName_, sizeof(imGuiChildComboName_), "Child", _TRUNCATE);
+	}
+
+	ImGui::NewLine();
+}
+
+void ComboTree::FileMenu()
+{
+	// ファイル関係メニューの表示
+	if (ImGui::BeginMenu("File")) {
+
+		// 作成したツリーの保存を行う
+		if (ImGui::MenuItem("Save")) {
+
+		}
+
+		// ツリーの再読み込み
+		if (ImGui::MenuItem("Load")) {
+
+		}
+
+		ImGui::EndMenu();
+	}
+}
+
+void ComboTree::NodeMenu()
+{
 	// ノードメニューを表示する
 	int editID = 0;
 	Combo* change = nullptr;
@@ -51,26 +112,65 @@ void ComboTree::DebugGUI()
 		// もし編集対象が変更されている場合
 		if (change != nullptr) {
 			editingCombo_ = change;
+
+			// 生成する派生コンボの名称もそのコンボ名称に変更しておく
+			strncpy_s(imGuiChildComboName_, sizeof(imGuiChildComboName_), editingCombo_->GetName().c_str(), _TRUNCATE);
 		}
 	}
 
 	ImGui::SetWindowFontScale(1.0f);
-
-	ImGui::EndChild();
-
-	// 編集中コンボの情報表示
-	editingCombo_->DebugGUI();
-
-	// 編集中コンボに対して派生コンボを生成するボタンを追加する
-	if (ImGui::Button("Create Child")) {
-		CreateChild();
-	}
-
-	ImGui::End();
 }
 
-void ComboTree::CreateChild()
+void ComboTree::DeletePopUp()
 {
-	// 選択されたコンボに対して派生コンボを追加する
-	editingCombo_->CreateChild("Child");
+	// 削除処理
+	if (ImGui::Button("Delete Combo")) {
+		// ポップアップ表示
+		imGuiIsOpenPopUp_ = true;
+		ImGui::OpenPopup("Delete Combo");
+	}
+
+	// ポップアップが表示されていない場合早期リターン
+	if (!imGuiIsOpenPopUp_) {
+		return;
+	}
+
+	// 中央に表示する（オプション）
+	ImGui::SetNextWindowPos(ImGui::GetMainViewport()->GetCenter(), ImGuiCond_Appearing, ImVec2(0.5f, 0.5f));
+
+	// ウィンドウのスケール調整
+	ImGui::SetWindowFontScale(1.5f);
+
+	// ポップアップの起動
+	if (ImGui::BeginPopupModal("Delete Combo", NULL, ImGuiWindowFlags_AlwaysAutoResize)) {
+
+		// コンボを削除するか否か確認する
+		ImGui::Text("Do you want to remove this combo?");
+
+		// はい
+		if (ImGui::Button("Yes")) {
+			// 派生コンボの削除
+			editingCombo_->DeleteThis();
+
+			imGuiIsOpenPopUp_ = false;
+			// 開いたウィンドウを閉じる
+			ImGui::CloseCurrentPopup();
+		}
+
+		// 改行しない
+		ImGui::SameLine();
+
+		// いいえ
+		if (ImGui::Button("No")) {
+			imGuiIsOpenPopUp_ = false;
+			// 開いたウィンドウを閉じる
+			ImGui::CloseCurrentPopup();
+		}
+
+		// ポップアップ終了
+		ImGui::EndPopup();
+	}
+
+	// ウィンドウのスケール調整
+	ImGui::SetWindowFontScale(1.0f);
 }
