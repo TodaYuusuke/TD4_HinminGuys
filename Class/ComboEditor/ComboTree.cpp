@@ -106,6 +106,21 @@ void ComboTree::NodeMenu()
 	ImGui::SetWindowFontScale(1.0f);
 }
 
+int ComboTree::GetSameNameCount(const std::string& name)
+{
+	// 同名コンボのカウント用
+	int SameNameCount = 0;
+
+	// 大元コンボ分ループ
+	for (Combo* c : baseCombos_) {
+		// 同名コンボを全て探す
+		c->SameNameCount(name, SameNameCount);
+	}
+
+	// 結果を返す
+	return SameNameCount;
+}
+
 void ComboTree::CreateChildMenu()
 {
 	// 派生コンボの生成に関する処理
@@ -118,8 +133,15 @@ void ComboTree::CreateChildMenu()
 
 	// 派生コンボの生成処理
 	if (ImGui::Button("Create")) {
+		// 生成するコンボ名称に被りがないか確認する
+		std::string childComboName = imGuiChildComboName_;
+		int sameCount = GetSameNameCount(childComboName);
+
+		// 同名コンボが複数個確認された場合名称を変更する
+		if (sameCount > 0) { childComboName += std::to_string(sameCount + 1); }
+
 		// 編集対象に派生コンボを追加する
-		editingCombo_->CreateChild(imGuiChildComboName_);
+		editingCombo_->CreateChild(childComboName);
 
 		// 生成時点で名称をデフォルト設定に戻す
 		strncpy_s(imGuiChildComboName_, sizeof(imGuiChildComboName_), "Child", _TRUNCATE);

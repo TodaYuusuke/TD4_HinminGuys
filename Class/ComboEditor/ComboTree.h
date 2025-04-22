@@ -53,6 +53,13 @@ private: // プライベートなメンバ関数
 	void NodeMenu();
 
 	/// <summary>
+	/// <エディタ用> 同名コンボがいくつあるかのカウンター
+	/// </summary>
+	/// <param name="name">検証する名称</param>
+	/// <returns>同名コンボ数</returns>
+	int GetSameNameCount(const std::string& name);
+
+	/// <summary>
 	/// <エディタ用> 派生コンボ生成関数
 	/// </summary>
 	void CreateChildMenu();

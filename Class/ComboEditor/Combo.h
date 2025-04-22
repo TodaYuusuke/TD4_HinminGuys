@@ -74,16 +74,17 @@ public: // アクセッサ等
 	bool GetIsRecept() { return isRecept_; }
 
 	/// <summary>
-	/// 名前セッター
-	/// </summary>
-	/// <param name="newName">新しい名前</param>
-	void SetName(const std::string& newName) { name_ = newName; }
-
-	/// <summary>
 	/// 名前ゲッター
 	/// </summary>
 	/// <returns>名前</returns>
 	std::string GetName() { return name_; }
+
+	/// <summary>
+	/// 同名コンボ数のゲッター
+	/// </summary>
+	/// <param name="name">検証する名称</param>
+	/// <param name="count">カウント用変数の参照</param>
+	void SameNameCount(const std::string& name, int& count);
 
 public: // エディタ用関数群
 
@@ -136,9 +137,6 @@ private: // プライベートなメンバ関数
 	/// <エディタ用>削除フラグがたっているものを削除する関数
 	/// </summary>
 	void DeleteFunc(Combo*& combo);
-
-
-	void SameName
 
 	/// <summary>
 	/// <エディタ用>開始条件の設定

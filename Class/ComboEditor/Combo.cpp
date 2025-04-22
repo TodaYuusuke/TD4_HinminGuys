@@ -173,6 +173,27 @@ bool Combo::GetConditions()
 	return true;
 }
 
+void Combo::SameNameCount(const std::string& name, int& count)
+{
+	// コンボ名称取得、末尾に番号があれば取り外す
+	std::string comboName = name_;
+	while (isdigit(comboName.at(comboName.size() - 1)))
+	{
+		// 末尾の文字を削除
+		comboName.pop_back();
+	}
+
+	// 同名オブジェクトがあった場合は加算
+	if (comboName == name) {
+		count++;
+	}
+
+	// 派生コンボに対しても同様の処理を行い、同名のコンボ数を求める
+	for (Combo* c : childs_) {
+		c->SameNameCount(name, count);
+	}
+}
+
 void Combo::CreateChild(const std::string& name)
 {
 	// 新規コンボの生成
