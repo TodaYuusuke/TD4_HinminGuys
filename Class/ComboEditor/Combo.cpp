@@ -2,6 +2,13 @@
 
 Combo::~Combo()
 {
+	// 遷移条件配列内の要素削除
+	for (LWP::Utility::ICondition* c : conditions_) {
+		delete c;
+	}
+	// 配列の要素クリア
+	conditions_.clear();
+
 	// 派生コンボ配列内の要素削除
 	for (Combo* c : childs_) {
 		delete c;
@@ -71,14 +78,8 @@ void Combo::Update()
 
 void Combo::NodeMenu(int& id, int& buttonID, Combo*& combo)
 {
-	// 削除するフラグが立っている派生コンボの削除をしておく
-	childs_.remove_if([](Combo*& c) {
-		if (c->GetIsDelete()) {
-			return true;
-		}
-		
-		return false;
-	});
+	// 削除フラグが立っているものの削除
+	DeleteFunc(combo);
 
 	// ボタンが選択されている場合色を変更する
 	if (imGuiSelected_) {
@@ -140,6 +141,9 @@ void Combo::DebugGUI()
 
 	ImGui::NewLine();
 
+	// 開始条件の設定
+	StartConditionSettings();
+
 	// アニメーション関連の設定
 	AnimSettings();
 
@@ -178,6 +182,25 @@ void Combo::CreateChild(const std::string& name)
 
 	// 派生コンボ配列に追加
 	childs_.push_back(std::move(c));
+}
+
+void Combo::DeleteThis()
+{
+	// 派生コンボ配列内の要素削除
+	for (Combo* c : childs_) {
+		delete c;
+	}
+	// 配列の要素クリア
+	childs_.clear();
+
+	// このコンボの削除フラグをONにする
+	imGuiIsDelete_ = true;
+}
+
+void Combo::AddCondition(LWP::Utility::ICondition* condition)
+{
+	// 条件配列に新たな条件を追加する
+	conditions_.push_back(std::move(condition));
 }
 
 void Combo::AttackActiveUpdate()
@@ -242,6 +265,81 @@ Combo* Combo::ReceptUpdate()
 	return nullptr;
 }
 
+void Combo::DeleteFunc(Combo*& combo)
+{
+	// 削除するフラグが立っている派生コンボの削除をしておく
+	std::list<Combo*>::iterator comboIt = childs_.begin();
+	while (comboIt != childs_.end()) {
+		Combo* c = *comboIt;
+		if (c->GetIsDelete()) {
+			delete c;
+			comboIt = childs_.erase(comboIt);
+
+			// このままだと参照範囲外としてエラーを吐くため編集対象その親に変更
+			combo = this;
+		}
+		else {
+			comboIt++;
+		}
+	}
+
+	// 削除するフラグが立っている条件分岐の削除をしておく
+	std::list<LWP::Utility::ICondition*>::iterator conditionIt = conditions_.begin();
+	while (conditionIt != conditions_.end()) {
+		LWP::Utility::ICondition* c = *conditionIt;
+		if (c->GetIsDelete()) {
+			delete c;
+			conditionIt = conditions_.erase(conditionIt);
+		}
+		else {
+			conditionIt++;
+		}
+	}
+}
+
+void Combo::StartConditionSettings()
+{
+	// 開始条件関連の設定
+	ImGui::SeparatorText("Start Condition Settings");
+
+	// 要素がない場合これ以降の処理を無視
+	if (conditions_.empty()) {
+		ImGui::NewLine();
+		ImGui::Text("None Start Conditions!");
+		ImGui::NewLine();
+		return;
+	}
+
+	ImGui::Indent();
+
+	// 個数カウント用
+	int count = 1;
+
+	// 全要素のImGuiの表示
+	for (LWP::Utility::ICondition*& c : conditions_) {
+		// 表示名称設定
+		std::string name = "Condition " + std::to_string(count);
+
+		// ツリーノードでImGuiを表示
+		if (ImGui::TreeNode(name.c_str())) {
+			c->Update();
+			c->DebugGUI();
+
+			// ボタンを押した際に削除
+			if (ImGui::Button("Delete")) {
+				c->SetIsDelete(true);
+			}
+
+			ImGui::TreePop();
+		}
+		// カウント加算
+		count++;
+	}
+
+	ImGui::Unindent();
+	ImGui::NewLine();
+}
+
 void Combo::AnimSettings()
 {
 	// アニメーション関係の設定
@@ -299,17 +397,4 @@ void Combo::ReceptSettings()
 
 	ImGui::Unindent();
 	ImGui::NewLine();
-}
-
-void Combo::DeleteThis()
-{
-	// 派生コンボ配列内の要素削除
-	for (Combo* c : childs_) {
-		delete c;
-	}
-	// 配列の要素クリア
-	childs_.clear();
-
-	// このコンボの削除フラグをONにする
-	imGuiIsDelete_ = true;
 }

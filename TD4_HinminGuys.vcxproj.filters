@@ -36,19 +36,13 @@
     <ClCompile Include="Class\Condition\child\Keyboard\ReleaseKeyboardCondition.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Class\Condition\child\Controller\TriggerControllerButtonCondition.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Class\Condition\child\Controller\PressControllerButtonCondition.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Class\Condition\child\Controller\ReleaseControllerButtonCondition.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="Class\DeltaTimer\DeltaTimer.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="Class\ComboEditor\ComboTree.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Class\Condition\child\Controller\ControllerButtonCondition.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
@@ -74,19 +68,19 @@
     <ClInclude Include="Class\Condition\child\Keyboard\ReleaseKeyboardCondition.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Class\Condition\child\Controller\TriggerControllerButtonCondition.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Class\Condition\child\Controller\PressControllerButtonCondition.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Class\Condition\child\Controller\ReleaseControllerButtonCondition.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="Class\DeltaTimer\DeltaTimer.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Class\ComboEditor\ComboTree.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Class\Condition\child\Controller\ControllerButtonCondition.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Class\Condition\ConditionEnums.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Class\Condition\ConditionList.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>

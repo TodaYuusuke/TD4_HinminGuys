@@ -58,6 +58,16 @@ private: // プライベートなメンバ関数
 	void CreateChildMenu();
 
 	/// <summary>
+	/// <エディタ用> 開始条件生成関数
+	/// </summary>
+	void CreateConditionMenu();
+
+	/// <summary>
+	/// <エディタ用> 開始条件のコントローラー入力に関するメニュー関数
+	/// </summary>
+	void ControllerInputMenu();
+
+	/// <summary>
 	/// 削除メニュー
 	/// </summary>
 	void DeletePopUp();

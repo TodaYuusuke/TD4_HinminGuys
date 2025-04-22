@@ -1,5 +1,6 @@
 #pragma once
 #include <Adapter.h>
+#include "ConditionEnums.h"
 
 namespace LWP::Utility {
 
@@ -22,6 +23,16 @@ namespace LWP::Utility {
 
 	public: // メンバ関数
 
+		/// <summary>
+		/// 更新関数
+		/// </summary>
+		virtual void Update() {};
+
+		/// <summary>
+		/// デバッグ用GUIの表示関数
+		/// </summary>
+		virtual void DebugGUI() { };
+
 	public: // アクセッサ等
 		
 		/// <summary>
@@ -31,16 +42,24 @@ namespace LWP::Utility {
 		virtual bool CheckCondition() = 0;
 
 		/// <summary>
-		/// 分岐条件名ゲッター
+		/// 削除フラグ状態ゲッター
 		/// </summary>
-		/// <returns>条件分岐名</returns>
-		std::string GetName() { return name_; }
+		/// <returns>削除フラグの状態</returns>
+		bool GetIsDelete() { return imGuiIsDelete_; }
+		/// <summary>
+		/// 削除フラグ状態セッター
+		/// </summary>
+		/// <param name="isDelete">削除するか</param>
+		void SetIsDelete(const bool isDelete) { imGuiIsDelete_ = isDelete; }
 
 	protected: // メンバ変数
 
-		// 分岐条件名
-		std::string name_ = "None";
+		#pragma region エディタ用変数
 
+		// 条件削除フラグ
+		bool imGuiIsDelete_ = false;
+
+		#pragma endregion
 	};
 }
 

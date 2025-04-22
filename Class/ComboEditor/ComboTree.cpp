@@ -1,5 +1,7 @@
 #include "ComboTree.h"
 
+using namespace LWP::Utility::Condition;
+
 ComboTree::~ComboTree()
 {
 	// 派生コンボ配列内の要素削除
@@ -51,31 +53,14 @@ void ComboTree::DebugGUI()
 		// 派生コンボの生成処理
 		CreateChildMenu();
 
+		// 開始条件の生成処理
+		CreateConditionMenu();
+
 		// コンボの削除処理
 		DeletePopUp();
 	}
 
 	ImGui::End();
-}
-
-void ComboTree::CreateChildMenu()
-{
-	// 派生コンボの生成に関する処理
-	ImGui::SeparatorText("CreateChild");
-
-	// 生成する派生コンボの名称設定
-	ImGui::InputText("Child Name", imGuiChildComboName_, sizeof(imGuiChildComboName_));
-
-	// 派生コンボの生成処理
-	if (ImGui::Button("Create")) {
-		// 編集対象に派生コンボを追加する
-		editingCombo_->CreateChild(imGuiChildComboName_);
-
-		// 生成時点で名称をデフォルト設定に戻す
-		strncpy_s(imGuiChildComboName_, sizeof(imGuiChildComboName_), "Child", _TRUNCATE);
-	}
-
-	ImGui::NewLine();
 }
 
 void ComboTree::FileMenu()
@@ -121,8 +106,63 @@ void ComboTree::NodeMenu()
 	ImGui::SetWindowFontScale(1.0f);
 }
 
+void ComboTree::CreateChildMenu()
+{
+	// 派生コンボの生成に関する処理
+	ImGui::SeparatorText("CreateChild");
+
+	// 生成する派生コンボの名称設定
+	ImGui::InputText("Child Name", imGuiChildComboName_, sizeof(imGuiChildComboName_));
+
+	ImGui::SameLine();
+
+	// 派生コンボの生成処理
+	if (ImGui::Button("Create")) {
+		// 編集対象に派生コンボを追加する
+		editingCombo_->CreateChild(imGuiChildComboName_);
+
+		// 生成時点で名称をデフォルト設定に戻す
+		strncpy_s(imGuiChildComboName_, sizeof(imGuiChildComboName_), "Child", _TRUNCATE);
+	}
+
+	ImGui::NewLine();
+}
+
+void ComboTree::CreateConditionMenu()
+{
+	// 派生コンボの生成に関する処理
+	ImGui::SeparatorText("Create StartCondition");
+	// ボタン変更メニュー
+	if (ImGui::BeginMenu("Select Condition")) {
+		if (ImGui::BeginMenu("Contoroller Input")) {
+			ControllerInputMenu();
+			ImGui::EndMenu();
+		}
+
+		ImGui::EndMenu();
+	}
+
+	// 改行
+	ImGui::NewLine();
+}
+
+void ComboTree::ControllerInputMenu()
+{
+	if (ImGui::MenuItem("Button")) {
+		// 新しい開始条件の生成
+		LWP::Utility::ControllerButtonCondition* c = 
+			new LWP::Utility::ControllerButtonCondition(TRIGGER, Controller::X);
+
+		// 追加
+		editingCombo_->AddCondition(c);
+	}
+}
+
 void ComboTree::DeletePopUp()
 {
+	// コンボ削除に関する処理
+	ImGui::SeparatorText("DeleteMenu");
+
 	// 削除処理
 	if (ImGui::Button("Delete Combo")) {
 		// ポップアップ表示

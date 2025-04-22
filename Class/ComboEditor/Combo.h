@@ -1,7 +1,7 @@
 #pragma once
 #include <Adapter.h>
 #include <list>
-#include "../Condition/ICondition.h"
+#include "../Condition/ConditionList.h"
 #include "../DeltaTimer/DeltaTimer.h"
 
 /// <summary>
@@ -74,10 +74,16 @@ public: // アクセッサ等
 	bool GetIsRecept() { return isRecept_; }
 
 	/// <summary>
+	/// 名前セッター
+	/// </summary>
+	/// <param name="newName">新しい名前</param>
+	void SetName(const std::string& newName) { name_ = newName; }
+
+	/// <summary>
 	/// 名前ゲッター
 	/// </summary>
 	/// <returns>名前</returns>
-	std::string GetName() { return name_; };
+	std::string GetName() { return name_; }
 
 public: // エディタ用関数群
 
@@ -88,15 +94,21 @@ public: // エディタ用関数群
 	void CreateChild(const std::string& name);
 	
 	/// <summary>
+	/// <エディタ用> 削除フラグゲッター
+	/// </summary>
+	/// <returns>削除するか</returns>
+	bool GetIsDelete() { return imGuiIsDelete_; }
+
+	/// <summary>
 	/// <エディタ用> 派生コンボ内の要素を全て削除する
 	/// </summary>
 	void DeleteThis();
 
 	/// <summary>
-	/// <エディタ用> 削除フラグゲッター
+	/// 新規開始条件追加関数
 	/// </summary>
-	/// <returns>削除するか</returns>
-	bool GetIsDelete() { return imGuiIsDelete_; }
+	/// <param name="condition">追加する開始条件</param>
+	void AddCondition(LWP::Utility::ICondition* condition);
 
 private: // プライベートなメンバ関数
 
@@ -119,6 +131,19 @@ private: // プライベートなメンバ関数
 	/// コンボ受付関数
 	/// </summary>
 	Combo* ReceptUpdate();
+
+	/// <summary>
+	/// <エディタ用>削除フラグがたっているものを削除する関数
+	/// </summary>
+	void DeleteFunc(Combo*& combo);
+
+
+	void SameName
+
+	/// <summary>
+	/// <エディタ用>開始条件の設定
+	/// </summary>
+	void StartConditionSettings();
 
 	/// <summary>
 	/// <エディタ用>アニメーション関連の設定
