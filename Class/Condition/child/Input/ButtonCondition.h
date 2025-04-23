@@ -7,19 +7,20 @@ namespace LWP::Utility {
 	/// <summary>
 	/// コントローラーボタンの入力による分岐条件
 	/// </summary>
-	class ControllerButtonCondition : public LWP::Utility::ICondition
+	class ButtonCondition : public LWP::Utility::ICondition
 	{
 	public: // コンストラクタ等
 
 		// デフォルトコンストラクタの削除
-		ControllerButtonCondition() = delete;
+		ButtonCondition() = delete;
 
 		/// <summary>
 		/// コンストラクタ
 		/// </summary>
 		/// <param name="inputState">入力状態</param>
-		/// <param name="id">ボタンのID</param>
-		ControllerButtonCondition(int inputState, int id) :inputState_(inputState), kID_(id) {};
+		/// <param name="buttonID">ボタンのID</param>
+		/// <param name="keyID">キーのID</param>
+		ButtonCondition(int inputState, int buttonID, int keyID) :inputState_(inputState), buttonID_(buttonID), keyID_(keyID) {};
 
 	public: // メンバ関数
 
@@ -64,7 +65,10 @@ namespace LWP::Utility {
 		LWP::Utility::DeltaTimer pressTimer_{};
 
 		// 検証するボタンID
-		int kID_{};
+		int buttonID_{};
+
+		// 検証するキーID
+		int keyID_{};
 
 	};
 

@@ -156,8 +156,8 @@ void ComboTree::CreateConditionMenu()
 	ImGui::SeparatorText("Create StartCondition");
 	// ボタン変更メニュー
 	if (ImGui::BeginMenu("Select Condition")) {
-		if (ImGui::BeginMenu("Contoroller Input")) {
-			ControllerInputMenu();
+		if (ImGui::BeginMenu("Input")) {
+			InputMenu();
 			ImGui::EndMenu();
 		}
 
@@ -168,12 +168,12 @@ void ComboTree::CreateConditionMenu()
 	ImGui::NewLine();
 }
 
-void ComboTree::ControllerInputMenu()
+void ComboTree::InputMenu()
 {
 	if (ImGui::MenuItem("Button")) {
 		// 新しい開始条件の生成
-		LWP::Utility::ControllerButtonCondition* c = 
-			new LWP::Utility::ControllerButtonCondition(TRIGGER, Controller::X);
+		LWP::Utility::ButtonCondition* c = 
+			new LWP::Utility::ButtonCondition(TRIGGER, Controller::X, KeyBoard::J);
 
 		// 追加
 		editingCombo_->AddCondition(c);

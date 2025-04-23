@@ -149,21 +149,16 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Class\ComboEditor\ComboTree.cpp" />
-    <ClCompile Include="Class\Condition\child\Controller\ControllerButtonCondition.cpp" />
-    <ClCompile Include="Class\Condition\child\Keyboard\PressKeyboardCondition.cpp" />
-    <ClCompile Include="Class\Condition\child\Keyboard\ReleaseKeyboardCondition.cpp" />
+    <ClCompile Include="Class\Condition\child\Input\ButtonCondition.cpp" />
     <ClCompile Include="Class\DeltaTimer\DeltaTimer.cpp" />
     <ClCompile Include="Class\Scene\GameScene.cpp" />
     <ClCompile Include="Class\Scene\Title.cpp" />
     <ClCompile Include="Class\ComboEditor\Combo.cpp" />
-    <ClCompile Include="Class\Condition\child\Keyboard\TriggerKeyboardCondition.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Class\ComboEditor\ComboTree.h" />
-    <ClInclude Include="Class\Condition\child\Controller\ControllerButtonCondition.h" />
-    <ClInclude Include="Class\Condition\child\Keyboard\PressKeyboardCondition.h" />
-    <ClInclude Include="Class\Condition\child\Keyboard\ReleaseKeyboardCondition.h" />
+    <ClInclude Include="Class\Condition\child\Input\ButtonCondition.h" />
     <ClInclude Include="Class\Condition\ConditionEnums.h" />
     <ClInclude Include="Class\Condition\ConditionList.h" />
     <ClInclude Include="Class\DeltaTimer\DeltaTimer.h" />
@@ -171,7 +166,6 @@
     <ClInclude Include="Class\Scene\Title.h" />
     <ClInclude Include="Class\ComboEditor\Combo.h" />
     <ClInclude Include="Class\Condition\ICondition.h" />
-    <ClInclude Include="Class\Condition\child\Keyboard\TriggerKeyboardCondition.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

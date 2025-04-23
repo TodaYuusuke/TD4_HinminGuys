@@ -70,9 +70,9 @@ private: // プライベートなメンバ関数
 	void CreateConditionMenu();
 
 	/// <summary>
-	/// <エディタ用> 開始条件のコントローラー入力に関するメニュー関数
+	/// <エディタ用> 開始条件の入力に関するメニュー関数
 	/// </summary>
-	void ControllerInputMenu();
+	void InputMenu();
 
 	/// <summary>
 	/// 削除メニュー
