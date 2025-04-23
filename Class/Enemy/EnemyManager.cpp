@@ -1,4 +1,10 @@
 #include "EnemyManager.h"
+#include "../Player/Player.h"
+
+EnemyManager::~EnemyManager()
+{
+	Finalize();
+}
 
 void EnemyManager::Initialize()
 {
@@ -17,9 +23,9 @@ void EnemyManager::Update()
 {
 
 	//全ての敵の更新
-	for (const std::unique_ptr<IEnemy>& enemyA : enemies_) {
+	for (auto enemyA = enemies_.begin(); enemyA != enemies_.end(); enemyA++) {
 		//互いの情報を共有するためのループ
-		for (const std::unique_ptr<IEnemy>& enemyB : enemies_) {
+		for (auto enemyB = enemies_.begin(); enemyB != enemies_.end(); enemyB++) {
 
 			//同一なら無視
 			if (enemyA == enemyB) {
@@ -27,7 +33,7 @@ void EnemyManager::Update()
 			}
 
 			//二人の距離を測る
-			Vector3 diff = enemyA->GetPosition() - enemyB->GetPosition();
+			Vector3 diff = (*enemyA)->GetPosition() - (*enemyB)->GetPosition();
 			//Y軸移動は考えない
 			diff.y = 0.0f;
 			//距離
@@ -35,13 +41,15 @@ void EnemyManager::Update()
 
 			//距離が一定以上近い場合、押し出しベクトルを加算する
 			if (dist < enemyDist_ && dist > 0.0001f) {
-				enemyA->AddRepulsiveForce(diff.Normalize() * ((enemyDist_ - dist) / enemyDist_));
+				(*enemyA)->AddRepulsiveForce(diff.Normalize() * ((enemyDist_ - dist) / enemyDist_));
 			}
 
 		}
 
-		enemyA->Update();
+		(*enemyA)->Update();
 	}
+
+	SortAscendingDistanceList();
 
 }
 
@@ -55,33 +63,38 @@ void EnemyManager::CreateEnemy(const Vector3& position, EnemyType type)
 		return;
 	}
 
-	std::unique_ptr<IEnemy> enemy;
-
 	//タイプに応じて生成するものを変更
 	switch (type)
 	{
 	case EnemyType::kNormal:
-		enemy = std::make_unique<NormalEnemy>();
+		enemies_.push_back(new NormalEnemy());
 		break;
 	case EnemyType::kBoss:
-		enemy = std::make_unique<BossEnemy>();
+		enemies_.push_back(new BossEnemy());
 		break;
 	default:
 		break;
 	}
 
 	//初期化してリストに追加
-	enemy->Initialize(player_, position);
-	enemies_.push_back(std::move(enemy));
-
+	enemies_.back()->Initialize(player_, position);
+	
 }
 
 
 
 void EnemyManager::ClearList()
 {
+	
 	//リストを空にする
-	enemies_.clear();
+	while (not enemies_.empty()) {
+
+		//deleteしてからpop
+		delete enemies_.back();
+		enemies_.pop_back();
+
+	}
+
 }
 
 void EnemyManager::Debug()
@@ -102,6 +115,26 @@ void EnemyManager::Debug()
 		CreateEnemy(spawnPoint_, EnemyType::kNormal);
 	}
 
+	if (ImGui::BeginTabBar("Enemies", ImGuiTabBarFlags_None)) {
+
+		//デバッグ
+		for (auto enemy = enemies_.begin(); enemy != enemies_.end(); enemy++) {
+			(*enemy)->Debug();
+		}
+
+		ImGui::EndTabBar();
+	}
+
 	ImGui::End();
 
 }
+
+void EnemyManager::SortAscendingDistanceList()
+{
+
+	enemies_.sort([](IEnemy* enemyA, IEnemy* enemyB) {
+		return enemyA->GetDistFromPlayer() < enemyB->GetDistFromPlayer();
+		});
+
+}
+

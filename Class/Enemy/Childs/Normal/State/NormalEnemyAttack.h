@@ -16,7 +16,7 @@ public:
 
 private:
 
-
+	LWP::Object::TransformQuat attackTF{};
 
 };
 

@@ -1,15 +1,25 @@
 #include "IEnemy.h"
 #include "../Player/Player.h"
 #include "IEnemyState.h"
+#define UNIT16_MAX 65535
 
 //実体宣言
 uint16_t IEnemy::currentEnemyID_ = 0;
 
 IEnemy::IEnemy()
 {
-	//IDをセットして、ナンバーを加算
+	//IDをセット
 	ID_ = currentEnemyID_;
-	currentEnemyID_++;
+
+	//最大値になったら0にリセット
+	if (currentEnemyID_ >= UNIT16_MAX) {
+		currentEnemyID_ = 0;
+	}
+	//カウント増加
+	else {
+		currentEnemyID_++;
+	}
+
 }
 
 IEnemy::~IEnemy()
@@ -34,4 +44,14 @@ void IEnemy::SetState(std::unique_ptr<IEnemyState> state)
 	state_ = std::move(state);
 	//初期化
 	state_->Initialize(this);
+}
+
+void IEnemy::Debug()
+{
+
+	if (ImGui::TreeNode(std::to_string(ID_).c_str())) {
+		ImGui::Text(std::to_string(distFromPlayer_).c_str());
+		ImGui::TreePop();
+	}
+
 }

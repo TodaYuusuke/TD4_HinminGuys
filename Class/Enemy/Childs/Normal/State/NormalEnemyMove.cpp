@@ -70,6 +70,7 @@ void NormalEnemyMove::Update()
 
 		//移動
 		velocity_ = enemy_->GetPlayerPosition() - enemy_->GetPosition();
+		enemy_->SetDistFromPlayer(velocity_.Length());
 		//y軸の移動ベクトルを消す
 		velocity_.y = 0.0f;
 		//敵の向きをプレイヤーに向かせるため、ここで向きを保存

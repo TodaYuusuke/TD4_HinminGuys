@@ -15,6 +15,8 @@ class EnemyManager
 {
 public:
 
+	~EnemyManager();
+
 	//初期化
 	void Initialize();
 	//終了処理
@@ -30,14 +32,16 @@ public:
 	//デバッグウィンドウ
 	void Debug();
 	//リスト取得
-	std::list<std::unique_ptr<IEnemy>>* GetEnemyListPtr() { return &enemies_; }
+	std::list<IEnemy*>* GetEnemyListPtr() { return &enemies_; }
+	//リストを距離順にソート(昇順。後半になるにつれて距離が長くなる)
+	void SortAscendingDistanceList();
 
 private:
 
 	Player* player_;
 
 	//全ての敵を管理するリスト
-	std::list<std::unique_ptr<IEnemy>> enemies_;
+	std::list<IEnemy*> enemies_;
 
 #pragma region デバッグ用
 

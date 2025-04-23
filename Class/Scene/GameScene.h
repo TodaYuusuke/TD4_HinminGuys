@@ -8,7 +8,7 @@ class GameScene final
 	: public IScene {
 public:
 	GameScene();
-	~GameScene();
+	~GameScene() override;
 
 	// ** 純粋仮想関数の実体宣言 ** //
 
