@@ -33,7 +33,7 @@ void EnemyManager::Update()
 			}
 
 			//二人の距離を測る
-			Vector3 diff = (*enemyA)->GetPosition() - (*enemyA)->GetPosition();
+			Vector3 diff = (*enemyA)->GetPosition() - (*enemyB)->GetPosition();
 			//Y軸移動は考えない
 			diff.y = 0.0f;
 			//距離
