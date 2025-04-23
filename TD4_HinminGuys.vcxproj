@@ -159,6 +159,7 @@
     <ClCompile Include="Class\Enemy\Childs\Normal\State\NormalEnemyIdle.cpp" />
     <ClCompile Include="Class\Enemy\Childs\Normal\State\NormalEnemyMove.cpp" />
     <ClCompile Include="Class\Player\Systems\Children\Attack.cpp" />
+    <ClCompile Include="Class\Player\Systems\Children\LockOn.cpp" />
     <ClCompile Include="Class\Scene\GameScene.cpp" />
     <ClCompile Include="Class\Scene\Title.cpp" />
     <ClCompile Include="Class\Camera\FollowCamera.cpp" />
@@ -180,6 +181,7 @@
     <ClInclude Include="Class\Enemy\Childs\Normal\State\NormalEnemyIdle.h" />
     <ClInclude Include="Class\Enemy\Childs\Normal\State\NormalEnemyMove.h" />
     <ClInclude Include="Class\Player\ICharacter.h" />
+    <ClInclude Include="Class\Player\Systems\Children\Attack.h" />
     <ClInclude Include="Class\Player\Systems\ISystem.h" />
     <ClInclude Include="Class\Player\Systems\Children\LockOn.h" />
     <ClInclude Include="Class\Scene\GameScene.h" />
