@@ -13,7 +13,7 @@ public:// 構造体
 
 public:
 	// コンストラクタ
-	LockOn(LWP::Object::Camera* camera);
+	LockOn(LWP::Object::Camera* camera, Player* player);
 	// デストラクタ
 	~LockOn() override = default;
 
@@ -52,17 +52,44 @@ private:
 	void ClearLockOnList();
 
 	// カメラの正面方向を算出
+	LWP::Math::Vector2 ConvertWorld2Screen(LWP::Math::Vector3 worldPos);
+
+	bool IsObjectInScreen(LWP::Math::Vector3 worldPos);
+
+	bool IsObjectInOppositeDirection(const Vector3& objectPosition, const Vector3& cameraPosition, const Vector3& cameraDirection);
+
+	LWP::Math::Vector3 Transforms(const LWP::Math::Vector3& vector, const LWP::Math::Matrix4x4& matrix);
+
+public:// Getter, Setter
+#pragma region Getter
+
+#pragma endregion
+
+#pragma region Setter
+	/// <summary>
+	/// 敵のリストを設定
+	/// </summary>
+	/// <param name="enemyList">敵のリスト</param>
+	void SetEnemyList(std::list<std::unique_ptr<IEnemy>>* enemyList) { enemies_ = enemyList; }
+#pragma endregion
 
 private:// 定数
 	// ロックオンの上限数
-	const int kMaxLockOnNum = 10;
+	inline constexpr static int32_t kMaxLockOnNum = 10;
 
 	// ロックオンできる範囲
-	const float kMaxRange = 50.0f;
+	constexpr static float kMaxRange = 50.0f;
 
 private:
 	// ロックオン対象の敵
 	std::vector<LockOnData> lockOnDatas_;
+	// ロックオン対象のID
+	std::vector<int32_t> lockedEnemyIDs_;
+
+	// 敵のリスト
+	const std::list<std::unique_ptr<IEnemy>>* enemies_;
+
+	LWP::Math::Vector3 lockedEnemyPos_;
 
 	// 最も近くにいる敵の距離
 	LWP::Math::Vector3 minDistance_;

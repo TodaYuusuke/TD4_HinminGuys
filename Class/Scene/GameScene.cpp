@@ -10,9 +10,13 @@ using namespace LWP::Object;
 using namespace LWP::Info;
 
 GameScene::GameScene() 
-	: player_(&mainCamera),
+	: player_(&mainCamera, &enemyManager_),
 	  followCamera_(&mainCamera, player_.GetModelPos())
 {
+	enemyManager_.Finalize();
+}
+
+GameScene::~GameScene() {
 	enemyManager_.Finalize();
 }
 

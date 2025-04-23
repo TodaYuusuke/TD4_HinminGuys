@@ -1,7 +1,9 @@
 #include "Parry.h"
+#include "../../Player.h"
 
-Parry::Parry(LWP::Object::Camera* camera) {
+Parry::Parry(LWP::Object::Camera* camera, Player* player) {
 	pCamera_ = camera;
+	player_ = player;
 	debugTimeEvents_ = CreateParryData();
 }
 

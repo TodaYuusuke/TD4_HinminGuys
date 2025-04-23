@@ -1,11 +1,13 @@
 #include "Move.h"
+#include "../../Player.h"
 
 using namespace LWP;
 using namespace LWP::Math;
 using namespace LWP::Input;
 
-Move::Move(LWP::Object::Camera* camera) {
+Move::Move(LWP::Object::Camera* camera, Player* player) {
 	pCamera_ = camera;
+	player_ = player;
 }
 
 void Move::Initialize() {

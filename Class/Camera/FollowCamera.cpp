@@ -5,6 +5,7 @@ FollowCamera::FollowCamera(LWP::Object::Camera* camera, LWP::Math::Vector3* targ
 	targetPos_ = targetPos;
 	// 球体を読み込む
 	lockOnData_.targetModel.LoadSphere();
+	lockOnData_.targetModel.isActive = false;
 }
 
 void FollowCamera::Initialize() {

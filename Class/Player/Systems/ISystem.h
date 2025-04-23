@@ -1,6 +1,7 @@
 #pragma once
 #include "../Adapter/Adapter.h"
 
+class Player;
 /// <summary>
 /// 自機の機能クラスの基底クラス
 /// </summary>
@@ -32,7 +33,16 @@ public:// Getter, Setter
 	/// <param name="camera">カメラのアドレス</param>
 	void SetCamera(LWP::Object::Camera* camera) { pCamera_ = camera; }
 
+	/// <summary>
+	/// 自機のポインタを設定
+	/// </summary>
+	/// <param name="player"></param>
+	void SetPlayer(Player* player) { player_ = player; }
+
 protected:
+	// 自機のアドレス
+	Player* player_;
+
 	// シーンで使用しているカメラのポインタ
 	LWP::Object::Camera* pCamera_;
 

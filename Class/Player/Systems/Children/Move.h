@@ -7,7 +7,7 @@
 class Move : public ISystem {
 public:
 	// コンストラクタ
-	Move(LWP::Object::Camera* camera);
+	Move(LWP::Object::Camera* camera, Player* player);
 	// デストラクタ
 	~Move() override = default;
 

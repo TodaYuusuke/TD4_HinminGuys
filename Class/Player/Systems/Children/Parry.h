@@ -12,7 +12,7 @@ struct TimeEvent {
 class Parry : public ISystem {
 public:
 	// コンストラクタ
-	Parry(LWP::Object::Camera* camera);
+	Parry(LWP::Object::Camera* camera, Player* player);
 	// デストラクタ
 	~Parry() override = default;
 

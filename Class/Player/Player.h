@@ -3,12 +3,15 @@
 #include "Systems/Children/Move.h"
 #include "Systems/Children/Parry.h"
 #include "Systems/Children/Attack.h"
+#include "Systems/Children/LockOn.h"
 #include <memory>
 
+class IEnemy;
+class EnemyManager;
 class Player : public ICharacter {
 public:
 	// コンストラクタ
-	Player(LWP::Object::Camera* camera);
+	Player(LWP::Object::Camera* camera, EnemyManager* enemyManager);
 	// デストラクタ
 	~Player() override = default;
 
@@ -49,7 +52,17 @@ public:// Getter,Setter
 	/// </summary>
 	/// <param name="camera">カメラのアドレス</param>
 	void SetCamera(LWP::Object::Camera* camera) { pCamera_ = camera; }
+
+	/// <summary>
+	/// 敵の管理クラスを設定
+	/// </summary>
+	/// <param name="enemyManager">敵の管理クラスのポインタ</param>
+	void SetEnemyManager(EnemyManager* enemyManager) { enemyManager_ = enemyManager; }
 #pragma endregion
+
+private:// 外部からポインタをもらう変数
+	// 敵の管理クラス
+	EnemyManager* enemyManager_;
 
 private:
 	// 移動機能
@@ -58,4 +71,6 @@ private:
 	std::unique_ptr<Parry> parrySystem_;
 	// 攻撃機能
 	std::unique_ptr<Attack> attackSystem_;
+	// ロックオン機能
+	std::unique_ptr<LockOn> lockOnSystem_;
 };
