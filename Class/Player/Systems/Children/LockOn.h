@@ -3,6 +3,7 @@
 #include "../../../Enemy/IEnemy.h"
 #include <vector>
 
+class FollowCamera;
 class LockOn : public ISystem {
 public:// 構造体
 	// ロックオン時に必要な情報
@@ -70,7 +71,13 @@ public:// Getter, Setter
 	/// 敵のリストを設定
 	/// </summary>
 	/// <param name="enemyList">敵のリスト</param>
-	void SetEnemyList(std::list<std::unique_ptr<IEnemy>>* enemyList) { enemies_ = enemyList; }
+	void SetEnemyList(std::list<IEnemy*>* enemyList) { enemies_ = enemyList; }
+
+	/// <summary>
+	/// 追従カメラのポインタを設定
+	/// </summary>
+	/// <param name="followCamera">追従カメラのポインタ</param>
+	void SetFollowCamera(FollowCamera* followCamera) { followCamera_ = followCamera; }
 #pragma endregion
 
 private:// 定数
@@ -80,17 +87,19 @@ private:// 定数
 	// ロックオンできる範囲
 	constexpr static float kMaxRange = 50.0f;
 
+private:// 外部からポインタをもらう変数
+	// 敵のリスト
+	const std::list<IEnemy*>* enemies_;
+	// 追従カメラ
+	FollowCamera* followCamera_;
+
 private:
-	// ロックオン対象の敵
-	std::vector<LockOnData> lockOnDatas_;
-	// ロックオン対象のID
+	// ロックオンされたことのある敵のID
 	std::vector<int32_t> lockedEnemyIDs_;
 
-	// 敵のリスト
-	const std::list<std::unique_ptr<IEnemy>>* enemies_;
+	// 現在ロックオンされている敵の情報
+	IEnemy* lockOnEnemy_;
 
-	LWP::Math::Vector3 lockedEnemyPos_;
-
-	// 最も近くにいる敵の距離
-	LWP::Math::Vector3 minDistance_;
+	// 現在ロックオン中か
+	bool isLockOn_;
 };

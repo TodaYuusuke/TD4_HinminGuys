@@ -10,15 +10,10 @@ using namespace LWP::Object;
 using namespace LWP::Info;
 
 GameScene::GameScene() 
-	: player_(&mainCamera, &enemyManager_),
+	: player_(&mainCamera, &enemyManager_, &followCamera_),
 	  followCamera_(&mainCamera, player_.GetModelPos())
 {
 	enemyManager_.Initialize();
-}
-
-GameScene::~GameScene()
-{
-	enemyManager_.Finalize();
 }
 
 GameScene::~GameScene() {
@@ -52,18 +47,17 @@ void GameScene::Update() {
 	}
 
 #ifdef _DEBUG
-
 	enemyManager_.Debug();
-
 #endif // _DEBUG
-
-
-	// 自機
-	player_.Update();
 	//敵全て
 	enemyManager_.Update();
 
+	// 自機
+	player_.Update();
+
+	// 追従カメラ
 	followCamera_.Update();
 
+	// デバッグ用のカメラ
 	mainCamera.DebugGUI();
 }

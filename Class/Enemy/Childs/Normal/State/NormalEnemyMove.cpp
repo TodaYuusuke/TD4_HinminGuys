@@ -75,12 +75,12 @@ void NormalEnemyMove::Update()
 		velocity_.y = 0.0f;
 		//敵の向きをプレイヤーに向かせるため、ここで向きを保存
 		Vector3 to = velocity_.Normalize();
-		velocity_ = velocity_.Normalize() * LWP::Info::GetDeltaTime();
+		velocity_ = velocity_.Normalize() * LWP::Info::GetDeltaTimeF();
 		//近づかない場合、通常移動時間中は移動方向を逆にする
 		if (not isApproach_ and runTime_ > 0) {
 			velocity_ *= -1.0f;
 		}
-		enemy_->SetPosition(enemy_->GetPosition() + velocity_ + (enemy_->GetRepulsiveForce() * LWP::Info::GetDeltaTime()));
+		enemy_->SetPosition(enemy_->GetPosition() + velocity_ + (enemy_->GetRepulsiveForce() * LWP::Info::GetDeltaTimeF()));
 
 		//プレイヤーの方向を向く
 		if (velocity_.Length() != 0.0f) {

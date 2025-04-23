@@ -12,8 +12,6 @@ public:
 		LWP::Object::TransformQuat lockOnTransform;
 		// ロックオン対象のTransformのポインタ
 		LWP::Object::TransformQuat* targetTransform;
-		// ロックオン対象の位置を球体で表示(デバッグ用)
-		LWP::Resource::RigidModel targetModel;
 		// ロックオン時のカメラの位置調整
 		LWP::Math::Vector3 rotateOffset;
 		// ロックオン対象とカメラとの方向ベクトル
@@ -89,10 +87,21 @@ public:// Getter,Setter
 	void SetCamera(LWP::Object::Camera* camera) { camera_ = camera; }
 
 	/// <summary>
-	/// ロックオン対象のTransformQuatをアドレスで渡す
+	/// ロックオン開始
 	/// </summary>
-	/// <param name="lockOnTarget">ロックオン対象</param>
-	void SetLockOnTarget(LWP::Object::TransformQuat* lockOnTarget) { lockOnData_.targetTransform = lockOnTarget; }
+	/// <param name="lockOnTarget">ロックオン対象のアドレス</param>
+	void StartLockOn(LWP::Object::TransformQuat* lockOnTarget) { 
+		lockOnData_.targetTransform = lockOnTarget; 
+		lockOnData_.isLocked = true;
+	}
+	/// <summary>
+	/// ロックオン終了
+	/// </summary>
+	void FinishLockOn() {
+		lockOnData_.targetTransform = nullptr;
+		lockOnData_.isLocked = false;
+	}
+
 #pragma endregion
 
 private:// 定数
@@ -114,12 +123,5 @@ private:
 
 	// ロックオン時に使う情報
 	LockOnData lockOnData_;
-	LWP::Object::TransformQuat t;
-	//// ロックオンした敵の情報
-	//LWP::Object::TransformQuat* lockOnTarget_;
-	//// ロックオン対象の位置を球体で表示(デバッグ用)
-	//LWP::Resource::RigidModel lockOnTargetModel_;
-	//// ロックオンしているか
-	//bool isLocked_;
 };
 

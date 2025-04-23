@@ -74,6 +74,9 @@ public:
 	//プレイヤーからの距離ゲット
 	float GetDistFromPlayer() const { return distFromPlayer_; }
 
+
+	LWP::Object::TransformQuat* GetWorldTF() { return &model_.worldTF; }
+
 protected:
 
 	//モデル

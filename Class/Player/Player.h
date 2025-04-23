@@ -8,10 +8,11 @@
 
 class IEnemy;
 class EnemyManager;
+class FollowCamera;
 class Player : public ICharacter {
 public:
 	// コンストラクタ
-	Player(LWP::Object::Camera* camera, EnemyManager* enemyManager);
+	Player(LWP::Object::Camera* camera, EnemyManager* enemyManager, FollowCamera* followCamera);
 	// デストラクタ
 	~Player() override = default;
 
@@ -63,6 +64,8 @@ public:// Getter,Setter
 private:// 外部からポインタをもらう変数
 	// 敵の管理クラス
 	EnemyManager* enemyManager_;
+	// 追従カメラ
+	FollowCamera* followCamera_;
 
 private:
 	// 移動機能

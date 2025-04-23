@@ -3,14 +3,10 @@
 FollowCamera::FollowCamera(LWP::Object::Camera* camera, LWP::Math::Vector3* targetPos) {
 	camera_ = camera;
 	targetPos_ = targetPos;
-	// 球体を読み込む
-	lockOnData_.targetModel.LoadSphere();
-	lockOnData_.targetModel.isActive = false;
 }
 
 void FollowCamera::Initialize() {
-	lockOnData_.targetModel.worldTF.scale = { 2,2,2 };
-	lockOnData_.targetTransform = &t;
+	//lockOnData_.targetTransform = ;
 }
 
 void FollowCamera::Update() {
@@ -29,7 +25,7 @@ void FollowCamera::Update() {
 	ImGui::DragFloat3("Distance", &kTargetDist.x, 0.1f, -100, 100);
 	if (lockOnData_.targetTransform) {
 		if (ImGui::TreeNode("LockOn")) {
-			ImGui::DragFloat3("Translation", &t.translation.x, 0.1f, -100, 100);
+			ImGui::DragFloat3("Translation", &lockOnData_.targetTransform->translation.x, 0.1f, -100, 100);
 			ImGui::DragFloat4("Quaternion", &lockOnData_.targetTransform->rotation.x, 0.1f, -100, 100);
 			ImGui::Checkbox("IsLocked", &lockOnData_.isLocked);
 			ImGui::TreePop();
@@ -70,8 +66,6 @@ void FollowCamera::InputUpdate() {
 }
 
 void FollowCamera::LockOnUpdate() {
-	lockOnData_.targetModel.worldTF.translation = t.translation;
-
 	// ロックオン対象がいないなら早期リターン
 	if (!lockOnData_.targetTransform) { return; }
 	if (!lockOnData_.isLocked) { return; }
@@ -80,7 +74,7 @@ void FollowCamera::LockOnUpdate() {
 	lwp::Vector3 d = (lockOnData_.targetTransform->GetWorldPosition() - camera_->worldTF.translation).Normalize();
 	LWP::Math::Vector2 dir;
 	dir.y = atan2(d.x, d.z);                        // Y軸（左右）
-	dir.x = atan2(-d.y, sqrt(d.x * d.x + d.z * d.z)); // X軸（上下）
+	dir.x = atan2(-d.y, sqrt(d.x * d.x + d.z * d.z)); // X軸（上下
 
 	// x軸回転
 	camera_->worldTF.rotation = LWP::Math::Quaternion::CreateFromAxisAngle(LWP::Math::Vector3{ 1, 0, 0 }, dir.x);

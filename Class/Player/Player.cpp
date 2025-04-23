@@ -1,9 +1,10 @@
 #include "Player.h"
 #include "../Enemy/EnemyManager.h"
 
-Player::Player(LWP::Object::Camera* camera, EnemyManager* enemyManager) {
+Player::Player(LWP::Object::Camera* camera, EnemyManager* enemyManager, FollowCamera* followCamera) {
 	pCamera_ = camera; 
 	enemyManager_ = enemyManager;
+	followCamera_ = followCamera;
 
 	// モデルを読み込む
 	model_.LoadShortPath("player/Player_Simple.gltf");
@@ -61,6 +62,7 @@ void Player::CreateSystems() {
 	lockOnSystem_ = std::make_unique<LockOn>(pCamera_, this);
 	lockOnSystem_->Initialize();
 	lockOnSystem_->SetEnemyList(enemyManager_->GetEnemyListPtr());
+	lockOnSystem_->SetFollowCamera(followCamera_);
 }
 
 void Player::DebugGui() {

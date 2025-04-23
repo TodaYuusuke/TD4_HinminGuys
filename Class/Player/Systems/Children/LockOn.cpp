@@ -1,5 +1,6 @@
 #include "LockOn.h"
 #include "../../Player.h"
+#include "../../../Camera/FollowCamera.h"
 
 LockOn::LockOn(LWP::Object::Camera* camera, Player* player) {
 	pCamera_ = camera;
@@ -19,15 +20,21 @@ void LockOn::Update() {
 
 	// ロックオン可能状態の条件から外れた敵をリストから除外する
 	ClearLockOnList();
+
+	// 最も近い敵をロックオン
+	SearchNearEnemy();
 }
 
 void LockOn::Reset() {
-	lockOnDatas_.clear();
+	followCamera_->FinishLockOn();
+	lockedEnemyIDs_.clear();
+	lockOnEnemy_ = nullptr;
+	isLockOn_ = false;
 }
 
 void LockOn::InputUpdate() {
 	// LTでロックオン
-	if (LWP::Input::Pad::GetPress(XINPUT_GAMEPAD_LEFT_THUMB)) {
+	if (LWP::Input::Pad::GetPress(XINPUT_GAMEPAD_LEFT_THUMB) || LWP::Input::Keyboard::GetTrigger(DIK_SPACE)) {
 		if (!isActive_) {
 			isActive_ = true;
 		}
@@ -39,10 +46,9 @@ void LockOn::InputUpdate() {
 }
 
 void LockOn::SearchLockOnEnemy() {
-	for (const std::unique_ptr<IEnemy>& enemy : *enemies_) {
-		// ロックオンリストに登録しているならスキップ
-		auto result = std::find(lockedEnemyIDs_.begin(), lockedEnemyIDs_.end(), enemy->GetID());
-		if (result != lockedEnemyIDs_.end()) { continue; }
+	for (IEnemy* enemy : *enemies_) {
+		// ロックオン可能状態の敵ならスキップ
+		if (enemy->GetIsLocked()) { continue; }
 
 		// ロックオン可能距離に敵がいないならスキップ
 		LWP::Math::Vector3 p2e = enemy->GetPosition() - player_->GetWorldTF()->GetWorldPosition();
@@ -59,37 +65,49 @@ void LockOn::SearchLockOnEnemy() {
 
 		// スクリーン座標内にいるか
 		if (!IsObjectInScreen(enemy->GetPosition())) { continue; }
-
-#pragma region ロックオンリストに追加
-		// ロックオンされたIDを登録
-		lockedEnemyIDs_.push_back(enemy->GetID());
-		// ロックオンした敵情報をリストに入れる
-		LockOnData lockOnData = {
-			enemy.get(),
-			false
-		};
-		lockOnDatas_.push_back(lockOnData);
-#pragma endregion
+		
+		// 敵をロックオン可能状態にする
+		enemy->SetIsLocked(true);
 	}
 }
 
 void LockOn::SearchNearEnemy() {
-	// ロックオンリスト内の敵で自機に最も近い敵を最初にロックオン
-	for (int i = 0; i < lockOnDatas_.size(); i++) {
+	if (!isActive_) { return; }
+	if (isLockOn_) { return; }
 
+	for (IEnemy* enemy : *enemies_) {
+		// ロックオン可能状態の敵じゃないならスキップ
+		if (!enemy->GetIsLocked()) { continue; }
+		
+		// 一度でもロックオンしたことがあるならスキップ
+		bool isLockedEnemy = false;
+		for (int i = 0; i < lockedEnemyIDs_.size(); i++) {	
+			if (enemy->GetID() == lockedEnemyIDs_[i]) {
+				isLockedEnemy = true;
+				break;
+			}
+		}	
+		if (isLockedEnemy) { continue; }
+
+		// ロックオン開始
+		lockedEnemyIDs_.push_back(enemy->GetID());
+		lockOnEnemy_ = enemy;
+		followCamera_->StartLockOn(lockOnEnemy_->GetWorldTF());
+		isLockOn_ = true;
+		break;
 	}
 }
 
 void LockOn::ClearLockOnList() {
-	for (int i = 0; i < lockOnDatas_.size(); i++) {
+	for (IEnemy* enemy : *enemies_) {
+		// ロックオン可能状態の敵じゃないならスキップ
+		if (!enemy->GetIsLocked()) { continue; }
+
 		// ロックオン可能距離に敵がいないならリストから除外
-		LWP::Math::Vector3 p2e = lockOnDatas_[i].enemyData->GetPosition() - player_->GetWorldTF()->GetWorldPosition();
+		LWP::Math::Vector3 p2e = enemy->GetPosition() - player_->GetWorldTF()->GetWorldPosition();
 		float radius = kMaxRange;
 		if ((p2e.x * p2e.x) + (p2e.y * p2e.y) + (p2e.z * p2e.z) > (radius * radius)) {
-			// ロックオン対象のIDを消す
-			lockedEnemyIDs_.erase(std::remove(lockedEnemyIDs_.begin(), lockedEnemyIDs_.end(), lockOnDatas_[i].enemyData->GetID()), lockedEnemyIDs_.end());
-			// ロックオンリストから除外
-			lockOnDatas_.erase(lockOnDatas_.begin() + i);
+			enemy->SetIsLocked(false);
 			continue;
 		}
 
@@ -99,20 +117,14 @@ void LockOn::ClearLockOnList() {
 		Matrix4x4 rotMatrix = LWP::Math::Matrix4x4::CreateRotateXYZMatrix(pCamera_->worldTF.rotation);
 		// 方向ベクトルを求める
 		cameraDir = cameraDir * rotMatrix;
-		if (IsObjectInOppositeDirection(lockOnDatas_[i].enemyData->GetPosition(), pCamera_->worldTF.translation, cameraDir)) {
-			// ロックオン対象のIDを消す
-			lockedEnemyIDs_.erase(std::remove(lockedEnemyIDs_.begin(), lockedEnemyIDs_.end(), lockOnDatas_[i].enemyData->GetID()), lockedEnemyIDs_.end());
-			// ロックオンリストから除外
-			lockOnDatas_.erase(lockOnDatas_.begin() + i);
+		if (IsObjectInOppositeDirection(enemy->GetPosition(), pCamera_->worldTF.translation, cameraDir)) {
+			enemy->SetIsLocked(false);
 			continue;
 		}
 
 		// スクリーン座標内にいないならリストから除外
-		if (!IsObjectInScreen(lockOnDatas_[i].enemyData->GetPosition())) {
-			// ロックオン対象のIDを消す
-			lockedEnemyIDs_.erase(std::remove(lockedEnemyIDs_.begin(), lockedEnemyIDs_.end(), lockOnDatas_[i].enemyData->GetID()), lockedEnemyIDs_.end());
-			// ロックオンリストから除外
-			lockOnDatas_.erase(lockOnDatas_.begin() + i);
+		if (!IsObjectInScreen(enemy->GetPosition())) {
+			enemy->SetIsLocked(false);
 			continue;
 		}
 	}
