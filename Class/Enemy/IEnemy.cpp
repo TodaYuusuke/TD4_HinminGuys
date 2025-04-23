@@ -45,3 +45,13 @@ void IEnemy::SetState(std::unique_ptr<IEnemyState> state)
 	//初期化
 	state_->Initialize(this);
 }
+
+void IEnemy::Debug()
+{
+
+	if (ImGui::TreeNode(std::to_string(ID_).c_str())) {
+		ImGui::Text(std::to_string(distFromPlayer_).c_str());
+		ImGui::TreePop();
+	}
+
+}

@@ -17,6 +17,9 @@ void NormalEnemy::Initialize(Player* player, const Vector3& position)
 	model_.worldTF.scale = { 0.5f, 0.5f, 0.5f };
 	state_ = std::make_unique<NormalEnemyIdle>();
 	state_->Initialize(this);
+	attackHitBox_.isActive = false;
+	attackHitBox_.isShowWireFrame = false;
+	hitBox_.SetFollowPtr(&model_.worldTF);
 }
 
 void NormalEnemy::Update()

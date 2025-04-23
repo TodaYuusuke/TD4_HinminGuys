@@ -59,6 +59,20 @@ public:
 	const Vector3& GetRepulsiveForce() const { return repulsiveForce_; }
 	//反発力を加算
 	void AddRepulsiveForce(const Vector3& force) { repulsiveForce_ += force; }
+	//本体当たり判定取得
+	LWP::Object::Collider::AABB* GetHitBox() { return &hitBox_; }
+	//攻撃当たり判定
+	LWP::Object::Collider::AABB* GetAttackHitBox() { return &attackHitBox_; }
+	//ロックオンセッター
+	void SetIsLocked(bool flag) { isLocked_ = flag; }
+	//ロックオンゲッター
+	bool GetIsLocked() const { return isLocked_; }
+	//デバッグ
+	void Debug();
+	//プレイヤーからの距離セット
+	void SetDistFromPlayer(float dist) { distFromPlayer_ = dist; }
+	//プレイヤーからの距離ゲット
+	float GetDistFromPlayer() const { return distFromPlayer_; }
 
 protected:
 
@@ -66,6 +80,10 @@ protected:
 	SkinningModel model_;
 	//アニメーション
 	Animation animation_;
+	//本体当たり判定
+	LWP::Object::Collider::AABB hitBox_;
+	//攻撃当たり判定
+	LWP::Object::Collider::AABB attackHitBox_;
 	//状態
 	std::unique_ptr<IEnemyState> state_;
 
@@ -77,9 +95,13 @@ protected:
 	EnemyType type_;
 	//全体のID管理
 	static uint16_t currentEnemyID_;
+	//プレイヤーからの距離
+	float distFromPlayer_ = 0.0f;
 	//個々のID
 	uint16_t ID_;
 	//死亡フラグ
 	bool isDead_ = false;
+	//ロックオンされているか
+	bool isLocked_ = false;
 
 };

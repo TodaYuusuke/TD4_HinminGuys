@@ -13,6 +13,11 @@ GameScene::GameScene()
 	: player_(&mainCamera),
 	  followCamera_(&mainCamera, player_.GetModelPos())
 {
+	enemyManager_.Initialize();
+}
+
+GameScene::~GameScene()
+{
 	enemyManager_.Finalize();
 }
 
