@@ -82,11 +82,6 @@ void FollowCamera::LockOnUpdate() {
 	dir.y = atan2(d.x, d.z);                        // Y軸（左右）
 	dir.x = atan2(-d.y, sqrt(d.x * d.x + d.z * d.z)); // X軸（上下）
 
-	// 角度制限
-	//ClampAngle(dir.x, d.Normalize(), kMinRotateX, kMaxRotateX);
-
-	//if (dir.x == 0.0f) { return; }
-
 	// x軸回転
 	camera_->worldTF.rotation = LWP::Math::Quaternion::CreateFromAxisAngle(LWP::Math::Vector3{ 1, 0, 0 }, dir.x);
 	// y軸は常に上を向くように固定
@@ -97,11 +92,11 @@ void FollowCamera::ClampAngle(float& target, LWP::Math::Vector3 distance, float 
 	// ターゲットとカメラの角度を求める
 	float limitX = std::acos(LWP::Math::Vector3::Dot({ 0,1,0 }, distance));
 	// 下
-	if (limitX < kMinRotateX && target <= 0.0f) {
+	if (limitX < minLimitAngle && target <= 0.0f) {
 		target = 0;
 	}
 	// 上
-	if (limitX > kMaxRotateX && target >= 0.0f) {
+	if (limitX > maxLimitAngle && target >= 0.0f) {
 		target = 0;
 	}
 }

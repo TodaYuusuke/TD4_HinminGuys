@@ -84,7 +84,7 @@ float Move::GetAngle(const LWP::Math::Vector3& a, const LWP::Math::Vector3& b, c
 	Vector3 cross = LWP::Math::Vector3::Cross(aN, bN);
 
 	if (LWP::Math::Vector3::Dot(up, cross) < 0) {
-		angle = 2 * M_PI - angle;
+		angle = 2 * (float)M_PI - angle;
 	}
 
 	return angle;
