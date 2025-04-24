@@ -27,4 +27,8 @@ void BossEnemy::Update()
 	//現在の状態を更新
 	state_->Update();
 
+	//プレイヤーとの距離を計算
+	Vector3 velocity = GetPlayerPosition() - GetPosition();
+	SetDistFromPlayer(velocity.Length());
+
 }
