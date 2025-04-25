@@ -1,9 +1,9 @@
-#include "NormalEnemyIdle.h"
-#include "NormalEnemyMove.h"
-#include "../../../../Player/Player.h"
-#include "../../../IEnemy.h"
+#include "NormalIdle.h"
+#include "NormalMove.h"
+#include "../../../Player/Player.h"
+#include "../../IEnemy.h"
 
-void NormalEnemyIdle::Initialize(IEnemy* enemy)
+void NormalIdle::Initialize(IEnemy* enemy)
 {
 	enemy_ = enemy;
 	enemy_->SetAnimation("Idle", true);
@@ -11,7 +11,7 @@ void NormalEnemyIdle::Initialize(IEnemy* enemy)
 	standTime_ = 60;
 }
 
-void NormalEnemyIdle::Update()
+void NormalIdle::Update()
 {
 
 	//プレイヤーが存在する場合
@@ -25,7 +25,7 @@ void NormalEnemyIdle::Update()
 		if (standTime_ <= 0) {
 
 			//攻撃状態に移行
-			enemy_->SetState(std::make_unique<NormalEnemyMove>());
+			enemy_->SetState(new NormalMove());
 
 		}
 

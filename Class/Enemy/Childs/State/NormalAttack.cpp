@@ -1,9 +1,9 @@
-#include "NormalEnemyAttack.h"
-#include "NormalEnemyIdle.h"
-#include "../../../../Player/Player.h"
-#include "../../../IEnemy.h"
+#include "NormalAttack.h"
+#include "NormalIdle.h"
+#include "../../../Player/Player.h"
+#include "../../IEnemy.h"
 
-void NormalEnemyAttack::Initialize(IEnemy* enemy)
+void NormalAttack::Initialize(IEnemy* enemy)
 {
 	enemy_ = enemy;
 	enemy_->SetAnimation("Attack", false);
@@ -12,7 +12,7 @@ void NormalEnemyAttack::Initialize(IEnemy* enemy)
 	enemy_->GetAttackHitBox()->isShowWireFrame = true;
 }
 
-void NormalEnemyAttack::Update()
+void NormalAttack::Update()
 {
 
 	//攻撃が終了した時
@@ -23,7 +23,7 @@ void NormalEnemyAttack::Update()
 		enemy_->GetAttackHitBox()->isShowWireFrame = false;
 
 		//待機状態に移行
-		enemy_->SetState(std::make_unique<NormalEnemyIdle>());
+		enemy_->SetState(new NormalIdle());
 
 	}
 

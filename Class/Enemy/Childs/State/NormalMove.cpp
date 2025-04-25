@@ -1,10 +1,10 @@
-#include "NormalEnemyMove.h"
-#include "NormalEnemyAttack.h"
-#include "NormalEnemyIdle.h"
-#include "../../../../Player/Player.h"
-#include "../../../IEnemy.h"
+#include "NormalMove.h"
+#include "NormalAttack.h"
+#include "NormalIdle.h"
+#include "../../../Player/Player.h"
+#include "../../IEnemy.h"
 
-void NormalEnemyMove::Initialize(IEnemy* enemy)
+void NormalMove::Initialize(IEnemy* enemy)
 {
 	enemy_ = enemy;
 	enemy_->SetAnimation("Run", true);
@@ -21,7 +21,7 @@ void NormalEnemyMove::Initialize(IEnemy* enemy)
 
 }
 
-void NormalEnemyMove::Update()
+void NormalMove::Update()
 {
 
 	//プレイヤーが存在する場合
@@ -38,7 +38,8 @@ void NormalEnemyMove::Update()
 			//プレイヤーとの距離が近い場合
 			if (Vector3::Distance(enemy_->GetPlayerPosition(), enemy_->GetPosition()) < attackDist_) {
 				//攻撃状態に移行
-				enemy_->SetState(std::make_unique<NormalEnemyAttack>());
+				enemy_->SetState(new NormalAttack());
+				return;
 			}
 			//一定以上離れている場合
 			else {
@@ -54,12 +55,14 @@ void NormalEnemyMove::Update()
 					//プレイヤーとの距離が近いなら攻撃
 					if (Vector3::Distance(enemy_->GetPlayerPosition(), enemy_->GetPosition()) < attackDist_) {
 						//攻撃状態に移行
-						enemy_->SetState(std::make_unique<NormalEnemyAttack>());
+						enemy_->SetState(new NormalAttack());
+						return;
 					}
 					//そうでないなら待機状態に戻す
 					else {
 						//待機状態に移行
-						enemy_->SetState(std::make_unique<NormalEnemyIdle>());
+						enemy_->SetState(new NormalIdle());
+						return;
 					}
 
 				}
@@ -70,7 +73,6 @@ void NormalEnemyMove::Update()
 
 		//移動
 		velocity_ = enemy_->GetPlayerPosition() - enemy_->GetPosition();
-		enemy_->SetDistFromPlayer(velocity_.Length());
 		//y軸の移動ベクトルを消す
 		velocity_.y = 0.0f;
 		//敵の向きをプレイヤーに向かせるため、ここで向きを保存

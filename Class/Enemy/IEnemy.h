@@ -30,7 +30,7 @@ public:
 	//初期化
 	virtual void Initialize(Player* player, const Vector3& position) = 0;
 	//更新
-	virtual void Update() = 0;
+	virtual void Update();
 	//プレイヤーをセットする関数
 	void SetPlayer(Player* player) { player_ = player; }
 	//死亡フラグ取得
@@ -52,7 +52,7 @@ public:
 	//アニメーション取得
 	Animation* GetAnimation() { return &animation_; }
 	//状態切り替え
-	void SetState(std::unique_ptr<IEnemyState> state);
+	void SetState(IEnemyState* state);
 	//ID取得
 	uint32_t GetID() const { return ID_; }
 	//反発力取得
@@ -68,7 +68,7 @@ public:
 	//ロックオンゲッター
 	bool GetIsLocked() const { return isLocked_; }
 	//デバッグ
-	void Debug();
+	void DebugGUI();
 	//プレイヤーからの距離セット
 	void SetDistFromPlayer(float dist) { distFromPlayer_ = dist; }
 	//プレイヤーからの距離ゲット
@@ -85,7 +85,7 @@ protected:
 	//攻撃当たり判定
 	LWP::Object::Collider::AABB attackHitBox_;
 	//状態
-	std::unique_ptr<IEnemyState> state_;
+	IEnemyState* state_;
 
 	//プレイヤー情報
 	Player* player_;

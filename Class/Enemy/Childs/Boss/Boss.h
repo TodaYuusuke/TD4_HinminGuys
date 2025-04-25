@@ -5,11 +5,11 @@
 /// <summary>
 /// ボス敵クラス
 /// </summary>
-class BossEnemy : public IEnemy
+class Boss : public IEnemy
 {
 public:
-	BossEnemy() = default;
-	~BossEnemy() override = default;
+	Boss() = default;
+	~Boss() override = default;
 
 	void Initialize(Player* player, const Vector3& position) override;
 

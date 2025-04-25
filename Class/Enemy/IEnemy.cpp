@@ -25,6 +25,31 @@ IEnemy::IEnemy()
 IEnemy::~IEnemy()
 {
 	
+	//ステートが存在していたら削除
+	if (state_) {
+		delete state_;
+	}
+
+}
+
+void IEnemy::Update()
+{
+
+	//デルタタイムが0.0f以下の時、更新しない
+	if (LWP::Info::GetDeltaTime() <= 0.0f) {
+		return;
+	}
+
+	//現在の状態を更新
+	state_->Update();
+
+	//反発力リセット
+	repulsiveForce_ = { 0.0f,0.0f,0.0f };
+
+	//プレイヤーとの距離を計算
+	Vector3 diff = GetPlayerPosition() - GetPosition();
+	distFromPlayer_ = diff.Length();
+
 }
 
 Vector3 IEnemy::GetPlayerPosition()
@@ -37,16 +62,19 @@ void IEnemy::SetAnimation(const std::string& animName, bool isLoop)
     animation_.Play(animName, isLoop);
 }
 
-void IEnemy::SetState(std::unique_ptr<IEnemyState> state)
+void IEnemy::SetState(IEnemyState* state)
 {
 	//前回の状態を開放、新しい状態に置き換える
-	state_.release();
-	state_ = std::move(state);
+	if (state_) {
+		delete state_;
+	}
+	state_ = state;
 	//初期化
 	state_->Initialize(this);
+
 }
 
-void IEnemy::Debug()
+void IEnemy::DebugGUI()
 {
 
 	if (ImGui::TreeNode(std::to_string(ID_).c_str())) {

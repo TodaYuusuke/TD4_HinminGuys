@@ -67,10 +67,10 @@ void EnemyManager::CreateEnemy(const Vector3& position, EnemyType type)
 	switch (type)
 	{
 	case EnemyType::kNormal:
-		enemies_.push_back(new NormalEnemy());
+		enemies_.push_back(new Normal());
 		break;
 	case EnemyType::kBoss:
-		enemies_.push_back(new BossEnemy());
+		enemies_.push_back(new Boss());
 		break;
 	default:
 		break;
@@ -97,7 +97,7 @@ void EnemyManager::ClearList()
 
 }
 
-void EnemyManager::Debug()
+void EnemyManager::DebugGUI()
 {
 
 	ImGui::Begin("Enemy Manager");
@@ -119,7 +119,7 @@ void EnemyManager::Debug()
 
 		//デバッグ
 		for (auto enemy = enemies_.begin(); enemy != enemies_.end(); enemy++) {
-			(*enemy)->Debug();
+			(*enemy)->DebugGUI();
 		}
 
 		ImGui::EndTabBar();

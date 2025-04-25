@@ -49,7 +49,7 @@ void GameScene::Update() {
 
 #ifdef _DEBUG
 
-	enemyManager_.Debug();
+	enemyManager_.DebugGUI();
 
 #endif // _DEBUG
 

@@ -1,8 +1,8 @@
 #pragma once
 #include "../Adapter/Adapter.h"
 #include "IEnemy.h"
-#include "Childs/Normal/NormalEnemy.h"
-#include "Childs/Boss/BossEnemy.h"
+#include "Childs/Normal/Normal.h"
+#include "Childs/Boss/Boss.h"
 #include <list>
 #include <memory>
 
@@ -30,7 +30,7 @@ public:
 	//リストのクリア
 	void ClearList();
 	//デバッグウィンドウ
-	void Debug();
+	void DebugGUI();
 	//リスト取得
 	std::list<IEnemy*>* GetEnemyListPtr() { return &enemies_; }
 	//リストを距離順にソート(昇順。後半になるにつれて距離が長くなる)

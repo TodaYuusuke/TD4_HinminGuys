@@ -1,14 +1,14 @@
 #pragma once
-#include "../../../IEnemyState.h"
+#include "../../IEnemyState.h"
 
 /// <summary>
 /// 雑魚敵攻撃状態クラス
 /// </summary>
-class NormalEnemyAttack : public IEnemyState
+class NormalAttack : public IEnemyState
 {
 public:
 
-	~NormalEnemyAttack() override = default;
+	~NormalAttack() override = default;
 
 	void Initialize(IEnemy* enemy) override;
 
