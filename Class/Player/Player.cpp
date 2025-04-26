@@ -34,7 +34,7 @@ void Player::Update() {
 	model_.worldTF.rotation = moveSystem_->GetRotate();
 
 	// ImGui
-	DebugGui();
+	DebugGUI();
 }
 
 void Player::Reset() {
@@ -65,13 +65,15 @@ void Player::CreateSystems() {
 	lockOnSystem_->SetFollowCamera(followCamera_);
 }
 
-void Player::DebugGui() {
+void Player::DebugGUI() {
 #ifdef _DEBUG
 	ImGui::Begin("Player");
 	// パリィ
-	parrySystem_->DebugGui();
+	parrySystem_->DebugGUI();
 	// 攻撃
-	attackSystem_->DegubGui();
+	attackSystem_->DebugGUI();
+	// ロックオン
+	lockOnSystem_->DebugGUI();
 
 	ImGui::DragFloat3("Translation", &model_.worldTF.translation.x, 0.1f, -10000, 10000);
 	ImGui::End();

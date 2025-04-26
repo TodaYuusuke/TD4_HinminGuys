@@ -55,15 +55,6 @@ private:
 	/// <param name="maxLimitAngle">角度の上限値(単位:ラジアン)</param>
 	void ClampAngle(float& target, LWP::Math::Vector3 distance, float minLimitAngle, float maxLimitAngle);
 
-	/// <summary>
-	/// イージング(指数関数的に数値が上がる)
-	/// </summary>
-	/// <param name="current"></param>
-	/// <param name="target"></param>
-	/// <param name="damping"></param>
-	/// <returns></returns>
-	LWP::Math::Vector3 ExponentialInterpolate(const LWP::Math::Vector3& current, const LWP::Math::Vector3& target, float damping);
-
 public:// Getter,Setter
 #pragma region Getter
 	/// <summary>
@@ -114,12 +105,16 @@ private:// 定数
 	// x軸の上限値
 	const float kMaxRotateX = (float)std::numbers::pi / 2.0f + (float)std::numbers::pi / 4.0f;
 
-private:
+private:// 外部からポインタをもらう変数
 	// カメラ
 	LWP::Object::Camera* camera_;
 
+private:
 	// 追従対象の座標
 	const LWP::Math::Vector3* targetPos_;
+
+	//　ロックオン時のカメラの位置調整
+	LWP::Math::Vector3 lockOnOffset_;
 
 	// ロックオン時に使う情報
 	LockOnData lockOnData_;

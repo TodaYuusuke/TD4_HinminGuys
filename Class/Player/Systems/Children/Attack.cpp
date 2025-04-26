@@ -31,7 +31,7 @@ void Attack::Reset() {
 	isActive_ = true;
 }
 
-void Attack::DegubGui() {
+void Attack::DebugGUI() {
 	if (ImGui::TreeNode("Attack")) {
 		collider_.DebugGUI();
 		ImGui::TreePop();

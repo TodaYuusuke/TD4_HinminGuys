@@ -28,7 +28,7 @@ public:
 	/// <summary>
 	/// ImGuiによるパラメータを表示
 	/// </summary>
-	void DegubGui();
+	void DebugGUI();
 
 private:
 	// 攻撃判定

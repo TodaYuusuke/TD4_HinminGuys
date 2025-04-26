@@ -39,7 +39,7 @@ private:
 	/// <summary>
 	/// デバッグ用のタブを表示(Debug時のみ)
 	/// </summary>
-	void DebugGui();
+	void DebugGUI();
 
 public:// Getter,Setter
 #pragma region Getter

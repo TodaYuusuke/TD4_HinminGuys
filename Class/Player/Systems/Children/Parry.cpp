@@ -39,7 +39,7 @@ void Parry::Reset() {
 	isActive_ = false;
 }
 
-void Parry::DebugGui() {
+void Parry::DebugGUI() {
 	if (ImGui::TreeNode("Parry")) {
 		if (ImGui::TreeNode("Event")) {
 			// イベントの進む順序

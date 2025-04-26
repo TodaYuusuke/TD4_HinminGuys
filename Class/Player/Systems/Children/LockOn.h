@@ -32,6 +32,11 @@ public:
 	/// </summary>
 	void Reset() override;
 
+	/// <summary>
+	/// デバッグ用のタブを表示(Debug時のみ)
+	/// </summary>
+	void DebugGUI();
+
 private:
 	/// <summary>
 	/// 入力処理
@@ -46,6 +51,16 @@ private:
 	/// 最も近い敵を索敵
 	/// </summary>
 	void SearchNearEnemy();
+
+	/// <summary>
+	/// ロックオン開始時に必要な情報
+	/// </summary>
+	void StartLockOn(IEnemy* enemy);
+
+	/// <summary>
+	/// ロックオン対象を変える
+	/// </summary>
+	void ChangeLockOnTarget();
 
 	/// <summary>
 	/// ロックオンリストを初期化する
@@ -100,6 +115,13 @@ private:
 	// 現在ロックオンされている敵の情報
 	IEnemy* lockOnEnemy_;
 
-	// 現在ロックオン中か
-	bool isLockOn_;
+	// ロックオン可能数
+	int lockOnNum_;
+
+	// カメラ回転、左右どちらに入力があったかを受け取る
+	float inputCameraRotateY_;
+
+	// ロックオン対象を変えるか
+	bool isChangeLockOn_;
+	bool isChangeLocked_;
 };

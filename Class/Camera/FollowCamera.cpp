@@ -6,7 +6,7 @@ FollowCamera::FollowCamera(LWP::Object::Camera* camera, LWP::Math::Vector3* targ
 }
 
 void FollowCamera::Initialize() {
-	//lockOnData_.targetTransform = ;
+	lockOnOffset_ = { 0.0f,2.5f,0.0f };
 }
 
 void FollowCamera::Update() {
@@ -23,10 +23,12 @@ void FollowCamera::Update() {
 	ImGui::DragFloat3("Translation", &camera_->worldTF.translation.x, 0.1f, -1000, 1000);
 	ImGui::DragFloat4("Quaternion", &camera_->worldTF.rotation.x, 0.1f, -1000, 1000);
 	ImGui::DragFloat3("Distance", &kTargetDist.x, 0.1f, -100, 100);
-	if (lockOnData_.targetTransform) {
-		if (ImGui::TreeNode("LockOn")) {
+
+	if (ImGui::TreeNode("LockOn")) {
+		if (lockOnData_.targetTransform) {
 			ImGui::DragFloat3("Translation", &lockOnData_.targetTransform->translation.x, 0.1f, -100, 100);
 			ImGui::DragFloat4("Quaternion", &lockOnData_.targetTransform->rotation.x, 0.1f, -100, 100);
+			ImGui::DragFloat3("Offset", &lockOnOffset_.x, 0.1f, -100, 100);
 			ImGui::Checkbox("IsLocked", &lockOnData_.isLocked);
 			ImGui::TreePop();
 		}
@@ -71,10 +73,11 @@ void FollowCamera::LockOnUpdate() {
 	if (!lockOnData_.isLocked) { return; }
 
 	// ロックオン対象とカメラとの方向ベクトルを算出
-	lwp::Vector3 d = (lockOnData_.targetTransform->GetWorldPosition() - camera_->worldTF.translation).Normalize();
+	LWP::Math::Vector3 cameraPos = camera_->worldTF.translation + lockOnOffset_;
+	lwp::Vector3 dist = (lockOnData_.targetTransform->GetWorldPosition() - cameraPos).Normalize();
 	LWP::Math::Vector2 dir;
-	dir.y = atan2(d.x, d.z);                        // Y軸（左右）
-	dir.x = atan2(-d.y, sqrt(d.x * d.x + d.z * d.z)); // X軸（上下
+	dir.y = atan2(dist.x, dist.z);                        // Y軸（左右）
+	dir.x = atan2(-dist.y, sqrt(dist.x * dist.x + dist.z * dist.z)); // X軸（上下
 
 	// x軸回転
 	camera_->worldTF.rotation = LWP::Math::Quaternion::CreateFromAxisAngle(LWP::Math::Vector3{ 1, 0, 0 }, dir.x);
@@ -93,9 +96,4 @@ void FollowCamera::ClampAngle(float& target, LWP::Math::Vector3 distance, float 
 	if (limitX > maxLimitAngle && target >= 0.0f) {
 		target = 0;
 	}
-}
-
-LWP::Math::Vector3 FollowCamera::ExponentialInterpolate(const LWP::Math::Vector3& current, const LWP::Math::Vector3& target, float damping) {
-	float factor = 1.0f - std::exp(-damping);
-	return current + (target - current) * factor;
 }

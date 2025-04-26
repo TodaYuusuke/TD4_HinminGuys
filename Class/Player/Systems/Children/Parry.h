@@ -33,7 +33,7 @@ public:
 	/// <summary>
 	/// ImGuiによるパラメータ表示
 	/// </summary>
-	void DebugGui();
+	void DebugGUI();
 
 private:
 	/// <summary>

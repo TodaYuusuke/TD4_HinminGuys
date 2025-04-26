@@ -9,6 +9,8 @@ LockOn::LockOn(LWP::Object::Camera* camera, Player* player) {
 
 void LockOn::Initialize() {
 	isActive_ = false;
+	isChangeLockOn_ = false;
+	isChangeLocked_ = false;
 }
 
 void LockOn::Update() {
@@ -23,25 +25,41 @@ void LockOn::Update() {
 
 	// 最も近い敵をロックオン
 	SearchNearEnemy();
+
+	isChangeLocked_ = isChangeLockOn_;
 }
 
 void LockOn::Reset() {
 	followCamera_->FinishLockOn();
 	lockedEnemyIDs_.clear();
 	lockOnEnemy_ = nullptr;
-	isLockOn_ = false;
+	isActive_ = false;
+	isChangeLockOn_ = false;
+	isChangeLocked_ = false;
+	inputCameraRotateY_ = 0.0f;
+	lockOnNum_ = 0;
+}
+
+void LockOn::DebugGUI() {
+	if (ImGui::TreeNode("LockOn")) {
+		ImGui::Checkbox("IsLockOn", &isActive_);
+		ImGui::Checkbox("IsChangeLockOnTarget", &isChangeLockOn_);
+		ImGui::Checkbox("IsChangeLocked", &isChangeLocked_);
+		ImGui::TreePop();
+	}
 }
 
 void LockOn::InputUpdate() {
+	// ロックオン対象の変更処理
+	ChangeLockOnTarget();
+
 	// LTでロックオン
 	if (LWP::Input::Pad::GetPress(XINPUT_GAMEPAD_LEFT_THUMB) || LWP::Input::Keyboard::GetTrigger(DIK_SPACE)) {
 		if (!isActive_) {
 			isActive_ = true;
+			isChangeLockOn_ = true;
 		}
-		else {
-			isActive_ = false;
-			Reset();
-		}
+		else { Reset(); }
 	}
 }
 
@@ -65,36 +83,70 @@ void LockOn::SearchLockOnEnemy() {
 
 		// スクリーン座標内にいるか
 		if (!IsObjectInScreen(enemy->GetPosition())) { continue; }
-		
+
 		// 敵をロックオン可能状態にする
 		enemy->SetIsLocked(true);
+		lockOnNum_++;
 	}
 }
 
 void LockOn::SearchNearEnemy() {
-	if (!isActive_) { return; }
-	if (isLockOn_) { return; }
+	if (!isChangeLocked_ && isChangeLockOn_) {
+		for (IEnemy* enemy : *enemies_) {
+			// ロックオン可能状態の敵じゃないならスキップ
+			if (!enemy->GetIsLocked()) { continue; }
 
-	for (IEnemy* enemy : *enemies_) {
-		// ロックオン可能状態の敵じゃないならスキップ
-		if (!enemy->GetIsLocked()) { continue; }
-		
-		// 一度でもロックオンしたことがあるならスキップ
-		bool isLockedEnemy = false;
-		for (int i = 0; i < lockedEnemyIDs_.size(); i++) {	
-			if (enemy->GetID() == lockedEnemyIDs_[i]) {
-				isLockedEnemy = true;
-				break;
+			// 一度でもロックオンしたことがあるならスキップ
+			bool isLockedEnemy = false;
+			for (int i = 0; i < lockedEnemyIDs_.size(); i++) {
+				if (enemy->GetID() == lockedEnemyIDs_[i]) {
+					isLockedEnemy = true;
+					break;
+				}
 			}
-		}	
-		if (isLockedEnemy) { continue; }
+			if (isLockedEnemy) { continue; }
 
-		// ロックオン開始
-		lockedEnemyIDs_.push_back(enemy->GetID());
-		lockOnEnemy_ = enemy;
-		followCamera_->StartLockOn(lockOnEnemy_->GetWorldTF());
-		isLockOn_ = true;
-		break;
+			// ロックオン開始
+			StartLockOn(enemy);
+
+			break;
+		}
+	}
+}
+
+void LockOn::StartLockOn(IEnemy* enemy) {
+	// ロックオン開始
+	lockedEnemyIDs_.push_back(enemy->GetID());
+	lockOnEnemy_ = enemy;
+	followCamera_->StartLockOn(lockOnEnemy_->GetWorldTF());
+	isChangeLocked_ = false;
+}
+
+void LockOn::ChangeLockOnTarget() {
+	if (!isActive_) { return; }
+
+#pragma region ロックオン時のみ左右どちらに入力があったかを知るため
+	// 回転する向き
+	LWP::Math::Vector2 dir = { 0.0f,0.0f };
+	// キーボード入力
+	if (LWP::Input::Keyboard::GetPress(DIK_RIGHT)) {
+		dir.y += 1.0f;
+	}
+	if (LWP::Input::Keyboard::GetPress(DIK_LEFT)) {
+		dir.y -= 1.0f;
+	}
+	// コントローラーでの回転
+	dir.y += LWP::Input::Pad::GetRStick().y;
+#pragma endregion
+
+	inputCameraRotateY_ = dir.y;
+
+	// ロックオン中に入力があった
+	if (inputCameraRotateY_ != 0.0f) {
+		isChangeLockOn_ = true;
+	}
+	else {
+		isChangeLockOn_ = false;
 	}
 }
 
@@ -126,6 +178,19 @@ void LockOn::ClearLockOnList() {
 		if (!IsObjectInScreen(enemy->GetPosition())) {
 			enemy->SetIsLocked(false);
 			continue;
+		}
+	}
+
+	// すべてロックオンしたことがあるならロックオン状態を初期化
+	if (isActive_) {
+		if (lockOnNum_ <= (int)lockedEnemyIDs_.size()) {
+			for (IEnemy* enemy : *enemies_) {
+				enemy->SetIsLocked(false);		
+			}
+			lockedEnemyIDs_.clear();
+			lockOnNum_ = 0;
+			// ロックオン可能な敵を再検索
+			SearchLockOnEnemy();
 		}
 	}
 }
