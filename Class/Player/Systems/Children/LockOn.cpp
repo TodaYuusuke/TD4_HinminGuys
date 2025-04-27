@@ -21,7 +21,7 @@ void LockOn::Update() {
 	SearchLockOnEnemy();
 
 	// ロックオン可能状態の条件から外れた敵をリストから除外する
-	ClearLockOnList();
+	ClearLockOn();
 
 	// 最も近い敵をロックオン
 	SearchNearEnemy();
@@ -40,8 +40,12 @@ void LockOn::Reset() {
 	lockOnNum_ = 0;
 }
 
+static int o;
 void LockOn::DebugGUI() {
+	o = (int)lockedEnemyIDs_.size();
 	if (ImGui::TreeNode("LockOn")) {
+		ImGui::DragInt("LockedNum", &o, 1, 0, 100);
+		ImGui::DragInt("LockOnEnableCount", &lockOnNum_, 1, 0, 100);
 		ImGui::Checkbox("IsLockOn", &isActive_);
 		ImGui::Checkbox("IsChangeLockOnTarget", &isChangeLockOn_);
 		ImGui::Checkbox("IsChangeLocked", &isChangeLocked_);
@@ -61,65 +65,6 @@ void LockOn::InputUpdate() {
 		}
 		else { Reset(); }
 	}
-}
-
-void LockOn::SearchLockOnEnemy() {
-	for (IEnemy* enemy : *enemies_) {
-		// ロックオン可能状態の敵ならスキップ
-		if (enemy->GetIsLocked()) { continue; }
-
-		// ロックオン可能距離に敵がいないならスキップ
-		LWP::Math::Vector3 p2e = enemy->GetPosition() - player_->GetWorldTF()->GetWorldPosition();
-		float radius = kMaxRange;
-		if ((p2e.x * p2e.x) + (p2e.y * p2e.y) + (p2e.z * p2e.z) > (radius * radius)) { continue; }
-
-		// カメラの正面方向に敵がいないならスキップ
-		LWP::Math::Vector3 cameraDir{ 0,0,1 };
-		// 回転行列を求める
-		Matrix4x4 rotMatrix = LWP::Math::Matrix4x4::CreateRotateXYZMatrix(pCamera_->worldTF.rotation);
-		// 方向ベクトルを求める
-		cameraDir = cameraDir * rotMatrix;
-		if (IsObjectInOppositeDirection(enemy->GetPosition(), pCamera_->worldTF.translation, cameraDir)) { continue; }
-
-		// スクリーン座標内にいるか
-		if (!IsObjectInScreen(enemy->GetPosition())) { continue; }
-
-		// 敵をロックオン可能状態にする
-		enemy->SetIsLocked(true);
-		lockOnNum_++;
-	}
-}
-
-void LockOn::SearchNearEnemy() {
-	if (!isChangeLocked_ && isChangeLockOn_) {
-		for (IEnemy* enemy : *enemies_) {
-			// ロックオン可能状態の敵じゃないならスキップ
-			if (!enemy->GetIsLocked()) { continue; }
-
-			// 一度でもロックオンしたことがあるならスキップ
-			bool isLockedEnemy = false;
-			for (int i = 0; i < lockedEnemyIDs_.size(); i++) {
-				if (enemy->GetID() == lockedEnemyIDs_[i]) {
-					isLockedEnemy = true;
-					break;
-				}
-			}
-			if (isLockedEnemy) { continue; }
-
-			// ロックオン開始
-			StartLockOn(enemy);
-
-			break;
-		}
-	}
-}
-
-void LockOn::StartLockOn(IEnemy* enemy) {
-	// ロックオン開始
-	lockedEnemyIDs_.push_back(enemy->GetID());
-	lockOnEnemy_ = enemy;
-	followCamera_->StartLockOn(lockOnEnemy_->GetWorldTF());
-	isChangeLocked_ = false;
 }
 
 void LockOn::ChangeLockOnTarget() {
@@ -150,7 +95,34 @@ void LockOn::ChangeLockOnTarget() {
 	}
 }
 
-void LockOn::ClearLockOnList() {
+void LockOn::SearchLockOnEnemy() {
+	for (IEnemy* enemy : *enemies_) {
+		// ロックオン可能状態の敵ならスキップ
+		if (enemy->GetIsLocked()) { continue; }
+
+		// ロックオン可能距離に敵がいないならスキップ
+		LWP::Math::Vector3 p2e = enemy->GetPosition() - player_->GetWorldTF()->GetWorldPosition();
+		float radius = kMaxRange;
+		if ((p2e.x * p2e.x) + (p2e.y * p2e.y) + (p2e.z * p2e.z) > (radius * radius)) { continue; }
+
+		// カメラの正面方向に敵がいないならスキップ
+		LWP::Math::Vector3 cameraDir{ 0,0,1 };
+		// 回転行列を求める
+		Matrix4x4 rotMatrix = LWP::Math::Matrix4x4::CreateRotateXYZMatrix(pCamera_->worldTF.rotation);
+		// 方向ベクトルを求める
+		cameraDir = cameraDir * rotMatrix;
+		if (IsObjectInOppositeDirection(enemy->GetPosition(), pCamera_->worldTF.translation, cameraDir)) { continue; }
+
+		// スクリーン座標内にいるか
+		if (!IsObjectInScreen(enemy->GetPosition())) { continue; }
+
+		// 敵をロックオン可能状態にする
+		enemy->SetIsLocked(true);
+		lockOnNum_++;
+	}
+}
+
+void LockOn::ClearLockOn() {
 	for (IEnemy* enemy : *enemies_) {
 		// ロックオン可能状態の敵じゃないならスキップ
 		if (!enemy->GetIsLocked()) { continue; }
@@ -180,19 +152,56 @@ void LockOn::ClearLockOnList() {
 			continue;
 		}
 	}
+}
 
-	// すべてロックオンしたことがあるならロックオン状態を初期化
-	if (isActive_) {
-		if (lockOnNum_ <= (int)lockedEnemyIDs_.size()) {
-			for (IEnemy* enemy : *enemies_) {
-				enemy->SetIsLocked(false);		
+void LockOn::SearchNearEnemy() {
+	if (!isChangeLocked_ && isChangeLockOn_) {
+		for (IEnemy* enemy : *enemies_) {
+			// ロックオン可能状態の敵じゃないならスキップ
+			if (!enemy->GetIsLocked()) { continue; }
+
+			// 一度でもロックオンしたことがあるならスキップ
+			bool isLockedEnemy = false;
+			for (int i = 0; i < lockedEnemyIDs_.size(); i++) {
+				if (enemy->GetID() == lockedEnemyIDs_[i]) {
+					isLockedEnemy = true;
+					break;
+				}
 			}
-			lockedEnemyIDs_.clear();
-			lockOnNum_ = 0;
-			// ロックオン可能な敵を再検索
-			SearchLockOnEnemy();
+			if (isLockedEnemy) { continue; }
+
+			if (inputCameraRotateY_ != 0.0f && !lockedEnemyIDs_.empty()) {
+				// 自機の右方向を基準とする
+				LWP::Math::Vector3 dir = { 0,0,1 };
+				// 回転行列を求める
+				LWP::Math::Matrix4x4 rotMatrix = LWP::Math::Matrix4x4::CreateRotateXYZMatrix(pCamera_->worldTF.rotation);
+				// 方向ベクトルを求める
+				dir = dir * rotMatrix;
+
+				dir = LWP::Math::Vector3::Cross(LWP::Math::Vector3{ 0,1,0 }, dir);
+				// 値が-なら左に敵がいる
+				float dot = LWP::Math::Vector3::Dot((dir).Normalize(), (enemy->GetPosition() - player_->GetWorldTF()->GetWorldPosition()).Normalize());
+				// 異なる符号ならロックオンしない
+				if (std::signbit(inputCameraRotateY_) != std::signbit(dot)) { continue; }
+			}
+
+			// ロックオン開始
+			StartLockOn(enemy);
+
+			break;
 		}
 	}
+}
+
+void LockOn::StartLockOn(IEnemy* enemy) {
+	lockedEnemyIDs_.clear();
+	lockOnNum_ = 0;
+
+	// ロックオン開始
+	lockedEnemyIDs_.push_back(enemy->GetID());
+	lockOnEnemy_ = enemy;
+	followCamera_->StartLockOn(lockOnEnemy_->GetWorldTF());
+	isChangeLocked_ = false;
 }
 
 Vector2 LockOn::ConvertWorld2Screen(LWP::Math::Vector3 worldPos) {

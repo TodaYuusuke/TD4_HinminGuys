@@ -44,9 +44,20 @@ private:
 	void InputUpdate();
 
 	/// <summary>
+	/// ロックオン対象を変える
+	/// </summary>
+	void ChangeLockOnTarget();
+
+	/// <summary>
 	/// ロックオン可能範囲の敵を索敵
 	/// </summary>
 	void SearchLockOnEnemy();
+
+	/// <summary>
+	/// ロックオン情報を初期化する
+	/// </summary>
+	void ClearLockOn();
+
 	/// <summary>
 	/// 最も近い敵を索敵
 	/// </summary>
@@ -56,16 +67,6 @@ private:
 	/// ロックオン開始時に必要な情報
 	/// </summary>
 	void StartLockOn(IEnemy* enemy);
-
-	/// <summary>
-	/// ロックオン対象を変える
-	/// </summary>
-	void ChangeLockOnTarget();
-
-	/// <summary>
-	/// ロックオンリストを初期化する
-	/// </summary>
-	void ClearLockOnList();
 
 	// カメラの正面方向を算出
 	LWP::Math::Vector2 ConvertWorld2Screen(LWP::Math::Vector3 worldPos);
