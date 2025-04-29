@@ -52,11 +52,11 @@ void GameScene::Update() {
 	//敵全て
 	enemyManager_.Update();
 
-	// 自機
-	player_.Update();
-
 	// 追従カメラ
 	followCamera_.Update();
+
+	// 自機
+	player_.Update();
 
 	// デバッグ用のカメラ
 	mainCamera.DebugGUI();

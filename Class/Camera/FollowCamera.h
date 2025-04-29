@@ -62,6 +62,12 @@ public:// Getter,Setter
 	/// </summary>
 	/// <returns></returns>
 	LWP::Object::Camera* GetCamera() { return camera_; }
+
+	/// <summary>
+	/// ロックオン中かを取得
+	/// </summary>
+	/// <returns></returns>
+	bool GetIsLockOn() { return lockOnData_.isLocked; }
 #pragma endregion
 
 #pragma region Setter
@@ -81,8 +87,8 @@ public:// Getter,Setter
 	/// ロックオン開始
 	/// </summary>
 	/// <param name="lockOnTarget">ロックオン対象のアドレス</param>
-	void StartLockOn(LWP::Object::TransformQuat* lockOnTarget) { 
-		lockOnData_.targetTransform = lockOnTarget; 
+	void StartLockOn(LWP::Object::TransformQuat* lockOnTarget) {
+		lockOnData_.targetTransform = lockOnTarget;
 		lockOnData_.isLocked = true;
 	}
 	/// <summary>

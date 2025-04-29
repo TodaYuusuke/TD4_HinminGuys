@@ -3,13 +3,18 @@
 #include "../../../Enemy/IEnemy.h"
 #include <vector>
 
+
 class FollowCamera;
 class LockOn : public ISystem {
 public:// 構造体
 	// ロックオン時に必要な情報
 	struct LockOnData {
-		IEnemy* enemyData;	// 敵の情報
-		bool isActive;		// 一度ロックオンしたか
+		IEnemy* enemyData;					// 敵の情報
+		LWP::Primitive::Sprite reticle;		// ロックオン可能UIのスプライト
+		LWP::Object::TransformQuat offset;	// 補間の値を格納
+		Vector2 defaultReticlePos;			// ロックオン可能UIの初期座標
+		Vector2 defaultReticleAnchorPoint;	// ロックオン可能UIの初期中心点
+		Vector3 defaultReticleScale;		// ロックオン可能UIの初期サイズ
 	};
 
 public:
@@ -68,14 +73,20 @@ private:
 	/// </summary>
 	void StartLockOn(IEnemy* enemy);
 
+	/// <summary>
+	/// ロックオン時のレティクルの更新処理
+	/// </summary>
+	void LockOnReticleUpdate();
+
+	// ワールド座標からスクリーン座標に変換
+	Vector2 ConvertWorld2Screen(Vector3 worldPos);
+
+	bool IsObjectInScreen(Vector3 worldPos);
+
 	// カメラの正面方向を算出
-	LWP::Math::Vector2 ConvertWorld2Screen(LWP::Math::Vector3 worldPos);
-
-	bool IsObjectInScreen(LWP::Math::Vector3 worldPos);
-
 	bool IsObjectInOppositeDirection(const Vector3& objectPosition, const Vector3& cameraPosition, const Vector3& cameraDirection);
 
-	LWP::Math::Vector3 Transforms(const LWP::Math::Vector3& vector, const LWP::Math::Matrix4x4& matrix);
+	Vector3 Transforms(const Vector3& vector, const Matrix4x4& matrix);
 
 public:// Getter, Setter
 #pragma region Getter
@@ -111,7 +122,9 @@ private:// 外部からポインタをもらう変数
 
 private:
 	// ロックオンされたことのある敵のID
-	std::vector<int32_t> lockedEnemyIDs_;
+	std::vector<uint32_t> lockedEnemyIDs_;
+	// ロックオンできる敵
+	std::vector<LockOnData> lockOnEnemies_;
 
 	// 現在ロックオンされている敵の情報
 	IEnemy* lockOnEnemy_;
