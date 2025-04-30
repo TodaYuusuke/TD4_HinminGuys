@@ -165,6 +165,7 @@
     <ClCompile Include="Class\Scene\GameScene.cpp" />
     <ClCompile Include="Class\Scene\Title.cpp" />
     <ClCompile Include="Class\Camera\FollowCamera.cpp" />
+    <ClCompile Include="Class\Player\Systems\EventOrder.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Class\Player\Player.cpp" />
     <ClCompile Include="Class\Player\Systems\Children\Move.cpp" />
@@ -192,6 +193,7 @@
     <ClInclude Include="Class\Player\Systems\Children\Move.h" />
     <ClInclude Include="Class\Player\Systems\Children\Parry.h" />
     <ClInclude Include="Class\Camera\FollowCamera.h" />
+    <ClInclude Include="Class\Player\Systems\EventOrder.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />

@@ -1,10 +1,6 @@
 #pragma once
 #include "../ISystem.h"
-
-struct TimeEvent {
-	float graceTime; // 猶予時間
-	std::string name;// 今の状態の名前
-};
+#include "../EventOrder.h"
 
 /// <summary>
 /// 自機のパリィ機能をまとめたクラス
@@ -41,18 +37,9 @@ private:
 	/// </summary>
 	void InputUpdate();
 
-	/// <summary>
-	/// パリィの情報を作成
-	/// </summary>
-	std::vector<TimeEvent> CreateParryData();
-
 public:// Getter, Setter
 #pragma region Getter
-	/// <summary>
-	/// パリィ中に起こる状態をまとめたクラスを取得
-	/// </summary>
-	/// <returns></returns>
-	std::vector<TimeEvent> GetTimeEvents() { return timeEvents_; }
+
 #pragma endregion
 
 private:// 定数
@@ -66,12 +53,6 @@ private:// 定数
 	const float kRecoveryTime = 60.0f * 0.0f;
 
 private:
-	// frameごとに起きる状態をまとめたリスト
-	std::vector<TimeEvent> timeEvents_;
-
-	// デバッグ用のイベントリスト(ImGuiにしか使ってないから気にしないで)
-	std::vector<TimeEvent> debugTimeEvents_;
-
-	// 経過時間
-	float currentTime_;
+	// フレーム単位で発生するアクションイベントを管理するクラス
+	EventOrder eventOrder_;
 };

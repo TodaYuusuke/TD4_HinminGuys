@@ -27,17 +27,26 @@ public:
 	virtual void Reset() = 0;
 
 public:// Getter, Setter
+#pragma region Getter
+	/// <summary>
+	/// 機能が使える状態かを取得
+	/// </summary>
+	/// <returns></returns>
+	bool GetIsActive() { return isActive_; }
+#pragma endregion
+
+#pragma region Setter
 	/// <summary>
 	/// シーンで使用しているカメラのポインタ
 	/// </summary>
 	/// <param name="camera">カメラのアドレス</param>
 	void SetCamera(LWP::Object::Camera* camera) { pCamera_ = camera; }
-
 	/// <summary>
 	/// 自機のポインタを設定
 	/// </summary>
 	/// <param name="player"></param>
 	void SetPlayer(Player* player) { player_ = player; }
+#pragma endregion
 
 protected:
 	// 自機のアドレス
