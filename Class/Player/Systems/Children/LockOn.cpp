@@ -14,10 +14,12 @@ void LockOn::Initialize() {
 	isChangeLockOn_ = false;
 	isChangeLocked_ = false;
 
-	/*lockOnEnemies_.resize(kMaxLockOnNum);
-	for (LWP::Primitive::Sprite& lockOnEnemy : lockOnEnemies_) {
-		lockOnEnemy.LoadTexture("resources/textures/arrow.png");
-	}*/
+	// ロックオン中のレティクル
+	lockOnUI_.defaultPos = { 0,1,0 };
+	lockOnUI_.defaultAnchorPoint = { 0.5f, 0.5f };
+	lockOnUI_.sprite.LoadTexture("lockOnReticle.png");
+	lockOnUI_.sprite.anchorPoint = lockOnUI_.defaultAnchorPoint;
+	lockOnUI_.sprite.isActive = false;
 }
 
 void LockOn::Update() {
@@ -30,28 +32,27 @@ void LockOn::Update() {
 	// ロックオン可能状態の条件から外れた敵をリストから除外する
 	ClearLockOn();
 
-	// ロックオン時のレティクル座標を更新
-	LockOnReticleUpdate();
-
 	// 最も近い敵をロックオン
 	SearchNearEnemy();
+
+	// ロックオン時のレティクル座標を更新
+	LockOnReticleUpdate();
 
 	isChangeLocked_ = isChangeLockOn_;
 }
 
 void LockOn::Reset() {
 	followCamera_->FinishLockOn();
+	lockedEnemyIDs_.clear();
 	lockOnEnemy_ = nullptr;
 	isActive_ = false;
 	isChangeLockOn_ = false;
 	isChangeLocked_ = false;
 	inputCameraRotateY_ = 0.0f;
-	lockOnNum_ = 0;
 }
 
 void LockOn::DebugGUI() {
 	if (ImGui::TreeNode("LockOn")) {
-		ImGui::DragInt("LockOnEnableCount", &lockOnNum_, 1, 0, 100);
 		ImGui::Checkbox("IsLockOn", &isActive_);
 		ImGui::Checkbox("IsChangeLockOnTarget", &isChangeLockOn_);
 		ImGui::Checkbox("IsChangeLocked", &isChangeLocked_);
@@ -126,15 +127,17 @@ void LockOn::SearchLockOnEnemy() {
 		// スクリーン座標内にいるか
 		if (!IsObjectInScreen(enemy->GetPosition())) { continue; }
 
+		// 現在ロックオン中の敵は追加しない
+		if (enemy == lockOnEnemy_) { continue; }
+
 		// 敵をロックオン可能状態にする
 		enemy->SetIsLocked(true);
-
-		int size = (int)lockOnEnemies_.size();
-		lockOnEnemies_.resize(size + 1);
-		lockOnEnemies_[size].enemyData = enemy;
-		lockOnEnemies_[size].reticle.LoadTexture("arrow.png");
-		lockOnEnemies_[size].reticle.anchorPoint = { 0.5f,0.5f };
-		lockOnNum_++;
+		// ロックオン可能UIを設置
+		LockOnData lockOnData;
+		lockOnData.enemyData = enemy;
+		lockOnData.ui.sprite.LoadTexture("arrow.png");
+		lockOnData.ui.sprite.anchorPoint = { 0.5f,0.5f };
+		lockOnEnableEnemies_.push_back(lockOnData);
 	}
 }
 
@@ -148,12 +151,15 @@ void LockOn::ClearLockOn() {
 		float radius = kMaxRange;
 		if ((p2e.x * p2e.x) + (p2e.y * p2e.y) + (p2e.z * p2e.z) > (radius * radius)) {
 			enemy->SetIsLocked(false);
-			lockOnNum_--;
-			for (int i = 0; i < lockOnEnemies_.size(); i++) {
-				if (enemy->GetID() == lockOnEnemies_[i].enemyData->GetID()) {
-					lockOnEnemies_.erase(lockOnEnemies_.begin() + i);
+			/*for (int i = 0; i < lockOnEnableEnemies_.size(); i++) {
+				if (enemy->GetID() == lockOnEnableEnemies_[i].enemyData->GetID()) {
+					lockOnEnableEnemies_.erase(lockOnEnableEnemies_.begin() + i);
 					break;
 				}
+			}*/
+			auto it = std::find(lockOnEnableEnemies_.begin(), lockOnEnableEnemies_.end(), enemy);
+			if (it != lockOnEnableEnemies_.end()) {
+				lockOnEnableEnemies_.erase(std::remove(lockOnEnableEnemies_.begin(), lockOnEnableEnemies_.end(), enemy), lockOnEnableEnemies_.end());
 			}
 			continue;
 		}
@@ -166,12 +172,15 @@ void LockOn::ClearLockOn() {
 		cameraDir = cameraDir * rotMatrix;
 		if (IsObjectInOppositeDirection(enemy->GetPosition(), pCamera_->worldTF.translation, cameraDir)) {
 			enemy->SetIsLocked(false);
-			lockOnNum_--;
-			for (int i = 0; i < lockOnEnemies_.size(); i++) {
-				if (enemy->GetID() == lockOnEnemies_[i].enemyData->GetID()) {
-					lockOnEnemies_.erase(lockOnEnemies_.begin() + i);
+			/*for (int i = 0; i < lockOnEnableEnemies_.size(); i++) {
+				if (enemy->GetID() == lockOnEnableEnemies_[i].enemyData->GetID()) {
+					lockOnEnableEnemies_.erase(lockOnEnableEnemies_.begin() + i);
 					break;
 				}
+			}*/
+			auto it = std::find(lockOnEnableEnemies_.begin(), lockOnEnableEnemies_.end(), enemy);
+			if (it != lockOnEnableEnemies_.end()) {
+				lockOnEnableEnemies_.erase(std::remove(lockOnEnableEnemies_.begin(), lockOnEnableEnemies_.end(), enemy), lockOnEnableEnemies_.end());
 			}
 			continue;
 		}
@@ -179,13 +188,17 @@ void LockOn::ClearLockOn() {
 		// スクリーン座標内にいないならリストから除外
 		if (!IsObjectInScreen(enemy->GetPosition())) {
 			enemy->SetIsLocked(false);
-			lockOnNum_--;
-			for (int i = 0; i < lockOnEnemies_.size(); i++) {
-				if (enemy->GetID() == lockOnEnemies_[i].enemyData->GetID()) {
-					lockOnEnemies_.erase(lockOnEnemies_.begin() + i);
-					break;
-				}
+			//for (int i = 0; i < lockOnEnableEnemies_.size(); i++) {
+			//	if (enemy->GetID() == lockOnEnableEnemies_[i].enemyData->GetID()) {
+			//		lockOnEnableEnemies_.erase(lockOnEnableEnemies_.begin() + i);
+			//		break;
+			//	}
+			//}
+			auto it = std::find(lockOnEnableEnemies_.begin(), lockOnEnableEnemies_.end(), enemy);
+			if (it != lockOnEnableEnemies_.end()) {
+				lockOnEnableEnemies_.erase(std::remove(lockOnEnableEnemies_.begin(), lockOnEnableEnemies_.end(), enemy), lockOnEnableEnemies_.end());
 			}
+
 			continue;
 		}
 	}
@@ -198,15 +211,16 @@ void LockOn::SearchNearEnemy() {
 			if (!enemy->GetIsLocked()) { continue; }
 
 			// 一度でもロックオンしたことがあるならスキップ
-			bool isLockedEnemy = false;
+			/*bool isLockedEnemy = false;
 			for (int i = 0; i < lockedEnemyIDs_.size(); i++) {
 				if (enemy->GetID() == lockedEnemyIDs_[i]) {
 					isLockedEnemy = true;
 					break;
 				}
 			}
-			if (isLockedEnemy) { continue; }
+			if (isLockedEnemy) { continue; }*/
 
+			// 入力した方向に敵がいるならロックオン対象を変更
 			if (inputCameraRotateY_ != 0.0f && !lockedEnemyIDs_.empty()) {
 				// 自機の右方向を基準とする
 				Vector3 dir = { 0,0,1 };
@@ -214,14 +228,14 @@ void LockOn::SearchNearEnemy() {
 				Matrix4x4 rotMatrix = Matrix4x4::CreateRotateXYZMatrix(pCamera_->worldTF.rotation);
 				// 方向ベクトルを求める
 				dir = dir * rotMatrix;
-
 				dir = Vector3::Cross(Vector3{ 0,1,0 }, dir);
 				// 値が-なら左に敵がいる
 				float dot = Vector3::Dot((dir).Normalize(), (enemy->GetPosition() - player_->GetWorldTF()->GetWorldPosition()).Normalize());
 				// 異なる符号ならロックオンしない
-				if (std::signbit(inputCameraRotateY_) != std::signbit(dot)) { continue; }
+				if (std::signbit(inputCameraRotateY_) != std::signbit(dot)) {
+					continue; 
+				}
 			}
-
 			// ロックオン開始
 			StartLockOn(enemy);
 
@@ -231,22 +245,50 @@ void LockOn::SearchNearEnemy() {
 }
 
 void LockOn::StartLockOn(IEnemy* enemy) {
-	lockedEnemyIDs_.clear();
-	lockOnNum_ = 0;
+	// すでに存在しない場合だけ追加する
+	if (std::find(lockedEnemyIDs_.begin(), lockedEnemyIDs_.end(), enemy->GetID()) == lockedEnemyIDs_.end()) {
+		lockedEnemyIDs_.push_back(enemy->GetID());
+	}
 
-	// ロックオン開始
-	lockedEnemyIDs_.push_back(enemy->GetID());
+	// ロックオン対象をセット
 	lockOnEnemy_ = enemy;
+	// ロックオン対象にZ注目開始
 	followCamera_->StartLockOn(lockOnEnemy_->GetWorldTF());
+	// ロックオン中の敵は"ロックオン可能状態"を外す
+	enemy->SetIsLocked(false);
 	isChangeLocked_ = false;
 }
 
 void LockOn::LockOnReticleUpdate() {
-	for (LockOnData& lockOnEnemy : lockOnEnemies_) {
+	lockOnUI_.sprite.isActive = false;
+	// Z注目をしている敵がいるなら専用UIを表示
+	if (lockOnEnemy_) {
+		lockOnUI_.sprite.isActive = true;
+		// 敵の座標をスクリーン座標に変換
+		Vector2 screenPos = ConvertWorld2Screen(lockOnEnemy_->GetPosition() + lockOnUI_.defaultPos);
+		// レティクルスプライトの座標を更新
+		lockOnUI_.sprite.worldTF.translation = {
+			screenPos.x,
+			screenPos.y,
+			0
+		};
+
+		// Z注目中の敵を"ロックオン可能状態"リストから除外
+		auto it = std::find(lockOnEnableEnemies_.begin(), lockOnEnableEnemies_.end(), lockOnEnemy_);
+		if (it != lockOnEnableEnemies_.end()) {
+			lockOnEnableEnemies_.erase(std::remove(lockOnEnableEnemies_.begin(), lockOnEnableEnemies_.end(), lockOnEnemy_), lockOnEnableEnemies_.end());
+		}
+	}
+
+	// ロックオン可能な敵にUIを表示
+	for (LockOnData& lockOnEnemy : lockOnEnableEnemies_) {
+		// 敵がロックオン可能状態でないならスキップ
+		if (!lockOnEnemy.enemyData->GetIsLocked()) { continue; }
+
 		// 敵の座標をスクリーン座標に変換
 		Vector2 screenPos = ConvertWorld2Screen(lockOnEnemy.enemyData->GetPosition() + Vector3{ 0, 1, 0 });
 		// レティクルスプライトの座標を更新
-		lockOnEnemy.reticle.worldTF.translation = {
+		lockOnEnemy.ui.sprite.worldTF.translation = {
 			screenPos.x,
 			screenPos.y,
 			0

@@ -7,14 +7,23 @@
 class FollowCamera;
 class LockOn : public ISystem {
 public:// 構造体
+	struct LockOnUI {
+		LWP::Primitive::Sprite sprite;		// ロックオン可能UIのスプライト
+		LWP::Object::TransformQuat offset;	// 補間の値を格納
+		Vector3 defaultPos;					// ロックオン可能UIの初期座標
+		Vector3 defaultScale;				// ロックオン可能UIの初期サイズ
+		Vector2 defaultAnchorPoint;			// ロックオン可能UIの初期中心点
+	};
+
 	// ロックオン時に必要な情報
 	struct LockOnData {
 		IEnemy* enemyData;					// 敵の情報
-		LWP::Primitive::Sprite reticle;		// ロックオン可能UIのスプライト
-		LWP::Object::TransformQuat offset;	// 補間の値を格納
-		Vector2 defaultReticlePos;			// ロックオン可能UIの初期座標
-		Vector2 defaultReticleAnchorPoint;	// ロックオン可能UIの初期中心点
-		Vector3 defaultReticleScale;		// ロックオン可能UIの初期サイズ
+		LockOnUI ui;
+
+		// 同じ敵をロックオンしようとしているかを判別するときに使う
+		bool operator==(IEnemy* other)const {
+			return enemyData == other;
+		}
 	};
 
 public:
@@ -108,9 +117,6 @@ public:// Getter, Setter
 #pragma endregion
 
 private:// 定数
-	// ロックオンの上限数
-	inline constexpr static int32_t kMaxLockOnNum = 10;
-
 	// ロックオンできる範囲
 	constexpr static float kMaxRange = 50.0f;
 
@@ -124,10 +130,12 @@ private:
 	// ロックオンされたことのある敵のID
 	std::vector<uint32_t> lockedEnemyIDs_;
 	// ロックオンできる敵
-	std::vector<LockOnData> lockOnEnemies_;
+	std::vector<LockOnData> lockOnEnableEnemies_;
 
 	// 現在ロックオンされている敵の情報
 	IEnemy* lockOnEnemy_;
+
+	LockOnUI lockOnUI_;
 
 	// ロックオン可能数
 	int lockOnNum_;
