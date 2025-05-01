@@ -2,6 +2,7 @@
 #include "InputConfig.h"
 
 using namespace LWP::Input;
+using namespace InputConfig;
 
 void InputHandler::Initialize() {
 	// コマンド作成
@@ -32,18 +33,19 @@ void InputHandler::CreateCommand() {
 }
 
 std::vector<ICommand*> InputHandler::HandleInput() {
+	
 	std::vector<ICommand*> result;
 
 	// 通常攻撃コマンド
-	if (Keyboard::GetTrigger(Key_NormalAttack) || Pad::GetPress(Pad_NormalAttack)) {
+	if (Keyboard::GetTrigger(Key::NormalAttack) || Pad::GetPress(GamePad::NormalAttack)) {
 		result.push_back(pressNormalAttackCommand_);
 	}
 	// パリィコマンド
-	if (Keyboard::GetTrigger(Key_Parry) || Pad::GetPress(Pad_Parry)) {
+	if (Keyboard::GetTrigger(Key::Parry) || Pad::GetPress(GamePad::Parry)) {
 		result.push_back(pressParryCommand_);
 	}
 	// ロックオンコマンド
-	if (Keyboard::GetTrigger(Key_LockOn) || Pad::GetPress(Pad_LockOn)) {
+	if (Keyboard::GetTrigger(Key::LockOn) || Pad::GetPress(GamePad::LockOn)) {
 		result.push_back(pressLockOnCommand_);
 	}
 
