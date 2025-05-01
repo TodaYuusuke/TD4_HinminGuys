@@ -44,35 +44,31 @@ void EventOrder::CreateTimeEvent(TimeEvent timeEvent) {
 }
 
 void EventOrder::DebugGUI() {
-	if (ImGui::TreeNode("Parry")) {
-		if (ImGui::TreeNode("Event")) {
-			// イベントの進む順序
-			if (ImGui::TreeNode("ExecutionOrder")) {
-				int i = 0;
-				for (TimeEvent& timeEvent : timeEventSchedules_) {
-					i++;
-					std::string timeEventName = std::to_string(i) + " : % s";
-					std::string timeEventGraceTime = "##TimeEvent" + std::to_string(i);
-					ImGui::Text(timeEventName.c_str(), timeEvent.name.c_str());
-					ImGui::DragFloat((std::string("GraceTime") + timeEventGraceTime).c_str(), &timeEvent.graceTime, 1, 0, 10000);
-				}
-				ImGui::TreePop();
-			}
-			// 現在のイベントと猶予時間
-			if (ImGui::TreeNode("CurrentData")) {
-				if (!timeEvents_.empty()) {
-					ImGui::Text("Event : %s", timeEvents_[0].name.c_str());
-					ImGui::DragFloat("GraceTime", &timeEvents_[0].graceTime, 1, 0, 1000);
-				}
-				ImGui::TreePop();
+	if (ImGui::TreeNode("Event")) {
+		// イベントの進む順序
+		if (ImGui::TreeNode("ExecutionOrder")) {
+			int i = 0;
+			for (TimeEvent& timeEvent : timeEventSchedules_) {
+				i++;
+				std::string timeEventName = std::to_string(i) + " : % s";
+				std::string timeEventGraceTime = "##TimeEvent" + std::to_string(i);
+				ImGui::Text(timeEventName.c_str(), timeEvent.name.c_str());
+				ImGui::DragFloat((std::string("GraceTime") + timeEventGraceTime).c_str(), &timeEvent.graceTime, 1, 0, 10000);
 			}
 			ImGui::TreePop();
 		}
-		// 経過時間
-		ImGui::DragFloat("CurrentTime", &currentTime_, 1, 0, 1000);
-		// 機能を使用中か
-		ImGui::Checkbox("IsParry", &isActive_);
-
+		// 現在のイベントと猶予時間
+		if (ImGui::TreeNode("CurrentData")) {
+			if (!timeEvents_.empty()) {
+				ImGui::Text("Event : %s", timeEvents_[0].name.c_str());
+				ImGui::DragFloat("GraceTime", &timeEvents_[0].graceTime, 1, 0, 1000);
+			}
+			ImGui::TreePop();
+		}
 		ImGui::TreePop();
 	}
+	// 経過時間
+	ImGui::DragFloat("CurrentTime", &currentTime_, 1, 0, 1000);
+	// 機能を使用中か
+	ImGui::Checkbox("IsParry", &isActive_);
 }

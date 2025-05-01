@@ -43,8 +43,31 @@ private:
 
 public:// Getter,Setter
 #pragma region Getter
+	/// <summary>
+	/// 自機の座標を取得
+	/// </summary>
+	/// <returns></returns>
 	LWP::Math::Vector3* GetModelPos() { return &model_.worldTF.translation; }
+	/// <summary>
+	/// 自機のTransformQuatを取得
+	/// </summary>
+	/// <returns></returns>
 	LWP::Object::TransformQuat* GetWorldTF() { return &model_.worldTF; }
+	/// <summary>
+	/// 攻撃機能のアドレスを取得
+	/// </summary>
+	/// <returns></returns>
+	Attack* GetAttackSystem() { return attackSystem_.get(); }
+	/// <summary>
+	/// パリィ機能のアドレスを取得
+	/// </summary>
+	/// <returns></returns>
+	Parry* GetParrySystem() { return parrySystem_.get(); }
+	/// <summary>
+	/// ロックオン機能のアドレスを取得
+	/// </summary>
+	/// <returns></returns>
+	LockOn* GetLockOnSystem() { return lockOnSystem_.get(); }
 #pragma endregion
 
 #pragma region Setter

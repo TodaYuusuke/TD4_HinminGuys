@@ -31,11 +31,10 @@ public:
 	/// </summary>
 	void DebugGUI();
 
-private:
 	/// <summary>
-	/// 入力処理
+	/// パリィのコマンド
 	/// </summary>
-	void InputUpdate();
+	void Command();
 
 public:// Getter, Setter
 #pragma region Getter
@@ -55,4 +54,8 @@ private:// 定数
 private:
 	// フレーム単位で発生するアクションイベントを管理するクラス
 	EventOrder eventOrder_;
+
+	// パリィ判定
+	LWP::Object::Collision collider_;
+	LWP::Object::Collider::AABB& aabb_;
 };

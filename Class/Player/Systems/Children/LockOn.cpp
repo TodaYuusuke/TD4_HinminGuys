@@ -23,9 +23,6 @@ void LockOn::Initialize() {
 }
 
 void LockOn::Update() {
-	// 入力処理
-	InputUpdate();
-
 	// ロックオン可能状態の敵をリストに追加
 	SearchLockOnEnemy();
 
@@ -39,6 +36,9 @@ void LockOn::Update() {
 	LockOnReticleUpdate();
 
 	isChangeLocked_ = isChangeLockOn_;
+
+	// ロックオン対象の変更処理
+	ChangeLockOnTarget();
 }
 
 void LockOn::Reset() {
@@ -60,18 +60,12 @@ void LockOn::DebugGUI() {
 	}
 }
 
-void LockOn::InputUpdate() {
-	// ロックオン対象の変更処理
-	ChangeLockOnTarget();
-
-	// LTでロックオン
-	if (LWP::Input::Pad::GetPress(XINPUT_GAMEPAD_LEFT_THUMB) || LWP::Input::Keyboard::GetTrigger(DIK_SPACE)) {
-		if (!isActive_) {
-			isActive_ = true;
-			isChangeLockOn_ = true;
-		}
-		else { Reset(); }
+void LockOn::Command() {
+	if (!isActive_) {
+		isActive_ = true;
+		isChangeLockOn_ = true;
 	}
+	else { Reset(); }
 }
 
 void LockOn::ChangeLockOnTarget() {

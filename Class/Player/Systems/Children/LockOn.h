@@ -51,12 +51,12 @@ public:
 	/// </summary>
 	void DebugGUI();
 
-private:
 	/// <summary>
-	/// 入力処理
+	/// ロックオンコマンド
 	/// </summary>
-	void InputUpdate();
+	void Command();
 
+private:
 	/// <summary>
 	/// ロックオン対象を変える
 	/// </summary>

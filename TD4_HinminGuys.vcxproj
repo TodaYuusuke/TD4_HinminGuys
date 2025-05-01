@@ -166,6 +166,8 @@
     <ClCompile Include="Class\Scene\Title.cpp" />
     <ClCompile Include="Class\Camera\FollowCamera.cpp" />
     <ClCompile Include="Class\Player\Systems\EventOrder.cpp" />
+    <ClCompile Include="Class\Player\Command\ICommand.cpp" />
+    <ClCompile Include="Class\Player\Command\InputHandler.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Class\Player\Player.cpp" />
     <ClCompile Include="Class\Player\Systems\Children\Move.cpp" />
@@ -183,6 +185,7 @@
     <ClInclude Include="Class\Enemy\Childs\Normal\State\NormalEnemyAttack.h" />
     <ClInclude Include="Class\Enemy\Childs\Normal\State\NormalEnemyIdle.h" />
     <ClInclude Include="Class\Enemy\Childs\Normal\State\NormalEnemyMove.h" />
+    <ClInclude Include="Class\Player\Command\InputConfig.h" />
     <ClInclude Include="Class\Player\ICharacter.h" />
     <ClInclude Include="Class\Player\Systems\Children\Attack.h" />
     <ClInclude Include="Class\Player\Systems\ISystem.h" />
@@ -194,6 +197,8 @@
     <ClInclude Include="Class\Player\Systems\Children\Parry.h" />
     <ClInclude Include="Class\Camera\FollowCamera.h" />
     <ClInclude Include="Class\Player\Systems\EventOrder.h" />
+    <ClInclude Include="Class\Player\Command\ICommand.h" />
+    <ClInclude Include="Class\Player\Command\InputHandler.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />

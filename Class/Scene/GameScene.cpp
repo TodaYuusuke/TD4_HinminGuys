@@ -22,6 +22,9 @@ GameScene::~GameScene() {
 
 // 初期化
 void GameScene::Initialize() {
+	//inputHandler_ = new InputHandler();
+	// Assign command
+	inputHandler_.Initialize();
 
 	enemyManager_.Initialize();
 	enemyManager_.SetPlayer(&player_);
@@ -46,9 +49,21 @@ void GameScene::Update() {
 		nextSceneFunction = []() { return new Title(); };
 	}
 
+	// 入力されたコマンドを確認
+	inputHandler_.Update(player_);
+
 #ifdef _DEBUG
 	enemyManager_.Debug();
+	inputHandler_.DebugGUI();
+	// デバッグ用のカメラ
+	mainCamera.DebugGUI();
+
+	// FPSカウンターの表示
+	ImGui::Begin("Control panel");
+	ImGui::Text("Frame rate: %6.2f fps", ImGui::GetIO().Framerate);
+	ImGui::End();
 #endif // _DEBUG
+
 	//敵全て
 	enemyManager_.Update();
 
@@ -57,7 +72,4 @@ void GameScene::Update() {
 
 	// 自機
 	player_.Update();
-
-	// デバッグ用のカメラ
-	mainCamera.DebugGUI();
 }

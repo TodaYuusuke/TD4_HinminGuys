@@ -19,16 +19,33 @@ Attack::Attack(LWP::Object::Camera* camera, Player* player)
 }
 
 void Attack::Initialize() {
+	isActive_ = false;
 
+	// フレーム単位で発生するアクションイベントを管理するクラス
+	eventOrder_.Initialize();
+	// 通常攻撃発生までの時間
+	eventOrder_.CreateTimeEvent(TimeEvent{ kNormalSwingTime, "NormalAttackSwingTime" });
+	// 通常攻撃の猶予時間
+	eventOrder_.CreateTimeEvent(TimeEvent{ kNormalAttackTime, "NormalAttackTime" });
+	// 通常攻撃の硬直時間
+	eventOrder_.CreateTimeEvent(TimeEvent{ kNormalRecoveryTime , "NormalAttackRecoveryTime" });
 }
 
 void Attack::Update() {
 	// 機能を使えないなら早期リターン
 	if (!isActive_) { return; }
+
+	// frameごとに起きるイベント
+	eventOrder_.Update();
+
+	// 全てのイベントが終了しているなら機能停止
+	if (eventOrder_.GetIsEnd()) {
+		Reset();
+	}
 }
 
 void Attack::Reset() {
-	isActive_ = true;
+	isActive_ = false;
 }
 
 void Attack::DebugGUI() {
@@ -36,4 +53,9 @@ void Attack::DebugGUI() {
 		collider_.DebugGUI();
 		ImGui::TreePop();
 	}
+}
+
+void Attack::NormalCommand() {
+	eventOrder_.Start();
+	isActive_ = true;
 }

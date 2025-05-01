@@ -1,9 +1,17 @@
 #include "Parry.h"
 #include "../../Player.h"
 
-Parry::Parry(LWP::Object::Camera* camera, Player* player) {
+Parry::Parry(LWP::Object::Camera* camera, Player* player)
+	: aabb_(collider_.SetBroadShape(LWP::Object::Collider::AABB()))
+{
 	pCamera_ = camera;
 	player_ = player;
+
+	// パリィ判定生成
+	aabb_.min.y = 0.0f;
+	aabb_.max.y = 1.0f;
+	collider_.SetFollowTarget(player_->GetWorldTF());
+	collider_.isActive = true;
 }
 
 void Parry::Initialize() {
@@ -22,9 +30,6 @@ void Parry::Initialize() {
 }
 
 void Parry::Update() {
-	// 入力処理
-	InputUpdate();
-
 	// パリィ機能を使えないなら早期リターン
 	if (!isActive_) { return; }
 
@@ -42,12 +47,14 @@ void Parry::Reset() {
 }
 
 void Parry::DebugGUI() {
-	eventOrder_.DebugGUI();
+	if (ImGui::TreeNode("Parry")) {
+		eventOrder_.DebugGUI();
+		collider_.DebugGUI();
+		ImGui::TreePop();
+	}
 }
 
-void Parry::InputUpdate() {
-	if (LWP::Input::Keyboard::GetPress(DIK_SPACE) || LWP::Input::Pad::GetPress(XINPUT_GAMEPAD_RIGHT_SHOULDER)) {
-		eventOrder_.Start();
-		isActive_ = true;
-	}
+void Parry::Command() {
+	eventOrder_.Start();
+	isActive_ = true;
 }
