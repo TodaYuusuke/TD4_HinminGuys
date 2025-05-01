@@ -20,9 +20,20 @@ void InputHandler::Update(Player& player) {
 }
 
 void InputHandler::DebugGUI() {
-	int size = (int)commands_.size();
 	ImGui::Begin("InputHandler");
-	ImGui::Text("InputNum : %d", size);
+	if (ImGui::TreeNode("Command")) {
+		// 登録されているコマンド
+		if (ImGui::TreeNode("AllView")) {
+
+			ImGui::TreePop();
+		}
+		// 登録をし直す
+		if (ImGui::TreeNode("Reset")) {
+
+			ImGui::TreePop();
+		}
+		ImGui::TreePop();
+	}
 	ImGui::End();
 }
 
@@ -33,19 +44,18 @@ void InputHandler::CreateCommand() {
 }
 
 std::vector<ICommand*> InputHandler::HandleInput() {
-	
 	std::vector<ICommand*> result;
 
 	// 通常攻撃コマンド
-	if (Keyboard::GetTrigger(Key::NormalAttack) || Pad::GetPress(GamePad::NormalAttack)) {
+	if (Keyboard::GetTrigger(Command::Key::NormalAttack) || Pad::GetPress(Command::GamePad::NormalAttack)) {
 		result.push_back(pressNormalAttackCommand_);
 	}
 	// パリィコマンド
-	if (Keyboard::GetTrigger(Key::Parry) || Pad::GetPress(GamePad::Parry)) {
+	if (Keyboard::GetTrigger(Command::Key::Parry) || Pad::GetPress(Command::GamePad::Parry)) {
 		result.push_back(pressParryCommand_);
 	}
 	// ロックオンコマンド
-	if (Keyboard::GetTrigger(Key::LockOn) || Pad::GetPress(GamePad::LockOn)) {
+	if (Keyboard::GetTrigger(Command::Key::LockOn) || Pad::GetPress(Command::GamePad::LockOn)) {
 		result.push_back(pressLockOnCommand_);
 	}
 
