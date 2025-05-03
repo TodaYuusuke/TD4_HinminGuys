@@ -1,5 +1,6 @@
 #include "Parry.h"
 #include "../../Player.h"
+#include "../Engine/object/core/collision/Collision.h"
 
 Parry::Parry(LWP::Object::Camera* camera, Player* player)
 	: aabb_(collider_.SetBroadShape(LWP::Object::Collider::AABB()))
@@ -77,8 +78,11 @@ void Parry::CreateCollision() {
 	aabb_.max.y = 1.0f;
 	collider_.SetFollowTarget(player_->GetWorldTF());
 	collider_.isActive = false;
+	collider_.mask.SetBelongFrag(ColMask0);
 	collider_.stayLambda = [this](LWP::Object::Collision* hitTarget) {
-		hitTarget;
+		// 衝突した相手が同じマスクなら処理しない
+		if (hitTarget->mask.GetBelongFrag() == collider_.mask.GetBelongFrag()) { return; }
+		// すでにジャスパor甘パリィなら処理しない
 		if (isGoodParry_ || isJustParry_) { return; }
 
 		// ジャストパリィ

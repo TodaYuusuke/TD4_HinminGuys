@@ -75,9 +75,12 @@ void Attack::CreateCollision() {
 	aabb_.min.y = 0.0f;
 	aabb_.max.y = 1.0f;
 	collider_.SetFollowTarget(player_->GetWorldTF());
+	collider_.mask.SetBelongFrag(ColMask0);
 	collider_.isActive = false;
 	collider_.stayLambda = [this](LWP::Object::Collision* hitTarget) {
-		hitTarget;
+		// 衝突した相手が同じマスクなら処理しない
+		if (hitTarget->mask.GetBelongFrag() == collider_.mask.GetBelongFrag()) { return; }
+		// 
 		if (isNormalAttack_) { return; }
 
 		// 攻撃判定が出ているとき
