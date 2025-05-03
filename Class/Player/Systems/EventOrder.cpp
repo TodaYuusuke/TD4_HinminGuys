@@ -34,6 +34,7 @@ void EventOrder::Start() {
 }
 
 void EventOrder::Reset() {
+	timeEvents_.clear();
 	currentTime_ = 0;
 	isActive_ = false;
 }
@@ -65,10 +66,12 @@ void EventOrder::DebugGUI() {
 			}
 			ImGui::TreePop();
 		}
+		// 経過時間
+		ImGui::DragFloat("CurrentTime", &currentTime_, 1, 0, 1000);
+		// 機能を使用中か
+		ImGui::Checkbox("IsActive", &isActive_);
+
 		ImGui::TreePop();
 	}
-	// 経過時間
-	ImGui::DragFloat("CurrentTime", &currentTime_, 1, 0, 1000);
-	// 機能を使用中か
-	ImGui::Checkbox("IsParry", &isActive_);
+
 }

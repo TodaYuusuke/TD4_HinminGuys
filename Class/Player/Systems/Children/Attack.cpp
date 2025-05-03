@@ -11,11 +11,8 @@ Attack::Attack(LWP::Object::Camera* camera, Player* player)
 	pCamera_ = camera;
 	player_ = player;
 
-	// 攻撃判定生成
-	aabb_.min.y = 0.0f;
-	aabb_.max.y = 1.0f;
-	collider_.SetFollowTarget(player_->GetWorldTF());
-	collider_.isActive = true;
+	// 攻撃の当たり判定作成
+	CreateCollision();
 }
 
 void Attack::Initialize() {
@@ -35,10 +32,13 @@ void Attack::Update() {
 	// 機能を使えないなら早期リターン
 	if (!isActive_) { return; }
 
-	// frameごとに起きるイベント
+	// frameごとに起きるアクションイベント
 	eventOrder_.Update();
 
-	// 全てのイベントが終了しているなら機能停止
+	// 攻撃のアクションイベント状態の確認
+	CheckAttackState();
+
+	// 全てのアクションイベントが終了しているなら機能停止
 	if (eventOrder_.GetIsEnd()) {
 		Reset();
 	}
@@ -46,16 +46,57 @@ void Attack::Update() {
 
 void Attack::Reset() {
 	isActive_ = false;
+	isNormalAttack_ = false;
+	collider_.isActive = false;
 }
 
 void Attack::DebugGUI() {
 	if (ImGui::TreeNode("Attack")) {
-		collider_.DebugGUI();
+		eventOrder_.DebugGUI();
+		ImGui::Checkbox("IsNormalAttack", &isNormalAttack_);
+		if (ImGui::TreeNode("Collider")) {
+			collider_.DebugGUI();
+			ImGui::TreePop();
+		}
 		ImGui::TreePop();
 	}
 }
 
 void Attack::NormalCommand() {
+	if (eventOrder_.GetIsEnd()) {
+		isActive_ = true;
+		collider_.isActive = true;
+	}
 	eventOrder_.Start();
-	isActive_ = true;
+}
+
+void Attack::CreateCollision() {
+	// 攻撃判定生成
+	aabb_.min.y = 0.0f;
+	aabb_.max.y = 1.0f;
+	collider_.SetFollowTarget(player_->GetWorldTF());
+	collider_.isActive = false;
+	collider_.stayLambda = [this](LWP::Object::Collision* hitTarget) {
+		hitTarget;
+		if (isNormalAttack_) { return; }
+
+		// 攻撃判定が出ているとき
+		if (eventOrder_.GetCurrentTimeEvent().name == "NormalAttackTime") {
+			collider_.isActive = true;
+			isNormalAttack_ = true;
+		}
+		};
+}
+
+void Attack::CheckAttackState() {
+	// 振りかぶりの時
+	if (eventOrder_.GetCurrentTimeEvent().name == "NormalAttackSwingTime") {
+		collider_.isActive = false;
+		isNormalAttack_ = false;
+	}
+	// 硬直
+	else if (eventOrder_.GetCurrentTimeEvent().name == "NormalAttackRecoveryTime") {
+		collider_.isActive = false;
+		isNormalAttack_ = false;
+	}
 }

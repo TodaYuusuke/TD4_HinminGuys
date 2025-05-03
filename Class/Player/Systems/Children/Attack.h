@@ -36,6 +36,17 @@ public:
 	/// </summary>
 	void NormalCommand();
 
+private:
+	/// <summary>
+	/// 当たり判定を作成
+	/// </summary>
+	void CreateCollision();
+
+	/// <summary>
+	/// 攻撃のイベント状態の確認とそれに伴った処理
+	/// </summary>
+	void CheckAttackState();
+
 private:// 定数
 	// 通常攻撃発動までにかかる時間
 	const float kNormalSwingTime = 60.0f * 0.0f;
@@ -51,4 +62,7 @@ private:
 	// 攻撃判定
 	LWP::Object::Collision collider_;
 	LWP::Object::Collider::AABB& aabb_;
+
+	// 通常攻撃の判定が出ているか
+	bool isNormalAttack_;
 };

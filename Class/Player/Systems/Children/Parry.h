@@ -36,6 +36,17 @@ public:
 	/// </summary>
 	void Command();
 
+private:
+	/// <summary>
+	/// 当たり判定を作成
+	/// </summary>
+	void CreateCollision();
+
+	/// <summary>
+	/// パリィの状態を確認
+	/// </summary>
+	void CheckParryState();
+
 public:// Getter, Setter
 #pragma region Getter
 
@@ -55,7 +66,13 @@ private:
 	// フレーム単位で発生するアクションイベントを管理するクラス
 	EventOrder eventOrder_;
 
+	std::map<std::string, std::function<void(const std::string&)>> onCollisionEventOrder_;
+	std::map<std::string, std::function<void(const std::string&)>> eventOrderUpdate_;
+
 	// パリィ判定
 	LWP::Object::Collision collider_;
 	LWP::Object::Collider::AABB& aabb_;
+
+	bool isJustParry_;
+	bool isGoodParry_;
 };
