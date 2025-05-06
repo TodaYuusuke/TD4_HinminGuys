@@ -22,6 +22,8 @@ private:
 	float approachDist_ = 2.0f;
 	//プレイヤーに近づくかどうか
 	bool isApproach_ = true;
+	//右回りかどうか
+	bool isClockwise_ = false;
 
 };
 

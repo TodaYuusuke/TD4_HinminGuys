@@ -27,6 +27,7 @@ private:
 	static uint16_t nextAttackCount_;
 	//自身の攻撃する順番
 	uint16_t attackID_;
-
+	//右回りかどうか
+	bool isClockwise_ = false;
 
 };

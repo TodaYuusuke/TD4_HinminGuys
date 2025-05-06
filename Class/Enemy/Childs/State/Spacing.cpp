@@ -13,6 +13,12 @@ void Spacing::Initialize(IEnemy* enemy)
 {
 	enemy_ = enemy;
 	enemy_->SetAnimation("Run", true);
+
+	//ランダムな数字を利用して右回りかどうかを決める
+	if (LWP::Utility::GenerateRandamNum(0, 1) == 0) {
+		isClockwise_ = true;
+	}
+
 }
 
 void Spacing::Update()
@@ -43,8 +49,14 @@ void Spacing::Update()
 
 		//円周を沿うような移動ベクトルにする
 		Vector3 result{};
+
 		result.x = -sinf(theta);
 		result.z = cosf(theta);
+
+		//右回りならベクトルを逆にする
+		if (isClockwise_) {
+			result *= -1.0f;
+		}
 
 		//プレイヤーとの間合いをあらかじめ決めておき、その範囲内に入ったら押し出しベクトルを加算するようにする
 		if (length < approachDist_ && length > 0.0001f) {
