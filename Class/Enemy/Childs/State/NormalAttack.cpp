@@ -10,6 +10,7 @@ void NormalAttack::Initialize(IEnemy* enemy)
 	//攻撃判定オン
 	enemy_->GetAttackHitBox()->isActive = true;
 	enemy_->GetAttackHitBox()->isShowWireFrame = true;
+	enemy_->BeginAttack();
 }
 
 void NormalAttack::Update()
@@ -23,7 +24,9 @@ void NormalAttack::Update()
 		enemy_->GetAttackHitBox()->isShowWireFrame = false;
 
 		//待機状態に移行
+		enemy_->EndAttack();
 		enemy_->SetState(new NormalIdle());
+		return;
 
 	}
 

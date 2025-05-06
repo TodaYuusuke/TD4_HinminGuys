@@ -11,6 +11,7 @@ void EnemyManager::Initialize()
 	//リストをクリア
 	ClearList();
 	spawnPoint_ = { 0.0f,0.0f,0.0f };
+	IEnemy::ResetAttack();
 }
 
 void EnemyManager::Finalize()

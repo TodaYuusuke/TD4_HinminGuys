@@ -41,7 +41,7 @@ void Spacing::Update()
 			theta *= -1.0f;
 		}
 
-		//プレイヤーに向かうベクトルとそれをクォータニオンを利用して90度回転させたベクトルの中間ベクトルを作る
+		//円周を沿うような移動ベクトルにする
 		Vector3 result{};
 		result.x = -sinf(theta);
 		result.z = cosf(theta);
@@ -51,59 +51,11 @@ void Spacing::Update()
 			enemy_->AddRepulsiveForce(dist.Normalize() * -((approachDist_ - length) / approachDist_));
 		}
 
-		//敵の向きをプレイヤーに向かせるため、ここで向きを保存
-		Vector3 to = dist.Normalize();
 		dist = dist.Normalize() * LWP::Info::GetDeltaTime();
 		
 		enemy_->SetPosition(enemy_->GetPosition() + result * LWP::Info::GetDeltaTime() + (enemy_->GetRepulsiveForce() * LWP::Info::GetDeltaTime()));
-
-		//プレイヤーの方向を向く
-		if (dist.Length() != 0.0f) {
-			//敵の基本姿勢
-			Vector3 from = { 0.0f,0.0f,1.0f };
-
-			// 回転軸をクロス積から求める
-			Vector3 axis = Vector3::Cross(from, to);
-			// 内積
-			float dot = Vector3::Dot(from, to);
-			// 完全に平行な場合、単位クォータニオンを返す
-			if (dot > 0.9999f) {
-
-				//行きたい方向のQuaternionの作成
-				enemy_->SetRotation(Quaternion{ 0.0f,0.0f,0.0f,1.0f });
-
-			}
-			else {
-
-				//逆向きのベクトルだった場合、垂直なベクトルを一つ選ぶ
-				if (dot <= -1.0f) {
-
-					if (from.x != 0.0f or from.y != 0.0f) {
-
-						axis = { from.y, -from.x,0.0f };
-						axis = axis.Normalize();
-					}
-					else if (from.x != 0.0f or from.z != 0.0f) {
-
-						axis = { 0.0f, -from.z, from.x };
-						axis = axis.Normalize();
-
-					}
-
-				}
-				else {
-					axis = Vector3::Cross(from, to).Normalize();
-				}
-
-				// θを求める
-				float theta = std::acos(Vector3::Dot(from, to) / (from.Length() * to.Length()));
-
-				//行きたい方向のQuaternionの作成
-				enemy_->SetRotation(Quaternion::CreateFromAxisAngle(axis, theta));
-
-			}
-
-		}
+		//プレイヤーの向きに回転
+		enemy_->RotateTowardsPlayer();
 
 	}
 

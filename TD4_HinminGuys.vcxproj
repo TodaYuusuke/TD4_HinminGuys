@@ -153,6 +153,7 @@
     <ClCompile Include="Class\Enemy\Childs\State\BossIdle.cpp" />
     <ClCompile Include="Class\Enemy\Childs\State\BossMove.cpp" />
     <ClCompile Include="Class\Enemy\Childs\State\Spacing.cpp" />
+    <ClCompile Include="Class\Enemy\Childs\State\WaitingForAttack.cpp" />
     <ClCompile Include="Class\Enemy\EnemyManager.cpp" />
     <ClCompile Include="Class\Enemy\IEnemy.cpp" />
     <ClCompile Include="Class\Enemy\Childs\Normal\Normal.cpp" />
@@ -175,6 +176,7 @@
     <ClInclude Include="Class\Enemy\Childs\State\BossIdle.h" />
     <ClInclude Include="Class\Enemy\Childs\State\BossMove.h" />
     <ClInclude Include="Class\Enemy\Childs\State\Spacing.h" />
+    <ClInclude Include="Class\Enemy\Childs\State\WaitingForAttack.h" />
     <ClInclude Include="Class\Enemy\EnemyManager.h" />
     <ClInclude Include="Class\Enemy\IEnemy.h" />
     <ClInclude Include="Class\Enemy\IEnemyState.h" />

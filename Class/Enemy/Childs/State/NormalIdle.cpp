@@ -26,7 +26,7 @@ void NormalIdle::Update()
 		if (standTime_ <= 0) {
 
 			//攻撃状態に移行
-			enemy_->SetState(new Spacing());
+			enemy_->SetState(new NormalMove());
 
 		}
 

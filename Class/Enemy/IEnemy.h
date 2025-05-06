@@ -73,6 +73,16 @@ public:
 	void SetDistFromPlayer(float dist) { distFromPlayer_ = dist; }
 	//プレイヤーからの距離ゲット
 	float GetDistFromPlayer() const { return distFromPlayer_; }
+	//プレイヤーの方向に回転
+	void RotateTowardsPlayer();
+	//攻撃開始
+	void BeginAttack() { isAttack_ = true; }
+	//攻撃終了
+	void EndAttack() { isAttack_ = false; }
+	//攻撃中フラグ取得
+	bool GetIsAttack() const { return isAttack_; }
+	//攻撃フラグを強制終了(外部からの呼び出し用)
+	static void ResetAttack() { isAttack_ = false; }
 
 protected:
 
@@ -103,5 +113,7 @@ protected:
 	bool isDead_ = false;
 	//ロックオンされているか
 	bool isLocked_ = false;
+	//攻撃中かどうか
+	static bool isAttack_;
 
 };
