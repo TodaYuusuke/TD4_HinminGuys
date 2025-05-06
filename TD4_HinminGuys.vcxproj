@@ -168,10 +168,15 @@
     <ClCompile Include="Class\Player\Systems\EventOrder.cpp" />
     <ClCompile Include="Class\Player\Command\ICommand.cpp" />
     <ClCompile Include="Class\Player\Command\InputHandler.cpp" />
+    <ClCompile Include="Class\Player\Systems\Children\State\Attack\LockOnAttack.cpp" />
+    <ClCompile Include="Class\Player\Systems\Children\State\Attack\DefaultAttack.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Class\Player\Player.cpp" />
     <ClCompile Include="Class\Player\Systems\Children\Move.cpp" />
     <ClCompile Include="Class\Player\Systems\Children\Parry.cpp" />
+    <ClCompile Include="Class\Player\Systems\Children\Sheath.cpp" />
+    <ClCompile Include="Class\Player\Systems\SystemManager.cpp" />
+    <ClCompile Include="Class\Player\Systems\Children\State\Attack\NoneAttack.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Class\Enemy\Childs\Boss\BossEnemy.h" />
@@ -199,6 +204,12 @@
     <ClInclude Include="Class\Player\Systems\EventOrder.h" />
     <ClInclude Include="Class\Player\Command\ICommand.h" />
     <ClInclude Include="Class\Player\Command\InputHandler.h" />
+    <ClInclude Include="Class\Player\Systems\Children\Sheath.h" />
+    <ClInclude Include="Class\Player\Systems\SystemManager.h" />
+    <ClInclude Include="Class\Player\Systems\Children\State\IAttackSystemState.h" />
+    <ClInclude Include="Class\Player\Systems\Children\State\Attack\LockOnAttack.h" />
+    <ClInclude Include="Class\Player\Systems\Children\State\Attack\DefaultAttack.h" />
+    <ClInclude Include="Class\Player\Systems\Children\State\Attack\NoneAttack.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />

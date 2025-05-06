@@ -19,63 +19,35 @@ void Player::Initialize() {
 }
 
 void Player::Update() {
-	// 移動機能
-	moveSystem_->Update();
-	// パリィ機能
-	parrySystem_->Update();
-	// 攻撃機能
-	attackSystem_->Update();
-	// ロックオン機能
-	lockOnSystem_->Update();
+	// 各機能
+	systemManager_->Update();
 
 	// 速度を加算
-	model_.worldTF.translation += moveSystem_->GetMoveVel();
+	model_.worldTF.translation += systemManager_->GetVelocity();
 	// 角度を加算
-	model_.worldTF.rotation = moveSystem_->GetRotate();
+	model_.worldTF.rotation = systemManager_->GetRotate();
 
 	// ImGui
 	DebugGUI();
 }
 
 void Player::Reset() {
-	// 移動機能
-	moveSystem_->Reset();
-	// パリィ機能
-	parrySystem_->Reset();
-	// 攻撃機能
-	attackSystem_->Reset();
-	// ロックオン機能
-	lockOnSystem_->Reset();
+	systemManager_->Reset();
 }
 
 void Player::CreateSystems() {
-	// 移動機能
-	moveSystem_ = std::make_unique<Move>(pCamera_, this);
-	moveSystem_->Initialize();
-	// パリィ機能
-	parrySystem_ = std::make_unique<Parry>(pCamera_, this);
-	parrySystem_->Initialize();
-	// 攻撃機能
-	attackSystem_ = std::make_unique<Attack>(pCamera_, this);
-	attackSystem_->Initialize();
-	// ロックオン機能
-	lockOnSystem_ = std::make_unique<LockOn>(pCamera_, this);
-	lockOnSystem_->Initialize();
-	lockOnSystem_->SetEnemyList(enemyManager_->GetEnemyListPtr());
-	lockOnSystem_->SetFollowCamera(followCamera_);
+	systemManager_ = std::make_unique<SystemManager>(this, enemyManager_, followCamera_, pCamera_);
+	systemManager_->Initialize();
 }
 
 void Player::DebugGUI() {
 #ifdef _DEBUG
 	ImGui::Begin("Player");
-	// パリィ
-	parrySystem_->DebugGUI();
-	// 攻撃
-	attackSystem_->DebugGUI();
-	// ロックオン
-	lockOnSystem_->DebugGUI();
-
+	
+	systemManager_->DebugGUI();
 	ImGui::DragFloat3("Translation", &model_.worldTF.translation.x, 0.1f, -10000, 10000);
+	ImGui::DragFloat4("Quaternion", &model_.worldTF.rotation.x, 0.1f, -10000, 10000);
+
 	ImGui::End();
 #endif // DEBUG
 }

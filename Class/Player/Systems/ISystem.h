@@ -33,6 +33,20 @@ public:// Getter, Setter
 	/// </summary>
 	/// <returns></returns>
 	bool GetIsActive() { return isActive_; }
+	/// <summary>
+	/// 移動入力を受け付ける状態かを取得
+	/// </summary>
+	/// <returns></returns>
+	bool GetIsMoveInput() { return isMoveInput_; }
+
+	/// <summary>
+	/// 機能を使用できるようになった瞬間を取得
+	/// </summary>
+	/// <returns></returns>
+	bool GetTrigger(){
+		if (!isPreActive_ && isActive_) { return true; }
+		return false;
+	}
 #pragma endregion
 
 #pragma region Setter
@@ -46,6 +60,14 @@ public:// Getter, Setter
 	/// </summary>
 	/// <param name="player"></param>
 	void SetPlayer(Player* player) { player_ = player; }
+	/// <summary>
+	/// 機能が使える状態かを設定
+	/// </summary>
+	void SetIsActive(bool isActive) { isActive_ = isActive; }
+	/// <summary>
+	/// 移動入力を受け付ける状態かを設定
+	/// </summary>
+	void SetIsMoveInput(bool isMoveInput) { isMoveInput_ = isMoveInput; }
 #pragma endregion
 
 protected:
@@ -57,4 +79,7 @@ protected:
 
 	// 機能が使える状態か
 	bool isActive_ = true;
+	bool isPreActive_ = true;
+	// 移動入力を受け付ける状態か
+	bool isMoveInput_ = true;
 };

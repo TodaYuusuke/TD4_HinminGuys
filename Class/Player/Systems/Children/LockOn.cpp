@@ -11,6 +11,7 @@ LockOn::LockOn(LWP::Object::Camera* camera, Player* player) {
 
 void LockOn::Initialize() {
 	isActive_ = false;
+	isPreActive_ = false;
 	isChangeLockOn_ = false;
 	isChangeLocked_ = false;
 
@@ -39,6 +40,8 @@ void LockOn::Update() {
 
 	// ロックオン対象の変更処理
 	ChangeLockOnTarget();
+
+	isPreActive_ = isActive_;
 }
 
 void LockOn::Reset() {

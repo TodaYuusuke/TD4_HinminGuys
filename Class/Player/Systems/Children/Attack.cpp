@@ -1,7 +1,11 @@
 #include "Attack.h"
 #include "../../Player.h"
+#include "State/Attack/DefaultAttack.h"
+#include "State/Attack/LockOnAttack.h"
+#include "State/Attack/NoneAttack.h"
 
 using namespace LWP;
+using namespace LWP::Math;
 using namespace LWP::Object;
 using namespace LWP::Object::Collider;
 
@@ -13,10 +17,19 @@ Attack::Attack(LWP::Object::Camera* camera, Player* player)
 
 	// 攻撃の当たり判定作成
 	CreateCollision();
+
+	// 状態作成
+	state_ = new NoneAttack(this);
+	state_->Initialize();
+}
+
+Attack::~Attack() {
+	delete state_;
 }
 
 void Attack::Initialize() {
 	isActive_ = false;
+	isPreActive_ = false;
 
 	// フレーム単位で発生するアクションイベントを管理するクラス
 	eventOrder_.Initialize();
@@ -30,7 +43,10 @@ void Attack::Initialize() {
 
 void Attack::Update() {
 	// 機能を使えないなら早期リターン
-	if (!isActive_) { return; }
+	if (!isActive_) {
+		isMoveInput_ = true;
+		return;
+	}
 
 	// frameごとに起きるアクションイベント
 	eventOrder_.Update();
@@ -38,26 +54,41 @@ void Attack::Update() {
 	// 攻撃のアクションイベント状態の確認
 	CheckAttackState();
 
+	// 状態
+	state_->Update();
+
 	// 全てのアクションイベントが終了しているなら機能停止
 	if (eventOrder_.GetIsEnd()) {
 		Reset();
 	}
+
+	isPreActive_ = isActive_;
 }
 
 void Attack::Reset() {
 	isActive_ = false;
+	isMoveInput_ = true;
 	isNormalAttack_ = false;
 	collider_.isActive = false;
+	attackAssistVel_ = { 0.0f,0.0f,0.0f };
+	attackAssistRadian_ = { 0.0f,0.0f,0.0f };
+	attackAssistQuat_ = { 0.0f,0.0f,0.0f,1.0f };
 }
 
 void Attack::DebugGUI() {
 	if (ImGui::TreeNode("Attack")) {
 		eventOrder_.DebugGUI();
 		ImGui::Checkbox("IsNormalAttack", &isNormalAttack_);
+		// 当たり判定
 		if (ImGui::TreeNode("Collider")) {
 			collider_.DebugGUI();
 			ImGui::TreePop();
 		}
+
+		ImGui::DragFloat3("Velocity", &attackAssistVel_.x, 0.1f, -10000, 10000);
+		ImGui::DragFloat3("Rotation", &attackAssistRadian_.x, 0.1f, -6.28f, 6.28f);
+		ImGui::DragFloat4("Quaternion", &attackAssistQuat_.x, 0.1f, -1, 1);
+
 		ImGui::TreePop();
 	}
 }
@@ -65,9 +96,15 @@ void Attack::DebugGUI() {
 void Attack::NormalCommand() {
 	if (eventOrder_.GetIsEnd()) {
 		isActive_ = true;
+		isMoveInput_ = false;
 		collider_.isActive = true;
 	}
 	eventOrder_.Start();
+}
+
+void Attack::ChangeState(IAttackSystemState* pState) {
+	delete state_;
+	state_ = pState;
 }
 
 void Attack::CreateCollision() {
@@ -75,6 +112,7 @@ void Attack::CreateCollision() {
 	aabb_.min.y = 0.0f;
 	aabb_.max.y = 1.0f;
 	collider_.SetFollowTarget(player_->GetWorldTF());
+	collider_.worldTF.translation = { 0,0,2 };
 	collider_.mask.SetBelongFrag(ColMask0);
 	collider_.isActive = false;
 	collider_.stayLambda = [this](LWP::Object::Collision* hitTarget) {
@@ -96,10 +134,46 @@ void Attack::CheckAttackState() {
 	if (eventOrder_.GetCurrentTimeEvent().name == "NormalAttackSwingTime") {
 		collider_.isActive = false;
 		isNormalAttack_ = false;
+		// 攻撃が当たる位置に自機を移動させる
+		AttackAssistMovement();
 	}
 	// 硬直
 	else if (eventOrder_.GetCurrentTimeEvent().name == "NormalAttackRecoveryTime") {
 		collider_.isActive = false;
 		isNormalAttack_ = false;
+	}
+	else {
+		ChangeState(new NoneAttack(this));
+	}
+}
+
+void Attack::AttackAssistMovement() {
+	if (!GetTrigger()) { return; }
+
+	// ロックオン中なら対象に近づく
+	if (lockOnSystem_->GetCurrentLockOnTarget()) {
+		ChangeState(new LockOnAttack(this, player_, lockOnSystem_->GetCurrentLockOnTarget()));
+
+		//// 自機とロックオン中の敵との距離
+		//Vector3 attackTargetDist = (lockOnSystem_->GetCurrentLockOnTarget()->GetWorldTF()->GetWorldPosition() - player_->GetWorldTF()->GetWorldPosition()) * 0.4f;
+		//attackAssistVel_ = LWP::Utility::Interpolation::Slerp(Vector3{ 0.0f,0.0f,0.0f }, attackTargetDist, 0.25f);
+
+		//// 移動速度からラジアンを求める
+		//attackAssistRadian_.y = LWP::Utility::GetRadian(LWP::Math::Vector3{ 0,0,1 }, attackAssistVel_.Normalize(), LWP::Math::Vector3{ 0,1,0 });
+		//attackAssistQuat_ = LWP::Math::Quaternion::CreateFromAxisAngle(LWP::Math::Vector3{ 0, 1, 0 }, attackAssistRadian_.y);
+	}
+	else {
+		ChangeState(new DefaultAttack(this, player_));
+		//// 自機の方向ベクトル
+		//Vector3 playerDir = { 0.0f,0.0f,1.0f };
+		//// 回転行列を求める
+		//Matrix4x4 rotMatrix = LWP::Math::Matrix4x4::CreateRotateXYZMatrix(player_->GetWorldTF()->rotation);
+		//// 方向ベクトルを求める
+		//playerDir = playerDir * rotMatrix;
+		//playerDir.y = 0;
+
+		//// 移動速度からラジアンを求める
+		//attackAssistRadian_.y = LWP::Utility::GetRadian(LWP::Math::Vector3{ 0,0,1 }, playerDir.Normalize(), LWP::Math::Vector3{ 0,1,0 });
+		//attackAssistQuat_ = LWP::Math::Quaternion::CreateFromAxisAngle(LWP::Math::Vector3{ 0, 1, 0 }, attackAssistRadian_.y);
 	}
 }

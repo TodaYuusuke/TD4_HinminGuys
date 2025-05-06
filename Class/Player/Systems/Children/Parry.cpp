@@ -14,6 +14,7 @@ Parry::Parry(LWP::Object::Camera* camera, Player* player)
 
 void Parry::Initialize() {
 	isActive_ = false;
+	isPreActive_ = false;
 
 	// フレーム単位で発生するアクションイベントを管理するクラス
 	eventOrder_.Initialize();
@@ -41,10 +42,13 @@ void Parry::Update() {
 	if (eventOrder_.GetIsEnd()) {
 		Reset();
 	}
+
+	isPreActive_ = isActive_;
 }
 
 void Parry::Reset() {
 	isActive_ = false;
+	isMoveInput_ = true;
 	isJustParry_ = false;
 	isGoodParry_ = false;
 	collider_.isActive = false;	
@@ -68,6 +72,7 @@ void Parry::Command() {
 	if (eventOrder_.GetIsEnd()) {
 		isActive_ = true;
 		collider_.isActive = true;
+		isMoveInput_ = false;
 	}
 	eventOrder_.Start();
 }

@@ -4,6 +4,7 @@
 #include "Systems/Children/Parry.h"
 #include "Systems/Children/Attack.h"
 #include "Systems/Children/LockOn.h"
+#include "Systems/SystemManager.h"
 #include <memory>
 
 class IEnemy;
@@ -57,17 +58,17 @@ public:// Getter,Setter
 	/// 攻撃機能のアドレスを取得
 	/// </summary>
 	/// <returns></returns>
-	Attack* GetAttackSystem() { return attackSystem_.get(); }
+	Attack* GetAttackSystem() { return systemManager_->GetAttackSystem(); }
 	/// <summary>
 	/// パリィ機能のアドレスを取得
 	/// </summary>
 	/// <returns></returns>
-	Parry* GetParrySystem() { return parrySystem_.get(); }
+	Parry* GetParrySystem() { return systemManager_->GetParrySystem(); }
 	/// <summary>
 	/// ロックオン機能のアドレスを取得
 	/// </summary>
 	/// <returns></returns>
-	LockOn* GetLockOnSystem() { return lockOnSystem_.get(); }
+	LockOn* GetLockOnSystem() { return systemManager_->GetLockOnSystem(); }
 #pragma endregion
 
 #pragma region Setter
@@ -91,12 +92,14 @@ private:// 外部からポインタをもらう変数
 	FollowCamera* followCamera_;
 
 private:
-	// 移動機能
-	std::unique_ptr<Move> moveSystem_;
-	// パリィ機能
-	std::unique_ptr<Parry> parrySystem_;
-	// 攻撃機能
-	std::unique_ptr<Attack> attackSystem_;
-	// ロックオン機能
-	std::unique_ptr<LockOn> lockOnSystem_;
+	//// 移動機能
+	//std::unique_ptr<Move> moveSystem_;
+	//// パリィ機能
+	//std::unique_ptr<Parry> parrySystem_;
+	//// 攻撃機能
+	//std::unique_ptr<Attack> attackSystem_;
+	//// ロックオン機能
+	//std::unique_ptr<LockOn> lockOnSystem_;
+
+	std::unique_ptr<SystemManager> systemManager_;
 };

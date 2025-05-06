@@ -99,7 +99,11 @@ private:
 
 public:// Getter, Setter
 #pragma region Getter
-
+	/// <summary>
+	/// 現在ロックオンしている敵の情報を取得
+	/// </summary>
+	/// <returns></returns>
+	IEnemy* GetCurrentLockOnTarget() { return lockOnEnemy_;	}
 #pragma endregion
 
 #pragma region Setter
