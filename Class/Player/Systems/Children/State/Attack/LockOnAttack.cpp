@@ -18,7 +18,7 @@ void LockOnAttack::Initialize() {
 
 void LockOnAttack::Update() {
 	// 自機とロックオン中の敵との距離
-	Vector3 attackTargetDist = (player_->GetLockOnSystem()->GetCurrentLockOnTarget()->GetWorldTF()->GetWorldPosition() - player_->GetWorldTF()->GetWorldPosition()) * 0.4f;
+	Vector3 attackTargetDist = (lockOnTarget_->GetWorldTF()->GetWorldPosition() - player_->GetWorldTF()->GetWorldPosition()) * 0.4f;
 	assistVel_ = LWP::Utility::Interpolation::Slerp(Vector3{ 0.0f,0.0f,0.0f }, attackTargetDist, 0.25f);
 
 	// 移動速度からラジアンを求める
