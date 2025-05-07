@@ -1,18 +1,21 @@
 #include "Move.h"
+#include "../../Player.h"
 
 using namespace LWP;
 using namespace LWP::Math;
 using namespace LWP::Input;
 
-Move::Move(LWP::Object::Camera* camera) {
+Move::Move(LWP::Object::Camera* camera, Player* player) {
 	pCamera_ = camera;
+	player_ = player;
 }
 
 void Move::Initialize() {
 	// 移動速度
 	moveVel_ = { 0.0f, 0.0f, 0.0f };
 	// 向いている角度
-	rotate_ = { 0.0f,0.0f,0.0f,1.0f };
+	quat_ = { 0.0f,0.0f,0.0f,1.0f };
+	radian_ = { 0.0f, 0.0f, 0.0f };
 }
 
 void Move::Update() {
@@ -21,13 +24,27 @@ void Move::Update() {
 
 	// 入力処理
 	InputUpdate();
+
+	isPreActive_ = isActive_;
 }
 
 void Move::Reset() {
 	// 移動速度
 	moveVel_ = { 0.0f, 0.0f, 0.0f };
 	// 向いている角度
-	rotate_ = { 0.0f,0.0f,0.0f,1.0f };
+	quat_ = { 0.0f,0.0f,0.0f,1.0f };
+	radian_ = { 0.0f, 0.0f, 0.0f };
+}
+
+void Move::DebugGUI() {
+	if (ImGui::TreeNode("Move")) {
+		;
+		//ImGui::Checkbox("IsNormalAttack", &isNormalAttack_);
+		ImGui::DragFloat3("Velocity", &moveVel_.x, 0.1f, -10000, 10000);
+		ImGui::DragFloat3("Rotation", &radian_.x, 0.1f, -6.28f, 6.28f);
+		ImGui::DragFloat4("Quaternion", &quat_.x, 0.1f, -1, 1);
+		ImGui::TreePop();
+	}
 }
 
 void Move::InputUpdate() {
@@ -54,7 +71,6 @@ void Move::InputUpdate() {
 		dir.x = 1.0f;
 	}
 #pragma endregion
-
 	// カメラが向いている方向に進む
 	// 回転行列を求める
 	Matrix4x4 rotMatrix = LWP::Math::Matrix4x4::CreateRotateXYZMatrix(pCamera_->worldTF.rotation);
@@ -65,8 +81,8 @@ void Move::InputUpdate() {
 	// 移動ベクトルから体の向きを算出(入力があるときのみ処理する)
 	if (LWP::Math::Vector3::Dot(Abs(dir), LWP::Math::Vector3{ 1,1,1 }) != 0) {
 		// 移動速度からラジアンを求める
-		float y = GetAngle(LWP::Math::Vector3{ 0,0,1 }, moveVel_.Normalize(), LWP::Math::Vector3{ 0,1,0 });
-		rotate_ = LWP::Math::Quaternion::CreateFromAxisAngle(LWP::Math::Vector3{ 0, 1, 0 }, y);
+		radian_.y = GetAngle(LWP::Math::Vector3{ 0,0,1 }, moveVel_.Normalize(), LWP::Math::Vector3{ 0,1,0 });
+		quat_ = LWP::Math::Quaternion::CreateFromAxisAngle(LWP::Math::Vector3{ 0, 1, 0 }, radian_.y);
 	}
 }
 
@@ -82,7 +98,7 @@ float Move::GetAngle(const LWP::Math::Vector3& a, const LWP::Math::Vector3& b, c
 	Vector3 cross = LWP::Math::Vector3::Cross(aN, bN);
 
 	if (LWP::Math::Vector3::Dot(up, cross) < 0) {
-		angle = 2 * M_PI - angle;
+		angle = 2 * (float)M_PI - angle;
 	}
 
 	return angle;

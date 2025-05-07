@@ -1,96 +1,121 @@
 #include "Parry.h"
+#include "../../Player.h"
+#include "../Engine/object/core/collision/Collision.h"
 
-Parry::Parry(LWP::Object::Camera* camera) {
+Parry::Parry(LWP::Object::Camera* camera, Player* player)
+	: aabb_(collider_.SetBroadShape(LWP::Object::Collider::AABB()))
+{
 	pCamera_ = camera;
-	debugTimeEvents_ = CreateParryData();
+	player_ = player;
+
+	// パリィ判定生成
+	CreateCollision();
 }
 
 void Parry::Initialize() {
-	currentTime_ = 0;
 	isActive_ = false;
+	isPreActive_ = false;
+
+	// フレーム単位で発生するアクションイベントを管理するクラス
+	eventOrder_.Initialize();
+	// パリィ発生までの時間
+	eventOrder_.CreateTimeEvent(TimeEvent{ kSwingTime, "SwingTime" });
+	// ジャストパリィの猶予時間
+	eventOrder_.CreateTimeEvent(TimeEvent{ kJustParryTime, "JustParry" });
+	// 通常パリィの猶予時間
+	eventOrder_.CreateTimeEvent(TimeEvent{ kGoodParryTime , "GoodParry" });
+	// パリィの硬直時間
+	eventOrder_.CreateTimeEvent(TimeEvent{ kRecoveryTime , "RecoveryTime" });
 }
 
 void Parry::Update() {
-	// 入力処理
-	InputUpdate();
-
 	// パリィ機能を使えないなら早期リターン
 	if (!isActive_) { return; }
 
-	// イベントの猶予時間を過ぎていたら先頭のイベント削除
-	if (currentTime_ >= timeEvents_[0].graceTime) {
-		timeEvents_.erase(timeEvents_.begin());
-		currentTime_ = 0;
-	}
+	// frameごとに起きるイベント
+	eventOrder_.Update();
 
-	// 時間を進める
-	currentTime_++;
+	// パリィの状態確認
+	CheckParryState();
 
 	// 全てのイベントが終了しているなら機能停止
-	if (timeEvents_.empty()) {
+	if (eventOrder_.GetIsEnd()) {
 		Reset();
 	}
+
+	isPreActive_ = isActive_;
 }
 
 void Parry::Reset() {
-	currentTime_ = 0;
 	isActive_ = false;
+	isMoveInput_ = true;
+	isJustParry_ = false;
+	isGoodParry_ = false;
+	collider_.isActive = false;	
 }
 
-void Parry::DebugGui() {
+void Parry::DebugGUI() {
 	if (ImGui::TreeNode("Parry")) {
-		if (ImGui::TreeNode("Event")) {
-			// イベントの進む順序
-			if (ImGui::TreeNode("ExecutionOrder")) {
-				int i = 0;
-				for (TimeEvent& timeEvent : debugTimeEvents_) {
-					i++;
-					std::string timeEventName = std::to_string(i) + " : % s";
-					ImGui::Text(timeEventName.c_str(), timeEvent.name.c_str());
-					ImGui::Text("GraceTime : %f", timeEvent.graceTime);
-				}
-				ImGui::TreePop();
-			}
-			// 現在のイベントと猶予時間
-			if (ImGui::TreeNode("CurrentData")) {
-				if (!timeEvents_.empty()) {
-					ImGui::Text("Event : %s", timeEvents_[0].name.c_str());
-					ImGui::DragFloat("GraceTime", &timeEvents_[0].graceTime, 1, 0, 1000);
-				}
-				ImGui::TreePop();
-			}
+		eventOrder_.DebugGUI();
+		ImGui::Checkbox("IsJustParry", &isJustParry_);
+		ImGui::Checkbox("IsGoodParry", &isGoodParry_);
+
+		if (ImGui::TreeNode("Collider")) {
+			collider_.DebugGUI();
 			ImGui::TreePop();
 		}
-		// 経過時間
-		ImGui::DragFloat("CurrentTime", &currentTime_, 1, 0, 1000);
-		// パリィ中か
-		ImGui::Checkbox("IsParry", &isActive_);
-
 		ImGui::TreePop();
 	}
 }
 
-void Parry::InputUpdate() {
-	if (LWP::Input::Keyboard::GetPress(DIK_SPACE) || LWP::Input::Pad::GetPress(XINPUT_GAMEPAD_RIGHT_SHOULDER)) {
-		// パリィボタンを押していないときのみ
-		if (timeEvents_.empty()) {
-			// パリィの情報を作成
-			timeEvents_ = CreateParryData();
-			isActive_ = true;
-		}
+void Parry::Command() {
+	if (eventOrder_.GetIsEnd()) {
+		isActive_ = true;
+		collider_.isActive = true;
+		isMoveInput_ = false;
 	}
+	eventOrder_.Start();
 }
 
-std::vector<TimeEvent> Parry::CreateParryData() {
-	std::vector<TimeEvent> timeEvents;
-	// パリィ発生までの時間
-	timeEvents.push_back(TimeEvent{ kSwingTime, "SwingTime" });
-	// ジャストパリィの猶予時間
-	timeEvents.push_back(TimeEvent{ kJustParryTime, "JustParry" });
-	// 通常パリィの猶予時間
-	timeEvents.push_back(TimeEvent{ kGoodParryTime , "GoodParry" });
-	// パリィの硬直時間
-	timeEvents.push_back(TimeEvent{ kRecoveryTime , "RecoveryTime" });
+void Parry::CreateCollision() {
+	// 攻撃判定生成
+	aabb_.min.y = 0.0f;
+	aabb_.max.y = 1.0f;
+	collider_.SetFollowTarget(player_->GetWorldTF());
+	collider_.isActive = false;
+	collider_.mask.SetBelongFrag(ColMask0);
+	collider_.stayLambda = [this](LWP::Object::Collision* hitTarget) {
+		// 衝突した相手が同じマスクなら処理しない
+		if (hitTarget->mask.GetBelongFrag() == collider_.mask.GetBelongFrag()) { return; }
+		// すでにジャスパor甘パリィなら処理しない
+		if (isGoodParry_ || isJustParry_) { return; }
 
-	return timeEvents;
+		// ジャストパリィ
+		if (eventOrder_.GetCurrentTimeEvent().name == "JustParry") {
+			collider_.isActive = true;
+			isJustParry_ = true;
+			isGoodParry_ = false;
+		}
+		// 甘めパリィ
+		else if (eventOrder_.GetCurrentTimeEvent().name == "GoodParry") {
+			collider_.isActive = true;
+			isGoodParry_ = true;
+			isJustParry_ = false;
+		}
+		};
+}
+
+void Parry::CheckParryState() {
+	// 予備動作
+	if (eventOrder_.GetCurrentTimeEvent().name == "SwingTime") {
+		collider_.isActive = false;
+		isJustParry_ = false;
+		isGoodParry_ = false;
+	}
+	// 硬直
+	else if (eventOrder_.GetCurrentTimeEvent().name == "RecoveryTime") {
+		collider_.isActive = false;
+		isJustParry_ = false;
+		isGoodParry_ = false;
+	}
 }

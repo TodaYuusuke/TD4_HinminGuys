@@ -12,8 +12,6 @@ public:
 		LWP::Object::TransformQuat lockOnTransform;
 		// ロックオン対象のTransformのポインタ
 		LWP::Object::TransformQuat* targetTransform;
-		// ロックオン対象の位置を球体で表示(デバッグ用)
-		LWP::Resource::RigidModel targetModel;
 		// ロックオン時のカメラの位置調整
 		LWP::Math::Vector3 rotateOffset;
 		// ロックオン対象とカメラとの方向ベクトル
@@ -57,15 +55,6 @@ private:
 	/// <param name="maxLimitAngle">角度の上限値(単位:ラジアン)</param>
 	void ClampAngle(float& target, LWP::Math::Vector3 distance, float minLimitAngle, float maxLimitAngle);
 
-	/// <summary>
-	/// イージング(指数関数的に数値が上がる)
-	/// </summary>
-	/// <param name="current"></param>
-	/// <param name="target"></param>
-	/// <param name="damping"></param>
-	/// <returns></returns>
-	LWP::Math::Vector3 ExponentialInterpolate(const LWP::Math::Vector3& current, const LWP::Math::Vector3& target, float damping);
-
 public:// Getter,Setter
 #pragma region Getter
 	/// <summary>
@@ -73,6 +62,12 @@ public:// Getter,Setter
 	/// </summary>
 	/// <returns></returns>
 	LWP::Object::Camera* GetCamera() { return camera_; }
+
+	/// <summary>
+	/// ロックオン中かを取得
+	/// </summary>
+	/// <returns></returns>
+	bool GetIsLockOn() { return lockOnData_.isLocked; }
 #pragma endregion
 
 #pragma region Setter
@@ -89,10 +84,21 @@ public:// Getter,Setter
 	void SetCamera(LWP::Object::Camera* camera) { camera_ = camera; }
 
 	/// <summary>
-	/// ロックオン対象のTransformQuatをアドレスで渡す
+	/// ロックオン開始
 	/// </summary>
-	/// <param name="lockOnTarget">ロックオン対象</param>
-	void SetLockOnTarget(LWP::Object::TransformQuat* lockOnTarget) { lockOnData_.targetTransform = lockOnTarget; }
+	/// <param name="lockOnTarget">ロックオン対象のアドレス</param>
+	void StartLockOn(LWP::Object::TransformQuat* lockOnTarget) {
+		lockOnData_.targetTransform = lockOnTarget;
+		lockOnData_.isLocked = true;
+	}
+	/// <summary>
+	/// ロックオン終了
+	/// </summary>
+	void FinishLockOn() {
+		lockOnData_.targetTransform = nullptr;
+		lockOnData_.isLocked = false;
+	}
+
 #pragma endregion
 
 private:// 定数
@@ -105,21 +111,18 @@ private:// 定数
 	// x軸の上限値
 	const float kMaxRotateX = (float)std::numbers::pi / 2.0f + (float)std::numbers::pi / 4.0f;
 
-private:
+private:// 外部からポインタをもらう変数
 	// カメラ
 	LWP::Object::Camera* camera_;
 
+private:
 	// 追従対象の座標
 	const LWP::Math::Vector3* targetPos_;
 
+	//　ロックオン時のカメラの位置調整
+	LWP::Math::Vector3 lockOnOffset_;
+
 	// ロックオン時に使う情報
 	LockOnData lockOnData_;
-	LWP::Object::TransformQuat t;
-	//// ロックオンした敵の情報
-	//LWP::Object::TransformQuat* lockOnTarget_;
-	//// ロックオン対象の位置を球体で表示(デバッグ用)
-	//LWP::Resource::RigidModel lockOnTargetModel_;
-	//// ロックオンしているか
-	//bool isLocked_;
 };
 

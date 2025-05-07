@@ -84,6 +84,9 @@ public:
 	//攻撃フラグを強制終了(外部からの呼び出し用)
 	static void ResetAttack() { isAttack_ = false; }
 
+
+	LWP::Object::TransformQuat* GetWorldTF() { return &model_.worldTF; }
+
 protected:
 
 	//モデル

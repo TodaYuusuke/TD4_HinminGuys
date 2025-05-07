@@ -10,19 +10,21 @@ using namespace LWP::Object;
 using namespace LWP::Info;
 
 GameScene::GameScene() 
-	: player_(&mainCamera),
+	: player_(&mainCamera, &enemyManager_, &followCamera_),
 	  followCamera_(&mainCamera, player_.GetModelPos())
 {
 	enemyManager_.Initialize();
 }
 
-GameScene::~GameScene()
-{
+GameScene::~GameScene() {
 	enemyManager_.Finalize();
 }
 
 // 初期化
 void GameScene::Initialize() {
+	//inputHandler_ = new InputHandler();
+	// Assign command
+	inputHandler_.Initialize();
 
 	enemyManager_.Initialize();
 	enemyManager_.SetPlayer(&player_);
@@ -47,19 +49,27 @@ void GameScene::Update() {
 		nextSceneFunction = []() { return new Title(); };
 	}
 
-#ifdef _DEBUG
+	// 入力されたコマンドを確認
+	inputHandler_.Update(player_);
 
+#ifdef _DEBUG
+	inputHandler_.DebugGUI();
+	// デバッグ用のカメラ
+	mainCamera.DebugGUI();
 	enemyManager_.DebugGUI();
 
+	// FPSカウンターの表示
+	ImGui::Begin("Control panel");
+	ImGui::Text("Frame rate: %6.2f fps", ImGui::GetIO().Framerate);
+	ImGui::End();
 #endif // _DEBUG
 
-
-	// 自機
-	player_.Update();
 	//敵全て
 	enemyManager_.Update();
 
+	// 追従カメラ
 	followCamera_.Update();
 
-	mainCamera.DebugGUI();
+	// 自機
+	player_.Update();
 }

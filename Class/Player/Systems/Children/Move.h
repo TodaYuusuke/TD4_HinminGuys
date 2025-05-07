@@ -7,7 +7,7 @@
 class Move : public ISystem {
 public:
 	// コンストラクタ
-	Move(LWP::Object::Camera* camera);
+	Move(LWP::Object::Camera* camera, Player* player);
 	// デストラクタ
 	~Move() override = default;
 
@@ -24,6 +24,11 @@ public:
 	/// 全ての数値をリセット
 	/// </summary>
 	void Reset() override;
+
+	/// <summary>
+	/// ImGuiによるパラメータ表示
+	/// </summary>
+	void DebugGUI();
 
 private:
 	/// <summary>
@@ -64,10 +69,15 @@ public:// Getter, Setter
 	/// <returns></returns>
 	LWP::Math::Vector3 GetMoveVel() { return moveVel_; }
 	/// <summary>
-	/// 向いている方向を取得
+	/// 向いている方向を取得(クォータニオン)
 	/// </summary>
 	/// <returns></returns>
-	LWP::Math::Quaternion GetRotate() { return rotate_; }
+	LWP::Math::Quaternion GetMoveQuat() { return quat_; }
+	/// <summary>
+	/// 向いている方向を取得(ラジアン)
+	/// </summary>
+	/// <returns></returns>
+	LWP::Math::Vector3 GetMoveRadian() { return radian_; }
 #pragma endregion
 
 #pragma region Setter
@@ -85,8 +95,13 @@ public:// Getter, Setter
 	/// <summary>
 	/// 向いている方向を設定
 	/// </summary>
-	/// <param name="rotate">向かせる方向</param>
-	void SetRotate(const LWP::Math::Quaternion& rotate) { rotate_ = rotate; }
+	/// <param name="radian">向かせる方向(ラジアン)</param>
+	void SetRotate(const LWP::Math::Vector3& radian) { radian_ = radian; }
+	/// <summary>
+	/// 向いている方向を設定
+	/// </summary>
+	/// <param name="quat">向かせる方向(クォータニオン)</param>
+	void SetRotate(const LWP::Math::Quaternion& quat) { quat_ = quat; }
 #pragma endregion
 
 private:// プライベートな変数
@@ -97,7 +112,8 @@ private:// プライベートな変数
 	LWP::Math::Vector3 moveVel_;
 
 	// 向いている角度
-	LWP::Math::Quaternion rotate_ = {0.0f,0.0f,0.0f,1.0f};
+	LWP::Math::Quaternion quat_ = {0.0f,0.0f,0.0f,1.0f};
+	LWP::Math::Vector3 radian_;
 
 	// 移動時のイージング
 	LWP::Math::Vector3 moveOffset_;

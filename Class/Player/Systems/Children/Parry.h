@@ -1,10 +1,6 @@
 #pragma once
 #include "../ISystem.h"
-
-struct TimeEvent {
-	float graceTime; // 猶予時間
-	std::string name;// 今の状態の名前
-};
+#include "../EventOrder.h"
 
 /// <summary>
 /// 自機のパリィ機能をまとめたクラス
@@ -12,7 +8,7 @@ struct TimeEvent {
 class Parry : public ISystem {
 public:
 	// コンストラクタ
-	Parry(LWP::Object::Camera* camera);
+	Parry(LWP::Object::Camera* camera, Player* player);
 	// デストラクタ
 	~Parry() override = default;
 
@@ -33,45 +29,47 @@ public:
 	/// <summary>
 	/// ImGuiによるパラメータ表示
 	/// </summary>
-	void DebugGui();
+	void DebugGUI();
+
+	/// <summary>
+	/// パリィのコマンド
+	/// </summary>
+	void Command();
 
 private:
 	/// <summary>
-	/// 入力処理
+	/// 当たり判定を作成
 	/// </summary>
-	void InputUpdate();
+	void CreateCollision();
 
 	/// <summary>
-	/// パリィの情報を作成
+	/// パリィの状態を確認
 	/// </summary>
-	std::vector<TimeEvent> CreateParryData();
+	void CheckParryState();
 
 public:// Getter, Setter
 #pragma region Getter
-	/// <summary>
-	/// パリィ中に起こる状態をまとめたクラスを取得
-	/// </summary>
-	/// <returns></returns>
-	std::vector<TimeEvent> GetTimeEvents() { return timeEvents_; }
+
 #pragma endregion
 
 private:// 定数
-	// パリィ発動までにかかる時間
-	const float kSwingTime = 60.0f * 0.0f;
+	// パリィ発動までにかかる時間[frame * 秒]
+	float kSwingTime = 60.0f * 0.0f;
 	// 通常パリィの猶予時間[frame * 秒]
-	const float kGoodParryTime = 60.0f * 0.6f;
+	float kGoodParryTime = 60.0f * 0.6f;
 	// ジャストパリィの猶予時間[frame * 秒]
-	const float kJustParryTime = 60.0f * 0.1f;
+	float kJustParryTime = 60.0f * 0.2f;
 	// パリィの硬直[frame * 秒]
-	const float kRecoveryTime = 60.0f * 0.0f;
+	float kRecoveryTime = 60.0f * 0.0f;
 
 private:
-	// frameごとに起きる状態をまとめたリスト
-	std::vector<TimeEvent> timeEvents_;
+	// フレーム単位で発生するアクションイベントを管理するクラス
+	EventOrder eventOrder_;
 
-	// デバッグ用のイベントリスト(ImGuiにしか使ってないから気にしないで)
-	std::vector<TimeEvent> debugTimeEvents_;
+	// パリィ判定
+	LWP::Object::Collision collider_;
+	LWP::Object::Collider::AABB& aabb_;
 
-	// 経過時間
-	float currentTime_;
+	bool isJustParry_;
+	bool isGoodParry_;
 };

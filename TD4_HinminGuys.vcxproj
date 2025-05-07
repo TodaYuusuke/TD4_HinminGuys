@@ -109,6 +109,7 @@
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <AdditionalOptions>/source-charset:utf-8 %(AdditionalOptions)</AdditionalOptions>
+      <TreatWarningAsError>false</TreatWarningAsError>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -134,6 +135,7 @@
       <Optimization>MinSpace</Optimization>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <AdditionalOptions>/source-charset:utf-8 %(AdditionalOptions)</AdditionalOptions>
+      <TreatWarningAsError>false</TreatWarningAsError>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -165,10 +167,19 @@
     <ClCompile Include="Class\Scene\GameScene.cpp" />
     <ClCompile Include="Class\Scene\Title.cpp" />
     <ClCompile Include="Class\Camera\FollowCamera.cpp" />
+    <ClCompile Include="Class\Player\Systems\EventOrder.cpp" />
+    <ClCompile Include="Class\Player\Command\ICommand.cpp" />
+    <ClCompile Include="Class\Player\Command\InputHandler.cpp" />
+    <ClCompile Include="Class\Player\Systems\Children\State\Attack\LockOnAttack.cpp" />
+    <ClCompile Include="Class\Player\Systems\Children\State\Attack\DefaultAttack.cpp" />
+    <ClCompile Include="Class\Player\Systems\Children\Evasion.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Class\Player\Player.cpp" />
     <ClCompile Include="Class\Player\Systems\Children\Move.cpp" />
     <ClCompile Include="Class\Player\Systems\Children\Parry.cpp" />
+    <ClCompile Include="Class\Player\Systems\Children\Sheath.cpp" />
+    <ClCompile Include="Class\Player\Systems\SystemManager.cpp" />
+    <ClCompile Include="Class\Player\Systems\Children\State\Attack\NoneAttack.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Class\Enemy\Childs\Boss\Boss.h" />
@@ -180,6 +191,11 @@
     <ClInclude Include="Class\Enemy\EnemyManager.h" />
     <ClInclude Include="Class\Enemy\IEnemy.h" />
     <ClInclude Include="Class\Enemy\IEnemyState.h" />
+    <ClInclude Include="Class\Enemy\Childs\Normal\NormalEnemy.h" />
+    <ClInclude Include="Class\Enemy\Childs\Normal\State\NormalEnemyAttack.h" />
+    <ClInclude Include="Class\Enemy\Childs\Normal\State\NormalEnemyIdle.h" />
+    <ClInclude Include="Class\Enemy\Childs\Normal\State\NormalEnemyMove.h" />
+    <ClInclude Include="Class\Player\Command\InputConfig.h" />
     <ClInclude Include="Class\Enemy\Childs\Normal\Normal.h" />
     <ClInclude Include="Class\Enemy\Childs\State\NormalAttack.h" />
     <ClInclude Include="Class\Enemy\Childs\State\NormalIdle.h" />
@@ -194,6 +210,16 @@
     <ClInclude Include="Class\Player\Systems\Children\Move.h" />
     <ClInclude Include="Class\Player\Systems\Children\Parry.h" />
     <ClInclude Include="Class\Camera\FollowCamera.h" />
+    <ClInclude Include="Class\Player\Systems\EventOrder.h" />
+    <ClInclude Include="Class\Player\Command\ICommand.h" />
+    <ClInclude Include="Class\Player\Command\InputHandler.h" />
+    <ClInclude Include="Class\Player\Systems\Children\Sheath.h" />
+    <ClInclude Include="Class\Player\Systems\SystemManager.h" />
+    <ClInclude Include="Class\Player\Systems\Children\State\IAttackSystemState.h" />
+    <ClInclude Include="Class\Player\Systems\Children\State\Attack\LockOnAttack.h" />
+    <ClInclude Include="Class\Player\Systems\Children\State\Attack\DefaultAttack.h" />
+    <ClInclude Include="Class\Player\Systems\Children\State\Attack\NoneAttack.h" />
+    <ClInclude Include="Class\Player\Systems\Children\Evasion.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />
