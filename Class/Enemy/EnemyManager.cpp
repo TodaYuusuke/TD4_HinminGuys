@@ -106,15 +106,34 @@ void EnemyManager::DebugGUI()
 	//スポーンポイント設定
 	ImGui::DragFloat3("spawn point", &spawnPoint_.x, 0.1f);
 
-	//ボス召喚
-	if (ImGui::Button("Create Boss")) {
-		CreateEnemy(spawnPoint_, EnemyType::kBoss);
+	//敵の数が最大数になるまで召喚可能
+	if (enemies_.size() < kMaxEnemyCount_) {
+
+		//ボス召喚
+		if (ImGui::Button("Create Boss")) {
+			CreateEnemy(spawnPoint_, EnemyType::kBoss);
+		}
+
+		//ザコ召喚
+		if (ImGui::Button("Create Normal")) {
+			CreateEnemy(spawnPoint_, EnemyType::kNormal);
+		}
+
+	}
+	else {
+
+		//敵が上限である旨のテキストを出す
+		ImGui::Text("Enemy Count Maximum");
+
 	}
 
-	//ザコ召喚
-	if (ImGui::Button("Create Normal")) {
-		CreateEnemy(spawnPoint_, EnemyType::kNormal);
+	//敵リセット
+	if (ImGui::Button("Clear")) {
+		ClearList();
 	}
+
+	//敵の総数
+	ImGui::Text("enemy Count : %d", enemies_.size());
 
 	if (ImGui::BeginTabBar("Enemies", ImGuiTabBarFlags_None)) {
 

@@ -103,10 +103,10 @@ protected:
 	Vector3 repulsiveForce_{};
 	//種類
 	EnemyType type_;
-	//全体のID管理
-	static uint16_t currentEnemyID_;
 	//プレイヤーからの距離
 	float distFromPlayer_ = 0.0f;
+	//全体のID管理
+	static uint16_t currentEnemyID_;
 	//個々のID
 	uint16_t ID_;
 	//死亡フラグ

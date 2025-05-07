@@ -63,8 +63,10 @@ void Spacing::Update()
 			enemy_->AddRepulsiveForce(dist.Normalize() * -((approachDist_ - length) / approachDist_));
 		}
 
-		dist = dist.Normalize() * LWP::Info::GetDeltaTime();
-		
+		result = result + dist.Normalize();
+
+		result = result.Normalize();
+
 		enemy_->SetPosition(enemy_->GetPosition() + result * LWP::Info::GetDeltaTime() + (enemy_->GetRepulsiveForce() * LWP::Info::GetDeltaTime()));
 		//プレイヤーの向きに回転
 		enemy_->RotateTowardsPlayer();

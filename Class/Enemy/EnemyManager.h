@@ -52,6 +52,8 @@ private:
 
 	//敵が互いに取る距離
 	float enemyDist_ = 1.0f;
+	//敵の出現上限
+	const uint16_t kMaxEnemyCount_ = 20;
 
 };
 
