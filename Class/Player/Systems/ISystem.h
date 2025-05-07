@@ -1,5 +1,6 @@
 #pragma once
 #include "../Adapter/Adapter.h"
+#include "EventOrder.h"
 
 class Player;
 /// <summary>
@@ -25,6 +26,9 @@ public:
 	/// 全ての数値をリセット
 	/// </summary>
 	virtual void Reset() = 0;
+
+
+	virtual void DebugGUI() = 0;
 
 public:// Getter, Setter
 #pragma region Getter
@@ -77,9 +81,15 @@ protected:
 	// シーンで使用しているカメラのポインタ
 	LWP::Object::Camera* pCamera_;
 
+	// フレーム単位で発生するアクションイベントを管理するクラス
+	EventOrder eventOrder_;
+
 	// 機能が使える状態か
 	bool isActive_ = true;
 	bool isPreActive_ = true;
 	// 移動入力を受け付ける状態か
 	bool isMoveInput_ = true;
+
+	// jsonによるパラメータの保存、読み込み
+	LWP::Utility::JsonIO json_;
 };

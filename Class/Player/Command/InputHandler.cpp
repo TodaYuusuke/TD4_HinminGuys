@@ -20,7 +20,6 @@ void InputHandler::Update(Player& player) {
 }
 
 void InputHandler::DebugGUI() {
-	ImGui::Begin("InputHandler");
 	if (ImGui::TreeNode("Command")) {
 		// 登録されているコマンド
 		if (ImGui::TreeNode("AllView")) {
@@ -34,29 +33,33 @@ void InputHandler::DebugGUI() {
 		}
 		ImGui::TreePop();
 	}
-	ImGui::End();
 }
 
 void InputHandler::CreateCommand() {
 	AssignNormalAttackCommand();
 	AssignParryCommand();
 	AssignLockOnCommand();
+	AssignEvasionCommand();
 }
 
 std::vector<ICommand*> InputHandler::HandleInput() {
 	std::vector<ICommand*> result;
 
 	// 通常攻撃コマンド
-	if (Keyboard::GetTrigger(Command::Key::NormalAttack) || Pad::GetPress(Command::GamePad::NormalAttack)) {
+	if (Keyboard::GetTrigger(Command::Key::NormalAttack) || Pad::GetTrigger(Command::GamePad::NormalAttack)) {
 		result.push_back(pressNormalAttackCommand_);
 	}
 	// パリィコマンド
-	if (Keyboard::GetTrigger(Command::Key::Parry) || Pad::GetPress(Command::GamePad::Parry)) {
+	if (Keyboard::GetTrigger(Command::Key::Parry) || Pad::GetTrigger(Command::GamePad::Parry)) {
 		result.push_back(pressParryCommand_);
 	}
 	// ロックオンコマンド
-	if (Keyboard::GetTrigger(Command::Key::LockOn) || Pad::GetPress(Command::GamePad::LockOn)) {
+	if (Keyboard::GetTrigger(Command::Key::LockOn) || Pad::GetTrigger(Command::GamePad::LockOn)) {
 		result.push_back(pressLockOnCommand_);
+	}
+	// 回避コマンド
+	if (Keyboard::GetTrigger(Command::Key::Evasion) || Pad::GetTrigger(Command::GamePad::Evasion)) {
+		result.push_back(pressEvasionCommand_);
 	}
 
 	return result;
@@ -75,4 +78,9 @@ void InputHandler::AssignParryCommand() {
 void InputHandler::AssignLockOnCommand() {
 	ICommand* command = new LockOnCommand();
 	this->pressLockOnCommand_ = command;
+}
+
+void InputHandler::AssignEvasionCommand() {
+	ICommand* command = new EvasionCommand();
+	this->pressEvasionCommand_ = command;
 }

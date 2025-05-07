@@ -4,6 +4,7 @@
 #include "Children/Parry.h"
 #include "Children/Attack.h"
 #include "Children/LockOn.h"
+#include "Children/Evasion.h"
 #include <memory>
 
 class Player;
@@ -16,7 +17,7 @@ private:
 		kAttack,
 		kParry,
 		kLockOn,
-		kChange
+		kEvasion
 	};
 public:
 	// コンストラクタ
@@ -53,20 +54,31 @@ private:
 public:// Getter, Setter
 #pragma region Getter
 	/// <summary>
-	/// 攻撃機能のアドレスを取得
+	/// ロックオン機能のアドレスを取得
 	/// </summary>
 	/// <returns></returns>
-	Attack* GetAttackSystem() { return attackSystem_.get(); }
+	LockOn* GetLockOnSystem() { return lockOnSystem_.get(); }
 	/// <summary>
 	/// パリィ機能のアドレスを取得
 	/// </summary>
 	/// <returns></returns>
 	Parry* GetParrySystem() { return parrySystem_.get(); }
 	/// <summary>
-	/// ロックオン機能のアドレスを取得
+	/// 攻撃機能のアドレスを取得
 	/// </summary>
 	/// <returns></returns>
-	LockOn* GetLockOnSystem() { return lockOnSystem_.get(); }
+	Attack* GetAttackSystem() { return attackSystem_.get(); }
+	/// <summary>
+	/// 移動機能のアドレスを取得
+	/// </summary>
+	/// <returns></returns>
+	Move* GetMoveSystem() { return moveSystem_.get(); }
+	/// <summary>
+	/// 回避機能のアドレスを取得
+	/// </summary>
+	/// <returns></returns>
+	Evasion* GetEvasionSystem() { return evasionSystem_.get(); }
+
 	/// <summary>
 	/// 速度を取得
 	/// </summary>
@@ -89,18 +101,20 @@ private:// 外部からポインタをもらう変数
 	EnemyManager* enemyManager_;
 	// 追従カメラ
 	FollowCamera* followCamera_;
-
-private:
+	// シーンで使用しているカメラ
 	LWP::Object::Camera* pCamera_;
 
-	// 移動機能
-	std::unique_ptr<Move> moveSystem_;
+private:
+	// ロックオン機能
+	std::unique_ptr<LockOn> lockOnSystem_;
 	// パリィ機能
 	std::unique_ptr<Parry> parrySystem_;
 	// 攻撃機能
 	std::unique_ptr<Attack> attackSystem_;
-	// ロックオン機能
-	std::unique_ptr<LockOn> lockOnSystem_;
+	// 移動機能
+	std::unique_ptr<Move> moveSystem_;
+	// 回避機能
+	std::unique_ptr<Evasion> evasionSystem_;
 
 	// 機能クラスをまとめた変数
 	std::vector<ISystem*> systems_;
@@ -110,6 +124,6 @@ private:
 	// 角度
 	LWP::Math::Quaternion rotate_;
 
+	// 入力状態
 	InputState inputState_;
-	InputState preInputState_;
 };

@@ -5,6 +5,7 @@
 #include "../Enemy/EnemyManager.h"
 #include "../Player/Command/ICommand.h"
 #include "../Player/Command/InputHandler.h"
+#include "../TestCollider.h"
 #include <set>
 
 class GameScene final
@@ -20,12 +21,18 @@ public:
 	// 更新
 	void Update() override;
 
+	/// <summary>
+	/// デバッグ用のタブを表示(Debug時のみ)
+	/// </summary>
+	void DebugGUI();
+
 
 private: // ** これより先に必要な処理や変数を記述 ** //
 	// 自機
 	Player player_;
 	InputHandler inputHandler_;
-	//std::set<ICommand*> command_;
+
+	TestCollider testCollider_;
 
 	// 追従カメラ
 	FollowCamera followCamera_;
@@ -35,8 +42,9 @@ private: // ** これより先に必要な処理や変数を記述 ** //
 
 	// 平面(一時的に作っているので要修正)
 	LWP::Resource::RigidModel plane;
+	// 天球(一時的に作っているので要修正)
+	LWP::Resource::RigidModel skydome;
 
 	//ライト
 	LWP::Object::DirectionLight light_;
-
 };

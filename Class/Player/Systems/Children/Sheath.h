@@ -1,12 +1,12 @@
 #pragma once
 #include "../ISystem.h"
 
-class Evasion : public ISystem{
+class Sheath : public ISystem{
 public:
 	// コンストラクタ
-	Evasion(LWP::Object::Camera * camera, Player * player);
+	Sheath(LWP::Object::Camera * camera, Player * player);
 	// デストラクタ
-	~Evasion() override = default;
+	~Sheath() override = default;
 
 	/// <summary>
 	/// 初期化

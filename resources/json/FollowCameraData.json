@@ -1,0 +1,15 @@
+{
+    "GameStartAngle": [
+        0.30000001192092896,
+        0.0,
+        0.0
+    ],
+    "MaxRotateX": 2.356194496154785,
+    "MinRotateX": 1.4707963466644287,
+    "Sensitivity": 1.0,
+    "TargetDistance": [
+        0.0,
+        0.0,
+        -20.0
+    ]
+}

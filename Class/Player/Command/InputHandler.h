@@ -46,6 +46,10 @@ private:
 	/// ロックオンコマンドの登録
 	/// </summary>
 	void AssignLockOnCommand();
+	/// <summary>
+	/// 回避コマンドの登録
+	/// </summary>
+	void AssignEvasionCommand();
 
 private:
 	// 通常攻撃コマンド
@@ -54,6 +58,8 @@ private:
 	ICommand* pressParryCommand_;
 	// ロックオンコマンド
 	ICommand* pressLockOnCommand_;
+	// 回避コマンド
+	ICommand* pressEvasionCommand_;
 
 	// 実行用のコマンド
 	std::vector<ICommand*> commands_;

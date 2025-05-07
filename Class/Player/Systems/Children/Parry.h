@@ -1,6 +1,5 @@
 #pragma once
 #include "../ISystem.h"
-#include "../EventOrder.h"
 
 /// <summary>
 /// 自機のパリィ機能をまとめたクラス
@@ -29,7 +28,7 @@ public:
 	/// <summary>
 	/// ImGuiによるパラメータ表示
 	/// </summary>
-	void DebugGUI();
+	void DebugGUI() override;
 
 	/// <summary>
 	/// パリィのコマンド
@@ -43,6 +42,11 @@ private:
 	void CreateCollision();
 
 	/// <summary>
+	/// アクションイベントを生成
+	/// </summary>
+	void CreateEventOrder();
+
+	/// <summary>
 	/// パリィの状態を確認
 	/// </summary>
 	void CheckParryState();
@@ -52,20 +56,17 @@ public:// Getter, Setter
 
 #pragma endregion
 
-private:// 定数
-	// パリィ発動までにかかる時間[frame * 秒]
-	float kSwingTime = 60.0f * 0.0f;
-	// 通常パリィの猶予時間[frame * 秒]
-	float kGoodParryTime = 60.0f * 0.6f;
-	// ジャストパリィの猶予時間[frame * 秒]
-	float kJustParryTime = 60.0f * 0.2f;
-	// パリィの硬直[frame * 秒]
-	float kRecoveryTime = 60.0f * 0.0f;
+private:// jsonで保存する値
+	// パリィ発動までにかかる時間[秒]
+	float kSwingTime = 0.0f;
+	// 通常パリィの猶予時間[秒]
+	float kGoodParryTime = 0.6f;
+	// ジャストパリィの猶予時間[秒]
+	float kJustParryTime = 0.2f;
+	// パリィの硬直[秒]
+	float kRecoveryTime = 0.0f;
 
 private:
-	// フレーム単位で発生するアクションイベントを管理するクラス
-	EventOrder eventOrder_;
-
 	// パリィ判定
 	LWP::Object::Collision collider_;
 	LWP::Object::Collider::AABB& aabb_;

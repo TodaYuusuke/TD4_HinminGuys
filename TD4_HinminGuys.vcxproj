@@ -178,6 +178,7 @@
     <ClCompile Include="Class\Player\Systems\Children\Sheath.cpp" />
     <ClCompile Include="Class\Player\Systems\SystemManager.cpp" />
     <ClCompile Include="Class\Player\Systems\Children\State\Attack\NoneAttack.cpp" />
+    <ClCompile Include="Class\TestCollider.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Class\Enemy\Childs\Boss\BossEnemy.h" />
@@ -212,6 +213,7 @@
     <ClInclude Include="Class\Player\Systems\Children\State\Attack\DefaultAttack.h" />
     <ClInclude Include="Class\Player\Systems\Children\State\Attack\NoneAttack.h" />
     <ClInclude Include="Class\Player\Systems\Children\Evasion.h" />
+    <ClInclude Include="Class\TestCollider.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />

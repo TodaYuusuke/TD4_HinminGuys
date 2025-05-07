@@ -1,18 +1,18 @@
-#include "Evasion.h"
+#include "Sheath.h"
 
-Evasion::Evasion(LWP::Object::Camera* camera, Player* player) {
+Sheath::Sheath(LWP::Object::Camera* camera, Player* player) {
 	pCamera_ = camera;
 	player_ = player;
 }
 
-void Evasion::Initialize() {
+void Sheath::Initialize() {
 
 }
 
-void Evasion::Update() {
+void Sheath::Update() {
 
 }
 
-void Evasion::Reset() {
+void Sheath::Reset() {
 
 }

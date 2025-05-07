@@ -32,11 +32,17 @@ void SystemManager::Initialize() {
 	moveSystem_ = std::make_unique<Move>(pCamera_, player_);
 	moveSystem_->Initialize();
 	systems_.push_back(moveSystem_.get());
+	// 移動機能
+	evasionSystem_ = std::make_unique<Evasion>(pCamera_, player_);
+	evasionSystem_->Initialize();
+	systems_.push_back(evasionSystem_.get());
 
+	// 入力状態
 	inputState_ = InputState::kMove;
 }
 
 void SystemManager::Update() {
+	// 各機能
 	for (ISystem* system : systems_) {
 		system->Update();
 	}
@@ -46,6 +52,7 @@ void SystemManager::Update() {
 }
 
 void SystemManager::Reset() {
+	// 各機能
 	for (ISystem* system : systems_) {
 		system->Reset();
 	}
@@ -53,32 +60,47 @@ void SystemManager::Reset() {
 
 void SystemManager::DebugGUI() {
 #ifdef _DEBUG
-	// パリィ
-	parrySystem_->DebugGUI();
-	// 攻撃
-	attackSystem_->DebugGUI();
-	// ロックオン
-	lockOnSystem_->DebugGUI();
-	// 移動
-	moveSystem_->DebugGUI();
+	// 各機能
+	for (ISystem* system : systems_) {
+		system->DebugGUI();
+	}
 #endif // DEBUG
 }
 
 void SystemManager::EnableInputMoveState() {
 	// 入力処理を禁止する処理
+	// 回避時は方向転換のみ受け付ける
+	if (evasionSystem_->GetIsActive()) {
+		inputState_ = InputState::kEvasion;
+	}
 	// 攻撃時は移動入力の一切を受け付けない
-	if (!attackSystem_->GetIsMoveInput() && parrySystem_->GetIsMoveInput()) {
+	else if (attackSystem_->GetIsActive()) {
 		inputState_ = InputState::kAttack;
 		moveSystem_->SetIsActive(false);
 	}
 	// パリィ時は方向転換のみ受け付ける
-	else if (!parrySystem_->GetIsMoveInput() && attackSystem_->GetIsMoveInput()) {
+	else if (parrySystem_->GetIsActive()) {
 		inputState_ = InputState::kParry;
 	}
 	// 何もない時は移動入力を受け付ける
-	else if (parrySystem_->GetIsMoveInput() && attackSystem_->GetIsMoveInput()) {
+	else if (!parrySystem_->GetIsActive() && !attackSystem_->GetIsActive()) {
 		inputState_ = InputState::kMove;
 		moveSystem_->SetIsActive(true);
+
+		// 移動中のアニメーション
+		if (moveSystem_->GetIsMove()) {
+			if (player_->GetAnimation()->GetLoadedPath() != "Run") {
+				player_->StartAnimation("Walk", 2.0f, 0.0f);
+				player_->SetIsLoopAnimation(true);
+			}
+		}
+		// 移動していないときのアニメーション
+		else {
+			if (player_->GetAnimation()->GetLoadedPath() != "Idle") {
+				player_->StartAnimation("Idle", 1.0f, 0.0f);
+				player_->SetIsLoopAnimation(true);
+			}
+		}
 	}
 
 	// ラジアン
@@ -111,6 +133,14 @@ void SystemManager::EnableInputMoveState() {
 		velocity_ = { 0.0f,0.0f,0.0f };
 		// 角度を加算
 		radian = moveSystem_->GetMoveRadian();
+		// クォータニオンに変換
+		rotate_ = LWP::Math::Quaternion::CreateFromAxisAngle(LWP::Math::Vector3{ 0, 1, 0 }, radian.y);
+		break;
+	case InputState::kEvasion:
+		// 速度を加算
+		velocity_ = evasionSystem_->GetVelocity();
+		// 角度を加算
+		radian = evasionSystem_->GetRadian();
 		// クォータニオンに変換
 		rotate_ = LWP::Math::Quaternion::CreateFromAxisAngle(LWP::Math::Vector3{ 0, 1, 0 }, radian.y);
 		break;

@@ -6,7 +6,7 @@
 void NormalEnemyAttack::Initialize(IEnemy* enemy)
 {
 	enemy_ = enemy;
-	enemy_->SetAnimation("Attack", false);
+	enemy_->SetAnimation("LightAttack1", false);
 	//攻撃判定オン
 	enemy_->GetAttackHitBox()->isActive = true;
 	enemy_->GetAttackHitBox()->isShowWireFrame = true;

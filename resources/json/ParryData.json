@@ -1,0 +1,10 @@
+{
+    "EventOrder": {
+        "GraceTime": {
+            "GoodParry": 0.6,
+            "JustParry": 0.2,
+            "RecoveryTime": 0.0,
+            "SwingTime": 0.0
+        }
+    }
+}
