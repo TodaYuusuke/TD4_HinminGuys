@@ -142,6 +142,7 @@ void Attack::CheckAttackState() {
 		collider_.isActive = false;
 		isNormalAttack_ = false;
 	}
+	// 振りかぶり以外の時なら状態をリセット
 	else {
 		ChangeState(new NoneAttack(this));
 	}
@@ -150,30 +151,11 @@ void Attack::CheckAttackState() {
 void Attack::AttackAssistMovement() {
 	if (!GetTrigger()) { return; }
 
-	// ロックオン中なら対象に近づく
+	// ロックオン中なら対象に近づいてから攻撃
 	if (lockOnSystem_->GetCurrentLockOnTarget()) {
 		ChangeState(new LockOnAttack(this, player_, lockOnSystem_->GetCurrentLockOnTarget()));
-
-		//// 自機とロックオン中の敵との距離
-		//Vector3 attackTargetDist = (lockOnSystem_->GetCurrentLockOnTarget()->GetWorldTF()->GetWorldPosition() - player_->GetWorldTF()->GetWorldPosition()) * 0.4f;
-		//attackAssistVel_ = LWP::Utility::Interpolation::Slerp(Vector3{ 0.0f,0.0f,0.0f }, attackTargetDist, 0.25f);
-
-		//// 移動速度からラジアンを求める
-		//attackAssistRadian_.y = LWP::Utility::GetRadian(LWP::Math::Vector3{ 0,0,1 }, attackAssistVel_.Normalize(), LWP::Math::Vector3{ 0,1,0 });
-		//attackAssistQuat_ = LWP::Math::Quaternion::CreateFromAxisAngle(LWP::Math::Vector3{ 0, 1, 0 }, attackAssistRadian_.y);
 	}
 	else {
 		ChangeState(new DefaultAttack(this, player_));
-		//// 自機の方向ベクトル
-		//Vector3 playerDir = { 0.0f,0.0f,1.0f };
-		//// 回転行列を求める
-		//Matrix4x4 rotMatrix = LWP::Math::Matrix4x4::CreateRotateXYZMatrix(player_->GetWorldTF()->rotation);
-		//// 方向ベクトルを求める
-		//playerDir = playerDir * rotMatrix;
-		//playerDir.y = 0;
-
-		//// 移動速度からラジアンを求める
-		//attackAssistRadian_.y = LWP::Utility::GetRadian(LWP::Math::Vector3{ 0,0,1 }, playerDir.Normalize(), LWP::Math::Vector3{ 0,1,0 });
-		//attackAssistQuat_ = LWP::Math::Quaternion::CreateFromAxisAngle(LWP::Math::Vector3{ 0, 1, 0 }, attackAssistRadian_.y);
 	}
 }

@@ -53,21 +53,18 @@ public:// Getter, Setter
 #pragma endregion
 
 private:// 定数
-	// パリィ発動までにかかる時間
-	const float kSwingTime = 60.0f * 0.0f;
+	// パリィ発動までにかかる時間[frame * 秒]
+	float kSwingTime = 60.0f * 0.0f;
 	// 通常パリィの猶予時間[frame * 秒]
-	const float kGoodParryTime = 60.0f * 0.6f;
+	float kGoodParryTime = 60.0f * 0.6f;
 	// ジャストパリィの猶予時間[frame * 秒]
-	const float kJustParryTime = 60.0f * 0.1f;
+	float kJustParryTime = 60.0f * 0.2f;
 	// パリィの硬直[frame * 秒]
-	const float kRecoveryTime = 60.0f * 0.0f;
+	float kRecoveryTime = 60.0f * 0.0f;
 
 private:
 	// フレーム単位で発生するアクションイベントを管理するクラス
 	EventOrder eventOrder_;
-
-	std::map<std::string, std::function<void(const std::string&)>> onCollisionEventOrder_;
-	std::map<std::string, std::function<void(const std::string&)>> eventOrderUpdate_;
 
 	// パリィ判定
 	LWP::Object::Collision collider_;

@@ -170,6 +170,7 @@
     <ClCompile Include="Class\Player\Command\InputHandler.cpp" />
     <ClCompile Include="Class\Player\Systems\Children\State\Attack\LockOnAttack.cpp" />
     <ClCompile Include="Class\Player\Systems\Children\State\Attack\DefaultAttack.cpp" />
+    <ClCompile Include="Class\Player\Systems\Children\Evasion.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Class\Player\Player.cpp" />
     <ClCompile Include="Class\Player\Systems\Children\Move.cpp" />
@@ -210,6 +211,7 @@
     <ClInclude Include="Class\Player\Systems\Children\State\Attack\LockOnAttack.h" />
     <ClInclude Include="Class\Player\Systems\Children\State\Attack\DefaultAttack.h" />
     <ClInclude Include="Class\Player\Systems\Children\State\Attack\NoneAttack.h" />
+    <ClInclude Include="Class\Player\Systems\Children\Evasion.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />

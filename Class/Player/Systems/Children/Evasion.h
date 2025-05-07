@@ -1,10 +1,11 @@
 #pragma once
 #include "../ISystem.h"
+#include "../EventOrder.h"
 
-class Evasion : public ISystem{
+class Evasion : public ISystem {
 public:
 	// コンストラクタ
-	Evasion(LWP::Object::Camera * camera, Player * player);
+	Evasion(LWP::Object::Camera* camera, Player* player);
 	// デストラクタ
 	~Evasion() override = default;
 
@@ -22,6 +23,14 @@ public:
 	/// </summary>
 	void Reset() override;
 
-private:// プライベートな変数
+	/// <summary>
+	/// 回避のコマンド
+	/// </summary>
+	void Command();
 
+private:// プライベートな変数
+	// 回避時の速度
+	Vector3 velocity_;
+	// 回避時の角度(ラジアン)
+	Vector3 radian_;
 };
