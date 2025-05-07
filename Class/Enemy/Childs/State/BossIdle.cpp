@@ -10,3 +10,12 @@ void BossIdle::Initialize(IEnemy* enemy)
 void BossIdle::Update()
 {
 }
+
+void BossIdle::DebugGUI()
+{
+
+	if (ImGui::TreeNode("BossIdle")) {
+		ImGui::TreePop();
+	}
+
+}

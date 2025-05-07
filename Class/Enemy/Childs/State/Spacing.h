@@ -16,12 +16,16 @@ public:
 
 	void Update() override;
 
+	static void DebugGUI();
+
 private:
 
-	//近づくかどうかを決める距離
-	float approachDist_ = 2.0f;
-	//プレイヤーに近づくかどうか
-	bool isApproach_ = true;
+	//間合いを取る時間
+	static int32_t spacingTime_;
+	//カウント
+	int32_t countSpacingTime_;
+	//間合い距離
+	static float spaceDist_;
 	//右回りかどうか
 	bool isClockwise_ = false;
 

@@ -14,6 +14,8 @@ public:
 
 	void Update() override;
 
+	static void DebugGUI();
+
 private:
 
 

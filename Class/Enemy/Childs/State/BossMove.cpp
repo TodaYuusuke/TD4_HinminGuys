@@ -10,3 +10,12 @@ void BossMove::Initialize(IEnemy* enemy)
 void BossMove::Update()
 {
 }
+
+void BossMove::DebugGUI()
+{
+
+	if (ImGui::TreeNode("BossMove")) {
+		ImGui::TreePop();
+	}
+
+}

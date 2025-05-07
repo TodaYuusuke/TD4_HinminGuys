@@ -5,6 +5,8 @@
 
 //実体宣言
 uint16_t IEnemy::currentEnemyID_ = 0;
+uint16_t IEnemy::maxAttackCount_ = 3;
+uint16_t IEnemy::currentAttackCount_ = 0;
 bool IEnemy::isAttack_ = false;
 
 IEnemy::IEnemy()
@@ -58,9 +60,10 @@ Vector3 IEnemy::GetPlayerPosition()
     return *player_->GetModelPos();
 }
 
-void IEnemy::SetAnimation(const std::string& animName, bool isLoop)
+void IEnemy::SetAnimation(const std::string& animName, bool isLoop, float speed)
 {
     animation_.Play(animName, isLoop);
+	animation_.playbackSpeed = speed;
 }
 
 void IEnemy::SetState(IEnemyState* state)

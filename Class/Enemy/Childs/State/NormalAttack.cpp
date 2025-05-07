@@ -25,9 +25,19 @@ void NormalAttack::Update()
 
 		//待機状態に移行
 		enemy_->EndAttack();
+		enemy_->SubAttackCount();
 		enemy_->SetState(new NormalIdle());
 		return;
 
+	}
+
+}
+
+void NormalAttack::DebugGUI()
+{
+
+	if (ImGui::TreeNode("NormalAttack")) {
+		ImGui::TreePop();
 	}
 
 }

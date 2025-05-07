@@ -4,6 +4,19 @@
 class IEnemy;
 
 /// <summary>
+/// 状態一覧
+/// </summary>
+enum class States {
+	kNormalIdle,
+	kNormalMove,
+	kNormalAttack,
+	kSpacing,
+	kFollowing,
+	kWaitingForAttack,
+	kMax,
+};
+
+/// <summary>
 /// 敵の行動パターン基底クラス
 /// </summary>
 class IEnemyState

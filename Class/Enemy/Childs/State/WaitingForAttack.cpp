@@ -89,3 +89,14 @@ void WaitingForAttack::Update()
 	}
 
 }
+
+void WaitingForAttack::DebugGUI()
+{
+
+	if (ImGui::TreeNode("WaitingForAttack")) {
+		ImGui::Text("attack Count : %d", attackCount_);
+		ImGui::Text("next Attack Count : %d", nextAttackCount_);
+		ImGui::TreePop();
+	}
+
+}

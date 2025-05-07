@@ -48,7 +48,7 @@ public:
 	//プレイヤーの座標取得
 	Vector3 GetPlayerPosition();
 	//アニメーション切り替え
-	void SetAnimation(const std::string& animName, bool isLoop);
+	void SetAnimation(const std::string& animName, bool isLoop, float speed = 1.0f);
 	//アニメーション取得
 	Animation* GetAnimation() { return &animation_; }
 	//状態切り替え
@@ -83,7 +83,18 @@ public:
 	bool GetIsAttack() const { return isAttack_; }
 	//攻撃フラグを強制終了(外部からの呼び出し用)
 	static void ResetAttack() { isAttack_ = false; }
-
+	//攻撃態勢カウント増加
+	void AddAttackCount() { currentAttackCount_++; }
+	//攻撃態勢カウント減少
+	void SubAttackCount() { currentAttackCount_--; }
+	//現在の攻撃態勢人数取得
+	static uint16_t GetCurrentAttackCount() { return currentAttackCount_; }
+	//最大攻撃態勢人数取得
+	static uint16_t GetMaxAttackCount() { return maxAttackCount_; }
+	//近接カウントセット
+	void SetClosenessCount(uint16_t count) { closenessCount_ = count; }
+	//近接カウントゲット
+	uint16_t GetClosenessCount() const { return closenessCount_; }
 
 	LWP::Object::TransformQuat* GetWorldTF() { return &model_.worldTF; }
 
@@ -110,8 +121,14 @@ protected:
 	float distFromPlayer_ = 0.0f;
 	//全体のID管理
 	static uint16_t currentEnemyID_;
+	//攻撃態勢最大人数
+	static uint16_t maxAttackCount_;
+	//現在攻撃態勢に入っている人数
+	static uint16_t currentAttackCount_;
 	//個々のID
 	uint16_t ID_;
+	//距離の近さを示す変数。小さいほど近い
+	uint16_t closenessCount_ = 0;
 	//死亡フラグ
 	bool isDead_ = false;
 	//ロックオンされているか

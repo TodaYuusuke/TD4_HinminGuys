@@ -1,6 +1,7 @@
 #pragma once
 #include "../Adapter/Adapter.h"
 #include "IEnemy.h"
+#include "IEnemyState.h"
 #include "Childs/Normal/Normal.h"
 #include "Childs/Boss/Boss.h"
 #include <list>
@@ -38,6 +39,11 @@ public:
 
 private:
 
+	//特定のステートのデバッグGUIを開く
+	void DebugState(States states);
+
+private:
+
 	Player* player_;
 
 	//全ての敵を管理するリスト
@@ -51,7 +57,9 @@ private:
 #pragma endregion
 
 	//敵が互いに取る距離
-	float enemyDist_ = 1.0f;
+	float enemyDist_ = 3.0f;
+	//攻撃する敵同士が取る距離
+	float attackEnemyDist_ = 1.5f;
 	//敵の出現上限
 	const uint16_t kMaxEnemyCount_ = 20;
 

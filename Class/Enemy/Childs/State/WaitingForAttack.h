@@ -16,6 +16,8 @@ public:
 
 	void Update() override;
 
+	static void DebugGUI();
+
 	static uint16_t GetAttackCount() { return attackCount_; }
 	static uint16_t GetNextAttackCount() { return nextAttackCount_; }
 

@@ -16,18 +16,18 @@ public:
 
 	void Update() override;
 
+	static void DebugGUI();
+
 private:
 
 	//移動方向
 	Vector3 velocity_;
 	//移動時間
-	int32_t runTime_;
-	//追加移動時間
-	int32_t overRunTime_;
+	static int32_t runTime_;
+	//カウント
+	int32_t countRunTime_;
 	//攻撃モーションに入る距離
-	float attackDist_ = 0.5f;
-	//近づくかどうかを決める距離
-	float approachDist_ = 2.0f;
+	static float attackDist_;
 	//プレイヤーに近づくかどうか
 	bool isApproach_ = true;
 

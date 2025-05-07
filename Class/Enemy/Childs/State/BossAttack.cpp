@@ -10,3 +10,12 @@ void BossAttack::Initialize(IEnemy* enemy)
 void BossAttack::Update()
 {
 }
+
+void BossAttack::DebugGUI()
+{
+
+	if (ImGui::TreeNode("BossAttack")) {
+		ImGui::TreePop();
+	}
+
+}

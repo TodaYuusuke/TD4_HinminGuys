@@ -14,13 +14,16 @@ public:
 
 	void Update() override;
 
+	static void DebugGUI();
+
 private:
 
 	//待機時間
-	int32_t standTime_;
-	//攻撃モーションに入る距離
-	float attackDist_ = 3.0f;
-
+	static int32_t standTime_;
+	//カウント
+	int32_t countStandTime_;
+	//追従モーションに移行する距離
+	static float followingDist_;
 
 };
 
