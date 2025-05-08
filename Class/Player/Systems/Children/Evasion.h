@@ -81,4 +81,9 @@ private:// プライベートな変数
 	LWP::Math::Vector3 velocity_;
 	// 回避時の角度(ラジアン)
 	LWP::Math::Vector3 radian_;
+
+	// アニメーションの再生速度をイージング
+	LWP::Resource::Motion animationPlaySpeed_;
+	// アニメーションの再生速度
+	LWP::Math::Vector3 animPlaySpeed_;
 };

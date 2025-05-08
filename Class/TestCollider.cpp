@@ -1,4 +1,7 @@
 #include "TestCollider.h"
+#include "GameMask.h"
+
+using namespace GameMask;
 
 TestCollider::TestCollider()
 	: aabb_(collider_.SetBroadShape(LWP::Object::Collider::AABB()))
@@ -8,9 +11,9 @@ TestCollider::TestCollider()
 	// 攻撃判定生成
 	aabb_.min.y = 0.0f;
 	aabb_.max.y = 1.0f;
-	collider_.isActive = true;/*
-	collider_.mask.SetBelongFrag(ColMask1);
-	collider_.mask.SetHitFrag((uint32_t)~ColMask1);*/
+	collider_.isActive = true;
+	collider_.mask.SetBelongFrag(GetEnemy());
+	collider_.mask.SetHitFrag(GetPlayer() | GetAttack());
 }
 
 void TestCollider::Initialize()

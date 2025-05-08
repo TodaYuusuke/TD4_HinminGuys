@@ -13,8 +13,9 @@ void Evasion::Initialize() {
 	isActive_ = false;
 	isPreActive_ = false;
 
-	// アクションイベントを生成
-	CreateEventOrder();
+
+	animationPlaySpeed_.Add(&animPlaySpeed_, Vector3{ 0.05f, 0.0f, 0.0f }, 0.0f, 0.1f, LWP::Utility::Easing::Type::OutExpo)
+		.Add(&animPlaySpeed_, Vector3{ 1.0f, 0.0f, 0.0f }, 0.1f, 0.5f, LWP::Utility::Easing::Type::InExpo);
 
 	json_.Init("EvasionData.json");
 	json_.BeginGroup("EventOrder")
@@ -26,6 +27,9 @@ void Evasion::Initialize() {
 		.EndGroup()
 		.AddValue<float>("EvasionMultiply", &moveMultiply)
 		.CheckJsonFile();
+
+	// アクションイベントを生成
+	CreateEventOrder();
 }
 
 void Evasion::Update() {
@@ -39,6 +43,9 @@ void Evasion::Update() {
 
 	// アクションイベントの確認
 	CheckEvasionState();
+
+	animationPlaySpeed_.Update();
+	player_->SetAnimationPlaySpeed(animPlaySpeed_.x);
 
 	// 全てのアクションイベントが終了しているなら機能停止
 	if (eventOrder_.GetIsEnd()) {
@@ -58,6 +65,8 @@ void Evasion::Reset() {
 	radian_ = { 0.0f, 0.0f, 0.0f };
 	// アニメーションを初期化
 	player_->ResetAnimation();
+	animPlaySpeed_ = { 1.0f, 0.0f, 0.0f };
+	player_->SetAnimationPlaySpeed(animPlaySpeed_.x);
 }
 
 void Evasion::DebugGUI() {
@@ -79,6 +88,8 @@ void Evasion::DebugGUI() {
 
 		eventOrder_.DebugGUI();
 
+		ImGui::DragFloat3("AnimSpeed", &animPlaySpeed_.x);
+
 		ImGui::Checkbox("IsEvasion", &isActive_);
 
 		ImGui::TreePop();
@@ -88,6 +99,7 @@ void Evasion::DebugGUI() {
 void Evasion::Command() {
 	if (eventOrder_.GetIsEnd()) {
 		isActive_ = true;
+		animationPlaySpeed_.Start();
 		player_->ResetAnimation();
 		player_->StartAnimation("Dash", 1.0f, 0.0f);
 		player_->SetIsLoopAnimation(true);

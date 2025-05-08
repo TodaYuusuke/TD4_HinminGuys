@@ -9,9 +9,9 @@ using namespace LWP::Utility;
 using namespace LWP::Object;
 using namespace LWP::Info;
 
-GameScene::GameScene() 
+GameScene::GameScene()
 	: player_(&mainCamera, &enemyManager_, &followCamera_),
-	  followCamera_(&mainCamera, player_.GetModelPos())
+	followCamera_(&mainCamera, player_.GetModelPos())
 {
 	enemyManager_.Initialize();
 }
@@ -39,8 +39,8 @@ void GameScene::Initialize() {
 	// 一時的に平面を生成
 	plane.LoadShortPath("field/ground/SimpleStage.gltf");
 	plane.worldTF.scale = { 1000.0f,1000.0f ,1000.0f };
-	plane.worldTF.translation = { 0,-1,0 };
-	plane.materials["material"].uvTransform.scale = { 1000.0f,1000.0f ,0.0f };
+	plane.worldTF.translation = { 0,0,0 };
+	plane.materials["Material"].uvTransform.scale = { 1000.0f,1000.0f ,0.0f };
 	// 一時的に天球を生成
 	skydome.LoadShortPath("field/skydome/SkyDome.gltf");
 	skydome.worldTF.scale = { 1000.0f,1000.0f ,1000.0f };
@@ -76,40 +76,47 @@ void GameScene::Update() {
 
 void GameScene::DebugGUI() {
 #ifdef _DEBUG
-	ImGui::Begin("GameDebugWindow");
+	ImGui::Begin("DebugWindow");
+	if (ImGui::BeginTabBar("GameObject")) {		
+		// 自機
+		if (ImGui::BeginTabItem("Player")) {
+			player_.DebugGUI();
+			ImGui::EndTabItem();
+		}
+		// キーコンフィグ
+		if (ImGui::BeginTabItem("InputHandler")) {
+			inputHandler_.DebugGUI();
+			ImGui::EndTabItem();
+		}
+		// 追従カメラ
+		if (ImGui::BeginTabItem("FollowCamera")) {
+			followCamera_.DebugGUI();
+			ImGui::EndTabItem();
+		}
+		// 敵管理クラス
+		if (ImGui::BeginTabItem("EnemyManager")) {
+			enemyManager_.Debug();
+			ImGui::EndTabItem();
+		}
+		// 地面
+		if (ImGui::BeginTabItem("Ground")) {
+			plane.DebugGUI();
+			ImGui::EndTabItem();
+		}
+		// デバッグ用のカメラ
+		if (ImGui::BeginTabItem("DebugCamera")) {
+			mainCamera.DebugGUI();
+			ImGui::EndTabItem();
+		}
+		// FPSカウンターの表示
+		if (ImGui::BeginTabItem("Other")) {
+			ImGui::Text("Frame rate: %6.2f fps", ImGui::GetIO().Framerate);
+			ImGui::EndTabItem();
+		}
 
-	// FPSカウンターの表示
-	ImGui::Text("Frame rate: %6.2f fps", ImGui::GetIO().Framerate);
-	// 自機
-	if (ImGui::TreeNode("Player")) {
-		player_.DebugGUI();
-		ImGui::TreePop();
+		ImGui::EndTabBar();
 	}
-	// キーコンフィグ
-	if (ImGui::TreeNode("InputHandler")) {
-		inputHandler_.DebugGUI();
-		ImGui::TreePop();
-	}
-	// 追従カメラ
-	if (ImGui::TreeNode("FollowCamera")) {
-		followCamera_.DebugGUI();
-		ImGui::TreePop();
-	}
-	// 敵管理クラス
-	if (ImGui::TreeNode("EnemyManager")) {
-		enemyManager_.Debug();
-		ImGui::TreePop();
-	}
-	// 平面
-	if (ImGui::TreeNode("Plane")) {
-		plane.DebugGUI();
-		ImGui::TreePop();
-	}
-	
 
 	ImGui::End();
-
-	// デバッグ用のカメラ
-	mainCamera.DebugGUI();
 #endif // _DEBUG
 }

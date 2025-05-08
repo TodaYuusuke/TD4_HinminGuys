@@ -30,9 +30,8 @@ public:
 private: // ** これより先に必要な処理や変数を記述 ** //
 	// 自機
 	Player player_;
+	//　キー入力
 	InputHandler inputHandler_;
-
-	TestCollider testCollider_;
 
 	// 追従カメラ
 	FollowCamera followCamera_;
@@ -47,4 +46,8 @@ private: // ** これより先に必要な処理や変数を記述 ** //
 
 	//ライト
 	LWP::Object::DirectionLight light_;
+
+	// 当たり判定テスト用のオブジェクト
+	TestCollider testCollider_;
+
 };

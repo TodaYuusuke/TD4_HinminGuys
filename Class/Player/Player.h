@@ -100,18 +100,24 @@ public:// Getter,Setter
 		animation_.Play(animName, transitionTime, startTime); 
 	}
 	/// <summary>
-	/// アニメーションをループするかを設定
-	/// </summary>
-	/// <param name="isLoop"></param>
-	void SetIsLoopAnimation(bool isLoop) { animation_.Loop(isLoop); }
-	/// <summary>
 	/// アニメーションを初期化
 	/// </summary>
 	void ResetAnimation() { 
 		animation_.Init();
 		animation_.Stop();
 		animation_.Loop(false);
+		animation_.playbackSpeed = 1.0f;
 	}
+	/// <summary>
+	/// アニメーションの再生速度を設定
+	/// </summary>
+	/// <param name="playSpeed"></param>
+	void SetAnimationPlaySpeed(const float& playSpeed) { animation_.playbackSpeed = playSpeed; }
+	/// <summary>
+	/// アニメーションをループするかを設定
+	/// </summary>
+	/// <param name="isLoop"></param>
+	void SetIsLoopAnimation(const bool& isLoop) { animation_.Loop(isLoop); }
 #pragma endregion
 
 private:// 外部からポインタをもらう変数

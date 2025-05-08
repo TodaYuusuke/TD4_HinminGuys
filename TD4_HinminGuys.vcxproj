@@ -214,6 +214,7 @@
     <ClInclude Include="Class\Player\Systems\Children\State\Attack\NoneAttack.h" />
     <ClInclude Include="Class\Player\Systems\Children\Evasion.h" />
     <ClInclude Include="Class\TestCollider.h" />
+    <ClInclude Include="Class\GameMask.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />

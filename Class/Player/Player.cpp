@@ -44,6 +44,7 @@ void Player::DebugGUI() {
 	// アニメーション
 	if (ImGui::TreeNode("Animation")) {
 		animation_.DebugGUI();
+		ImGui::TreePop();
 	}
 
 	ImGui::DragFloat3("Translation", &model_.worldTF.translation.x, 0.1f, -10000, 10000);

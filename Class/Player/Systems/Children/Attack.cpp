@@ -3,11 +3,13 @@
 #include "State/Attack/DefaultAttack.h"
 #include "State/Attack/LockOnAttack.h"
 #include "State/Attack/NoneAttack.h"
+#include "../../../GameMask.h"
 
 using namespace LWP;
 using namespace LWP::Math;
 using namespace LWP::Object;
 using namespace LWP::Object::Collider;
+using namespace GameMask;
 
 Attack::Attack(LWP::Object::Camera* camera, Player* player)
 	: aabb_(collider_.SetBroadShape(LWP::Object::Collider::AABB()))
@@ -31,9 +33,6 @@ void Attack::Initialize() {
 	isActive_ = false;
 	isPreActive_ = false;
 
-	// フレーム単位で発生するアクションイベントを管理するクラス
-	CreateEventOrder();
-
 	json_.Init("AttackData.json");
 	json_.BeginGroup("EventOrder")
 		.BeginGroup("GraceTime")
@@ -43,6 +42,9 @@ void Attack::Initialize() {
 		.EndGroup()
 		.EndGroup()
 		.CheckJsonFile();
+
+	// フレーム単位で発生するアクションイベントを管理するクラス
+	CreateEventOrder();
 }
 
 void Attack::Update() {
@@ -137,13 +139,10 @@ void Attack::CreateCollision() {
 	aabb_.max.y = 1.0f;
 	collider_.SetFollowTarget(player_->GetWorldTF());
 	collider_.worldTF.translation = { 0,0,2 };
-	collider_.isActive = false;/*
-	collider_.mask.SetBelongFrag(ColMask0);
-	collider_.mask.SetHitFrag((uint32_t)~ColMask0);*/
+	collider_.isActive = false;
+	collider_.mask.SetBelongFrag(GetAttack());
+	collider_.mask.SetHitFrag(GetEnemy());
 	collider_.stayLambda = [this](LWP::Object::Collision* hitTarget) {
-		// 衝突した相手が同じマスクなら処理しない
-		//if (hitTarget->mask.GetBelongFrag() == collider_.mask.GetBelongFrag()) { return; }
-		// 
 		hitTarget;
 
 		// 攻撃判定が出ているとき

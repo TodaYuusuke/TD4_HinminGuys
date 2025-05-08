@@ -90,7 +90,8 @@ void SystemManager::EnableInputMoveState() {
 		// 移動中のアニメーション
 		if (moveSystem_->GetIsMove()) {
 			if (player_->GetAnimation()->GetLoadedPath() != "Run") {
-				player_->StartAnimation("Walk", 2.0f, 0.0f);
+				player_->StartAnimation("Run", 1.0f, 0.0f);
+				player_->SetAnimationPlaySpeed(0.5f);
 				player_->SetIsLoopAnimation(true);
 			}
 		}
@@ -98,6 +99,7 @@ void SystemManager::EnableInputMoveState() {
 		else {
 			if (player_->GetAnimation()->GetLoadedPath() != "Idle") {
 				player_->StartAnimation("Idle", 1.0f, 0.0f);
+				player_->SetAnimationPlaySpeed(1.0f);
 				player_->SetIsLoopAnimation(true);
 			}
 		}
