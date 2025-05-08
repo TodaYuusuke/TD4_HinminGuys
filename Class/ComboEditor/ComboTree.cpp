@@ -1,24 +1,21 @@
 #include "ComboTree.h"
 
 using namespace LWP::Utility::Condition;
+using namespace LWP;
 
 ComboTree::~ComboTree()
 {
-	// 派生コンボ配列内の要素削除
-	for (Combo* c : baseCombos_) {
-		delete c;
-	}
-	// 配列の要素クリア
-	baseCombos_.clear();
+	
 }
 
 void ComboTree::Init()
 {	
 	// 新規大元コンボを追加する
-	Combo* c = new Combo();
-	c->Init("Combo");
-	editingCombo_ = c;
-	baseCombos_.push_back(std::move(c));
+	rootCombo_.Init("Base");
+	editingCombo_ = &rootCombo_;
+
+	// コンボのロード
+	LoadCombo();
 }
 
 void ComboTree::Update()
@@ -70,12 +67,13 @@ void ComboTree::FileMenu()
 
 		// 作成したツリーの保存を行う
 		if (ImGui::MenuItem("Save")) {
-
+			// コンボの保存
+			SaveCombo();
 		}
 
 		// ツリーの再読み込み
 		if (ImGui::MenuItem("Load")) {
-
+			LoadCombo();
 		}
 
 		ImGui::EndMenu();
@@ -90,20 +88,74 @@ void ComboTree::NodeMenu()
 
 	ImGui::SetWindowFontScale(1.35f);
 
-	// 大元のコンボ配列分ループする
-	for (Combo* c : baseCombos_) {
-		c->NodeMenu(selectedID_, editID, change);
+	rootCombo_.NodeMenu(selectedID_, editID, change);
 
-		// もし編集対象が変更されている場合
-		if (change != nullptr) {
-			editingCombo_ = change;
+	// もし編集対象が変更されている場合
+	if (change != nullptr) {
+		editingCombo_ = change;
 
-			// 生成する派生コンボの名称もそのコンボ名称に変更しておく
-			strncpy_s(imGuiChildComboName_, sizeof(imGuiChildComboName_), editingCombo_->GetName().c_str(), _TRUNCATE);
-		}
+		// 生成する派生コンボの名称もそのコンボ名称に変更しておく
+		strncpy_s(imGuiChildComboName_, sizeof(imGuiChildComboName_), editingCombo_->GetName().c_str(), _TRUNCATE);
 	}
 
 	ImGui::SetWindowFontScale(1.0f);
+}
+
+void ComboTree::SaveCombo()
+{
+	jsonIO_.Init("Combo.json");
+
+	// 全コンボの保存
+	rootCombo_.AddValue(jsonIO_);
+	jsonIO_.Save();
+}
+
+void ComboTree::LoadCombo()
+{
+	// 初期化
+	jsonIO_.Init("Combo.json");
+	jsonIO_.CheckJsonFile();
+
+	// グループ名の取得
+	Utility::NestedList nameList = Utility::JsonIO::LoadGroupNames("Combo.json");
+
+	// グループ名リストが空の場合早期リターン
+	if (nameList.empty()) {
+		return;
+	}
+
+	// 同名の空のコンボ配列を作成して読み込めるようにする
+	auto lamda = [](auto self, Utility::NestedList& list, Combo& c) -> void {
+		for (auto itr = list.begin(); itr != list.end(); ++itr) {
+			// 名前を' : 'で分割する
+			std::vector<std::string> splitName = Utility::Split(itr->name, ':');
+
+			// 最初の要素に開始条件という文章が含まれているなら
+			if (splitName[0] == "StartConditions") {
+				// その後に続く文章で何の条件か判断し、追加する
+				if (splitName[1] == "Button") {
+					// 新しい開始条件の生成
+					Utility::ButtonCondition* condition =
+						new Utility::ButtonCondition(TRIGGER, Controller::X, KeyBoard::J);
+
+					// 追加
+					c.AddCondition(condition);
+				}
+
+				// 次のループへ
+				continue;
+			}
+
+			// 再帰的に空のコンボを生成する
+			self(self, itr->list, c.CreateChild(itr->name));
+		}
+	};
+	// ラムダ式を実行
+	lamda(lamda, nameList[0].list, rootCombo_);
+
+	rootCombo_.AddValue(jsonIO_);
+
+	jsonIO_.Load();
 }
 
 int ComboTree::GetSameNameCount(const std::string& name)
@@ -111,11 +163,8 @@ int ComboTree::GetSameNameCount(const std::string& name)
 	// 同名コンボのカウント用
 	int SameNameCount = 0;
 
-	// 大元コンボ分ループ
-	for (Combo* c : baseCombos_) {
-		// 同名コンボを全て探す
-		c->SameNameCount(name, SameNameCount);
-	}
+	// 同名コンボを全て探す
+	rootCombo_.SameNameCount(name, SameNameCount);
 
 	// 結果を返す
 	return SameNameCount;
@@ -172,8 +221,8 @@ void ComboTree::InputMenu()
 {
 	if (ImGui::MenuItem("Button")) {
 		// 新しい開始条件の生成
-		LWP::Utility::ButtonCondition* c = 
-			new LWP::Utility::ButtonCondition(TRIGGER, Controller::X, KeyBoard::J);
+		Utility::ButtonCondition* c = 
+			new Utility::ButtonCondition(TRIGGER, Controller::X, KeyBoard::J);
 
 		// 追加
 		editingCombo_->AddCondition(c);

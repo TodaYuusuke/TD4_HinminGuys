@@ -33,6 +33,12 @@ namespace LWP::Utility {
 		/// </summary>
 		virtual void DebugGUI() { };
 
+		/// <summary>
+		/// 保存関数
+		/// </summary>
+		/// <param name="json">保存対象json</param>
+		virtual void Save(LWP::Utility::JsonIO& json) { json; };
+
 	public: // アクセッサ等
 		
 		/// <summary>
@@ -55,6 +61,9 @@ namespace LWP::Utility {
 	protected: // メンバ変数
 
 		#pragma region エディタ用変数
+
+		// 条件名
+		std::string name_ = "";
 
 		// 条件削除フラグ
 		bool imGuiIsDelete_ = false;

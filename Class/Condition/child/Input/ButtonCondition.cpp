@@ -49,6 +49,16 @@ void LWP::Utility::ButtonCondition::DebugGUI()
 	}
 }
 
+void LWP::Utility::ButtonCondition::Save(LWP::Utility::JsonIO& json)
+{
+	// 入力条件の保存
+	json.AddValue<int>("InputState", &inputState_);
+
+	// ボタン、キーのIDを保存
+	json.AddValue<int>("ButtonID", &buttonID_);
+	json.AddValue<int>("KeyID", &keyID_);
+}
+
 bool LWP::Utility::ButtonCondition::CheckCondition()
 {
 	// 結果の返還用

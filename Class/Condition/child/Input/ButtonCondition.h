@@ -20,7 +20,7 @@ namespace LWP::Utility {
 		/// <param name="inputState">入力状態</param>
 		/// <param name="buttonID">ボタンのID</param>
 		/// <param name="keyID">キーのID</param>
-		ButtonCondition(int inputState, int buttonID, int keyID) :inputState_(inputState), buttonID_(buttonID), keyID_(keyID) {};
+		ButtonCondition(int inputState, int buttonID, int keyID) :inputState_(inputState), buttonID_(buttonID), keyID_(keyID) { name_ = "ButtonCondition"; };
 
 	public: // メンバ関数
 
@@ -33,6 +33,12 @@ namespace LWP::Utility {
 		/// デバッグ用GUIの表示関数
 		/// </summary>
 		void DebugGUI() override;
+
+		/// <summary>
+		/// 保存関数
+		/// </summary>
+		/// <param name="json">保存対象json</param>
+		void Save(LWP::Utility::JsonIO& json) override;
 
 	public: // アクセッサ等
 

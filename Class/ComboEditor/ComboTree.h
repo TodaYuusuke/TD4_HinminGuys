@@ -53,6 +53,16 @@ private: // プライベートなメンバ関数
 	void NodeMenu();
 
 	/// <summary>
+	/// コンボの保存関数
+	/// </summary>
+	void SaveCombo();
+	
+	/// <summary>
+	/// コンボのロード関数
+	/// </summary>
+	void LoadCombo();
+
+	/// <summary>
 	/// <エディタ用> 同名コンボがいくつあるかのカウンター
 	/// </summary>
 	/// <param name="name">検証する名称</param>
@@ -88,11 +98,14 @@ private: // メンバ変数
 
 #pragma region エディタ用変数
 
+	// jsonIO
+	LWP::Utility::JsonIO jsonIO_;
+
 	// 選択中のコンボID
 	int selectedID_ = 0;
 
-	// 大元コンボ配列
-	std::list<Combo*> baseCombos_;
+	// 大元コンボ
+	Combo rootCombo_;
 
 	// 編集中のコンボ
 	Combo* editingCombo_ = nullptr;

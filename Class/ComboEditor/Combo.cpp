@@ -1,9 +1,11 @@
 #include "Combo.h"
 
+using namespace LWP;
+
 Combo::~Combo()
 {
 	// 遷移条件配列内の要素削除
-	for (LWP::Utility::ICondition* c : conditions_) {
+	for (Utility::ICondition* c : conditions_) {
 		delete c;
 	}
 	// 配列の要素クリア
@@ -21,7 +23,6 @@ void Combo::Init(const std::string& name)
 {
 	// 名称設定
 	name_ = name;
-	strncpy_s(imGuiName_, sizeof(imGuiName_), name_.c_str(), _TRUNCATE);
 
 	// 攻撃関係変数のリセット
 	attackStartTime_ = 0.0f;	// 開始時間
@@ -136,8 +137,7 @@ void Combo::DebugGUI()
 	ImGui::Separator();
 
 	// コンボ名称の編集
-	ImGui::InputText("Name", imGuiName_, sizeof(imGuiName_));
-	name_ = imGuiName_;
+	Base::ImGuiManager::InputText("Name", name_);
 
 	ImGui::NewLine();
 
@@ -194,7 +194,52 @@ void Combo::SameNameCount(const std::string& name, int& count)
 	}
 }
 
-void Combo::CreateChild(const std::string& name)
+void Combo::AddValue(LWP::Utility::JsonIO& json)
+{
+	// コンボ名でグループ開始
+	json.BeginGroup(name_);
+
+	// アニメーション名の保存
+	json.AddValue<std::string>("AnimName", &animName_);
+
+	// 攻判定時間の保存
+	json.AddValue<float>("AttackStartTime", &attackStartTime_);
+	json.AddValue<float>("AttackEndTime", &attackEndTime_);
+	
+	// 硬直時間の保存
+	json.AddValue<float>("StifnessTime", &stifnessTime_);
+
+	// 受付時間の保存
+	json.AddValue<float>("ReceptTime", &receptTime_);
+
+	// 開始条件の保存
+	int condCount = 1;
+	for (LWP::Utility::ICondition* c : conditions_) {
+		// 開始条件名の設定 : 末尾は固有の名称
+		std::string cName = "StartConditions:Button:" + std::to_string(condCount);
+		// グループの開始
+		json.BeginGroup(cName);
+
+		// 開始条件の保存
+		c->Save(json);
+
+		// グループの終了
+		json.EndGroup();
+
+		// カウントを進める
+		condCount++;
+	}
+
+	// 派生クラスの情報保存
+	for (Combo* c : childs_) {
+		c->AddValue(json);
+	}
+
+	// このコンボのグループを終了する
+	json.EndGroup();
+}
+
+Combo& Combo::CreateChild(const std::string& name)
 {
 	// 新規コンボの生成
 	Combo* c = new Combo();
@@ -203,6 +248,9 @@ void Combo::CreateChild(const std::string& name)
 
 	// 派生コンボ配列に追加
 	childs_.push_back(std::move(c));
+	
+	// 生成下コンボの参照を返す
+	return *c;
 }
 
 void Combo::DeleteThis()
@@ -369,8 +417,7 @@ void Combo::AnimSettings()
 	ImGui::Indent();
 
 	// 再生されるアニメーションの設定
-	ImGui::InputText("AnimName", imGuiAnimName_, sizeof(imGuiAnimName_));
-	animName_ = imGuiAnimName_;
+	Base::ImGuiManager::InputText("AnimName", animName_);
 
 	ImGui::Unindent();
 	ImGui::NewLine();

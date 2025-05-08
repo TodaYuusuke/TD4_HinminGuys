@@ -89,10 +89,16 @@ public: // アクセッサ等
 public: // エディタ用関数群
 
 	/// <summary>
+	/// コンボの保存関数
+	/// </summary>
+	/// <param name="json"></param>
+	void AddValue(LWP::Utility::JsonIO& json);
+
+	/// <summary>
 	/// <エディタ用> 派生コンボ生成関数
 	/// </summary>
 	/// <param name="name">派生コンボ名</param>
-	void CreateChild(const std::string& name);
+	Combo& CreateChild(const std::string& name);
 	
 	/// <summary>
 	/// <エディタ用> 削除フラグゲッター
@@ -204,11 +210,6 @@ private: // メンバ変数
 
 	// ImGui上で選択されているフラグ
 	bool imGuiSelected_ = false;
-
-	// コンボ名称
-	char imGuiName_[64] = "";
-	// 再生されるアニメーション名称
-	char imGuiAnimName_[64] = "";
 
 	// このコンボの削除フラグ
 	bool imGuiIsDelete_ = false;
