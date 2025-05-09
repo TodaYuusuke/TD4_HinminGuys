@@ -16,10 +16,10 @@ namespace InputConfig {
 
 		// ゲームパッド
 		namespace GamePad {
-			uint8_t NormalAttack = XBOX_X;					// 通常攻撃
-			uint8_t Parry = XBOX_RT;						// パリィ
-			uint8_t LockOn = XBOX_LT;						// ロックオン
-			uint8_t Evasion = XBOX_LB | XBOX_RB;			// 回避
+			int NormalAttack = XBOX_Y;						// 通常攻撃
+			int Parry = XBOX_RT;							// パリィ
+			int LockOn = XBOX_LT;							// ロックオン
+			int Evasion = XBOX_LB | XBOX_RB;				// 回避
 		};
 	};
 };

@@ -1,6 +1,5 @@
 #pragma once
 #include "../ISystem.h"
-#include "../EventOrder.h"
 #include "LockOn.h"
 #include "State/IAttackSystemState.h"
 
@@ -32,7 +31,7 @@ public:
 	/// <summary>
 	/// ImGuiによるパラメータを表示
 	/// </summary>
-	void DebugGUI();
+	void DebugGUI() override;
 
 	/// <summary>
 	/// 通常攻撃のコマンド
@@ -50,6 +49,11 @@ private:
 	/// 当たり判定を作成
 	/// </summary>
 	void CreateCollision();
+
+	/// <summary>
+	/// アクションイベントの生成
+	/// </summary>
+	void CreateEventOrder();
 
 	/// <summary>
 	/// 攻撃のイベント状態の確認とそれに伴った処理
@@ -103,13 +107,13 @@ public:// Getter, Setter
 	void SetAttackAssistRadian(Vector3 attackAssistRadian) {  attackAssistRadian_ = attackAssistRadian; }
 #pragma endregion
 
-private:// 定数
-	// 通常攻撃発動までにかかる時間
-	const float kNormalSwingTime = 60.0f * 0.25f;
-	// 通常攻撃の猶予時間[frame * 秒]
-	const float kNormalAttackTime = 60.0f * 0.6f;
-	// 通常攻撃の硬直[frame * 秒]
-	const float kNormalRecoveryTime = 60.0f * 0.2f;
+private:// jsonで保存する値
+	// 通常攻撃発動までにかかる時間[秒]
+	float kNormalSwingTime = 0.25f;
+	// 通常攻撃の猶予時間[秒]
+	float kNormalAttackTime = 0.6f;
+	// 通常攻撃の硬直[秒]
+	float kNormalRecoveryTime = 0.2f;
 
 private:// 外部からポインタをもらう変数
 	// ロックオン機能
@@ -118,9 +122,6 @@ private:// 外部からポインタをもらう変数
 private:
 	// 状態遷移
 	IAttackSystemState* state_;
-
-	// フレーム単位で発生するアクションイベントを管理するクラス
-	EventOrder eventOrder_;
 
 	// 攻撃判定
 	LWP::Object::Collision collider_;

@@ -31,44 +31,49 @@ public:
 	/// </summary>
 	void Reset();
 
+	/// <summary>
+	/// デバッグ用のタブを表示(Debug時のみ)
+	/// </summary>
+	void DebugGUI();
+	
 private:
 	/// <summary>
 	/// 自機機能を全て生成
 	/// </summary>
 	void CreateSystems();
 
-	/// <summary>
-	/// デバッグ用のタブを表示(Debug時のみ)
-	/// </summary>
-	void DebugGUI();
-
 public:// Getter,Setter
 #pragma region Getter
 	/// <summary>
-	/// 自機の座標を取得
+	/// 各機能をまとめているクラスのアドレスを取得
 	/// </summary>
 	/// <returns></returns>
-	LWP::Math::Vector3* GetModelPos() { return &model_.worldTF.translation; }
+	SystemManager* GetSystemManager() { return systemManager_.get(); }
 	/// <summary>
 	/// 自機のTransformQuatを取得
 	/// </summary>
 	/// <returns></returns>
 	LWP::Object::TransformQuat* GetWorldTF() { return &model_.worldTF; }
 	/// <summary>
-	/// 攻撃機能のアドレスを取得
+	/// アニメーション情報を取得
 	/// </summary>
 	/// <returns></returns>
-	Attack* GetAttackSystem() { return systemManager_->GetAttackSystem(); }
+	LWP::Resource::Animation* GetAnimation() { return &animation_; }
 	/// <summary>
-	/// パリィ機能のアドレスを取得
+	/// 自機の座標を取得
 	/// </summary>
 	/// <returns></returns>
-	Parry* GetParrySystem() { return systemManager_->GetParrySystem(); }
+	LWP::Math::Vector3* GetModelPos() { return &model_.worldTF.translation; }
 	/// <summary>
-	/// ロックオン機能のアドレスを取得
+	/// 自機の速度を取得
 	/// </summary>
 	/// <returns></returns>
-	LockOn* GetLockOnSystem() { return systemManager_->GetLockOnSystem(); }
+	LWP::Math::Vector3 GetVelocity() { return systemManager_->GetVelocity(); }
+	/// <summary>
+	/// 自機の角度を取得(クォータニオン)
+	/// </summary>
+	/// <returns></returns>
+	LWP::Math::Quaternion GetQuat() { return systemManager_->GetRotate(); }
 #pragma endregion
 
 #pragma region Setter
@@ -77,12 +82,42 @@ public:// Getter,Setter
 	/// </summary>
 	/// <param name="camera">カメラのアドレス</param>
 	void SetCamera(LWP::Object::Camera* camera) { pCamera_ = camera; }
-
 	/// <summary>
 	/// 敵の管理クラスを設定
 	/// </summary>
 	/// <param name="enemyManager">敵の管理クラスのポインタ</param>
 	void SetEnemyManager(EnemyManager* enemyManager) { enemyManager_ = enemyManager; }
+
+	/// <summary>
+	/// アニメーションを開始
+	/// </summary>
+	/// <param name="animName">再生するアニメーション名</param>
+	/// <param name="transitionTime">モーションの遷移にかかる時間(0.0f以上)</param>
+	/// <param name="startTime">開始時間(0.0f ~ 1.0f)</param>
+	void StartAnimation(const std::string& animName, const float& transitionTime, const float& startTime) {
+		// アニメーションが再生されているなら早期リターン
+		if (animation_.GetPlaying(animName)) { return; }
+		animation_.Play(animName, transitionTime, startTime); 
+	}
+	/// <summary>
+	/// アニメーションを初期化
+	/// </summary>
+	void ResetAnimation() { 
+		animation_.Init();
+		animation_.Stop();
+		animation_.Loop(false);
+		animation_.playbackSpeed = 1.0f;
+	}
+	/// <summary>
+	/// アニメーションの再生速度を設定
+	/// </summary>
+	/// <param name="playSpeed"></param>
+	void SetAnimationPlaySpeed(const float& playSpeed) { animation_.playbackSpeed = playSpeed; }
+	/// <summary>
+	/// アニメーションをループするかを設定
+	/// </summary>
+	/// <param name="isLoop"></param>
+	void SetIsLoopAnimation(const bool& isLoop) { animation_.Loop(isLoop); }
 #pragma endregion
 
 private:// 外部からポインタをもらう変数
@@ -92,14 +127,6 @@ private:// 外部からポインタをもらう変数
 	FollowCamera* followCamera_;
 
 private:
-	//// 移動機能
-	//std::unique_ptr<Move> moveSystem_;
-	//// パリィ機能
-	//std::unique_ptr<Parry> parrySystem_;
-	//// 攻撃機能
-	//std::unique_ptr<Attack> attackSystem_;
-	//// ロックオン機能
-	//std::unique_ptr<LockOn> lockOnSystem_;
-
+	// 機能まとめ
 	std::unique_ptr<SystemManager> systemManager_;
 };

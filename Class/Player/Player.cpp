@@ -8,6 +8,7 @@ Player::Player(LWP::Object::Camera* camera, EnemyManager* enemyManager, FollowCa
 
 	// モデルを読み込む
 	model_.LoadShortPath("player/Player_Simple.gltf");
+	animation_.LoadFullPath("resources/model/player/Player_Simple.gltf", &model_);
 
 	// 自機機能を生成
 	CreateSystems();
@@ -22,32 +23,37 @@ void Player::Update() {
 	// 各機能
 	systemManager_->Update();
 
-	// 速度を加算
-	model_.worldTF.translation += systemManager_->GetVelocity() * LWP::Info::GetDeltaTime();
-	// 角度を加算
-	model_.worldTF.rotation = systemManager_->GetRotate();
+	// アニメーション
+	animation_.Update();
 
-	// ImGui
-	DebugGUI();
+	// 速度を加算
+	model_.worldTF.translation += systemManager_->GetVelocity();
+	// 角度を代入
+	model_.worldTF.rotation = systemManager_->GetRotate();
 }
 
 void Player::Reset() {
+	// 各機能
 	systemManager_->Reset();
-}
-
-void Player::CreateSystems() {
-	systemManager_ = std::make_unique<SystemManager>(this, enemyManager_, followCamera_, pCamera_);
-	systemManager_->Initialize();
 }
 
 void Player::DebugGUI() {
 #ifdef _DEBUG
-	ImGui::Begin("Player");
-	
+	// 各機能
 	systemManager_->DebugGUI();
+	// アニメーション
+	if (ImGui::TreeNode("Animation")) {
+		animation_.DebugGUI();
+		ImGui::TreePop();
+	}
+
 	ImGui::DragFloat3("Translation", &model_.worldTF.translation.x, 0.1f, -10000, 10000);
 	ImGui::DragFloat4("Quaternion", &model_.worldTF.rotation.x, 0.1f, -10000, 10000);
-
-	ImGui::End();
 #endif // DEBUG
+}
+
+void Player::CreateSystems() {
+	// 各機能生成
+	systemManager_ = std::make_unique<SystemManager>(this, enemyManager_, followCamera_, pCamera_);
+	systemManager_->Initialize();
 }

@@ -21,6 +21,10 @@ void LockOn::Initialize() {
 	lockOnUI_.sprite.LoadTexture("lockOnReticle.png");
 	lockOnUI_.sprite.anchorPoint = lockOnUI_.defaultAnchorPoint;
 	lockOnUI_.sprite.isActive = false;
+
+	json_.Init("LockOnData.json");
+	json_.AddValue("Range", &kMaxRange)
+		.CheckJsonFile();
 }
 
 void LockOn::Update() {
@@ -56,6 +60,11 @@ void LockOn::Reset() {
 
 void LockOn::DebugGUI() {
 	if (ImGui::TreeNode("LockOn")) {
+		if (ImGui::TreeNode("Json")) {
+			json_.DebugGUI();
+			ImGui::TreePop();
+		}
+
 		ImGui::Checkbox("IsLockOn", &isActive_);
 		ImGui::Checkbox("IsChangeLockOnTarget", &isChangeLockOn_);
 		ImGui::Checkbox("IsChangeLocked", &isChangeLocked_);
@@ -230,7 +239,7 @@ void LockOn::SearchNearEnemy() {
 				float dot = Vector3::Dot((dir).Normalize(), (enemy->GetPosition() - player_->GetWorldTF()->GetWorldPosition()).Normalize());
 				// 異なる符号ならロックオンしない
 				if (std::signbit(inputCameraRotateY_) != std::signbit(dot)) {
-					continue; 
+					continue;
 				}
 			}
 			// ロックオン開始

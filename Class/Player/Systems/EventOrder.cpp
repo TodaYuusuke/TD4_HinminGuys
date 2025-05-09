@@ -1,6 +1,8 @@
 #include "EventOrder.h"
 
 void EventOrder::Initialize() {
+	timeEvents_.clear();
+	timeEventSchedules_.clear();
 	currentTime_ = 0;
 	isActive_ = false;
 }

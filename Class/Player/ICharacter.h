@@ -22,5 +22,8 @@ protected:
 	LWP::Object::Camera* pCamera_;
 
 	// モデル
-	LWP::Resource::RigidModel model_;
+	LWP::Resource::SkinningModel model_;
+
+	//アニメーション
+	LWP::Resource::Animation animation_;
 };

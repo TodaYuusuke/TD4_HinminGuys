@@ -5,7 +5,7 @@
 void Boss::Initialize(Player* player, const Vector3& position)
 {
 	model_.LoadShortPath("player/Player_Simple.gltf");
-	model_.materials["material"].color = { 1.0f,0.0f,0.0f,1.0f };
+	model_.materials["Material"].color = { 1.0f,0.0f,0.0f,1.0f };
 	animation_.LoadFullPath("resources/model/player/Player_Simple.gltf", &model_);
 	animation_.Play("Idle", true);
 	SetPlayer(player);

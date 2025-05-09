@@ -16,6 +16,10 @@ void Move::Initialize() {
 	// 向いている角度
 	quat_ = { 0.0f,0.0f,0.0f,1.0f };
 	radian_ = { 0.0f, 0.0f, 0.0f };
+
+	json_.Init("MoveData.json");
+	json_.AddValue<float>("MoveMultiply", &moveMultiply)
+		.CheckJsonFile();
 }
 
 void Move::Update() {
@@ -34,12 +38,18 @@ void Move::Reset() {
 	// 向いている角度
 	quat_ = { 0.0f,0.0f,0.0f,1.0f };
 	radian_ = { 0.0f, 0.0f, 0.0f };
+	// アニメーションを初期化
+	player_->ResetAnimation();
+	isMove_ = false;
 }
 
 void Move::DebugGUI() {
 	if (ImGui::TreeNode("Move")) {
-		;
-		//ImGui::Checkbox("IsNormalAttack", &isNormalAttack_);
+		if (ImGui::TreeNode("Json")) {
+			json_.DebugGUI();
+			ImGui::TreePop();
+		}
+
 		ImGui::DragFloat3("Velocity", &moveVel_.x, 0.1f, -10000, 10000);
 		ImGui::DragFloat3("Rotation", &radian_.x, 0.1f, -6.28f, 6.28f);
 		ImGui::DragFloat4("Quaternion", &quat_.x, 0.1f, -1, 1);
@@ -75,31 +85,15 @@ void Move::InputUpdate() {
 	// 回転行列を求める
 	Matrix4x4 rotMatrix = LWP::Math::Matrix4x4::CreateRotateXYZMatrix(pCamera_->worldTF.rotation);
 	// 方向ベクトルを求める
-	moveVel_ = dir * rotMatrix;
+	moveVel_ = dir * rotMatrix * moveMultiply;
 	moveVel_.y = 0;
 
+	isMove_ = false;
 	// 移動ベクトルから体の向きを算出(入力があるときのみ処理する)
 	if (LWP::Math::Vector3::Dot(Abs(dir), LWP::Math::Vector3{ 1,1,1 }) != 0) {
 		// 移動速度からラジアンを求める
-		radian_.y = GetAngle(LWP::Math::Vector3{ 0,0,1 }, moveVel_.Normalize(), LWP::Math::Vector3{ 0,1,0 });
+		radian_.y = LWP::Utility::GetRadian(LWP::Math::Vector3{ 0,0,1 }, moveVel_.Normalize(), LWP::Math::Vector3{ 0,1,0 });
 		quat_ = LWP::Math::Quaternion::CreateFromAxisAngle(LWP::Math::Vector3{ 0, 1, 0 }, radian_.y);
+		isMove_ = true;
 	}
-}
-
-float Move::GetAngle(const LWP::Math::Vector3& a, const LWP::Math::Vector3& b, const LWP::Math::Vector3& up) {
-	Vector3 aN = a.Normalize();
-	Vector3 bN = b.Normalize();
-
-	float dot = LWP::Math::Vector3::Dot(aN, bN);
-	dot = std::fmax(-1.0f, std::fmin(1.0f, dot)); // 数値誤差対策
-
-	float angle = std::acos(dot); // 0〜π
-
-	Vector3 cross = LWP::Math::Vector3::Cross(aN, bN);
-
-	if (LWP::Math::Vector3::Dot(up, cross) < 0) {
-		angle = 2 * (float)M_PI - angle;
-	}
-
-	return angle;
 }

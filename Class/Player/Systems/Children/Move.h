@@ -28,22 +28,13 @@ public:
 	/// <summary>
 	/// ImGuiによるパラメータ表示
 	/// </summary>
-	void DebugGUI();
+	void DebugGUI() override;
 
 private:
 	/// <summary>
 	/// 入力処理
 	/// </summary>
 	void InputUpdate();
-
-	/// <summary>
-	/// 
-	/// </summary>
-	/// <param name="a"></param>
-	/// <param name="b"></param>
-	/// <param name="up"></param>
-	/// <returns></returns>
-	float GetAngle(const LWP::Math::Vector3& a, const LWP::Math::Vector3& b, const LWP::Math::Vector3& up);
 
 	// 絶対値に変換
 	LWP::Math::Vector3 Abs(LWP::Math::Vector3 value) {
@@ -78,6 +69,11 @@ public:// Getter, Setter
 	/// </summary>
 	/// <returns></returns>
 	LWP::Math::Vector3 GetMoveRadian() { return radian_; }
+	/// <summary>
+	/// 移動しているかを取得
+	/// </summary>
+	/// <returns></returns>
+	bool GetIsMove() { return isMove_; }
 #pragma endregion
 
 #pragma region Setter
@@ -104,6 +100,10 @@ public:// Getter, Setter
 	void SetRotate(const LWP::Math::Quaternion& quat) { quat_ = quat; }
 #pragma endregion
 
+private:// jsonで保存する値
+	// 移動速度の係数
+	float moveMultiply = 1.0f;
+
 private:// プライベートな変数
 	// 移動対象のモデルのアドレス
 	LWP::Resource::RigidModel* model_;
@@ -117,4 +117,7 @@ private:// プライベートな変数
 
 	// 移動時のイージング
 	LWP::Math::Vector3 moveOffset_;
+
+	// 移動しているか
+	bool isMove_;
 };

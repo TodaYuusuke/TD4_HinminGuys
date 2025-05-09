@@ -35,6 +35,11 @@ public:
 	/// </summary>
 	void Update();
 
+	/// <summary>
+	/// デバッグ用のタブを表示(Debug時のみ)
+	/// </summary>
+	void DebugGUI();
+
 private:
 	/// <summary>
 	/// 入力処理
@@ -101,15 +106,17 @@ public:// Getter,Setter
 
 #pragma endregion
 
-private:// 定数
+private:// jsonで保存する値
 	// 追従対象との距離
 	LWP::Math::Vector3 kTargetDist = { 0.0f,0.0f,-20.0f };
 	// 初期角度 
 	LWP::Math::Vector3 kStartAngle = { 0.3f, 0.0f, 0.0f };
 	// x軸の下限値
-	const float kMinRotateX = (float)std::numbers::pi / 2.0f - 0.1f;
+	float kMinRotateX = (float)std::numbers::pi / 2.0f - 0.1f;
 	// x軸の上限値
-	const float kMaxRotateX = (float)std::numbers::pi / 2.0f + (float)std::numbers::pi / 4.0f;
+	float kMaxRotateX = (float)std::numbers::pi / 2.0f + (float)std::numbers::pi / 4.0f;
+	// カメラの感度
+	float sensitivity = 1.0f;
 
 private:// 外部からポインタをもらう変数
 	// カメラ
@@ -124,5 +131,8 @@ private:
 
 	// ロックオン時に使う情報
 	LockOnData lockOnData_;
+
+	// パラメーターの保存
+	LWP::Utility::JsonIO json_;
 };
 

@@ -48,7 +48,7 @@ public:
 	/// <summary>
 	/// デバッグ用のタブを表示(Debug時のみ)
 	/// </summary>
-	void DebugGUI();
+	void DebugGUI() override;
 
 	/// <summary>
 	/// ロックオンコマンド
@@ -119,9 +119,9 @@ public:// Getter, Setter
 	void SetFollowCamera(FollowCamera* followCamera) { followCamera_ = followCamera; }
 #pragma endregion
 
-private:// 定数
+private:// jsonで保存する値
 	// ロックオンできる範囲
-	constexpr static float kMaxRange = 50.0f;
+	float kMaxRange = 50.0f;
 
 private:// 外部からポインタをもらう変数
 	// 敵のリスト

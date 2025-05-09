@@ -29,3 +29,10 @@ class LockOnCommand : public ICommand {
 public:
 	void Exec(Player& player)override;
 };
+/// <summary>
+/// 回避コマンド
+/// </summary>
+class EvasionCommand : public ICommand {
+public:
+	void Exec(Player& player)override;
+};

@@ -114,7 +114,7 @@ void EnemyManager::ClearList()
 void EnemyManager::DebugGUI()
 {
 
-	ImGui::Begin("Enemy Manager");
+	//ImGui::Begin("Enemy Manager");
 
 	//スポーンポイント設定
 	ImGui::DragFloat3("spawn point", &spawnPoint_.x, 0.1f);
@@ -182,7 +182,7 @@ void EnemyManager::DebugGUI()
 		ImGui::EndTabBar();
 	}
 
-	ImGui::End();
+	//ImGui::End();
 
 }
 

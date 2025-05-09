@@ -7,6 +7,14 @@ FollowCamera::FollowCamera(LWP::Object::Camera* camera, LWP::Math::Vector3* targ
 
 void FollowCamera::Initialize() {
 	lockOnOffset_ = { 0.0f,2.5f,0.0f };
+
+	json_.Init("FollowCameraData.json");
+	json_.AddValue<LWP::Math::Vector3>("TargetDistance", &kTargetDist)
+		.AddValue<LWP::Math::Vector3>("GameStartAngle", &kStartAngle)
+		.AddValue<float>("MinRotateX", &kMinRotateX)
+		.AddValue<float>("MaxRotateX", &kMaxRotateX)
+		.AddValue<float>("Sensitivity", &sensitivity)
+		.CheckJsonFile();
 }
 
 void FollowCamera::Update() {
@@ -18,11 +26,14 @@ void FollowCamera::Update() {
 
 	// カメラの座標を決定
 	camera_->worldTF.translation = (*targetPos_) + kTargetDist * LWP::Math::Matrix4x4::CreateRotateXYZMatrix(camera_->worldTF.rotation);
+}
 
-	ImGui::Begin("Camera");
-	ImGui::DragFloat3("Translation", &camera_->worldTF.translation.x, 0.1f, -1000, 1000);
-	ImGui::DragFloat4("Quaternion", &camera_->worldTF.rotation.x, 0.1f, -1000, 1000);
-	ImGui::DragFloat3("Distance", &kTargetDist.x, 0.1f, -100, 100);
+void FollowCamera::DebugGUI() {
+	//ImGui::Begin("Camera");
+	if (ImGui::TreeNode("Json")) {
+		json_.DebugGUI();
+		ImGui::TreePop();
+	}
 
 	if (ImGui::TreeNode("LockOn")) {
 		if (lockOnData_.targetTransform) {
@@ -30,10 +41,16 @@ void FollowCamera::Update() {
 			ImGui::DragFloat4("Quaternion", &lockOnData_.targetTransform->rotation.x, 0.1f, -100, 100);
 			ImGui::DragFloat3("Offset", &lockOnOffset_.x, 0.1f, -100, 100);
 			ImGui::Checkbox("IsLocked", &lockOnData_.isLocked);
-			ImGui::TreePop();
+			
 		}
+		ImGui::TreePop();
 	}
-	ImGui::End();
+
+	ImGui::DragFloat3("Translation", &camera_->worldTF.translation.x, 0.1f, -1000, 1000);
+	ImGui::DragFloat4("Quaternion", &camera_->worldTF.rotation.x, 0.1f, -1000, 1000);
+	ImGui::DragFloat3("Distance", &kTargetDist.x, 0.1f, -100, 100);
+
+	//ImGui::End();
 }
 
 void FollowCamera::InputUpdate() {
@@ -42,21 +59,21 @@ void FollowCamera::InputUpdate() {
 
 	// キーボードでの回転
 	if (LWP::Input::Keyboard::GetPress(DIK_UP)) {
-		dir.x += 1.0f;
+		dir.x += sensitivity;
 	}
 	if (LWP::Input::Keyboard::GetPress(DIK_DOWN)) {
-		dir.x -= 1.0f;
+		dir.x -= sensitivity;
 	}
 	if (LWP::Input::Keyboard::GetPress(DIK_RIGHT)) {
-		dir.y += 1.0f;
+		dir.y += sensitivity;
 	}
 	if (LWP::Input::Keyboard::GetPress(DIK_LEFT)) {
-		dir.y -= 1.0f;
+		dir.y -= sensitivity;
 	}
 
 	// コントローラーでの回転
-	dir.x -= LWP::Input::Pad::GetRStick().y;
-	dir.y += LWP::Input::Pad::GetRStick().x;
+	dir.x -= LWP::Input::Pad::GetRStick().y * sensitivity;
+	dir.y += LWP::Input::Pad::GetRStick().x * sensitivity;
 
 	// 角度制限
 	ClampAngle(dir.x, ((*targetPos_) - camera_->worldTF.translation).Normalize(), kMinRotateX, kMaxRotateX);

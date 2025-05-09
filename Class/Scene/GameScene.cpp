@@ -9,9 +9,9 @@ using namespace LWP::Utility;
 using namespace LWP::Object;
 using namespace LWP::Info;
 
-GameScene::GameScene() 
+GameScene::GameScene()
 	: player_(&mainCamera, &enemyManager_, &followCamera_),
-	  followCamera_(&mainCamera, player_.GetModelPos())
+	followCamera_(&mainCamera, player_.GetModelPos())
 {
 	enemyManager_.Initialize();
 }
@@ -22,10 +22,10 @@ GameScene::~GameScene() {
 
 // 初期化
 void GameScene::Initialize() {
-	//inputHandler_ = new InputHandler();
-	// Assign command
+	// コマンドの登録
 	inputHandler_.Initialize();
 
+	// 敵管理クラス
 	enemyManager_.Initialize();
 	enemyManager_.SetPlayer(&player_);
 
@@ -35,10 +35,19 @@ void GameScene::Initialize() {
 	// 自機の動作確認のため生成
 	player_.Initialize();
 
+#pragma region フィールドを一時的に生成
 	// 一時的に平面を生成
 	plane.LoadShortPath("field/ground/SimpleStage.gltf");
-	plane.worldTF.translation = { 0,-5,0 };
+	plane.worldTF.scale = { 1000.0f,1000.0f ,1000.0f };
+	plane.worldTF.translation = { 0,0,0 };
+	plane.materials["Material"].uvTransform.scale = { 1000.0f,1000.0f ,0.0f };
+	// 一時的に天球を生成
+	skydome.LoadShortPath("field/skydome/SkyDome.gltf");
+	skydome.worldTF.scale = { 1000.0f,1000.0f ,1000.0f };
+	skydome.SetAllMaterialLighting(false);
+#pragma endregion
 
+	// 平行光源を配置(これも一時的に配置)
 	light_.worldTF.translation = { 0,10,0 };
 }
 
@@ -52,18 +61,6 @@ void GameScene::Update() {
 	// 入力されたコマンドを確認
 	inputHandler_.Update(player_);
 
-#ifdef _DEBUG
-	inputHandler_.DebugGUI();
-	// デバッグ用のカメラ
-	mainCamera.DebugGUI();
-	enemyManager_.DebugGUI();
-
-	// FPSカウンターの表示
-	ImGui::Begin("Control panel");
-	ImGui::Text("Frame rate: %6.2f fps", ImGui::GetIO().Framerate);
-	ImGui::End();
-#endif // _DEBUG
-
 	//敵全て
 	enemyManager_.Update();
 
@@ -72,4 +69,54 @@ void GameScene::Update() {
 
 	// 自機
 	player_.Update();
+
+	// デバッグ用のウィンドウ
+	DebugGUI();
+}
+
+void GameScene::DebugGUI() {
+#ifdef _DEBUG
+	ImGui::Begin("DebugWindow");
+	if (ImGui::BeginTabBar("GameObject")) {		
+		// 自機
+		if (ImGui::BeginTabItem("Player")) {
+			player_.DebugGUI();
+			ImGui::EndTabItem();
+		}
+		// キーコンフィグ
+		if (ImGui::BeginTabItem("InputHandler")) {
+			inputHandler_.DebugGUI();
+			ImGui::EndTabItem();
+		}
+		// 追従カメラ
+		if (ImGui::BeginTabItem("FollowCamera")) {
+			followCamera_.DebugGUI();
+			ImGui::EndTabItem();
+		}
+		// 敵管理クラス
+		if (ImGui::BeginTabItem("EnemyManager")) {
+			enemyManager_.DebugGUI();
+			ImGui::EndTabItem();
+		}
+		// 地面
+		if (ImGui::BeginTabItem("Ground")) {
+			plane.DebugGUI();
+			ImGui::EndTabItem();
+		}
+		// デバッグ用のカメラ
+		if (ImGui::BeginTabItem("DebugCamera")) {
+			mainCamera.DebugGUI();
+			ImGui::EndTabItem();
+		}
+		// FPSカウンターの表示
+		if (ImGui::BeginTabItem("Other")) {
+			ImGui::Text("Frame rate: %6.2f fps", ImGui::GetIO().Framerate);
+			ImGui::EndTabItem();
+		}
+
+		ImGui::EndTabBar();
+	}
+
+	ImGui::End();
+#endif // _DEBUG
 }
