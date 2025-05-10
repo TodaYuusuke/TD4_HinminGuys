@@ -127,13 +127,12 @@ void Move::InputUpdate() {
 #pragma endregion
 	// カメラが向いている方向に進む
 	// 自機とカメラY軸を除いた方向ベクトルを算出
-	Vector3 cameraRadian = (player_->GetWorldTF()->GetWorldPosition() - pCamera_->worldTF.GetWorldPosition()).Normalize();
-	cameraRadian.y = 0;
+	Vector3 p2c = (player_->GetWorldTF()->GetWorldPosition() - pCamera_->worldTF.GetWorldPosition()).Normalize();
+	p2c.y = 0;
 	// 回転行列を求める
-	Matrix4x4 rotMatrix = LWP::Math::Matrix4x4::CreateRotateXYZMatrix(LWP::Math::Quaternion::ConvertDirection(cameraRadian));
+	Matrix4x4 rotMatrix = LWP::Math::Matrix4x4::CreateRotateXYZMatrix(LWP::Math::Quaternion::ConvertDirection(p2c));
 	// 方向ベクトルを求める
 	moveVel_ = dir * rotMatrix * moveMultiply;
-	moveVel_.y = 0;
 
 	isMove_ = false;
 	// 移動ベクトルから体の向きを算出(入力があるときのみ処理する)
