@@ -76,7 +76,7 @@ void SystemManager::EnableInputMoveState() {
 	// 攻撃時は移動入力の一切を受け付けない
 	else if (attackSystem_->GetIsActive()) {
 		inputState_ = InputState::kAttack;
-		moveSystem_->SetIsActive(false);
+
 	}
 	// パリィ時は方向転換のみ受け付ける
 	else if (parrySystem_->GetIsActive()) {
@@ -85,24 +85,6 @@ void SystemManager::EnableInputMoveState() {
 	// 何もない時は移動入力を受け付ける
 	else if (!parrySystem_->GetIsActive() && !attackSystem_->GetIsActive()) {
 		inputState_ = InputState::kMove;
-		moveSystem_->SetIsActive(true);
-
-		// 移動中のアニメーション
-		if (moveSystem_->GetIsMove()) {
-			if (player_->GetAnimation()->GetLoadedPath() != "Run") {
-				player_->StartAnimation("Run", 1.0f, 0.0f);
-				player_->SetAnimationPlaySpeed(0.5f);
-				player_->SetIsLoopAnimation(true);
-			}
-		}
-		// 移動していないときのアニメーション
-		else {
-			if (player_->GetAnimation()->GetLoadedPath() != "Idle") {
-				player_->StartAnimation("Idle", 1.0f, 0.0f);
-				player_->SetAnimationPlaySpeed(1.0f);
-				player_->SetIsLoopAnimation(true);
-			}
-		}
 	}
 
 	// ラジアン
@@ -110,6 +92,11 @@ void SystemManager::EnableInputMoveState() {
 
 	switch (inputState_) {
 	case InputState::kMove:
+		moveSystem_->SetIsActive(true);
+
+		// 移動時のアニメーションを変更
+		moveSystem_->MoveState();
+
 		// 速度を加算
 		velocity_ = moveSystem_->GetMoveVel();
 		// 角度を加算
@@ -118,6 +105,8 @@ void SystemManager::EnableInputMoveState() {
 		rotate_ = LWP::Math::Quaternion::CreateFromAxisAngle(LWP::Math::Vector3{ 0, 1, 0 }, radian.y);
 		break;
 	case InputState::kAttack:
+		moveSystem_->SetIsActive(false);
+
 		// 速度を加算
 		velocity_ = attackSystem_->GetAttackAssistVel();
 		// 角度を加算

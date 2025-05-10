@@ -103,9 +103,7 @@ public:// Getter,Setter
 	/// アニメーションを初期化
 	/// </summary>
 	void ResetAnimation() { 
-		animation_.Init();
-		animation_.Stop();
-		animation_.Loop(false);
+		//animation_.Loop(false);
 		animation_.playbackSpeed = 1.0f;
 	}
 	/// <summary>

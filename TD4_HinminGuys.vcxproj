@@ -109,7 +109,6 @@
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <AdditionalOptions>/source-charset:utf-8 %(AdditionalOptions)</AdditionalOptions>
-      <TreatWarningAsError>false</TreatWarningAsError>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -135,7 +134,6 @@
       <Optimization>MinSpace</Optimization>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <AdditionalOptions>/source-charset:utf-8 %(AdditionalOptions)</AdditionalOptions>
-      <TreatWarningAsError>false</TreatWarningAsError>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -171,6 +169,7 @@
     <ClCompile Include="Class\Player\Systems\Children\State\Attack\LockOnAttack.cpp" />
     <ClCompile Include="Class\Player\Systems\Children\State\Attack\DefaultAttack.cpp" />
     <ClCompile Include="Class\Player\Systems\Children\Evasion.cpp" />
+    <ClCompile Include="Class\Player\Systems\Children\State\Move\Idle.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Class\Player\Player.cpp" />
     <ClCompile Include="Class\Player\Systems\Children\Move.cpp" />
@@ -179,6 +178,8 @@
     <ClCompile Include="Class\Player\Systems\SystemManager.cpp" />
     <ClCompile Include="Class\Player\Systems\Children\State\Attack\NoneAttack.cpp" />
     <ClCompile Include="Class\TestCollider.cpp" />
+    <ClCompile Include="Class\Player\Systems\Children\State\Move\Run.cpp" />
+    <ClCompile Include="Class\Player\Systems\Children\State\Move\Walk.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Class\Enemy\Childs\Boss\BossEnemy.h" />
@@ -195,6 +196,7 @@
     <ClInclude Include="Class\Player\Command\InputConfig.h" />
     <ClInclude Include="Class\Player\ICharacter.h" />
     <ClInclude Include="Class\Player\Systems\Children\Attack.h" />
+    <ClInclude Include="Class\Player\Systems\Children\State\IMoveSystemState.h" />
     <ClInclude Include="Class\Player\Systems\ISystem.h" />
     <ClInclude Include="Class\Player\Systems\Children\LockOn.h" />
     <ClInclude Include="Class\Scene\GameScene.h" />
@@ -215,6 +217,9 @@
     <ClInclude Include="Class\Player\Systems\Children\Evasion.h" />
     <ClInclude Include="Class\TestCollider.h" />
     <ClInclude Include="Class\GameMask.h" />
+    <ClInclude Include="Class\Player\Systems\Children\State\Move\Idle.h" />
+    <ClInclude Include="Class\Player\Systems\Children\State\Move\Run.h" />
+    <ClInclude Include="Class\Player\Systems\Children\State\Move\Walk.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />

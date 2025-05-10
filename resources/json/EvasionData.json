@@ -1,4 +1,5 @@
 {
+    "DashButtonHoldSeconds": 0.3,
     "EvasionMultiply": 0.4000000059604645,
     "EventOrder": {
         "GraceTime": {

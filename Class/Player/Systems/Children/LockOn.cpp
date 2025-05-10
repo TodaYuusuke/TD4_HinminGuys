@@ -21,6 +21,7 @@ void LockOn::Initialize() {
 	lockOnUI_.sprite.LoadTexture("lockOnReticle.png");
 	lockOnUI_.sprite.anchorPoint = lockOnUI_.defaultAnchorPoint;
 	lockOnUI_.sprite.isActive = false;
+	lockOnUI_.enableLockOnObj.isActive = false;
 
 	json_.Init("LockOnData.json");
 	json_.AddValue("Range", &kMaxRange)
@@ -143,6 +144,9 @@ void LockOn::SearchLockOnEnemy() {
 		lockOnData.enemyData = enemy;
 		lockOnData.ui.sprite.LoadTexture("arrow.png");
 		lockOnData.ui.sprite.anchorPoint = { 0.5f,0.5f };
+		lockOnData.ui.enableLockOnObj.LoadTexture("arrow.png");
+		lockOnData.ui.enableLockOnObj.anchorPoint = { 0.5f, 0.5f };
+		lockOnData.ui.enableLockOnObj.isActive = false;
 		lockOnEnableEnemies_.push_back(lockOnData);
 	}
 }
@@ -299,6 +303,9 @@ void LockOn::LockOnReticleUpdate() {
 			screenPos.y,
 			0
 		};
+		lockOnEnemy.ui.sprite.isActive = false;
+		lockOnEnemy.ui.enableLockOnObj.worldTF.translation = lockOnEnemy.enemyData->GetPosition() + Vector3{0.0f, 1.5f, 0.0f};
+		lockOnEnemy.ui.enableLockOnObj.isActive = true;
 	}
 }
 

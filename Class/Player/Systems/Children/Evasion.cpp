@@ -1,8 +1,10 @@
 #include "Evasion.h"
 #include "../../Player.h"
+#include "../../Command/InputConfig.h"
 
 using namespace LWP;
 using namespace LWP::Math;
+using namespace InputConfig;
 
 Evasion::Evasion(LWP::Object::Camera* camera, Player* player) {
 	pCamera_ = camera;
@@ -13,10 +15,6 @@ void Evasion::Initialize() {
 	isActive_ = false;
 	isPreActive_ = false;
 
-
-	animationPlaySpeed_.Add(&animPlaySpeed_, Vector3{ 0.05f, 0.0f, 0.0f }, 0.0f, 0.1f, LWP::Utility::Easing::Type::OutExpo)
-		.Add(&animPlaySpeed_, Vector3{ 1.0f, 0.0f, 0.0f }, 0.1f, 0.5f, LWP::Utility::Easing::Type::InExpo);
-
 	json_.Init("EvasionData.json");
 	json_.BeginGroup("EventOrder")
 		.BeginGroup("GraceTime")
@@ -25,8 +23,12 @@ void Evasion::Initialize() {
 		.AddValue<float>("RecoveryTime", &kEvasionRecoveryTime)
 		.EndGroup()
 		.EndGroup()
+		.AddValue<float>("DashButtonHoldSeconds", &dashButtonHoldSeconds)
 		.AddValue<float>("EvasionMultiply", &moveMultiply)
 		.CheckJsonFile();
+
+	animationPlaySpeed_.Add(&animPlaySpeed_, Vector3{ 0.05f, 0.0f, 0.0f }, 0.0f, 0.1f, LWP::Utility::Easing::Type::OutExpo)
+		.Add(&animPlaySpeed_, Vector3{ 1.0f, 0.0f, 0.0f }, 0.1f, 0.5f, LWP::Utility::Easing::Type::InExpo);
 
 	// アクションイベントを生成
 	CreateEventOrder();
@@ -34,6 +36,9 @@ void Evasion::Initialize() {
 
 void Evasion::Update() {
 	if (!isActive_) { return; }
+
+	// ダッシュ条件を満たしているのかを確認
+	CheckDash();
 
 	// frameごとに起きるアクションイベント
 	eventOrder_.Update();
@@ -98,6 +103,7 @@ void Evasion::DebugGUI() {
 
 void Evasion::Command() {
 	if (eventOrder_.GetIsEnd()) {
+		pressTime_ = 0.0f;
 		isActive_ = true;
 		animationPlaySpeed_.Start();
 		player_->ResetAnimation();
@@ -135,6 +141,14 @@ void Evasion::CheckEvasionState() {
 		//collider_.isActive = false;
 		//isJustParry_ = false;
 		//isGoodParry_ = false;
+	}
+}
+
+void Evasion::CheckDash() {
+	// 長押ししている間
+	if (LWP::Input::Pad::GetPress(Command::GamePad::Evasion) || LWP::Input::Keyboard::GetPress(Command::Key::Evasion)) {
+		pressTime_++;
+		return;
 	}
 }
 

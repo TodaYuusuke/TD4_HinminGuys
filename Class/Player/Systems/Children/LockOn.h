@@ -8,6 +8,7 @@ class LockOn : public ISystem {
 public:// 構造体
 	struct LockOnUI {
 		LWP::Primitive::Sprite sprite;		// ロックオン可能UIのスプライト
+		LWP::Primitive::Billboard3D enableLockOnObj;
 		LWP::Object::TransformQuat offset;	// 補間の値を格納
 		Vector3 defaultPos;					// ロックオン可能UIの初期座標
 		Vector3 defaultScale;				// ロックオン可能UIの初期サイズ

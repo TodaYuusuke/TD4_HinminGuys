@@ -15,6 +15,11 @@ void FollowCamera::Initialize() {
 		.AddValue<float>("MaxRotateX", &kMaxRotateX)
 		.AddValue<float>("Sensitivity", &sensitivity)
 		.CheckJsonFile();
+
+	// x軸回転
+	camera_->worldTF.rotation = LWP::Math::Quaternion::CreateFromAxisAngle(LWP::Math::Vector3{ 1, 0, 0 }, LWP::Utility::DegreeToRadian(kStartAngle.x));
+	// y軸は常に上を向くように固定
+	camera_->worldTF.rotation = LWP::Math::Quaternion::CreateFromAxisAngle(LWP::Math::Vector3{ 0, 1, 0 }, LWP::Utility::DegreeToRadian(kStartAngle.y)) * camera_->worldTF.rotation;
 }
 
 void FollowCamera::Update() {
@@ -29,7 +34,6 @@ void FollowCamera::Update() {
 }
 
 void FollowCamera::DebugGUI() {
-	//ImGui::Begin("Camera");
 	if (ImGui::TreeNode("Json")) {
 		json_.DebugGUI();
 		ImGui::TreePop();
@@ -49,8 +53,6 @@ void FollowCamera::DebugGUI() {
 	ImGui::DragFloat3("Translation", &camera_->worldTF.translation.x, 0.1f, -1000, 1000);
 	ImGui::DragFloat4("Quaternion", &camera_->worldTF.rotation.x, 0.1f, -1000, 1000);
 	ImGui::DragFloat3("Distance", &kTargetDist.x, 0.1f, -100, 100);
-
-	//ImGui::End();
 }
 
 void FollowCamera::InputUpdate() {
@@ -59,10 +61,10 @@ void FollowCamera::InputUpdate() {
 
 	// キーボードでの回転
 	if (LWP::Input::Keyboard::GetPress(DIK_UP)) {
-		dir.x += sensitivity;
+		dir.x -= sensitivity;
 	}
 	if (LWP::Input::Keyboard::GetPress(DIK_DOWN)) {
-		dir.x -= sensitivity;
+		dir.x += sensitivity;
 	}
 	if (LWP::Input::Keyboard::GetPress(DIK_RIGHT)) {
 		dir.y += sensitivity;
@@ -76,7 +78,7 @@ void FollowCamera::InputUpdate() {
 	dir.y += LWP::Input::Pad::GetRStick().x * sensitivity;
 
 	// 角度制限
-	ClampAngle(dir.x, ((*targetPos_) - camera_->worldTF.translation).Normalize(), kMinRotateX, kMaxRotateX);
+	ClampAngle(dir.x, ((*targetPos_) - camera_->worldTF.translation).Normalize(), LWP::Utility::DegreeToRadian(kOriginRotateX + kMinRotateX), LWP::Utility::DegreeToRadian(kOriginRotateX + kMaxRotateX));
 
 	// x軸回転
 	camera_->worldTF.rotation = camera_->worldTF.rotation * LWP::Math::Quaternion::CreateFromAxisAngle(LWP::Math::Vector3{ 1, 0, 0 }, 0.03f * dir.x);

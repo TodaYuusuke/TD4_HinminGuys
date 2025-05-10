@@ -1,5 +1,6 @@
 #pragma once
 #include "../ISystem.h"
+#include "State/IMoveSystemState.h"
 
 /// <summary>
 /// 自機の移動機能をまとめたクラス
@@ -9,7 +10,7 @@ public:
 	// コンストラクタ
 	Move(LWP::Object::Camera* camera, Player* player);
 	// デストラクタ
-	~Move() override = default;
+	~Move() override;
 
 	/// <summary>
 	/// 初期化
@@ -30,11 +31,22 @@ public:
 	/// </summary>
 	void DebugGUI() override;
 
+	/// <summary>
+	/// 移動の状態を更新
+	/// </summary>
+	void MoveState();
+
 private:
 	/// <summary>
 	/// 入力処理
 	/// </summary>
 	void InputUpdate();
+
+	/// <summary>
+	/// 状態の遷移
+	/// </summary>
+	/// <param name="pState">次の状態</param>
+	void ChangeState(IMoveSystemState* pState);
 
 	// 絶対値に変換
 	LWP::Math::Vector3 Abs(LWP::Math::Vector3 value) {
@@ -69,6 +81,11 @@ public:// Getter, Setter
 	/// </summary>
 	/// <returns></returns>
 	LWP::Math::Vector3 GetMoveRadian() { return radian_; }
+	/// <summary>
+	/// 移動状態を取得
+	/// </summary>
+	/// <returns></returns>
+	IMoveSystemState* GetMoveState() { return state_; }
 	/// <summary>
 	/// 移動しているかを取得
 	/// </summary>
@@ -107,6 +124,8 @@ private:// jsonで保存する値
 private:// プライベートな変数
 	// 移動対象のモデルのアドレス
 	LWP::Resource::RigidModel* model_;
+
+	IMoveSystemState* state_;
 
 	// 移動速度
 	LWP::Math::Vector3 moveVel_;

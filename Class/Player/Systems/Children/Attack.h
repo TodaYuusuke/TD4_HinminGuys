@@ -38,13 +38,13 @@ public:
 	/// </summary>
 	void NormalCommand();
 
+private:
 	/// <summary>
 	/// 状態の遷移
 	/// </summary>
 	/// <param name="pState">次の状態</param>
 	void ChangeState(IAttackSystemState* pState);
 
-private:
 	/// <summary>
 	/// 当たり判定を作成
 	/// </summary>

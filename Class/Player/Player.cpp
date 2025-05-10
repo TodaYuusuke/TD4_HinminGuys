@@ -23,9 +23,6 @@ void Player::Update() {
 	// 各機能
 	systemManager_->Update();
 
-	// アニメーション
-	animation_.Update();
-
 	// 速度を加算
 	model_.worldTF.translation += systemManager_->GetVelocity();
 	// 角度を代入
