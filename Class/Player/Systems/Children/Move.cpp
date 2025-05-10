@@ -81,7 +81,7 @@ void Move::MoveState() {
 			return;
 		}
 	}
-
+	// 移動状態に移行
 	else {
 		// 走り状態に移行
 		if (player_->GetSystemManager()->GetEvasionSystem()->GetIsDash()) {
@@ -91,7 +91,7 @@ void Move::MoveState() {
 			}
 		}
 		else {
-			// 移動状態に移行
+			// 歩き状態に移行
 			if (!player_->GetAnimation()->GetPlaying("Walk")) {
 				ChangeState(new Walk(this, player_));
 				// ダッシュ状態解除
@@ -99,7 +99,6 @@ void Move::MoveState() {
 			}
 		}
 	}
-
 }
 
 void Move::InputUpdate() {
@@ -127,8 +126,11 @@ void Move::InputUpdate() {
 	}
 #pragma endregion
 	// カメラが向いている方向に進む
+	// 自機とカメラY軸を除いた方向ベクトルを算出
+	Vector3 cameraRadian = (player_->GetWorldTF()->GetWorldPosition() - pCamera_->worldTF.GetWorldPosition()).Normalize();
+	cameraRadian.y = 0;
 	// 回転行列を求める
-	Matrix4x4 rotMatrix = LWP::Math::Matrix4x4::CreateRotateXYZMatrix(pCamera_->worldTF.rotation);
+	Matrix4x4 rotMatrix = LWP::Math::Matrix4x4::CreateRotateXYZMatrix(LWP::Math::Quaternion::ConvertDirection(cameraRadian));
 	// 方向ベクトルを求める
 	moveVel_ = dir * rotMatrix * moveMultiply;
 	moveVel_.y = 0;
