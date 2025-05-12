@@ -55,8 +55,11 @@ void LWP::Utility::ButtonCondition::Save(LWP::Utility::JsonIO& json)
 	json.AddValue<int>("InputState", &inputState_);
 
 	// ボタン、キーのIDを保存
-	json.AddValue<int>("ButtonID", &buttonID_);
+	json.AddValue("ButtonID", &buttonID_);
 	json.AddValue<int>("KeyID", &keyID_);
+
+	// ボタンの長押し時間を保存
+	json.AddValue("PressTime", &pressTime_);
 }
 
 bool LWP::Utility::ButtonCondition::CheckCondition()

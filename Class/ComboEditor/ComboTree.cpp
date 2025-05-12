@@ -10,17 +10,43 @@ ComboTree::~ComboTree()
 
 void ComboTree::Init()
 {	
-	// 新規大元コンボを追加する
-	rootCombo_.Init("Base");
+	// 無操作状態のコンボの初期化
+	rootCombo_.Init("Neutral");
 	editingCombo_ = &rootCombo_;
 
 	// コンボのロード
 	LoadCombo();
+
+	// 現在コンボに無操作状態のコンボを設定する
+	nowCombo_ = &rootCombo_;
+	// 現在コンボのリセット
+	nowCombo_->Init();
+	// 現在コンボのスタート
+	nowCombo_->Start(anim_);
 }
 
 void ComboTree::Update()
 {
+	// 現在コンボの更新
+	nowCombo_->Update(animModel_, anim_);
 
+	// コンボの受付処理
+	nextCombo_ = nowCombo_->ReceptUpdate();
+
+	// 次のコンボが存在する、かつ硬直時間終了時
+	if ((nextCombo_ != nullptr && nextCombo_->GetIsStifness())) {
+		// 現在のコンボを初期化して次のコンボへ
+		nowCombo_->Init();
+		nowCombo_ = std::move(nextCombo_);
+		nowCombo_->Start(anim_);
+	}
+
+	// 次のコンボが存在しない、かつコンボ受付が終了している場合
+	if (nextCombo_ == nullptr || !nextCombo_->GetIsRecept()) {
+		nowCombo_->Init();
+		nowCombo_ = &rootCombo_;
+		nowCombo_->Start(anim_);
+	}
 }
 
 void ComboTree::DebugGUI()
@@ -95,7 +121,7 @@ void ComboTree::NodeMenu()
 		editingCombo_ = change;
 
 		// 生成する派生コンボの名称もそのコンボ名称に変更しておく
-		strncpy_s(imGuiChildComboName_, sizeof(imGuiChildComboName_), editingCombo_->GetName().c_str(), _TRUNCATE);
+		imGuiChildComboName_ = editingCombo_->GetName().c_str();
 	}
 
 	ImGui::SetWindowFontScale(1.0f);
@@ -153,9 +179,12 @@ void ComboTree::LoadCombo()
 	// ラムダ式を実行
 	lamda(lamda, nameList[0].list, rootCombo_);
 
+	// 値のロード
 	rootCombo_.AddValue(jsonIO_);
-
 	jsonIO_.Load();
+
+	// ロード後、派生優先度によって配列を並び替える
+	rootCombo_.SortByPriorityAll();
 }
 
 int ComboTree::GetSameNameCount(const std::string& name)
@@ -163,8 +192,16 @@ int ComboTree::GetSameNameCount(const std::string& name)
 	// 同名コンボのカウント用
 	int SameNameCount = 0;
 
+	// コンボ名称取得、末尾に番号があれば取り外す
+	std::string comboName = name;
+	while (isdigit(comboName.at(comboName.size() - 1)))
+	{
+		// 末尾の文字を削除
+		comboName.pop_back();
+	}
+
 	// 同名コンボを全て探す
-	rootCombo_.SameNameCount(name, SameNameCount);
+	rootCombo_.SameNameCount(comboName, SameNameCount);
 
 	// 結果を返す
 	return SameNameCount;
@@ -176,7 +213,7 @@ void ComboTree::CreateChildMenu()
 	ImGui::SeparatorText("CreateChild");
 
 	// 生成する派生コンボの名称設定
-	ImGui::InputText("Child Name", imGuiChildComboName_, sizeof(imGuiChildComboName_));
+	Base::ImGuiManager::InputText("Child Name", imGuiChildComboName_);
 
 	ImGui::SameLine();
 
@@ -191,9 +228,6 @@ void ComboTree::CreateChildMenu()
 
 		// 編集対象に派生コンボを追加する
 		editingCombo_->CreateChild(childComboName);
-
-		// 生成時点で名称をデフォルト設定に戻す
-		strncpy_s(imGuiChildComboName_, sizeof(imGuiChildComboName_), "Child", _TRUNCATE);
 	}
 
 	ImGui::NewLine();

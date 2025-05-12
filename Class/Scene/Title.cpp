@@ -15,10 +15,11 @@ void Title::Initialize() {
 
 void Title::Update() {
 
+	tree_.Update();
 	tree_.DebugGUI();
 
 	// シーン遷移
-	if (Keyboard::GetTrigger(DIK_P)) {
+	/*if (Keyboard::GetTrigger(DIK_P)) {
 		nextSceneFunction = []() { return new GameScene(); };
-	}
+	}*/
 }

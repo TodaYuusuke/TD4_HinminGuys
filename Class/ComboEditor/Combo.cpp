@@ -19,40 +19,44 @@ Combo::~Combo()
 	childs_.clear();
 }
 
-void Combo::Init(const std::string& name)
+void Combo::Init()
 {
-	// 名称設定
-	name_ = name;
-
 	// 攻撃関係変数のリセット
-	attackStartTime_ = 0.0f;	// 開始時間
-	attackEndTime_ = 0.0f;		// 終了時間
-	isAttackActive_ = false;	// 攻撃判定
+	isAttackActive_ = false;
 
 	// 硬直関係変数のリセット
-	stifnessTime_ = 0.0f;		// 硬直時間
-	isStifness_ = true;			// フラグ
+	isStifness_ = true;
 
 	// コンボ受付関係変数のリセット
-	receptTime_ = 0.0f;	// 受付時間
-	isRecept_ = false;	// 受付可能フラグ
+	isRecept_ = false;
 }
 
-void Combo::Init(const std::string& fileName, const std::string& comboName)
+void Combo::Init(const std::string& name)
 {
-	// Todo : ファイル読み込み作る
-	fileName, comboName;
+	// 初期化
+	Init();
 
-	// 初期化 Todo : 初期化の際に読み込んだコンボの名称を使用する
-	Init("Combo");
+	// 名称設定
+	name_ = name;
+}
 
-	// 攻撃判定用タイマー開始
+void Combo::Start(LWP::Resource::Animation* anim)
+{
+	// 判定用タイマー開始
 	attackDecisionTimer_.Start(attackStartTime_);	// 攻撃判定
 	stifnessTimer_.Start(stifnessTime_);			// 硬直時間
 	receptTimer_.Start(receptTime_);				// 受付時間
+
+	// 操作受付開始
+	isRecept_ = true;
+
+	if (anim != nullptr) {
+		// アニメーションの再生を行う
+		anim->Play(animName_);
+	}
 }
 
-void Combo::Update()
+void Combo::Update(LWP::Resource::SkinningModel* model, LWP::Resource::Animation* anim)
 {
 	// 攻撃判定用のタイマーが動作している場合のみ更新を行う
 	if (attackDecisionTimer_.GetIsActive()) {
@@ -71,10 +75,17 @@ void Combo::Update()
 		// コンボ受付時間に関する更新
 		ReceptTimeUpdate();
 	}
-	else {
-		// コンボ受付処理に関する更新
-		ReceptUpdate();
+}
+
+Combo* Combo::ReceptUpdate()
+{
+	// 派生コンボ内に遷移できるコンボがあった場合そのコンボを返す
+	for (Combo* c : childs_) {
+		if (c->GetConditions()) { return c; }
 	}
+
+	// 遷移できるコンボがない場合nullptrを返す
+	return nullptr;
 }
 
 void Combo::NodeMenu(int& id, int& buttonID, Combo*& combo)
@@ -144,6 +155,9 @@ void Combo::DebugGUI()
 	// 開始条件の設定
 	StartConditionSettings();
 
+	// 派生優先度の設定
+	PrioritySettings();
+
 	// アニメーション関連の設定
 	AnimSettings();
 
@@ -196,21 +210,14 @@ void Combo::SameNameCount(const std::string& name, int& count)
 
 void Combo::AddValue(LWP::Utility::JsonIO& json)
 {
-	// コンボ名でグループ開始
-	json.BeginGroup(name_);
-
-	// アニメーション名の保存
-	json.AddValue<std::string>("AnimName", &animName_);
-
-	// 攻判定時間の保存
-	json.AddValue<float>("AttackStartTime", &attackStartTime_);
-	json.AddValue<float>("AttackEndTime", &attackEndTime_);
-	
-	// 硬直時間の保存
-	json.AddValue<float>("StifnessTime", &stifnessTime_);
-
-	// 受付時間の保存
-	json.AddValue<float>("ReceptTime", &receptTime_);
+	// コンボ名でグループ開始、各パラメータの保存
+	json.BeginGroup(name_)
+		.AddValue("derivationPriority", &derivationProiority_)	// 派生優先度
+		.AddValue("AnimName", &animName_)						// アニメーション名
+		.AddValue("AttackStartTime", &attackStartTime_)			// 判定開始時間
+		.AddValue("AttackEndTime", &attackEndTime_)				// 判定終了時間
+		.AddValue("StifnessTime", &stifnessTime_)				// 硬直時間
+		.AddValue("ReceptTime", &receptTime_);					// 受付時間
 
 	// 開始条件の保存
 	int condCount = 1;
@@ -251,6 +258,25 @@ Combo& Combo::CreateChild(const std::string& name)
 	
 	// 生成下コンボの参照を返す
 	return *c;
+}
+
+void Combo::SortByPriority()
+{
+	// 配列内の派生優先度を比較して昇順に並べ替える
+	childs_.sort([](const Combo* c1, const Combo* c2) {
+		return c1->GetDerivationPriority() < c2->GetDerivationPriority();
+	});
+}
+
+void Combo::SortByPriorityAll()
+{
+	// 自身の派生コンボ配列の並び替え
+	SortByPriority();
+
+	// 全ての派生コンボ配列に対して並び替えを実行
+	for (Combo* c : childs_) {
+		c->SortByPriority();
+	}
 }
 
 void Combo::DeleteThis()
@@ -316,22 +342,11 @@ void Combo::ReceptTimeUpdate()
 
 	// 受付時間タイマーが終了している場合
 	if (receptTimer_.GetIsFinish()) {
-		// 次のコンボへ移る操作を受け付ける
-		isRecept_ = true;
+		// 操作受付終了
+		isRecept_ = false;
 		// 受付時間タイマーを非アクティブに
 		receptTimer_.SetIsActive(false);
 	}
-}
-
-Combo* Combo::ReceptUpdate()
-{
-	// 派生コンボ内に遷移できるコンボがあった場合そのコンボを返す
-	for (Combo* c : childs_) {
-		if (c->GetConditions()) { return c; }
-	}
-
-	// 遷移できるコンボがない場合nullptrを返す
-	return nullptr;
 }
 
 void Combo::DeleteFunc(Combo*& combo)
@@ -391,7 +406,6 @@ void Combo::StartConditionSettings()
 
 		// ツリーノードでImGuiを表示
 		if (ImGui::TreeNode(name.c_str())) {
-			c->Update();
 			c->DebugGUI();
 
 			// ボタンを押した際に削除
@@ -404,6 +418,21 @@ void Combo::StartConditionSettings()
 		// カウント加算
 		count++;
 	}
+
+	ImGui::Unindent();
+	ImGui::NewLine();
+}
+
+void Combo::PrioritySettings()
+{
+	// アニメーション関係の設定
+	ImGui::SeparatorText("Priority Settings");
+	ImGui::Indent();
+
+	// 派生優先度の設定
+	ImGui::InputInt("Priority", &derivationProiority_);
+	// 優先度が0以下になっていた場合0以上に補正
+	if (derivationProiority_ < 0) { derivationProiority_ = 0; }
 
 	ImGui::Unindent();
 	ImGui::NewLine();
@@ -455,13 +484,16 @@ void Combo::StifnessSetiings()
 
 void Combo::ReceptSettings()
 {
-	// 攻撃判定関連の設定
+	// 受付時間関連の設定
 	ImGui::SeparatorText("Recept Settings");
 
 	ImGui::Indent();
 
 	// 受付時間
 	ImGui::DragFloat("ReceptTime", &receptTime_, 0.01f, 0.0f);
+
+	// 終了時点で派生先が無かった場合自身に遷移するかどうか
+	ImGui::Checkbox("IsReturnSelf", &isReturnSelf_);
 
 	ImGui::Unindent();
 	ImGui::NewLine();

@@ -1,9 +1,1 @@
-{
-    "Base": {
-        "AnimName": "Idle",
-        "AttackEndTime": 0.0,
-        "AttackStartTime": 0.0,
-        "ReceptTime": 1.0,
-        "StifnessTime": 0.0
-    }
-}
+{}

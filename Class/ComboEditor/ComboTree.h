@@ -91,6 +91,11 @@ private: // プライベートなメンバ関数
 
 private: // メンバ変数
 
+	// アニメーションさせるモデル
+	LWP::Resource::SkinningModel* animModel_ = nullptr;
+	// アニメーション本体
+	LWP::Resource::Animation* anim_ = nullptr;
+
 	// 現在のコンボ
 	Combo* nowCombo_ = nullptr;
 	// 次のコンボ
@@ -104,14 +109,14 @@ private: // メンバ変数
 	// 選択中のコンボID
 	int selectedID_ = 0;
 
-	// 大元コンボ
+	// ニュートラル状態のコンボ
 	Combo rootCombo_;
 
 	// 編集中のコンボ
 	Combo* editingCombo_ = nullptr;
 
 	// 生成する派生コンボ名称
-	char imGuiChildComboName_[64] = "Child";
+	std::string imGuiChildComboName_;
 
 	// 削除確認用ポップアップフラグ
 	bool imGuiIsOpenPopUp_ = false;

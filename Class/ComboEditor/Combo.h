@@ -25,23 +25,34 @@ public: // メンバ関数
 	/// <summary>
 	/// 初期化関数
 	/// </summary>
-	/// <param name="name">コンボ名</param>
-	void Init(const std::string& name);
+	void Init();
 
 	/// <summary>
 	/// 初期化関数
 	/// </summary>
-	/// <param name="fileName">読み込むjsonファイル名</param>
-	/// <param name="comboName">読み込むコンボ名</param>
-	void Init(const std::string& fileName, const std::string& comboName);
+	/// <param name="name">コンボ名</param>
+	void Init(const std::string& name);
+
+	/// <summary>
+	/// 開始関数
+	/// </summary>
+	/// <param name="anim">アニメーション</param>
+	void Start(LWP::Resource::Animation* anim);
 
 	/// <summary>
 	/// 更新関数
 	/// </summary>
-	void Update();
+	/// <param name="model">スキニングモデル</param>
+	/// <param name="anim">アニメーション</param>
+	void Update(LWP::Resource::SkinningModel* model, LWP::Resource::Animation* anim);
 
 	/// <summary>
-	/// ノードツリー表示用関数
+	/// コンボ受付関数
+	/// </summary>
+	Combo* ReceptUpdate();
+
+	/// <summary>
+	/// <エディタ用>ノードツリー表示用関数
 	/// </summary>
 	/// <param name="id">ラジオボタン判定用ID</param>
 	/// <param name="buttonID">ボタンID</param>
@@ -68,10 +79,22 @@ public: // アクセッサ等
 	bool GetIsAttackActivate() { return isAttackActive_; }
 
 	/// <summary>
+	/// 硬直状態ゲッター
+	/// </summary>
+	/// <returns>硬直状態か</returns>
+	bool GetIsStifness() { return isStifness_; }
+
+	/// <summary>
 	/// 次のコンボへの移行可能状態ゲッター
 	/// </summary>
 	/// <returns>次のコンボへ移行できるか</returns>
 	bool GetIsRecept() { return isRecept_; }
+
+	/// <summary>
+	/// 当コンボ終了時、自身に遷移するかどうかのゲッター
+	/// </summary>
+	/// <returns>自身に遷移するか</returns>
+	bool GetIsReturnSelf() { return isReturnSelf_; }
 
 	/// <summary>
 	/// 名前ゲッター
@@ -101,6 +124,22 @@ public: // エディタ用関数群
 	Combo& CreateChild(const std::string& name);
 	
 	/// <summary>
+	/// <エディタ用>派生優先度
+	/// </summary>
+	/// <returns>派生優先度</returns>
+	int GetDerivationPriority() const { return derivationProiority_; }
+
+	/// <summary>
+	/// <エディタ用> 派生優先度によって派生コンボ配列を並び変える
+	/// </summary>
+	void SortByPriority();
+
+	/// <summary>
+	/// <エディタ用> 派生優先度によって全ての派生コンボ配列を再帰的に並び変える
+	/// </summary>
+	void SortByPriorityAll();
+
+	/// <summary>
 	/// <エディタ用> 削除フラグゲッター
 	/// </summary>
 	/// <returns>削除するか</returns>
@@ -112,7 +151,7 @@ public: // エディタ用関数群
 	void DeleteThis();
 
 	/// <summary>
-	/// 新規開始条件追加関数
+	/// <エディタ用>新規開始条件追加関数
 	/// </summary>
 	/// <param name="condition">追加する開始条件</param>
 	void AddCondition(LWP::Utility::ICondition* condition);
@@ -135,11 +174,6 @@ private: // プライベートなメンバ関数
 	void ReceptTimeUpdate();
 
 	/// <summary>
-	/// コンボ受付関数
-	/// </summary>
-	Combo* ReceptUpdate();
-
-	/// <summary>
 	/// <エディタ用>削除フラグがたっているものを削除する関数
 	/// </summary>
 	void DeleteFunc(Combo*& combo);
@@ -148,6 +182,11 @@ private: // プライベートなメンバ関数
 	/// <エディタ用>開始条件の設定
 	/// </summary>
 	void StartConditionSettings();
+
+	/// <summary>
+	/// <エディタ用>派生優先度設定
+	/// </summary>
+	void PrioritySettings();
 
 	/// <summary>
 	/// <エディタ用>アニメーション関連の設定
@@ -183,6 +222,9 @@ private: // メンバ変数
 	// コンボの開始条件配列
 	std::list<LWP::Utility::ICondition*> conditions_;
 
+	// このコンボへの派生優先度
+	int derivationProiority_ = 0;
+
 	// 攻撃判定開始秒数
 	float attackStartTime_ = 0.0f;
 	// 攻撃判定終了秒数
@@ -200,11 +242,14 @@ private: // メンバ変数
 	bool isStifness_ = false;
 
 	// 次のコンボへの受付開始秒数
-	float receptTime_ = 0.0f;
+	float receptTime_ = 0.5f;
 	// 受付時間用タイマー
 	LWP::Utility::DeltaTimer receptTimer_{};
 	// 受付可能フラグ
 	bool isRecept_ = false;
+
+	// このコンボ終了した時、派生先がない場合自分に返ってくるか
+	bool isReturnSelf_ = false;
 
 	#pragma region エディタ用変数
 
