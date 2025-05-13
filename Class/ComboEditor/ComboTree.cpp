@@ -86,6 +86,9 @@ void ComboTree::DebugGUI()
 	if (enableEditMode_ && editingCombo_ != nullptr) {
 		editingCombo_->DebugGUI();
 
+		// アニメーション簡易設定メニュー
+		AnimNameEasySetter();
+
 		// 派生コンボの生成処理
 		CreateChildMenu();
 
@@ -174,7 +177,15 @@ void ComboTree::NodeMenu()
 		editingCombo_ = change;
 
 		// 生成する派生コンボの名称もそのコンボ名称に変更しておく
-		imGuiChildComboName_ = editingCombo_->GetName().c_str();
+		std::string editComboName = editingCombo_->GetName();
+		// 末尾に番号があれば取り外す
+		while (isdigit(editComboName.at(editComboName.size() - 1)))
+		{
+			// 末尾の文字を削除
+			editComboName.pop_back();
+		}
+
+		imGuiChildComboName_ = editComboName;
 	}
 
 	ImGui::SetWindowFontScale(1.0f);
@@ -258,6 +269,41 @@ int ComboTree::GetSameNameCount(const std::string& name)
 
 	// 結果を返す
 	return SameNameCount;
+}
+
+void ComboTree::AnimNameEasySetter()
+{
+	ImGui::NewLine();
+	ImGui::SeparatorText("AnimNameEasySetter");
+	// アニメーションがセットされていなければここで早期リターン
+	if (anim_ == nullptr) {
+		ImGui::Text("Animation Class Isn't Set");
+		ImGui::TreePop();
+		return;
+	}
+
+	// アニメーションからアニメーション名を取得
+	std::vector<std::string>animNames = anim_->GetAnimationNames();
+
+	// 取得したアニメーションが無ければ早期リターン
+	if (animNames.empty()) {
+		ImGui::Text("No Animations!");
+		ImGui::TreePop();
+		return;
+	}
+
+	// アニメーション名をメニューで表示
+	if (ImGui::BeginMenu("Please Select Names")) {
+		for (std::string& name : animNames) {
+			// 選択すると該当するアニメーション名に切り替える
+			if (ImGui::MenuItem(name.c_str())) {
+				editingCombo_->SetAnimName(name);
+			}
+		}
+		ImGui::EndMenu();
+	}
+
+	ImGui::NewLine();
 }
 
 void ComboTree::CreateChildMenu()

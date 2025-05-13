@@ -70,6 +70,11 @@ private: // プライベートなメンバ関数
 	int GetSameNameCount(const std::string& name);
 
 	/// <summary>
+	/// アニメーション名を設定をやりやすくするメニュー
+	/// </summary>
+	void AnimNameEasySetter();
+
+	/// <summary>
 	/// <エディタ用> 派生コンボ生成関数
 	/// </summary>
 	void CreateChildMenu();
@@ -95,6 +100,9 @@ private: // メンバ変数
 	LWP::Resource::SkinningModel* animModel_ = nullptr;
 	// アニメーション本体
 	LWP::Resource::Animation* anim_ = nullptr;
+
+	// コライダー
+	LWP::Object::Collision* collider_;
 
 	// 現在のコンボ
 	Combo* nowCombo_ = nullptr;
