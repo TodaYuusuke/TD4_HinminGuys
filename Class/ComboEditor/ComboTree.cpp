@@ -8,8 +8,17 @@ ComboTree::~ComboTree()
 	
 }
 
-void ComboTree::Init()
-{	
+void ComboTree::Init(LWP::Resource::SkinningModel* model, LWP::Resource::Animation* anim)
+{
+	#ifdef _DEBUG
+	// デバッグ時、デフォルトで編集モード有効
+	enableEditMode_ = true;
+	#endif // _DEBUG
+
+	// モデル、アニメーションを取得
+	animModel_	= model;
+	anim_		= anim;
+
 	// 無操作状態のコンボの初期化
 	rootCombo_.Init("Neutral");
 	editingCombo_ = &rootCombo_;
@@ -27,6 +36,9 @@ void ComboTree::Init()
 
 void ComboTree::Update()
 {
+	// もし編集モードが有効であれば更新処理をスキップ
+	if (enableEditMode_) { return; }
+
 	// 現在コンボの更新
 	nowCombo_->Update(animModel_, anim_);
 
@@ -39,10 +51,11 @@ void ComboTree::Update()
 		nowCombo_->Init();
 		nowCombo_ = std::move(nextCombo_);
 		nowCombo_->Start(anim_);
+		return;
 	}
 
 	// 次のコンボが存在しない、かつコンボ受付が終了している場合
-	if (nextCombo_ == nullptr || !nextCombo_->GetIsRecept()) {
+	if (nextCombo_ == nullptr && !nowCombo_->GetIsRecept()) {
 		nowCombo_->Init();
 		nowCombo_ = &rootCombo_;
 		nowCombo_->Start(anim_);
@@ -69,8 +82,8 @@ void ComboTree::DebugGUI()
 
 	ImGui::EndChild();
 
-	// 編集中コンボのGUI情報表示
-	if (editingCombo_ != nullptr) {
+	// 編集モードが有効、かつコンボが選択されている場合
+	if (enableEditMode_ && editingCombo_ != nullptr) {
 		editingCombo_->DebugGUI();
 
 		// 派生コンボの生成処理
@@ -81,6 +94,46 @@ void ComboTree::DebugGUI()
 
 		// コンボの削除処理
 		DeletePopUp();
+
+		// 実行モードへ移るボタン処理
+		ImGui::SeparatorText("Change RunningMode");
+		// ボタンを押した際に実行モードへ移る
+		if (ImGui::Button("Change")) {
+			enableEditMode_ = false;
+		}
+
+	}
+	else { // 編集モードが有効でない場合
+		ImGui::NewLine();
+		ImGui::Separator();
+		ImGui::NewLine();
+
+		// フォントサイズの調整
+		ImGui::SetWindowFontScale(1.5f);
+
+		// 現在が実行モードであることを伝える
+		ImGui::Text("Currently Running Mode!");
+		ImGui::Text("Please Change EditMode!");
+		// 編集モードを有効にするボタンを表示させる
+		if (ImGui::Button("Enable EditMode")) {
+			// 編集コンボを無操作状態コンボにする
+			editingCombo_ = &rootCombo_;
+
+			// 現在のコンボを強制的に初期化
+			nowCombo_->Init();
+			// 現在コンボを強制的に無操作状態のコンボに
+			nowCombo_ = &rootCombo_;
+
+			// 押されたら編集モードを有効に
+			enableEditMode_ = true;
+		}
+
+		// フォントサイズのリセット
+		ImGui::SetWindowFontScale(1.0f);
+
+		ImGui::NewLine();
+		ImGui::Separator();
+		ImGui::NewLine();
 	}
 
 	ImGui::End();
@@ -153,8 +206,8 @@ void ComboTree::LoadCombo()
 	// 同名の空のコンボ配列を作成して読み込めるようにする
 	auto lamda = [](auto self, Utility::NestedList& list, Combo& c) -> void {
 		for (auto itr = list.begin(); itr != list.end(); ++itr) {
-			// 名前を' : 'で分割する
-			std::vector<std::string> splitName = Utility::Split(itr->name, ':');
+			// 名前を' | 'で分割する
+			std::vector<std::string> splitName = Utility::Split(itr->name, '|');
 
 			// 最初の要素に開始条件という文章が含まれているなら
 			if (splitName[0] == "StartConditions") {

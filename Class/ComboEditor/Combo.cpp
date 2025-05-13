@@ -50,7 +50,8 @@ void Combo::Start(LWP::Resource::Animation* anim)
 	// 操作受付開始
 	isRecept_ = true;
 
-	if (anim != nullptr) {
+	// アニメーション名に何かしら入力されていれば
+	if (animName_ != "") {
 		// アニメーションの再生を行う
 		anim->Play(animName_);
 	}
@@ -222,16 +223,9 @@ void Combo::AddValue(LWP::Utility::JsonIO& json)
 	// 開始条件の保存
 	int condCount = 1;
 	for (LWP::Utility::ICondition* c : conditions_) {
-		// 開始条件名の設定 : 末尾は固有の名称
-		std::string cName = "StartConditions:Button:" + std::to_string(condCount);
-		// グループの開始
-		json.BeginGroup(cName);
 
 		// 開始条件の保存
-		c->Save(json);
-
-		// グループの終了
-		json.EndGroup();
+		c->AddValue(json, condCount);
 
 		// カウントを進める
 		condCount++;

@@ -49,17 +49,25 @@ void LWP::Utility::ButtonCondition::DebugGUI()
 	}
 }
 
-void LWP::Utility::ButtonCondition::Save(LWP::Utility::JsonIO& json)
+void LWP::Utility::ButtonCondition::AddValue(LWP::Utility::JsonIO& json, const int count)
 {
+	// 開始条件名の設定 : 末尾は固有の名称
+	std::string cName = "StartConditions|Button|" + std::to_string(count);
+	// グループの開始
+	json.BeginGroup(cName);
+
 	// 入力条件の保存
-	json.AddValue<int>("InputState", &inputState_);
+	json.AddValue("InputState", &inputState_);
 
 	// ボタン、キーのIDを保存
 	json.AddValue("ButtonID", &buttonID_);
-	json.AddValue<int>("KeyID", &keyID_);
+	json.AddValue("KeyID", &keyID_);
 
 	// ボタンの長押し時間を保存
 	json.AddValue("PressTime", &pressTime_);
+
+	// グループの終了
+	json.EndGroup();
 }
 
 bool LWP::Utility::ButtonCondition::CheckCondition()

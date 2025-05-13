@@ -37,7 +37,8 @@ namespace LWP::Utility {
 		/// 保存関数
 		/// </summary>
 		/// <param name="json">保存対象json</param>
-		virtual void Save(LWP::Utility::JsonIO& json) { json; };
+		/// <param name="count">何個目の条件か</param>
+		virtual void AddValue(LWP::Utility::JsonIO& json, const int count) { json; };
 
 	public: // アクセッサ等
 		

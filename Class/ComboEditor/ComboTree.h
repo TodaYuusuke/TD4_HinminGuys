@@ -24,7 +24,7 @@ public: // メンバ関数
 	/// <summary>
 	/// 初期化関数
 	/// </summary>
-	void Init();
+	void Init(LWP::Resource::SkinningModel* model, LWP::Resource::Animation* anim);
 
 	/// <summary>
 	/// 更新関数
@@ -106,10 +106,13 @@ private: // メンバ変数
 	// jsonIO
 	LWP::Utility::JsonIO jsonIO_;
 
+	// 編集モード有効フラグ
+	bool enableEditMode_ = false;
+
 	// 選択中のコンボID
 	int selectedID_ = 0;
 
-	// ニュートラル状態のコンボ
+	// 無操作状態のコンボ
 	Combo rootCombo_;
 
 	// 編集中のコンボ

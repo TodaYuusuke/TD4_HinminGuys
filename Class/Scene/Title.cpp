@@ -10,7 +10,11 @@ using namespace LWP::Object;
 using namespace LWP::Info;
 
 void Title::Initialize() {
-	tree_.Init();
+
+	model_.LoadShortPath("player/Player_Simple.gltf");
+	anim_.LoadFullPath("resources/model/player/Player_Simple.gltf", &model_);
+
+	tree_.Init(&model_, &anim_);
 }
 
 void Title::Update() {
