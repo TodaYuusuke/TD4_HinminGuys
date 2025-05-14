@@ -115,7 +115,7 @@ void Evasion::Command() {
 		isActive_ = true;
 		animationPlaySpeed_.Start();
 		player_->ResetAnimation();
-		player_->StartAnimation("Dash", 1.0f, 0.0f);
+		player_->StartAnimation("Dash", 0.01f, 0.0f);
 		player_->SetIsLoopAnimation(true);
 	}
 	eventOrder_.Start();

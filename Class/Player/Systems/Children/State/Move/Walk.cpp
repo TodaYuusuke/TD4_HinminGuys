@@ -13,7 +13,7 @@ Walk::Walk(Move* moveSystem, Player* player, const float& moveMultiply) {
 	moveSystem_->SetMoveMultiply(moveMultiply);
 
 	// アニメーションを変更
-	player_->StartAnimation("Run", 1.0f, 0.0f);
+	player_->StartAnimation("Run", 0.1f, 0.0f);
 	player_->SetAnimationPlaySpeed(1.0f);
 	player_->SetIsLoopAnimation(true);
 }

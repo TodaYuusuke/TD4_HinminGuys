@@ -237,6 +237,10 @@ private: // メンバ変数
 
 	// 再生されるアニメーション名
 	std::string animName_ = "";
+	// 遷移秒数
+	float transitionTime_ = 0.0f;
+	// ループフラグ
+	bool isLoop_ = false;
 
 	// 派生コンボ先配列
 	std::list<Combo*> childs_;

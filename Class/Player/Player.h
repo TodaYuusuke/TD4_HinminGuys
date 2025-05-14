@@ -121,13 +121,13 @@ public:// Getter,Setter
 	/// </summary>
 	void ResetAnimation() { 
 		animation_.Loop(false);
-		animation_.playbackSpeed = 1.0f;
+		//animation_.playbackSpeed = 1.0f;
 	}
 	/// <summary>
 	/// アニメーションの再生速度を設定
 	/// </summary>
 	/// <param name="playSpeed"></param>
-	void SetAnimationPlaySpeed(const float& playSpeed) { animation_.playbackSpeed = playSpeed; }
+	void SetAnimationPlaySpeed(const float& playSpeed) { /*animation_.playbackSpeed = playSpeed;*/ }
 	/// <summary>
 	/// アニメーションをループするかを設定
 	/// </summary>

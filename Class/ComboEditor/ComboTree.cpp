@@ -300,6 +300,8 @@ void ComboTree::AnimNameEasySetter()
 	// アニメーション名をメニューで表示
 	if (ImGui::BeginMenu("Please Select Names")) {
 		for (std::string& name : animNames) {
+			if (name == "") { continue; }
+
 			// 選択すると該当するアニメーション名に切り替える
 			if (ImGui::MenuItem(name.c_str())) {
 				editingCombo_->SetAnimName(name);

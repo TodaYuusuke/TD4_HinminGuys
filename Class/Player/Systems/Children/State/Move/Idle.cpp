@@ -10,7 +10,7 @@ Idle::Idle(Move* moveSystem, Player* player) {
 	stateName_ = "Idle";
 
 	// アニメーションを変更
-	player_->StartAnimation("Idle", 1.0f, 0.0f);
+	player_->StartAnimation("Idle", 0.25f, 0.0f);
 	player_->SetAnimationPlaySpeed(1.0f);
 	player_->SetIsLoopAnimation(true);
 }

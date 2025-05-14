@@ -54,12 +54,11 @@ void Combo::Start(LWP::Resource::Animation* anim)
 
 	// アニメーション名に何かしら入力されていれば
 	if (animName_ != "") {
-		// ループを切り、再生速度をリセットする
-		anim->Loop(false);
-		anim->playbackSpeed = 1.0f;
+		// ループ設定
+		anim->Loop(isLoop_);
 
 		// アニメーションの再生を行う
-		anim->Play(animName_);
+		anim->Play(animName_, transitionTime_);
 	}
 }
 
@@ -233,6 +232,8 @@ void Combo::AddValue(LWP::Utility::JsonIO& json)
 	json.BeginGroup(name_)
 		.AddValue("derivationPriority", &derivationProiority_)			// 派生優先度
 		.AddValue("AnimName", &animName_)								// アニメーション名
+		.AddValue("TransitionTime", &transitionTime_)					// 遷移時間
+		.AddValue("IsLoop", &isLoop_)									// ループ状態
 		.AddValue("AttackStartTime", &attackStartTime_)					// 判定開始時間
 		.AddValue("AttackEndTime", &attackEndTime_)						// 判定終了時間
 		.AddValue("AttackAssistStartTime", &attackAssistStartTime_)		// 攻撃アシスト開始時間
@@ -485,6 +486,11 @@ void Combo::AnimSettings()
 
 	// 再生されるアニメーションの設定
 	Base::ImGuiManager::InputText("AnimName", animName_);
+
+	// 遷移秒数の設定
+	ImGui::DragFloat("TransitionTime", &transitionTime_, 0.01f, 0.0f);
+	// ループ状態の設定
+	ImGui::Checkbox("IsLoop", &isLoop_);
 
 	ImGui::Unindent();
 	ImGui::NewLine();
