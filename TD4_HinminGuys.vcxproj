@@ -154,7 +154,6 @@
     <ClCompile Include="Class\Condition\child\Input\ButtonCondition.cpp" />
     <ClCompile Include="Class\DeltaTimer\DeltaTimer.cpp" />
     <ClCompile Include="Class\Scene\GameScene.cpp" />
-    <ClCompile Include="Class\Scene\Title.cpp" />
     <ClCompile Include="Class\ComboEditor\Combo.cpp" />
     <ClCompile Include="Class\Enemy\Childs\Boss\Boss.cpp" />
     <ClCompile Include="Class\Enemy\Childs\State\BossAttack.cpp" />
@@ -172,7 +171,6 @@
     <ClCompile Include="Class\Enemy\WaveData.cpp" />
     <ClCompile Include="Class\Player\Systems\Children\Attack.cpp" />
     <ClCompile Include="Class\Player\Systems\Children\LockOn.cpp" />
-    <ClCompile Include="Class\Scene\GameScene.cpp" />
     <ClCompile Include="Class\Scene\Title.cpp" />
     <ClCompile Include="Class\Camera\FollowCamera.cpp" />
     <ClCompile Include="Class\Player\Systems\EventOrder.cpp" />
@@ -196,8 +194,6 @@
     <ClInclude Include="Class\Condition\ConditionEnums.h" />
     <ClInclude Include="Class\Condition\ConditionList.h" />
     <ClInclude Include="Class\DeltaTimer\DeltaTimer.h" />
-    <ClInclude Include="Class\Scene\GameScene.h" />
-    <ClInclude Include="Class\Scene\Title.h" />
     <ClInclude Include="Class\ComboEditor\Combo.h" />
     <ClInclude Include="Class\Condition\ICondition.h" />
     <ClInclude Include="Class\Enemy\Childs\Boss\Boss.h" />

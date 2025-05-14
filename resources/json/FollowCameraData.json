@@ -1,13 +1,13 @@
 {
-    "GameStartAngle": [
+    "Vector3 :GameStartAngle": [
         0.30000001192092896,
         0.0,
         0.0
     ],
-    "MaxRotateX": 2.6559998989105225,
-    "MinRotateX": 1.6710000038146973,
-    "Sensitivity": 1.0,
-    "TargetDistance": [
+    "float :MaxRotateX": 2.6559998989105225,
+    "float :MinRotateX": 1.6710000038146973,
+    "float :Sensitivity": 1.0,
+    "Vector3 :TargetDistance": [
         0.0,
         0.0,
         -7.0

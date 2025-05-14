@@ -1,10 +1,10 @@
 {
-    "EventOrder": {
-        "GraceTime": {
-            "GoodParry": 0.6,
-            "JustParry": 0.2,
-            "RecoveryTime": 0.0,
-            "SwingTime": 0.0
+    "Group :EventOrder": {
+        "Group :GraceTime": {
+            "float :GoodParry": 0.6,
+            "float :JustParry": 0.2,
+            "float :RecoveryTime": 0.0,
+            "float :SwingTime": 0.0
         }
     }
 }
