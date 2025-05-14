@@ -5,11 +5,11 @@
 /// <summary>
 /// 雑魚敵クラス
 /// </summary>
-class NormalEnemy : public IEnemy
+class Normal : public IEnemy
 {
 public:
-	NormalEnemy() = default;
-	~NormalEnemy() override = default;
+	Normal() = default;
+	~Normal() override = default;
 
 	void Initialize(Player* player, const Vector3& position) override;
 

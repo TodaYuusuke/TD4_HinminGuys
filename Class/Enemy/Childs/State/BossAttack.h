@@ -1,18 +1,20 @@
 #pragma once
-#include "../../../IEnemyState.h"
+#include "../../IEnemyState.h"
 
 /// <summary>
 /// ボス敵攻撃状態クラス
 /// </summary>
-class BossEnemyAttack : public IEnemyState
+class BossAttack : public IEnemyState
 {
 public:
 
-	~BossEnemyAttack() override = default;
+	~BossAttack() override = default;
 
 	void Initialize(IEnemy* enemy) override;
 
 	void Update() override;
+
+	static void DebugGUI();
 
 private:
 

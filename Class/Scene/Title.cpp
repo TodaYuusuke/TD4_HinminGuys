@@ -10,7 +10,7 @@ using namespace LWP::Object;
 using namespace LWP::Info;
 
 void Title::Initialize() {
-	
+  
 }
 
 void Title::Update() {

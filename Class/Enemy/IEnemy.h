@@ -30,7 +30,7 @@ public:
 	//初期化
 	virtual void Initialize(Player* player, const Vector3& position) = 0;
 	//更新
-	virtual void Update() = 0;
+	virtual void Update();
 	//プレイヤーをセットする関数
 	void SetPlayer(Player* player) { player_ = player; }
 	//死亡フラグ取得
@@ -48,11 +48,11 @@ public:
 	//プレイヤーの座標取得
 	Vector3 GetPlayerPosition();
 	//アニメーション切り替え
-	void SetAnimation(const std::string& animName, bool isLoop);
+	void SetAnimation(const std::string& animName, bool isLoop, float speed = 1.0f);
 	//アニメーション取得
 	Animation* GetAnimation() { return &animation_; }
 	//状態切り替え
-	void SetState(std::unique_ptr<IEnemyState> state);
+	void SetState(IEnemyState* state);
 	//ID取得
 	uint32_t GetID() const { return ID_; }
 	//反発力取得
@@ -68,12 +68,33 @@ public:
 	//ロックオンゲッター
 	bool GetIsLocked() const { return isLocked_; }
 	//デバッグ
-	void Debug();
+	void DebugGUI();
 	//プレイヤーからの距離セット
 	void SetDistFromPlayer(float dist) { distFromPlayer_ = dist; }
 	//プレイヤーからの距離ゲット
 	float GetDistFromPlayer() const { return distFromPlayer_; }
-
+	//プレイヤーの方向に回転
+	void RotateTowardsPlayer();
+	//攻撃開始
+	void BeginAttack() { isAttack_ = true; }
+	//攻撃終了
+	void EndAttack() { isAttack_ = false; }
+	//攻撃中フラグ取得
+	bool GetIsAttack() const { return isAttack_; }
+	//攻撃フラグを強制終了(外部からの呼び出し用)
+	static void ResetAttack() { isAttack_ = false; }
+	//攻撃態勢カウント増加
+	void AddAttackCount() { currentAttackCount_++; }
+	//攻撃態勢カウント減少
+	void SubAttackCount() { currentAttackCount_--; }
+	//現在の攻撃態勢人数取得
+	static uint16_t GetCurrentAttackCount() { return currentAttackCount_; }
+	//最大攻撃態勢人数取得
+	static uint16_t GetMaxAttackCount() { return maxAttackCount_; }
+	//近接カウントセット
+	void SetClosenessCount(uint16_t count) { closenessCount_ = count; }
+	//近接カウントゲット
+	uint16_t GetClosenessCount() const { return closenessCount_; }
 
 	LWP::Object::TransformQuat* GetWorldTF() { return &model_.worldTF; }
 
@@ -88,7 +109,7 @@ protected:
 	//攻撃当たり判定
 	LWP::Object::Collider::AABB attackHitBox_;
 	//状態
-	std::unique_ptr<IEnemyState> state_;
+	IEnemyState* state_;
 
 	//プレイヤー情報
 	Player* player_;
@@ -96,15 +117,23 @@ protected:
 	Vector3 repulsiveForce_{};
 	//種類
 	EnemyType type_;
-	//全体のID管理
-	static uint16_t currentEnemyID_;
 	//プレイヤーからの距離
 	float distFromPlayer_ = 0.0f;
+	//全体のID管理
+	static uint16_t currentEnemyID_;
+	//攻撃態勢最大人数
+	static uint16_t maxAttackCount_;
+	//現在攻撃態勢に入っている人数
+	static uint16_t currentAttackCount_;
 	//個々のID
 	uint16_t ID_;
+	//距離の近さを示す変数。小さいほど近い
+	uint16_t closenessCount_ = 0;
 	//死亡フラグ
 	bool isDead_ = false;
 	//ロックオンされているか
 	bool isLocked_ = false;
+	//攻撃中かどうか
+	static bool isAttack_;
 
 };

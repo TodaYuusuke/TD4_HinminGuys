@@ -95,7 +95,7 @@ void GameScene::DebugGUI() {
 		}
 		// 敵管理クラス
 		if (ImGui::BeginTabItem("EnemyManager")) {
-			enemyManager_.Debug();
+			enemyManager_.DebugGUI();
 			ImGui::EndTabItem();
 		}
 		// 地面
