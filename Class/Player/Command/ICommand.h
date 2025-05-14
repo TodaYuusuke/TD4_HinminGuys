@@ -36,3 +36,10 @@ class EvasionCommand : public ICommand {
 public:
 	void Exec(Player& player)override;
 };
+/// <summary>
+/// 鞘コマンド
+/// </summary>
+class SheathCommand : public ICommand {
+public:
+	void Exec(Player& player)override;
+};

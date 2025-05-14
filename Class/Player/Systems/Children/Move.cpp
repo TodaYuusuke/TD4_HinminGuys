@@ -1,5 +1,8 @@
 #include "Move.h"
 #include "../../Player.h"
+#include "State/Move/Idle.h"
+#include "State/Move/Walk.h"
+#include "State/Move/Run.h"
 
 using namespace LWP;
 using namespace LWP::Math;
@@ -10,6 +13,10 @@ Move::Move(LWP::Object::Camera* camera, Player* player) {
 	player_ = player;
 }
 
+Move::~Move() {
+	delete state_;
+}
+
 void Move::Initialize() {
 	// 移動速度
 	moveVel_ = { 0.0f, 0.0f, 0.0f };
@@ -17,14 +24,23 @@ void Move::Initialize() {
 	quat_ = { 0.0f,0.0f,0.0f,1.0f };
 	radian_ = { 0.0f, 0.0f, 0.0f };
 
+	// 移動状態を生成
+	state_ = new Idle(this, player_);
+	state_->Initialize();
+
+	// 値を保存する項目を作成
 	json_.Init("MoveData.json");
-	json_.AddValue<float>("MoveMultiply", &moveMultiply)
+	json_.AddValue<float>("WalkSpeedMultiply", &walkSpeedMultiply)
+		.AddValue<float>("DashSpeedMultiply", &dashSpeedMultiply)
 		.CheckJsonFile();
 }
 
 void Move::Update() {
 	// 機能を使えないなら早期リターン
 	if (!isActive_) { return; }
+
+	// 移動状態
+	state_->Update();
 
 	// 入力処理
 	InputUpdate();
@@ -53,7 +69,39 @@ void Move::DebugGUI() {
 		ImGui::DragFloat3("Velocity", &moveVel_.x, 0.1f, -10000, 10000);
 		ImGui::DragFloat3("Rotation", &radian_.x, 0.1f, -6.28f, 6.28f);
 		ImGui::DragFloat4("Quaternion", &quat_.x, 0.1f, -1, 1);
+		ImGui::Checkbox("IsMove", &isMove_);
 		ImGui::TreePop();
+	}
+}
+
+void Move::MoveState() {
+	// 待機状態に移行
+	if (!GetIsMove()) {
+		// 待機モーション再生中なら状態遷移しない
+		if (!player_->GetAnimation()->GetPlaying("Idle")) {
+			ChangeState(new Idle(this, player_));
+			// ダッシュ状態解除
+			player_->GetSystemManager()->GetEvasionSystem()->SetIsDash(false);
+			return;
+		}
+	}
+	// 移動状態に移行
+	else {
+		// 走り状態に移行
+		if (player_->GetSystemManager()->GetEvasionSystem()->GetIsDash()) {
+			// 走りモーション再生中なら状態遷移しない
+			if (!player_->GetAnimation()->GetPlaying("Dash") || state_->GetStateName() != "Dash") {
+				ChangeState(new Run(this, player_, dashSpeedMultiply));
+			}
+		}
+		else {
+			// 歩き状態に移行
+			if (!player_->GetAnimation()->GetPlaying("Walk")) {
+				ChangeState(new Walk(this, player_, walkSpeedMultiply));
+				// ダッシュ状態解除
+				player_->GetSystemManager()->GetEvasionSystem()->SetIsDash(false);
+			}
+		}
 	}
 }
 
@@ -82,11 +130,13 @@ void Move::InputUpdate() {
 	}
 #pragma endregion
 	// カメラが向いている方向に進む
+	// 自機とカメラY軸を除いた方向ベクトルを算出
+	Vector3 p2c = (player_->GetWorldTF()->GetWorldPosition() - pCamera_->worldTF.GetWorldPosition()).Normalize();
+	p2c.y = 0;
 	// 回転行列を求める
-	Matrix4x4 rotMatrix = LWP::Math::Matrix4x4::CreateRotateXYZMatrix(pCamera_->worldTF.rotation);
+	Matrix4x4 rotMatrix = LWP::Math::Matrix4x4::CreateRotateXYZMatrix(LWP::Math::Quaternion::ConvertDirection(p2c));
 	// 方向ベクトルを求める
-	moveVel_ = dir * rotMatrix * moveMultiply;
-	moveVel_.y = 0;
+	moveVel_ = dir * moveMultiply_ * rotMatrix;
 
 	isMove_ = false;
 	// 移動ベクトルから体の向きを算出(入力があるときのみ処理する)
@@ -96,4 +146,9 @@ void Move::InputUpdate() {
 		quat_ = LWP::Math::Quaternion::CreateFromAxisAngle(LWP::Math::Vector3{ 0, 1, 0 }, radian_.y);
 		isMove_ = true;
 	}
+}
+
+void Move::ChangeState(IMoveSystemState* pState) {
+	delete state_;
+	state_ = pState;
 }

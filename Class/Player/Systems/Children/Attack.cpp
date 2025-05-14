@@ -76,6 +76,7 @@ void Attack::Reset() {
 	isMoveInput_ = true;
 	isNormalAttack_ = false;
 	collider_.isActive = false;
+	aabb_.isShowWireFrame = false;
 	attackAssistVel_ = { 0.0f,0.0f,0.0f };
 	attackAssistRadian_ = { 0.0f,0.0f,0.0f };
 	attackAssistQuat_ = { 0.0f,0.0f,0.0f,1.0f };
@@ -119,9 +120,12 @@ void Attack::DebugGUI() {
 
 void Attack::NormalCommand() {
 	if (eventOrder_.GetIsEnd()) {
+		// 攻撃状態に移行
+		player_->GetSystemManager()->SetInputState(InputState::kAttack);
 		isActive_ = true;
 		isMoveInput_ = false;
 		collider_.isActive = true;
+		aabb_.isShowWireFrame = true;
 		player_->ResetAnimation();
 		player_->StartAnimation("LightAttack1", 0.6f, 0.0f);
 	}
@@ -135,10 +139,9 @@ void Attack::ChangeState(IAttackSystemState* pState) {
 
 void Attack::CreateCollision() {
 	// 攻撃判定生成
-	aabb_.min.y = 0.0f;
-	aabb_.max.y = 1.0f;
+	aabb_.isShowWireFrame = false;
 	collider_.SetFollowTarget(player_->GetWorldTF());
-	collider_.worldTF.translation = { 0,0,2 };
+	collider_.worldTF.translation = { 0,1,2 };
 	collider_.isActive = false;
 	collider_.mask.SetBelongFrag(GetAttack());
 	collider_.mask.SetHitFrag(GetEnemy());

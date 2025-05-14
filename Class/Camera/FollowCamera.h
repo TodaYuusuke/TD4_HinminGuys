@@ -118,6 +118,9 @@ private:// jsonで保存する値
 	// カメラの感度
 	float sensitivity = 1.0f;
 
+	// 回転角の始点
+	const float kOriginRotateX = 90.0f;
+
 private:// 外部からポインタをもらう変数
 	// カメラ
 	LWP::Object::Camera* camera_;

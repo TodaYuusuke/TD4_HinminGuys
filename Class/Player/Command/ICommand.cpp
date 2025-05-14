@@ -25,3 +25,10 @@ void EvasionCommand::Exec(Player& player) {
 
 	player.GetSystemManager()->GetEvasionSystem()->Command();
 }
+
+void SheathCommand::Exec(Player& player) {
+	// パリィ中、回避中、攻撃中は鞘関連の行動ができない
+	if (player.GetSystemManager()->GetParrySystem()->GetIsActive() || player.GetSystemManager()->GetEvasionSystem()->GetIsActive() || player.GetSystemManager()->GetAttackSystem()->GetIsActive()) { return; }
+
+	player.GetSystemManager()->GetSheathSystem()->Command();
+}
