@@ -63,5 +63,8 @@ private:
 	//敵の出現上限
 	const uint16_t kMaxEnemyCount_ = 20;
 
+	// jsonによるパラメータの保存、読み込み
+	LWP::Utility::JsonIO json_;
+
 };
 

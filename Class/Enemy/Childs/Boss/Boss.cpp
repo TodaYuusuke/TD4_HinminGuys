@@ -4,6 +4,7 @@
 
 void Boss::Initialize(Player* player, const Vector3& position)
 {
+	type_ = EnemyType::kBoss;
 	model_.LoadShortPath("player/Player_Simple.gltf");
 	model_.materials["Material"].color = { 1.0f,0.0f,0.0f,1.0f };
 	animation_.LoadFullPath("resources/model/player/Player_Simple.gltf", &model_);

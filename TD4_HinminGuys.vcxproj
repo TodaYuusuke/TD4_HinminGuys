@@ -163,6 +163,7 @@
     <ClCompile Include="Class\Enemy\Childs\State\NormalAttack.cpp" />
     <ClCompile Include="Class\Enemy\Childs\State\NormalIdle.cpp" />
     <ClCompile Include="Class\Enemy\Childs\State\NormalMove.cpp" />
+    <ClCompile Include="Class\Enemy\WaveData.cpp" />
     <ClCompile Include="Class\Player\Systems\Children\Attack.cpp" />
     <ClCompile Include="Class\Player\Systems\Children\LockOn.cpp" />
     <ClCompile Include="Class\Scene\GameScene.cpp" />
@@ -199,6 +200,7 @@
     <ClInclude Include="Class\Enemy\Childs\Normal\State\NormalEnemyIdle.h" />
     <ClInclude Include="Class\Enemy\Childs\Normal\State\NormalEnemyMove.h" />
     <ClInclude Include="Class\Enemy\States.h" />
+    <ClInclude Include="Class\Enemy\WaveData.h" />
     <ClInclude Include="Class\Player\Command\InputConfig.h" />
     <ClInclude Include="Class\Enemy\Childs\Normal\Normal.h" />
     <ClInclude Include="Class\Enemy\Childs\State\NormalAttack.h" />

@@ -8,7 +8,7 @@ using namespace LWP::Primitive;
 void Normal::Initialize(Player* player, const Vector3& position)
 {
 	model_.LoadShortPath("player/Player_Simple.gltf");
-	
+	type_ = EnemyType::kNormal;
 	//アニメーションロード
 	animation_.LoadFullPath("resources/model/player/Player_Simple.gltf", &model_);
 	model_.materials["Material"].color = { 1.0f,0.0f,0.0f,1.0f };
