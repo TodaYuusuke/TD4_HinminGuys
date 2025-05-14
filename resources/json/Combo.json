@@ -53,14 +53,56 @@
             "float :AttackStartTime": 0.0,
             "float :ReceptTime": 0.5,
             "float :StifnessTime": 0.10000000149011612,
-            "int32_t :derivationPriority": 0,
+            "int32_t :derivationPriority": 1,
             "string :AnimName": "LightAttack1"
+        },
+        "Group :StrongCombo1": {
+            "Group :StartConditions|Button|1": {
+                "float :PressTime": 0.10000000149011612,
+                "int32_t :ButtonID": 16384,
+                "int32_t :InputState": 0,
+                "int32_t :KeyID": 37
+            },
+            "Group :StrongCombo2": {
+                "Group :StartConditions|Button|1": {
+                    "float :PressTime": 0.10000000149011612,
+                    "int32_t :ButtonID": 16384,
+                    "int32_t :InputState": 0,
+                    "int32_t :KeyID": 37
+                },
+                "Group :StrongCombo3": {
+                    "Group :StartConditions|Button|1": {
+                        "float :PressTime": 0.10000000149011612,
+                        "int32_t :ButtonID": 16384,
+                        "int32_t :InputState": 0,
+                        "int32_t :KeyID": 37
+                    },
+                    "float :AttackEndTime": 0.0,
+                    "float :AttackStartTime": 0.0,
+                    "float :ReceptTime": 1.5,
+                    "float :StifnessTime": 0.0,
+                    "int32_t :derivationPriority": 0,
+                    "string :AnimName": "LightAttack4"
+                },
+                "float :AttackEndTime": 0.0,
+                "float :AttackStartTime": 0.0,
+                "float :ReceptTime": 0.5,
+                "float :StifnessTime": 1.0,
+                "int32_t :derivationPriority": 0,
+                "string :AnimName": "WeakParry"
+            },
+            "float :AttackEndTime": 0.0,
+            "float :AttackStartTime": 0.0,
+            "float :ReceptTime": 0.75,
+            "float :StifnessTime": 0.0,
+            "int32_t :derivationPriority": 0,
+            "string :AnimName": "Gaurd"
         },
         "float :AttackEndTime": 0.0,
         "float :AttackStartTime": 0.0,
-        "float :ReceptTime": 0.5,
+        "float :ReceptTime": 1.0,
         "float :StifnessTime": 0.0,
         "int32_t :derivationPriority": 0,
-        "string :AnimName": "Idle"
+        "string :AnimName": ""
     }
 }

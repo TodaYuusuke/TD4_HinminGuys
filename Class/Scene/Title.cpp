@@ -11,19 +11,11 @@ using namespace LWP::Info;
 
 void Title::Initialize() {
 
-	model_.LoadShortPath("player/Player_Simple.gltf");
-	anim_.LoadFullPath("resources/model/player/Player_Simple.gltf", &model_);
-
-	tree_.Init(&model_, &anim_);
 }
 
 void Title::Update() {
-
-	tree_.Update();
-	tree_.DebugGUI();
-
 	// シーン遷移
-	/*if (Keyboard::GetTrigger(DIK_P)) {
+	if (Keyboard::GetTrigger(DIK_P)) {
 		nextSceneFunction = []() { return new GameScene(); };
-	}*/
+	}
 }

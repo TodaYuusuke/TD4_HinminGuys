@@ -142,6 +142,15 @@ void ComboTree::DebugGUI()
 	ImGui::End();
 }
 
+bool ComboTree::GetIsStiffness()
+{
+	// 現在コンボに何も入っていなければfalseに
+	if (nowCombo_ == nullptr) { return false; }
+
+	// 硬直状態を返す
+	return nowCombo_->GetIsStifness();
+}
+
 void ComboTree::FileMenu()
 {
 	// ファイル関係メニューの表示

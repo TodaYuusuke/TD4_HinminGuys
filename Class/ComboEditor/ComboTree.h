@@ -38,7 +38,11 @@ public: // メンバ関数
 
 public: // アクセッサ等
 
-
+	/// <summary>
+	/// 現在コンボの硬直状態ゲッター
+	/// </summary>
+	/// <returns>硬直状態</returns>
+	bool GetIsStiffness();
 
 private: // プライベートなメンバ関数
 
