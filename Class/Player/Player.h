@@ -5,6 +5,8 @@
 #include "Systems/Children/Attack.h"
 #include "Systems/Children/LockOn.h"
 #include "Systems/SystemManager.h"
+#include "Gauge/HP/HP.h"
+#include "Gauge/Sheath/SheathGauge.h"
 #include <memory>
 
 class IEnemy;
@@ -41,6 +43,11 @@ private:
 	/// 自機機能を全て生成
 	/// </summary>
 	void CreateSystems();
+
+	/// <summary>
+	/// 当たり判定を作成
+	/// </summary>
+	void CreateCollision();
 
 public:// Getter,Setter
 #pragma region Getter
@@ -103,7 +110,7 @@ public:// Getter,Setter
 	/// アニメーションを初期化
 	/// </summary>
 	void ResetAnimation() { 
-		//animation_.Loop(false);
+		animation_.Loop(false);
 		animation_.playbackSpeed = 1.0f;
 	}
 	/// <summary>
@@ -116,6 +123,7 @@ public:// Getter,Setter
 	/// </summary>
 	/// <param name="isLoop"></param>
 	void SetIsLoopAnimation(const bool& isLoop) { animation_.Loop(isLoop); }
+	void SetPos(LWP::Math::Vector3 pos) { model_.worldTF.translation = pos; }
 #pragma endregion
 
 private:// 外部からポインタをもらう変数
@@ -125,6 +133,16 @@ private:// 外部からポインタをもらう変数
 	FollowCamera* followCamera_;
 
 private:
+	// 体の判定
+	LWP::Object::Collision collider_;
+	LWP::Object::Collider::AABB& aabb_;
+
 	// 機能まとめ
 	std::unique_ptr<SystemManager> systemManager_;
+
+	// HP
+	HP hp_;
+
+	// 鞘ゲージ
+	SheathGauge sheathGauge_;
 };

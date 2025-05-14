@@ -1,0 +1,21 @@
+{
+    "Group :WorldTransform": {
+        "Vector3 :Scale": [
+            1.0,
+            1.0,
+            1.0
+        ],
+        "Vector3 :Translation": [
+            64.0,
+            64.0,
+            0.0
+        ]
+    },
+    "Vector2 :AnchorPoint": [
+        0.0,
+        0.0
+    ],
+    "float :DeltaValue": 0.0,
+    "float :MaxHpValue": 100.0,
+    "float :Multiply": 1.0
+}

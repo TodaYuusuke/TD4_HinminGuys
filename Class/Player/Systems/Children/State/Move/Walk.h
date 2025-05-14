@@ -4,7 +4,7 @@
 class Walk : public IMoveSystemState {
 public:
 	// コンストラクタ
-	Walk(Move* moveSystem, Player* player);
+	Walk(Move* moveSystem, Player* player, const float& moveMultiply);
 	// デストラクタ
 	~Walk() override = default;
 

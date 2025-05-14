@@ -4,7 +4,7 @@
 class Run : public IMoveSystemState {
 public:
 	// コンストラクタ
-	Run(Move* moveSystem, Player* player);
+	Run(Move* moveSystem, Player* player, const float& moveMultiply);
 	// デストラクタ
 	~Run() override = default;
 

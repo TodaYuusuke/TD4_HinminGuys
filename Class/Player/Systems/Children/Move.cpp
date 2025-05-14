@@ -30,13 +30,17 @@ void Move::Initialize() {
 
 	// 値を保存する項目を作成
 	json_.Init("MoveData.json");
-	json_.AddValue<float>("MoveMultiply", &moveMultiply)
+	json_.AddValue<float>("WalkSpeedMultiply", &walkSpeedMultiply)
+		.AddValue<float>("DashSpeedMultiply", &dashSpeedMultiply)
 		.CheckJsonFile();
 }
 
 void Move::Update() {
 	// 機能を使えないなら早期リターン
 	if (!isActive_) { return; }
+
+	// 移動状態
+	state_->Update();
 
 	// 入力処理
 	InputUpdate();
@@ -86,14 +90,14 @@ void Move::MoveState() {
 		// 走り状態に移行
 		if (player_->GetSystemManager()->GetEvasionSystem()->GetIsDash()) {
 			// 走りモーション再生中なら状態遷移しない
-			if (!player_->GetAnimation()->GetPlaying("Dash")) {
-				ChangeState(new Run(this, player_));
+			if (!player_->GetAnimation()->GetPlaying("Dash") || state_->GetStateName() != "Dash") {
+				ChangeState(new Run(this, player_, dashSpeedMultiply));
 			}
 		}
 		else {
 			// 歩き状態に移行
 			if (!player_->GetAnimation()->GetPlaying("Walk")) {
-				ChangeState(new Walk(this, player_));
+				ChangeState(new Walk(this, player_, walkSpeedMultiply));
 				// ダッシュ状態解除
 				player_->GetSystemManager()->GetEvasionSystem()->SetIsDash(false);
 			}
@@ -132,7 +136,7 @@ void Move::InputUpdate() {
 	// 回転行列を求める
 	Matrix4x4 rotMatrix = LWP::Math::Matrix4x4::CreateRotateXYZMatrix(LWP::Math::Quaternion::ConvertDirection(p2c));
 	// 方向ベクトルを求める
-	moveVel_ = dir * rotMatrix * moveMultiply;
+	moveVel_ = dir * moveMultiply_ * rotMatrix;
 
 	isMove_ = false;
 	// 移動ベクトルから体の向きを算出(入力があるときのみ処理する)

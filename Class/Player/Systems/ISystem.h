@@ -85,8 +85,8 @@ protected:
 	EventOrder eventOrder_;
 
 	// 機能が使える状態か
-	bool isActive_ = true;
-	bool isPreActive_ = true;
+	bool isActive_ = false;
+	bool isPreActive_ = false;
 	// 移動入力を受け付ける状態か
 	bool isMoveInput_ = true;
 

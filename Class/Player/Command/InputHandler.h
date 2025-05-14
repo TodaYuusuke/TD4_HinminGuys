@@ -50,6 +50,10 @@ private:
 	/// 回避コマンドの登録
 	/// </summary>
 	void AssignEvasionCommand();
+	/// <summary>
+	/// 鞘コマンドの登録
+	/// </summary>
+	void AssignSheathCommand();
 
 private:
 	// 通常攻撃コマンド
@@ -60,6 +64,8 @@ private:
 	ICommand* pressLockOnCommand_;
 	// 回避コマンド
 	ICommand* pressEvasionCommand_;
+	// 鞘コマンド
+	ICommand* pressSheathCommand_;
 
 	// 実行用のコマンド
 	std::vector<ICommand*> commands_;

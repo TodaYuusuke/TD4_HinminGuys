@@ -40,6 +40,7 @@ void InputHandler::CreateCommand() {
 	AssignParryCommand();
 	AssignLockOnCommand();
 	AssignEvasionCommand();
+	AssignSheathCommand();
 }
 
 std::vector<ICommand*> InputHandler::HandleInput() {
@@ -60,6 +61,10 @@ std::vector<ICommand*> InputHandler::HandleInput() {
 	// 回避コマンド
 	if (Keyboard::GetTrigger(Command::Key::Evasion) || Pad::GetTrigger(Command::GamePad::Evasion)) {
 		result.push_back(pressEvasionCommand_);
+	}
+	// 鞘コマンド
+	if (Keyboard::GetTrigger(Command::Key::Sheath) || Pad::GetTrigger(Command::GamePad::Sheath)) {
+		result.push_back(pressSheathCommand_);
 	}
 
 	return result;
@@ -83,4 +88,9 @@ void InputHandler::AssignLockOnCommand() {
 void InputHandler::AssignEvasionCommand() {
 	ICommand* command = new EvasionCommand();
 	this->pressEvasionCommand_ = command;
+}
+
+void InputHandler::AssignSheathCommand() {
+	ICommand* command = new SheathCommand();
+	this->pressSheathCommand_ = command;
 }

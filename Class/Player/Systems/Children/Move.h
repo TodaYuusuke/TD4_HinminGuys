@@ -115,11 +115,18 @@ public:// Getter, Setter
 	/// </summary>
 	/// <param name="quat">向かせる方向(クォータニオン)</param>
 	void SetRotate(const LWP::Math::Quaternion& quat) { quat_ = quat; }
+	/// <summary>
+	/// 移動速度の倍率を設定
+	/// </summary>
+	/// <param name="moveMultiply"></param>
+	void SetMoveMultiply(const float& moveMultiply) { moveMultiply_ = moveMultiply; }
 #pragma endregion
 
 private:// jsonで保存する値
-	// 移動速度の係数
-	float moveMultiply = 1.0f;
+	// 歩き時の速度倍率
+	float walkSpeedMultiply = 1.0f;
+	// 走り時の速度倍率
+	float dashSpeedMultiply = 1.0f;
 
 private:// プライベートな変数
 	// 移動対象のモデルのアドレス
@@ -131,11 +138,14 @@ private:// プライベートな変数
 	LWP::Math::Vector3 moveVel_;
 
 	// 向いている角度
-	LWP::Math::Quaternion quat_ = {0.0f,0.0f,0.0f,1.0f};
+	LWP::Math::Quaternion quat_ = { 0.0f,0.0f,0.0f,1.0f };
 	LWP::Math::Vector3 radian_;
 
 	// 移動時のイージング
 	LWP::Math::Vector3 moveOffset_;
+
+	// 移動速度の倍率
+	float moveMultiply_;
 
 	// 移動しているか
 	bool isMove_;

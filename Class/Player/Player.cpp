@@ -1,8 +1,14 @@
 #include "Player.h"
 #include "../Enemy/EnemyManager.h"
+#include "../GameMask.h"
 
-Player::Player(LWP::Object::Camera* camera, EnemyManager* enemyManager, FollowCamera* followCamera) {
-	pCamera_ = camera; 
+using namespace LWP::Utility;
+using namespace GameMask;
+
+Player::Player(LWP::Object::Camera* camera, EnemyManager* enemyManager, FollowCamera* followCamera)
+	: aabb_(collider_.SetBroadShape(LWP::Object::Collider::AABB()))
+{
+	pCamera_ = camera;
 	enemyManager_ = enemyManager;
 	followCamera_ = followCamera;
 
@@ -12,6 +18,13 @@ Player::Player(LWP::Object::Camera* camera, EnemyManager* enemyManager, FollowCa
 
 	// 自機機能を生成
 	CreateSystems();
+
+	// 当たり判定を作成
+	CreateCollision();
+
+	// HPを作成
+	hp_.Initialize();
+	sheathGauge_.Initialize();
 }
 
 void Player::Initialize() {
@@ -27,6 +40,10 @@ void Player::Update() {
 	model_.worldTF.translation += systemManager_->GetVelocity();
 	// 角度を代入
 	model_.worldTF.rotation = systemManager_->GetRotate();
+
+	// HP
+	hp_.Update();
+	sheathGauge_.Update();
 }
 
 void Player::Reset() {
@@ -37,15 +54,20 @@ void Player::Reset() {
 void Player::DebugGUI() {
 #ifdef _DEBUG
 	// 各機能
-	systemManager_->DebugGUI();
+	if (ImGui::TreeNode("Systems")) {
+		systemManager_->DebugGUI();
+		ImGui::TreePop();
+	}
+	// HP
+	hp_.DebugGUI();
+	sheathGauge_.DebugGUI();
 	// アニメーション
 	if (ImGui::TreeNode("Animation")) {
 		animation_.DebugGUI();
 		ImGui::TreePop();
 	}
-
-	ImGui::DragFloat3("Translation", &model_.worldTF.translation.x, 0.1f, -10000, 10000);
-	ImGui::DragFloat4("Quaternion", &model_.worldTF.rotation.x, 0.1f, -10000, 10000);
+	// WorldTransform
+	model_.worldTF.DebugGUI();
 #endif // DEBUG
 }
 
@@ -53,4 +75,18 @@ void Player::CreateSystems() {
 	// 各機能生成
 	systemManager_ = std::make_unique<SystemManager>(this, enemyManager_, followCamera_, pCamera_);
 	systemManager_->Initialize();
+}
+
+void Player::CreateCollision() {
+	// 体の判定生成
+	collider_.SetFollowTarget(&model_.worldTF);
+	collider_.isActive = true;
+	collider_.worldTF.translation = { 0.0f, 1.0f, 0.0f };
+	// 自機の所属しているマスクを設定
+	collider_.mask.SetBelongFrag(GetPlayer());
+	// 当たり判定をとる対象のマスクを設定
+	collider_.mask.SetHitFrag(GetAttack());
+	collider_.stayLambda = [this](LWP::Object::Collision* hitTarget) {
+		hitTarget;
+		};
 }

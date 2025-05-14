@@ -1,11 +1,16 @@
 {
-    "DashButtonHoldSeconds": 0.3,
-    "EvasionMultiply": 0.4000000059604645,
-    "EventOrder": {
-        "GraceTime": {
-            "InvinsibleTime": 0.6000000238418579,
-            "RecoveryTime": 0.0,
-            "SwingTime": 0.0
+    "Group :EventOrder": {
+        "Group :GraceTime": {
+            "float :InvinsibleTime": 0.4000000059604645,
+            "float :RecoveryTime": 0.0,
+            "float :SwingTime": 0.0
         }
-    }
+    },
+    "Vector3 :Movement": [
+        0.0,
+        0.0,
+        10.0
+    ],
+    "float :DashButtonHoldSeconds": 0.30000001192092896,
+    "float :MoveMultiply": 1.0
 }

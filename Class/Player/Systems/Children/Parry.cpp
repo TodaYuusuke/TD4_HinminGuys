@@ -58,7 +58,8 @@ void Parry::Reset() {
 	isMoveInput_ = true;
 	isJustParry_ = false;
 	isGoodParry_ = false;
-	collider_.isActive = false;	
+	collider_.isActive = false;
+	aabb_.isShowWireFrame = false;
 	// アニメーションを初期化
 	player_->ResetAnimation();
 }
@@ -96,8 +97,11 @@ void Parry::DebugGUI() {
 
 void Parry::Command() {
 	if (eventOrder_.GetIsEnd()) {
+		// パリィ状態に移行
+		player_->GetSystemManager()->SetInputState(InputState::kParry);
 		isActive_ = true;
 		collider_.isActive = true;
+		aabb_.isShowWireFrame = true;
 		isMoveInput_ = false;
 		// ガードアニメーション開始
 		player_->ResetAnimation();
@@ -108,10 +112,12 @@ void Parry::Command() {
 
 void Parry::CreateCollision() {
 	// 攻撃判定生成
-	aabb_.min.y = 0.0f;
-	aabb_.max.y = 1.0f;
+	aabb_.min = { -1.0f, -1.0f, -1.0f };
+	aabb_.max = { 1.0f, 1.0f, 1.0f };
+	aabb_.isShowWireFrame = false;
 	collider_.SetFollowTarget(player_->GetWorldTF());
 	collider_.isActive = false;
+	collider_.worldTF.translation = { 0.0f, 1.0f, 0.0f };
 	collider_.mask.SetBelongFrag(GetPlayer());
 	collider_.mask.SetHitFrag(GetEnemy() | GetAttack());
 	collider_.stayLambda = [this](LWP::Object::Collision* hitTarget) {

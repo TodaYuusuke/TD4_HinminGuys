@@ -161,12 +161,6 @@ void LockOn::ClearLockOn() {
 		float radius = kMaxRange;
 		if ((p2e.x * p2e.x) + (p2e.y * p2e.y) + (p2e.z * p2e.z) > (radius * radius)) {
 			enemy->SetIsLocked(false);
-			/*for (int i = 0; i < lockOnEnableEnemies_.size(); i++) {
-				if (enemy->GetID() == lockOnEnableEnemies_[i].enemyData->GetID()) {
-					lockOnEnableEnemies_.erase(lockOnEnableEnemies_.begin() + i);
-					break;
-				}
-			}*/
 			auto it = std::find(lockOnEnableEnemies_.begin(), lockOnEnableEnemies_.end(), enemy);
 			if (it != lockOnEnableEnemies_.end()) {
 				lockOnEnableEnemies_.erase(std::remove(lockOnEnableEnemies_.begin(), lockOnEnableEnemies_.end(), enemy), lockOnEnableEnemies_.end());
@@ -182,12 +176,6 @@ void LockOn::ClearLockOn() {
 		cameraDir = cameraDir * rotMatrix;
 		if (IsObjectInOppositeDirection(enemy->GetPosition(), pCamera_->worldTF.translation, cameraDir)) {
 			enemy->SetIsLocked(false);
-			/*for (int i = 0; i < lockOnEnableEnemies_.size(); i++) {
-				if (enemy->GetID() == lockOnEnableEnemies_[i].enemyData->GetID()) {
-					lockOnEnableEnemies_.erase(lockOnEnableEnemies_.begin() + i);
-					break;
-				}
-			}*/
 			auto it = std::find(lockOnEnableEnemies_.begin(), lockOnEnableEnemies_.end(), enemy);
 			if (it != lockOnEnableEnemies_.end()) {
 				lockOnEnableEnemies_.erase(std::remove(lockOnEnableEnemies_.begin(), lockOnEnableEnemies_.end(), enemy), lockOnEnableEnemies_.end());
@@ -198,12 +186,6 @@ void LockOn::ClearLockOn() {
 		// スクリーン座標内にいないならリストから除外
 		if (!IsObjectInScreen(enemy->GetPosition())) {
 			enemy->SetIsLocked(false);
-			//for (int i = 0; i < lockOnEnableEnemies_.size(); i++) {
-			//	if (enemy->GetID() == lockOnEnableEnemies_[i].enemyData->GetID()) {
-			//		lockOnEnableEnemies_.erase(lockOnEnableEnemies_.begin() + i);
-			//		break;
-			//	}
-			//}
 			auto it = std::find(lockOnEnableEnemies_.begin(), lockOnEnableEnemies_.end(), enemy);
 			if (it != lockOnEnableEnemies_.end()) {
 				lockOnEnableEnemies_.erase(std::remove(lockOnEnableEnemies_.begin(), lockOnEnableEnemies_.end(), enemy), lockOnEnableEnemies_.end());
