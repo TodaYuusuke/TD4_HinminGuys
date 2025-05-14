@@ -150,6 +150,12 @@
     </Manifest>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Class\ComboEditor\ComboTree.cpp" />
+    <ClCompile Include="Class\Condition\child\Input\ButtonCondition.cpp" />
+    <ClCompile Include="Class\DeltaTimer\DeltaTimer.cpp" />
+    <ClCompile Include="Class\Scene\GameScene.cpp" />
+    <ClCompile Include="Class\Scene\Title.cpp" />
+    <ClCompile Include="Class\ComboEditor\Combo.cpp" />
     <ClCompile Include="Class\Enemy\Childs\Boss\Boss.cpp" />
     <ClCompile Include="Class\Enemy\Childs\State\BossAttack.cpp" />
     <ClCompile Include="Class\Enemy\Childs\State\BossIdle.cpp" />
@@ -185,6 +191,15 @@
     <ClCompile Include="Class\TestCollider.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Class\ComboEditor\ComboTree.h" />
+    <ClInclude Include="Class\Condition\child\Input\ButtonCondition.h" />
+    <ClInclude Include="Class\Condition\ConditionEnums.h" />
+    <ClInclude Include="Class\Condition\ConditionList.h" />
+    <ClInclude Include="Class\DeltaTimer\DeltaTimer.h" />
+    <ClInclude Include="Class\Scene\GameScene.h" />
+    <ClInclude Include="Class\Scene\Title.h" />
+    <ClInclude Include="Class\ComboEditor\Combo.h" />
+    <ClInclude Include="Class\Condition\ICondition.h" />
     <ClInclude Include="Class\Enemy\Childs\Boss\Boss.h" />
     <ClInclude Include="Class\Enemy\Childs\State\BossAttack.h" />
     <ClInclude Include="Class\Enemy\Childs\State\BossIdle.h" />

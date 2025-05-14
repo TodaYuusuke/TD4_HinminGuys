@@ -1,7 +1,5 @@
 #pragma once
 #include "scene/IScene.h"
-#include "../Player/Player.h"
-#include "../Camera/FollowCamera.h"
 
 class Title final
 	: public IScene {
@@ -18,4 +16,7 @@ public:
 
 
 private: // ** これより先に必要な処理や変数を記述 ** //
+
+
+
 };
