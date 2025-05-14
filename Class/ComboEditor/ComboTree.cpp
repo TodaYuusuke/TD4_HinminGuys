@@ -8,7 +8,7 @@ ComboTree::~ComboTree()
 	
 }
 
-void ComboTree::Init(LWP::Resource::SkinningModel* model, LWP::Resource::Animation* anim)
+void ComboTree::Init(const std::string& fileName, LWP::Resource::SkinningModel* model, LWP::Resource::Animation* anim)
 {
 	#ifdef _DEBUG
 	// デバッグ時、デフォルトで編集モード有効
@@ -16,15 +16,17 @@ void ComboTree::Init(LWP::Resource::SkinningModel* model, LWP::Resource::Animati
 	#endif // _DEBUG
 
 	// モデル、アニメーションを取得
-	animModel_	= model;
-	anim_		= anim;
+	animModel_ = model;
+	anim_ = anim;
 
 	// 無操作状態のコンボの初期化
 	rootCombo_.Init("Neutral");
 	editingCombo_ = &rootCombo_;
+	rootCombo_.SetIsRoot(true);
 
 	// コンボのロード
-	LoadCombo();
+	fileName_ = fileName;
+	LoadCombo(fileName_);
 
 	// 現在コンボに無操作状態のコンボを設定する
 	nowCombo_ = &rootCombo_;
@@ -162,11 +164,6 @@ void ComboTree::FileMenu()
 			SaveCombo();
 		}
 
-		// ツリーの再読み込み
-		if (ImGui::MenuItem("Load")) {
-			LoadCombo();
-		}
-
 		ImGui::EndMenu();
 	}
 }
@@ -202,21 +199,21 @@ void ComboTree::NodeMenu()
 
 void ComboTree::SaveCombo()
 {
-	jsonIO_.Init("Combo.json");
+	jsonIO_.Init(fileName_);
 
 	// 全コンボの保存
 	rootCombo_.AddValue(jsonIO_);
 	jsonIO_.Save();
 }
 
-void ComboTree::LoadCombo()
+void ComboTree::LoadCombo(const std::string& fileName)
 {
 	// 初期化
-	jsonIO_.Init("Combo.json");
+	jsonIO_.Init(fileName);
 	jsonIO_.CheckJsonFile();
 
 	// グループ名の取得
-	Utility::NestedList nameList = Utility::JsonIO::LoadGroupNames("Combo.json");
+	Utility::NestedList nameList = Utility::JsonIO::LoadGroupNames(fileName);
 
 	// グループ名リストが空の場合早期リターン
 	if (nameList.empty()) {
@@ -248,7 +245,7 @@ void ComboTree::LoadCombo()
 			// 再帰的に空のコンボを生成する
 			self(self, itr->list, c.CreateChild(itr->name));
 		}
-	};
+		};
 	// ラムダ式を実行
 	lamda(lamda, nameList[0].list, rootCombo_);
 
@@ -282,7 +279,6 @@ int ComboTree::GetSameNameCount(const std::string& name)
 
 void ComboTree::AnimNameEasySetter()
 {
-	ImGui::NewLine();
 	ImGui::SeparatorText("AnimNameEasySetter");
 	// アニメーションがセットされていなければここで早期リターン
 	if (anim_ == nullptr) {

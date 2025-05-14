@@ -47,6 +47,11 @@ public:
 	/// </summary>
 	void DebugGUI();
 
+	/// <summary>
+	/// ImGuiによるコンボのGUI表示
+	/// </summary>
+	void DebugComboGUI() { attackSystem_->DebugComboGUI(); }
+
 private:
 	/// <summary>
 	/// 移動入力が可能な状態なら自機に速度を加算

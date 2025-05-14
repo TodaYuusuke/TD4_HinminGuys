@@ -55,7 +55,6 @@ void Parry::Update() {
 
 void Parry::Reset() {
 	isActive_ = false;
-	isMoveInput_ = true;
 	isJustParry_ = false;
 	isGoodParry_ = false;
 	collider_.isActive = false;
@@ -102,7 +101,6 @@ void Parry::Command() {
 		isActive_ = true;
 		collider_.isActive = true;
 		aabb_.isShowWireFrame = true;
-		isMoveInput_ = false;
 		// ガードアニメーション開始
 		player_->ResetAnimation();
 		player_->StartAnimation("Gaurd", 10.0f, 0.0f);

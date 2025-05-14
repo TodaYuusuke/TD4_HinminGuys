@@ -37,12 +37,7 @@ public:// Getter, Setter
 	/// </summary>
 	/// <returns></returns>
 	bool GetIsActive() { return isActive_; }
-	/// <summary>
-	/// 移動入力を受け付ける状態かを取得
-	/// </summary>
-	/// <returns></returns>
-	bool GetIsMoveInput() { return isMoveInput_; }
-
+	
 	/// <summary>
 	/// 機能を使用できるようになった瞬間を取得
 	/// </summary>
@@ -68,10 +63,6 @@ public:// Getter, Setter
 	/// 機能が使える状態かを設定
 	/// </summary>
 	void SetIsActive(bool isActive) { isActive_ = isActive; }
-	/// <summary>
-	/// 移動入力を受け付ける状態かを設定
-	/// </summary>
-	void SetIsMoveInput(bool isMoveInput) { isMoveInput_ = isMoveInput; }
 #pragma endregion
 
 protected:
@@ -87,8 +78,6 @@ protected:
 	// 機能が使える状態か
 	bool isActive_ = false;
 	bool isPreActive_ = false;
-	// 移動入力を受け付ける状態か
-	bool isMoveInput_ = true;
 
 	// jsonによるパラメータの保存、読み込み
 	LWP::Utility::JsonIO json_;

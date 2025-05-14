@@ -24,7 +24,10 @@ public: // メンバ関数
 	/// <summary>
 	/// 初期化関数
 	/// </summary>
-	void Init(LWP::Resource::SkinningModel* model, LWP::Resource::Animation* anim);
+	/// <param name="fileName">読み込み保存するファイル名<param>
+	/// <param name="model">アニメーションさせるモデル</param>
+	/// <param name="anim">アニメーション</param>
+	void Init(const std::string& fileName, LWP::Resource::SkinningModel* model, LWP::Resource::Animation* anim);
 
 	/// <summary>
 	/// 更新関数
@@ -37,6 +40,12 @@ public: // メンバ関数
 	void DebugGUI();
 
 public: // アクセッサ等
+
+	/// <summary>
+	/// 現在のコンボが大元のコンボであるかどうかのゲッター
+	/// </summary>
+	/// <returns></returns>
+	bool GetIsThisRoot() { return nowCombo_->GetIsRoot(); }
 
 	/// <summary>
 	/// 現在コンボの硬直状態ゲッター
@@ -64,7 +73,8 @@ private: // プライベートなメンバ関数
 	/// <summary>
 	/// コンボのロード関数
 	/// </summary>
-	void LoadCombo();
+	/// <param name="fileName">ファイル名</param>
+	void LoadCombo(const std::string& fileName);
 
 	/// <summary>
 	/// <エディタ用> 同名コンボがいくつあるかのカウンター
@@ -114,6 +124,9 @@ private: // メンバ変数
 	Combo* nextCombo_ = nullptr;
 
 #pragma region エディタ用変数
+
+	// 保存先ファイル名
+	std::string fileName_{};
 
 	// jsonIO
 	LWP::Utility::JsonIO jsonIO_;

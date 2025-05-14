@@ -2,7 +2,7 @@
 
     "Group :EventOrder": {
         "Group :GraceTime": {
-            "float :InvinsibleTime": 0.4000000059604645,
+            "float :InvinsibleTime": 0.3,
             "float :RecoveryTime": 0.0,
             "float :SwingTime": 0.0
         }

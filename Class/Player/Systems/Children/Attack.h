@@ -2,6 +2,7 @@
 #include "../ISystem.h"
 #include "LockOn.h"
 #include "State/IAttackSystemState.h"
+#include "../../../ComboEditor/ComboTree.h"
 
 class IEnemy;
 /// <summary>
@@ -32,6 +33,11 @@ public:
 	/// ImGuiによるパラメータを表示
 	/// </summary>
 	void DebugGUI() override;
+
+	/// <summary>
+	/// ImGuiによるコンボのGUI表示
+	/// </summary>
+	void DebugComboGUI() { comboTree_.DebugGUI(); }
 
 	/// <summary>
 	/// 通常攻撃のコマンド
@@ -120,6 +126,10 @@ private:// 外部からポインタをもらう変数
 	LockOn* lockOnSystem_;
 
 private:
+
+	// コンボ攻撃用クラス
+	ComboTree comboTree_;
+
 	// 状態遷移
 	IAttackSystemState* state_;
 

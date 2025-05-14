@@ -23,6 +23,9 @@ Attack::Attack(LWP::Object::Camera* camera, Player* player)
 	// 状態作成
 	state_ = new NoneAttack(this);
 	state_->Initialize();
+
+	// コンボツリーの初期化
+	comboTree_.Init("Combo.json", player_->GetModel(), player_->GetAnimation());
 }
 
 Attack::~Attack() {
@@ -48,32 +51,50 @@ void Attack::Initialize() {
 }
 
 void Attack::Update() {
-	// 機能を使えないなら早期リターン
-	if (!isActive_) {
-		isMoveInput_ = true;
-		return;
+
+	// コンボツリー自体は毎フレーム更新する
+	comboTree_.Update();
+
+	// コンボが無操作状態のコンボでない場合
+	if (!comboTree_.GetIsThisRoot()) {
+		// 攻撃しているものとみなし、攻撃状態に移行
+		if (!isActive_) {
+			player_->GetSystemManager()->SetInputState(InputState::kAttack);
+			isActive_ = true;
+			//player_->ResetAnimation();
+		}
+	}
+	else { // 無操作状態のコンボが選択されている場合
+		// 機能停止させる
+		if (isActive_) {
+			Reset();
+		}
 	}
 
-	// frameごとに起きるアクションイベント
-	eventOrder_.Update();
+	//// 機能を使えないなら早期リターン
+	//if (!isActive_) {
+	//	return;
+	//}
 
-	// 攻撃のアクションイベント状態の確認
-	CheckAttackState();
+	//// frameごとに起きるアクションイベント
+	//eventOrder_.Update();
 
-	// 状態
-	state_->Update();
+	//// 攻撃のアクションイベント状態の確認
+	//CheckAttackState();
 
-	// 全てのアクションイベントが終了しているなら機能停止
-	if (eventOrder_.GetIsEnd()) {
-		Reset();
-	}
+	//// 状態
+	//state_->Update();
+
+	//// 全てのアクションイベントが終了しているなら機能停止
+	//if (eventOrder_.GetIsEnd()) {
+	//	Reset();
+	//}
 
 	isPreActive_ = isActive_;
 }
 
 void Attack::Reset() {
 	isActive_ = false;
-	isMoveInput_ = true;
 	isNormalAttack_ = false;
 	collider_.isActive = false;
 	aabb_.isShowWireFrame = false;
@@ -119,17 +140,8 @@ void Attack::DebugGUI() {
 }
 
 void Attack::NormalCommand() {
-	if (eventOrder_.GetIsEnd()) {
-		// 攻撃状態に移行
-		player_->GetSystemManager()->SetInputState(InputState::kAttack);
-		isActive_ = true;
-		isMoveInput_ = false;
-		collider_.isActive = true;
-		aabb_.isShowWireFrame = true;
-		player_->ResetAnimation();
-		player_->StartAnimation("LightAttack1", 0.6f, 0.0f);
-	}
-	eventOrder_.Start();
+	
+	//eventOrder_.Start();
 }
 
 void Attack::ChangeState(IAttackSystemState* pState) {

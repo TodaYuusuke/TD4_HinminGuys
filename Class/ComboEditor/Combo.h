@@ -67,6 +67,17 @@ public: // メンバ関数
 public: // アクセッサ等
 	
 	/// <summary>
+	/// 無操作状態のコンボであるかのセッター
+	/// </summary>
+	/// <param name="isRoot">状態</param>
+	void SetIsRoot(const bool isRoot) { isRoot_ = isRoot; }
+	/// <summary>
+	/// 無操作状態のコンボであるかのゲッター
+	/// </summary>
+	/// <returns>状態</returns>
+	bool GetIsRoot() { return isRoot_; }
+
+	/// <summary>
 	/// 開始条件の達成状況ゲッター
 	/// </summary>
 	/// <returns>コンボの開始条件を満たしているか</returns>
@@ -170,6 +181,11 @@ private: // プライベートなメンバ関数
 	void AttackActiveUpdate();
 
 	/// <summary>
+	/// 攻撃アシストの有効判定関係の更新
+	/// </summary>
+	void AttackAssistUpdate();
+
+	/// <summary>
 	/// 硬直時間関係の更新
 	/// </summary>
 	void StifnessTimeUpdate();
@@ -240,6 +256,17 @@ private: // メンバ変数
 	// 攻撃判定の有効フラグ
 	bool isAttackActive_ = false;
 
+	// 攻撃アシストの開始秒数
+	float attackAssistStartTime_ = 0.0f;
+	// 攻撃アシストの有効秒数
+	float attackAssistEnableTime_ = 0.0f;
+	// アシスト時の移動量
+	LWP::Math::Vector3 attackAssistMoveAmount_{};
+	// 攻撃アシスト処理用タイマー
+	LWP::Utility::DeltaTimer attackAssistTimer_{};
+	// 攻撃アシストの有効フラグ
+	bool isAttackAssistActive_ = false;
+
 	// 硬直時間
 	float stifnessTime_ = 0.0f;
 	// 硬直時間タイマー
@@ -258,6 +285,9 @@ private: // メンバ変数
 	bool isReturnSelf_ = false;
 
 	#pragma region エディタ用変数
+
+	// 無操作状態のコンボか
+	bool isRoot_ = false;
 
 	// ImGui上で選択されているフラグ
 	bool imGuiSelected_ = false;
