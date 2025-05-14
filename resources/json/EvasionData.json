@@ -1,0 +1,10 @@
+{
+    "EvasionMultiply": 0.4000000059604645,
+    "EventOrder": {
+        "GraceTime": {
+            "InvinsibleTime": 0.6000000238418579,
+            "RecoveryTime": 0.0,
+            "SwingTime": 0.0
+        }
+    }
+}

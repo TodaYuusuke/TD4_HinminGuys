@@ -109,6 +109,7 @@
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <AdditionalOptions>/source-charset:utf-8 %(AdditionalOptions)</AdditionalOptions>
+      <TreatWarningAsError>false</TreatWarningAsError>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -134,6 +135,7 @@
       <Optimization>MinSpace</Optimization>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <AdditionalOptions>/source-charset:utf-8 %(AdditionalOptions)</AdditionalOptions>
+      <TreatWarningAsError>false</TreatWarningAsError>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -154,7 +156,39 @@
     <ClCompile Include="Class\Scene\GameScene.cpp" />
     <ClCompile Include="Class\Scene\Title.cpp" />
     <ClCompile Include="Class\ComboEditor\Combo.cpp" />
+    <ClCompile Include="Class\Enemy\Childs\Boss\Boss.cpp" />
+    <ClCompile Include="Class\Enemy\Childs\State\BossAttack.cpp" />
+    <ClCompile Include="Class\Enemy\Childs\State\BossIdle.cpp" />
+    <ClCompile Include="Class\Enemy\Childs\State\BossMove.cpp" />
+    <ClCompile Include="Class\Enemy\Childs\State\Following.cpp" />
+    <ClCompile Include="Class\Enemy\Childs\State\Spacing.cpp" />
+    <ClCompile Include="Class\Enemy\Childs\State\WaitingForAttack.cpp" />
+    <ClCompile Include="Class\Enemy\EnemyManager.cpp" />
+    <ClCompile Include="Class\Enemy\IEnemy.cpp" />
+    <ClCompile Include="Class\Enemy\Childs\Normal\Normal.cpp" />
+    <ClCompile Include="Class\Enemy\Childs\State\NormalAttack.cpp" />
+    <ClCompile Include="Class\Enemy\Childs\State\NormalIdle.cpp" />
+    <ClCompile Include="Class\Enemy\Childs\State\NormalMove.cpp" />
+    <ClCompile Include="Class\Enemy\WaveData.cpp" />
+    <ClCompile Include="Class\Player\Systems\Children\Attack.cpp" />
+    <ClCompile Include="Class\Player\Systems\Children\LockOn.cpp" />
+    <ClCompile Include="Class\Scene\GameScene.cpp" />
+    <ClCompile Include="Class\Scene\Title.cpp" />
+    <ClCompile Include="Class\Camera\FollowCamera.cpp" />
+    <ClCompile Include="Class\Player\Systems\EventOrder.cpp" />
+    <ClCompile Include="Class\Player\Command\ICommand.cpp" />
+    <ClCompile Include="Class\Player\Command\InputHandler.cpp" />
+    <ClCompile Include="Class\Player\Systems\Children\State\Attack\LockOnAttack.cpp" />
+    <ClCompile Include="Class\Player\Systems\Children\State\Attack\DefaultAttack.cpp" />
+    <ClCompile Include="Class\Player\Systems\Children\Evasion.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Class\Player\Player.cpp" />
+    <ClCompile Include="Class\Player\Systems\Children\Move.cpp" />
+    <ClCompile Include="Class\Player\Systems\Children\Parry.cpp" />
+    <ClCompile Include="Class\Player\Systems\Children\Sheath.cpp" />
+    <ClCompile Include="Class\Player\Systems\SystemManager.cpp" />
+    <ClCompile Include="Class\Player\Systems\Children\State\Attack\NoneAttack.cpp" />
+    <ClCompile Include="Class\TestCollider.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Class\ComboEditor\ComboTree.h" />
@@ -166,6 +200,52 @@
     <ClInclude Include="Class\Scene\Title.h" />
     <ClInclude Include="Class\ComboEditor\Combo.h" />
     <ClInclude Include="Class\Condition\ICondition.h" />
+    <ClInclude Include="Class\Enemy\Childs\Boss\Boss.h" />
+    <ClInclude Include="Class\Enemy\Childs\State\BossAttack.h" />
+    <ClInclude Include="Class\Enemy\Childs\State\BossIdle.h" />
+    <ClInclude Include="Class\Enemy\Childs\State\BossMove.h" />
+    <ClInclude Include="Class\Enemy\Childs\State\Following.h" />
+    <ClInclude Include="Class\Enemy\Childs\State\Spacing.h" />
+    <ClInclude Include="Class\Enemy\Childs\State\WaitingForAttack.h" />
+    <ClInclude Include="Class\Enemy\EnemyManager.h" />
+    <ClInclude Include="Class\Enemy\IEnemy.h" />
+    <ClInclude Include="Class\Enemy\IEnemyState.h" />
+    <ClInclude Include="Class\Enemy\Childs\Normal\NormalEnemy.h" />
+    <ClInclude Include="Class\Enemy\Childs\Normal\State\NormalEnemyAttack.h" />
+    <ClInclude Include="Class\Enemy\Childs\Normal\State\NormalEnemyIdle.h" />
+    <ClInclude Include="Class\Enemy\Childs\Normal\State\NormalEnemyMove.h" />
+    <ClInclude Include="Class\Enemy\States.h" />
+    <ClInclude Include="Class\Enemy\WaveData.h" />
+    <ClInclude Include="Class\Player\Command\InputConfig.h" />
+    <ClInclude Include="Class\Enemy\Childs\Normal\Normal.h" />
+    <ClInclude Include="Class\Enemy\Childs\State\NormalAttack.h" />
+    <ClInclude Include="Class\Enemy\Childs\State\NormalIdle.h" />
+    <ClInclude Include="Class\Enemy\Childs\State\NormalMove.h" />
+    <ClInclude Include="Class\Player\ICharacter.h" />
+    <ClInclude Include="Class\Player\Systems\Children\Attack.h" />
+    <ClInclude Include="Class\Player\Systems\ISystem.h" />
+    <ClInclude Include="Class\Player\Systems\Children\LockOn.h" />
+    <ClInclude Include="Class\Scene\GameScene.h" />
+    <ClInclude Include="Class\Scene\Title.h" />
+    <ClInclude Include="Class\Player\Player.h" />
+    <ClInclude Include="Class\Player\Systems\Children\Move.h" />
+    <ClInclude Include="Class\Player\Systems\Children\Parry.h" />
+    <ClInclude Include="Class\Camera\FollowCamera.h" />
+    <ClInclude Include="Class\Player\Systems\EventOrder.h" />
+    <ClInclude Include="Class\Player\Command\ICommand.h" />
+    <ClInclude Include="Class\Player\Command\InputHandler.h" />
+    <ClInclude Include="Class\Player\Systems\Children\Sheath.h" />
+    <ClInclude Include="Class\Player\Systems\SystemManager.h" />
+    <ClInclude Include="Class\Player\Systems\Children\State\IAttackSystemState.h" />
+    <ClInclude Include="Class\Player\Systems\Children\State\Attack\LockOnAttack.h" />
+    <ClInclude Include="Class\Player\Systems\Children\State\Attack\DefaultAttack.h" />
+    <ClInclude Include="Class\Player\Systems\Children\State\Attack\NoneAttack.h" />
+    <ClInclude Include="Class\Player\Systems\Children\Evasion.h" />
+    <ClInclude Include="Class\TestCollider.h" />
+    <ClInclude Include="Class\GameMask.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include=".editorconfig" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
