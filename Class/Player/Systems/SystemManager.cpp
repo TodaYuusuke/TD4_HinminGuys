@@ -104,6 +104,7 @@ void SystemManager::EnableInputMoveState() {
 		if (Vector3::Dot(velocity_, velocity_) != 0) {
 			moveSystem_->SetRotate(radian_);
 		}
+		moveSystem_->SetMoveVel({ 0,0,0 });
 		break;
 	case InputState::kParry:
 		// 速度を加算

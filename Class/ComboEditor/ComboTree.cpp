@@ -102,6 +102,13 @@ void ComboTree::DebugGUI()
 
 		// 実行モードへ移るボタン処理
 		ImGui::SeparatorText("Change RunningMode");
+		ImGui::Text("Press <Tab Key> Change RunningMode");
+
+		// タブキーを押したら実行モードへ移る
+		if (LWP::Input::Keyboard::GetTrigger(DIK_TAB)) {
+			enableEditMode_ = false;
+		}
+
 		// ボタンを押した際に実行モードへ移る
 		if (ImGui::Button("Change")) {
 			enableEditMode_ = false;

@@ -49,6 +49,10 @@ void Combo::Start(LWP::Resource::SkinningModel* model, LWP::Resource::Animation*
 	stifnessTimer_.Start(stifnessTime_);				// 硬直時間
 	receptTimer_.Start(receptTime_);					// 受付時間
 
+	// 有効秒数が0以下ならそもそもタイマーを無効化する
+	if (attackEnableTime_ == 0.0f) { attackDecisionTimer_.SetIsActive(false); }
+	if (attackAssistEnableTime_ == 0.0f) { attackAssistTimer_.SetIsActive(false); }
+
 	// 操作受付開始
 	isRecept_ = true;
 

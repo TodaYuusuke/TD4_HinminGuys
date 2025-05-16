@@ -61,7 +61,6 @@ void Attack::Update() {
 		if (!isActive_) {
 			player_->GetSystemManager()->SetInputState(InputState::kAttack);
 			isActive_ = true;
-			//player_->ResetAnimation();
 		}
 	}
 	else { // 無操作状態のコンボが選択されている場合
@@ -74,9 +73,12 @@ void Attack::Update() {
 	// 攻撃アシストが有効になっている場合
 	if (comboTree_.GetIsEnableAttackAssist()) {
 		// ロックオン中なら対象に近づいて攻撃
-		if (lockOnSystem_->GetCurrentLockOnTarget()) {
+		if (lockOnSystem_->GetCurrentLockOnTarget() != NULL) {
+			// 現状のロックオン対象を取得
+			lockOnTarget_ = lockOnSystem_->GetCurrentLockOnTarget();
+
 			// 自機とロックオン中の敵との距離
-			Vector3 attackTargetDist = (lockOnTarget_->GetWorldTF()->GetWorldPosition() - player_->GetWorldTF()->GetWorldPosition()) * 0.4f;
+			Vector3 attackTargetDist = (lockOnTarget_->GetWorldTF()->GetWorldPosition() - player_->GetWorldTF()->GetWorldPosition()) * 0.1f;
 			attackAssistVel_ = LWP::Utility::Interpolation::Slerp(comboTree_.GetAttackAssistMoveAmount(), attackTargetDist, 0.25f);
 
 			// 移動速度からラジアンを求める
@@ -103,6 +105,10 @@ void Attack::Update() {
 
 		}
 	}
+	else {
+		// アシストの移動ベクトルリセット
+		attackAssistVel_ = { 0.0f,0.0f,0.0f };
+	}
 }
 
 void Attack::Reset() {
@@ -111,8 +117,6 @@ void Attack::Reset() {
 	collider_.isActive = false;
 	aabb_.isShowWireFrame = false;
 	attackAssistVel_ = { 0.0f,0.0f,0.0f };
-	attackAssistRadian_ = { 0.0f,0.0f,0.0f };
-	attackAssistQuat_ = { 0.0f,0.0f,0.0f,1.0f };
 	// アニメーションを初期化
 	player_->ResetAnimation();
 }
