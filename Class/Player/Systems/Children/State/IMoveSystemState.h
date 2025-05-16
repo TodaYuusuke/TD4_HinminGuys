@@ -14,6 +14,10 @@ public:
 	/// 更新処理
 	/// </summary>
 	virtual void Update() = 0;
+	/// <summary>
+	/// アニメーションのコマンド
+	/// </summary>
+	virtual void AnimCommand() = 0;
 
 public:// Getter, Setter
 #pragma region Getter
@@ -38,4 +42,6 @@ protected:
 
 	// 状態の名前
 	std::string stateName_;
+
+	bool isActive_ = false;
 };

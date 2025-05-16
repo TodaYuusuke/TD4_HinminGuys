@@ -20,6 +20,11 @@ public:
 	/// </summary>
 	virtual void Command() = 0;
 
+	/// <summary>
+	/// アニメーションのコマンド
+	/// </summary>
+	virtual void AnimCommand() = 0;
+
 public:// Getter, Setter
 #pragma region Getter
 	/// <summary>

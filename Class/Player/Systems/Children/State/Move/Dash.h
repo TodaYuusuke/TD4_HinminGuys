@@ -1,12 +1,12 @@
 #pragma once
 #include "../IMoveSystemState.h"
 
-class Walk : public IMoveSystemState {
+class Dash : public IMoveSystemState {
 public:
 	// コンストラクタ
-	Walk(Move* moveSystem, Player* player, const float& moveMultiply);
+	Dash(Move* moveSystem, Player* player, const float& moveMultiply);
 	// デストラクタ
-	~Walk() override = default;
+	~Dash() override = default;
 
 	/// <summary>
 	/// 初期化
@@ -26,4 +26,3 @@ public:
 private:
 
 };
-

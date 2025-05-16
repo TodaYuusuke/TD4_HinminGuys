@@ -40,8 +40,6 @@ void Sheath::Reset() {
 
 void Sheath::DebugGUI() {
 	if (ImGui::TreeNode("Sheath")) {
-		//eventOrder_.DebugGUI();
-
 		ImGui::DragFloat3("Velocity", &velocity_.x);
 		ImGui::DragFloat3("Radian", &radian_.x);
 
@@ -55,6 +53,11 @@ void Sheath::Command() {
 	player_->GetSystemManager()->SetInputState(InputState::kSheath);
 	// 状態によって変更
 	state_->Command();
+}
+
+void Sheath::AnimCommand() {
+	// 状態によって変更
+	state_->AnimCommand();
 }
 
 void Sheath::ChangeState(ISheathSystemState* pState) {

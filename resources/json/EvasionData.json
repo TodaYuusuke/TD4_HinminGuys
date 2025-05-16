@@ -1,8 +1,7 @@
 {
-
     "Group :EventOrder": {
         "Group :GraceTime": {
-            "float :InvinsibleTime": 0.3,
+            "float :InvinsibleTime": 0.30000001192092896,
             "float :RecoveryTime": 0.0,
             "float :SwingTime": 0.0
         }
@@ -10,8 +9,8 @@
     "Vector3 :Movement": [
         0.0,
         0.0,
-        10.0
+        1.0
     ],
     "float :DashButtonHoldSeconds": 0.30000001192092896,
-    "float :MoveMultiply": 1.0
+    "float :MoveMultiply": 5.0
 }

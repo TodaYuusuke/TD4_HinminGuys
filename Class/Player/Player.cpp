@@ -15,6 +15,7 @@ Player::Player(LWP::Object::Camera* camera, EnemyManager* enemyManager, FollowCa
 	// モデルを読み込む
 	model_.LoadShortPath("player/Player_Simple.gltf");
 	animation_.LoadFullPath("resources/model/player/Player_Simple.gltf", &model_);
+	animation_.Play("Idle");
 
 	// 自機機能を生成
 	CreateSystems();

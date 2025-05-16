@@ -18,6 +18,11 @@ public:
 	/// </summary>
 	void Update() override;
 
+	/// <summary>
+	/// アニメーションのコマンド
+	/// </summary>
+	void AnimCommand() override;
+
 private:
 
 };

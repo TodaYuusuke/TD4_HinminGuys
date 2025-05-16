@@ -26,6 +26,11 @@ public:
 	/// </summary>
 	void Command() override;
 
+	/// <summary>
+	/// アニメーションのコマンド
+	/// </summary>
+	void AnimCommand() override;
+
 private:
 	/// <summary>
 	/// アクションイベント応じて処理を変える
@@ -35,6 +40,4 @@ private:
 private:
 	// さや投げの移動量
 	LWP::Math::Vector3 throwMovement_ = {0,0,10};
-
-	EventOrder eventOrder_;
 };

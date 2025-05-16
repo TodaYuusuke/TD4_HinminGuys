@@ -25,6 +25,12 @@ public:
 	/// </summary>
 	void Command() override;
 
+	/// <summary>
+	/// アニメーションのコマンド
+	/// </summary>
+	void AnimCommand() override;
+
+private:
 	float SmoothDampF(float current, float target, float& currentVelocity, float smoothTime, float maxSpeed, float deltaTime);
 	LWP::Math::Vector3 SmoothDamp(LWP::Math::Vector3 current, LWP::Math::Vector3 target, LWP::Math::Vector3& currentVelocity, float smoothTime, float maxSpeed, float deltaTime);
 

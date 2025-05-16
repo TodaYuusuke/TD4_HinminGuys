@@ -6,6 +6,7 @@
 #include "Children/LockOn.h"
 #include "Children/Evasion.h"
 #include "Children/Sheath.h"
+#include "../Animator/PlayerAnimator.h"
 #include <memory>
 
 class Player;
@@ -137,9 +138,14 @@ private:
 	// 機能クラスをまとめた変数
 	std::vector<ISystem*> systems_;
 
+	// アニメーションの遷移を管理するクラス
+	PlayerAnimator animator_;
+
 	// 速度
 	LWP::Math::Vector3 velocity_;
+
 	// 角度
+	LWP::Math::Vector3 radian_;
 	LWP::Math::Quaternion rotate_;
 
 	// 入力状態
