@@ -27,7 +27,7 @@ public:
 	/// </summary>
 	void Hit() {
 		// ゲージ量 += 変化量 * 倍率
-		value += deltaValue * multiply;
+		value_ += deltaValue_ * multiply_;
 	}
 
 	/// <summary>
@@ -36,9 +36,9 @@ public:
 	void ColGaugeSize(std::string name){	
 		// HPバーの長さ計算
 		// 今のHPバーのサイズ = 最大HPの時のバーのサイズ × (今のHP ÷ 最大HP)
-		sprite[name].size.x = (maxSize_.x * (value / maxValue));
+		sprite_[name].size.x = (maxSize_.x * (value_ / maxValue_));
 
-		isPreHit = isHit;
+		isPreHit_ = isHit_;
 	}
 
 public:// Getter, Setter
@@ -48,14 +48,14 @@ public:// Getter, Setter
 	/// </summary>
 	/// <returns></returns>
 	inline bool GetHitTrigger() {
-		if (isHit && !isPreHit) { return true; }
+		if (isHit_ && !isPreHit_) { return true; }
 		return false;
 	}
 	/// <summary>
 	/// 残り体力の割合[%]を取得
 	/// </summary>
 	/// <returns></returns>
-	inline float GetPercent() { return value / maxValue * 100.0f; }
+	inline float GetPercent() { return value_ / maxValue_ * 100.0f; }
 	/// <summary>
 	/// 指定したパーセント > 体力の割合が下かを取得
 	/// </summary>
@@ -72,17 +72,17 @@ public:// Getter, Setter
 	/// ゲージの変動量を設定
 	/// </summary>
 	/// <param name="deltaValue">ゲージの変動量</param>
-	void SetDeltaValue(const float& deltaValue) { this->deltaValue = deltaValue; }
+	void SetDeltaValue(const float& deltaValue) { this->deltaValue_ = deltaValue; }
 	/// <summary>
 	/// ゲージの変動倍率を設定
 	/// </summary>
 	/// <param name="multiply">ゲージの変動倍率</param>
-	void SetMultiply(const float& multiply) { this->multiply = multiply; }
+	void SetMultiply(const float& multiply) { this->multiply_ = multiply; }
 	/// <summary>
 	/// ゲージの最大値を設定
 	/// </summary>
 	/// <param name="maxValue">ゲージの最大値</param>
-	void SetmaxValue(const float& maxValue) { this->maxValue = maxValue; }
+	void SetMaxValue(const float& maxValue) { this->maxValue_ = maxValue; }
 #pragma endregion
 
 protected:
@@ -90,23 +90,23 @@ protected:
 	LWP::Utility::JsonIO json_;
 
 	// ゲージの描画
-	std::map<std::string, LWP::Primitive::Sprite> sprite;	
+	std::map<std::string, LWP::Primitive::Sprite> sprite_;	
 
 	// ゲージの大きさ
-	LWP::Math::Vector2 size;	
+	LWP::Math::Vector2 size_;	
 	// 体力画像の最大サイズ(今回でいうと初期の画像サイズ)
 	LWP::Math::Vector2 maxSize_;	
 
 	// ゲージの変動量						
-	float deltaValue;										
+	float deltaValue_;										
 	// ゲージの上昇倍率
-	float multiply;				
+	float multiply_;				
 
 	// 値
-	float value;											
+	float value_;											
 	// 最大値
-	float maxValue;		
+	float maxValue_;		
 
-	bool isHit;
-	bool isPreHit;
+	bool isHit_;
+	bool isPreHit_;
 };

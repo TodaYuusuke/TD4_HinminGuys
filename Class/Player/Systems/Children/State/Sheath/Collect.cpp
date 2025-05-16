@@ -9,8 +9,6 @@ Collect::Collect(Sheath* sheathSystem, Player* player) {
 
 	// 状態の名前
 	stateName_ = "Collect";
-
-	//motion_.Add(&velocity_, sheathSystem_->GetSheathWorldTF().GetWorldPosition(), 0.0f, 0.5f, LWP::Utility::Easing::Type::OutExpo);
 }
 
 void Collect::Initialize() {
@@ -22,7 +20,6 @@ void Collect::Update() {
 
 	t_++;
 	velocity_ = (LWP::Utility::Interpolation::Lerp(start_, end_, LWP::Utility::Easing::OutExpo(t_ / 30.0f)) - player_->GetWorldTF()->GetWorldPosition());
-	//velocity_ = (LWP::Utility::Interpolation::Lerp(start_, end_, LWP::Utility::Easing::OutExpo(t_ / 30.0f)) - sheathSystem_->GetSheathWorldTF().GetWorldPosition()) * -1.0f;
 
 	// 移動速度からラジアンを求める
 	radian_.y = LWP::Utility::GetRadian(LWP::Math::Vector3{ 0,0,1 }, velocity_.Normalize(), LWP::Math::Vector3{ 0,1,0 });
@@ -43,6 +40,10 @@ void Collect::Command() {
 	isActive_ = true;
 	start_ = player_->GetWorldTF()->GetWorldPosition();
 	end_ = sheathSystem_->GetSheathWorldTF().GetWorldPosition();
+}
+
+void Collect::AnimCommand() {
+
 }
 
 float Collect::SmoothDampF(float current, float target, float& currentVelocity, float smoothTime, float maxSpeed, float deltaTime) {

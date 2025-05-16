@@ -67,7 +67,11 @@ public:// Getter,Setter
 	/// </summary>
 	/// <returns></returns>
 	LWP::Object::Camera* GetCamera() { return camera_; }
-
+	/// <summary>
+	/// 線形補間をしていない純粋なカメラ座標を取得
+	/// </summary>
+	/// <returns></returns>
+	LWP::Math::Vector3 GetDefaultPos() { return defaultPos_; }
 	/// <summary>
 	/// ロックオン中かを取得
 	/// </summary>
@@ -117,6 +121,8 @@ private:// jsonで保存する値
 	float kMaxRotateX = (float)std::numbers::pi / 2.0f + (float)std::numbers::pi / 4.0f;
 	// カメラの感度
 	float sensitivity = 1.0f;
+	// カメラの補間レート
+	float interTargetRate = 0.5f;
 
 	// 回転角の始点
 	const float kOriginRotateX = 90.0f;
@@ -131,6 +137,8 @@ private:
 
 	//　ロックオン時のカメラの位置調整
 	LWP::Math::Vector3 lockOnOffset_;
+	LWP::Math::Vector3 interTarget_;
+	LWP::Math::Vector3 defaultPos_;
 
 	// ロックオン時に使う情報
 	LockOnData lockOnData_;

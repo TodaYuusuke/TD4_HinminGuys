@@ -180,6 +180,8 @@
     <ClCompile Include="Class\Player\Systems\Children\State\Move\Idle.cpp" />
     <ClCompile Include="Class\Player\Gauge\HP\HP.cpp" />
     <ClCompile Include="Class\Player\Systems\Children\State\Sheath\Collect.cpp" />
+    <ClCompile Include="Class\Player\Animator\IAnimation.cpp" />
+    <ClCompile Include="Class\Player\Systems\Children\State\Move\Dash.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Class\Player\Player.cpp" />
     <ClCompile Include="Class\Player\Systems\Children\Move.cpp" />
@@ -192,6 +194,7 @@
     <ClCompile Include="Class\Player\Systems\Children\State\Move\Walk.cpp" />
     <ClCompile Include="Class\Player\Gauge\Sheath\SheathGauge.cpp" />
     <ClCompile Include="Class\Player\Systems\Children\State\Sheath\Throw.cpp" />
+    <ClCompile Include="Class\Player\Animator\PlayerAnimator.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Class\ComboEditor\ComboTree.h" />
@@ -217,6 +220,7 @@
     <ClInclude Include="Class\Enemy\Childs\Normal\State\NormalEnemyMove.h" />
     <ClInclude Include="Class\Enemy\States.h" />
     <ClInclude Include="Class\Enemy\WaveData.h" />
+    <ClInclude Include="Class\Player\Animator\AnimConfig.h" />
     <ClInclude Include="Class\Player\Command\InputConfig.h" />
     <ClInclude Include="Class\Enemy\Childs\Normal\Normal.h" />
     <ClInclude Include="Class\Enemy\Childs\State\NormalAttack.h" />
@@ -254,6 +258,9 @@
     <ClInclude Include="Class\Player\Gauge\Sheath\SheathGauge.h" />
     <ClInclude Include="Class\Player\Systems\Children\State\Sheath\Throw.h" />
     <ClInclude Include="Class\Player\Systems\Children\State\Sheath\Collect.h" />
+    <ClInclude Include="Class\Player\Animator\PlayerAnimator.h" />
+    <ClInclude Include="Class\Player\Animator\IAnimation.h" />
+    <ClInclude Include="Class\Player\Systems\Children\State\Move\Dash.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />

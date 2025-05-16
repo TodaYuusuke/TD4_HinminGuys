@@ -7,6 +7,15 @@
 /// </summary>
 class Move : public ISystem {
 public:
+enum class MoveState {
+	kIdle,
+	kWalk,
+	kRun,
+	kDash,
+	kCount
+};
+
+public:
 	// コンストラクタ
 	Move(LWP::Object::Camera* camera, Player* player);
 	// デストラクタ
@@ -32,9 +41,14 @@ public:
 	void DebugGUI() override;
 
 	/// <summary>
+	/// アニメーションのコマンド
+	/// </summary>
+	void AnimCommand();
+
+	/// <summary>
 	/// 移動の状態を更新
 	/// </summary>
-	void MoveState();
+	void CheckMoveState();
 
 private:
 	/// <summary>
@@ -47,6 +61,18 @@ private:
 	/// </summary>
 	/// <param name="pState">次の状態</param>
 	void ChangeState(IMoveSystemState* pState);
+
+	/// <summary>
+	/// クォータニオンのy軸のみ取り出す
+	/// </summary>
+	/// <param name="q"></param>
+	/// <returns></returns>
+	float GetYawFromQuaternion(const LWP::Math::Quaternion& q) {
+		// Yaw（Y軸まわりの回転）を取り出す
+		float siny_cosp = 2.0f * (q.w * q.y + q.z * q.x);
+		float cosy_cosp = 1.0f - 2.0f * (q.y * q.y + q.z * q.z);
+		return std::atan2(siny_cosp, cosy_cosp); // ラジアン
+	}
 
 	// 絶対値に変換
 	LWP::Math::Vector3 Abs(LWP::Math::Vector3 value) {
@@ -87,10 +113,31 @@ public:// Getter, Setter
 	/// <returns></returns>
 	IMoveSystemState* GetMoveState() { return state_; }
 	/// <summary>
+	/// スティックの倒し具合を取得
+	/// </summary>
+	/// <returns></returns>
+	float GetStickStrength() { return stickStrength_; }
+	/// <summary>
 	/// 移動しているかを取得
 	/// </summary>
 	/// <returns></returns>
 	bool GetIsMove() { return isMove_; }
+	/// <summary>
+	/// 入力処理を受けつけるかを取得
+	/// </summary>
+	/// <returns></returns>
+	bool GetEnableInput() { return enableInput_; }
+	/// <summary>
+	/// 指定した移動状態に変更された瞬間かを取得
+	/// </summary>
+	/// <param name="moveState"></param>
+	/// <returns></returns>
+	bool GetTriggerChangeMoveState(MoveState moveState){
+		if (preMoveState_ != moveState_ && moveState_ == moveState) {
+			return true;
+		}
+		return false;
+	}
 #pragma endregion
 
 #pragma region Setter
@@ -120,6 +167,11 @@ public:// Getter, Setter
 	/// </summary>
 	/// <param name="moveMultiply"></param>
 	void SetMoveMultiply(const float& moveMultiply) { moveMultiply_ = moveMultiply; }
+	/// <summary>
+	/// 入力処理を受けつけるかを設定
+	/// </summary>
+	/// <returns></returns>
+	void SetEnableInput(const bool& enableInput) { enableInput_ = enableInput; }
 #pragma endregion
 
 private:// jsonで保存する値
@@ -127,6 +179,8 @@ private:// jsonで保存する値
 	float walkSpeedMultiply = 1.0f;
 	// 走り時の速度倍率
 	float dashSpeedMultiply = 1.0f;
+	// 移動の補間レート
+	float moveSpeedRate = 0.2f;
 
 private:// プライベートな変数
 	// 移動対象のモデルのアドレス
@@ -144,9 +198,17 @@ private:// プライベートな変数
 	// 移動時のイージング
 	LWP::Math::Vector3 moveOffset_;
 
+	MoveState moveState_;
+	MoveState preMoveState_;
+
+	// スティックの倒し具合
+	float stickStrength_;
+
 	// 移動速度の倍率
 	float moveMultiply_;
 
 	// 移動しているか
 	bool isMove_;
+
+	bool enableInput_;
 };

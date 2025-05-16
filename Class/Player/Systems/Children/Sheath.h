@@ -34,6 +34,11 @@ public:
 	void Command();
 
 	/// <summary>
+	/// アニメーションのコマンド
+	/// </summary>
+	void AnimCommand();
+
+	/// <summary>
 	/// 状態の遷移
 	/// </summary>
 	/// <param name="pState">次の状態</param>
@@ -66,6 +71,16 @@ public:// Getter, Setter
 	/// </summary>
 	/// <returns></returns>
 	ISheathSystemState* GetSheathState() { return state_; }
+	/// <summary>
+	/// 行動制限を行うのかを取得
+	/// </summary>
+	/// <returns></returns>
+	bool GetIsActionRestrict(std::string stateName) { 
+		if (stateName == state_->GetStateName()) {
+			return state_->GetIsActive();
+		}
+		return false;
+	}
 #pragma endregion
 
 #pragma region Setter

@@ -37,7 +37,7 @@ public:
 	/// デバッグ用のタブを表示(Debug時のみ)
 	/// </summary>
 	void DebugGUI();
-	
+
 private:
 	/// <summary>
 	/// 自機機能を全て生成
@@ -51,6 +51,11 @@ private:
 
 public:// Getter,Setter
 #pragma region Getter
+	/// <summary>
+	/// 追従カメラの情報を取得
+	/// </summary>
+	/// <returns></returns>
+	FollowCamera* GetFollowCamera() { return followCamera_; }
 	/// <summary>
 	/// 各機能をまとめているクラスのアドレスを取得
 	/// </summary>
@@ -101,28 +106,33 @@ public:// Getter,Setter
 	/// <param name="animName">再生するアニメーション名</param>
 	/// <param name="transitionTime">モーションの遷移にかかる時間(0.0f以上)</param>
 	/// <param name="startTime">開始時間(0.0f ~ 1.0f)</param>
-	void StartAnimation(const std::string& animName, const float& transitionTime, const float& startTime) {
+	void StartAnimation(const std::string& animName, const float& transitionTime, const float& startTime, LWP::Resource::Animation::TrackType type = LWP::Resource::Animation::TrackType::Main) {
 		// アニメーションが再生されているなら早期リターン
-		if (animation_.GetPlaying(animName)) { return; }
-		animation_.Play(animName, transitionTime, startTime); 
+		//if (animation_.GetPlaying(animName)) { return; }
+		animation_.Play(animName, transitionTime, startTime, type);
 	}
 	/// <summary>
 	/// アニメーションを初期化
 	/// </summary>
-	void ResetAnimation() { 
+	void ResetAnimation() {
 		animation_.Loop(false);
-		animation_.playbackSpeed = 1.0f;
+
+		/*animation_.playbackSpeed = 1.0f;*/
 	}
+	/// <summary>
+	/// ブレンドされているアニメーションを停止
+	/// </summary>
+	void StopAnimation(LWP::Resource::Animation::TrackType type = LWP::Resource::Animation::TrackType::Main) { animation_.Stop(type); }
 	/// <summary>
 	/// アニメーションの再生速度を設定
 	/// </summary>
 	/// <param name="playSpeed"></param>
-	void SetAnimationPlaySpeed(const float& playSpeed) { animation_.playbackSpeed = playSpeed; }
+	void SetAnimationPlaySpeed(const float& playSpeed) { /*animation_.playbackSpeed = */playSpeed; }
 	/// <summary>
 	/// アニメーションをループするかを設定
 	/// </summary>
 	/// <param name="isLoop"></param>
-	void SetIsLoopAnimation(const bool& isLoop) { animation_.Loop(isLoop); }
+	void SetIsLoopAnimation(const bool& isLoop, LWP::Resource::Animation::TrackType type = LWP::Resource::Animation::TrackType::Main) { animation_.Loop(isLoop, type); }
 	void SetPos(LWP::Math::Vector3 pos) { model_.worldTF.translation = pos; }
 #pragma endregion
 

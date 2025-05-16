@@ -3,6 +3,8 @@
 #include "State/Move/Idle.h"
 #include "State/Move/Walk.h"
 #include "State/Move/Run.h"
+#include "State/Move/Dash.h"
+#include "../../../Camera/FollowCamera.h"
 
 using namespace LWP;
 using namespace LWP::Math;
@@ -32,15 +34,16 @@ void Move::Initialize() {
 	json_.Init("MoveData.json");
 	json_.AddValue<float>("WalkSpeedMultiply", &walkSpeedMultiply)
 		.AddValue<float>("DashSpeedMultiply", &dashSpeedMultiply)
+		.AddValue<float>("MoveSpeedRate", &moveSpeedRate)
 		.CheckJsonFile();
+
+	moveState_ = MoveState::kIdle;
+	preMoveState_ = moveState_;
 }
 
 void Move::Update() {
 	// 機能を使えないなら早期リターン
 	if (!isActive_) { return; }
-
-	// 移動状態
-	state_->Update();
 
 	// 入力処理
 	InputUpdate();
@@ -74,38 +77,61 @@ void Move::DebugGUI() {
 	}
 }
 
-void Move::MoveState() {
+void Move::AnimCommand() {
+	CheckMoveState();
+}
+
+void Move::CheckMoveState() {
+	player_->GetSystemManager()->SetInputState(InputState::kMove);
 	// 待機状態に移行
 	if (!GetIsMove()) {
-		// 待機モーション再生中なら状態遷移しない
-		if (!player_->GetAnimation()->GetPlaying("Idle")) {
+		moveState_ = MoveState::kIdle;
+		if (GetTriggerChangeMoveState(MoveState::kIdle) && stickStrength_ == 0) {
 			ChangeState(new Idle(this, player_));
 			// ダッシュ状態解除
-			player_->GetSystemManager()->GetEvasionSystem()->SetIsDash(false);
-			return;
+			player_->GetSystemManager()->GetEvasionSystem()->SetIsDash(false);	
 		}
 	}
 	// 移動状態に移行
 	else {
 		// 走り状態に移行
 		if (player_->GetSystemManager()->GetEvasionSystem()->GetIsDash()) {
+			moveState_ = MoveState::kDash;
 			// 走りモーション再生中なら状態遷移しない
 			if (!player_->GetAnimation()->GetPlaying("Dash") || state_->GetStateName() != "Dash") {
-				ChangeState(new Run(this, player_, dashSpeedMultiply));
+				ChangeState(new Dash(this, player_, dashSpeedMultiply));			
 			}
 		}
 		else {
-			// 歩き状態に移行
-			if (!player_->GetAnimation()->GetPlaying("Walk")) {
-				ChangeState(new Walk(this, player_, walkSpeedMultiply));
-				// ダッシュ状態解除
-				player_->GetSystemManager()->GetEvasionSystem()->SetIsDash(false);
+			// 小走り状態に移行
+			if (stickStrength_ > 0.5f) {
+				moveState_ = MoveState::kRun;
+				if (GetTriggerChangeMoveState(MoveState::kRun)) {
+					ChangeState(new Run(this, player_, walkSpeedMultiply));
+					// ダッシュ状態解除
+					player_->GetSystemManager()->GetEvasionSystem()->SetIsDash(false);					
+				}
+			}
+			else {
+				moveState_ = MoveState::kWalk;
+				if (GetTriggerChangeMoveState(MoveState::kWalk)) {
+					ChangeState(new Walk(this, player_, walkSpeedMultiply));
+					// ダッシュ状態解除
+					player_->GetSystemManager()->GetEvasionSystem()->SetIsDash(false);	
+				}
 			}
 		}
 	}
+
+	preMoveState_ = moveState_;
 }
 
 void Move::InputUpdate() {
+	if (!enableInput_) { 
+		moveVel_ = { 0,0,0 };
+		return; 
+	}
+
 	// 方向を取得
 	LWP::Math::Vector3 dir{ 0.0f, 0.0f, 0.0f };
 
@@ -129,14 +155,20 @@ void Move::InputUpdate() {
 		dir.x = 1.0f;
 	}
 #pragma endregion
+
+	stickStrength_ = dir.Length();
+
 	// カメラが向いている方向に進む
 	// 自機とカメラY軸を除いた方向ベクトルを算出
-	Vector3 p2c = (player_->GetWorldTF()->GetWorldPosition() - pCamera_->worldTF.GetWorldPosition()).Normalize();
+	Vector3 p2c = (player_->GetWorldTF()->GetWorldPosition() - player_->GetFollowCamera()->GetDefaultPos()).Normalize();
 	p2c.y = 0;
 	// 回転行列を求める
 	Matrix4x4 rotMatrix = LWP::Math::Matrix4x4::CreateRotateXYZMatrix(LWP::Math::Quaternion::ConvertDirection(p2c));
 	// 方向ベクトルを求める
-	moveVel_ = dir * moveMultiply_ * rotMatrix;
+	moveVel_ = LWP::Utility::Interpolation::Exponential(moveVel_, dir * moveMultiply_ * rotMatrix, moveSpeedRate);
+
+	// 移動状態
+	state_->Update();
 
 	isMove_ = false;
 	// 移動ベクトルから体の向きを算出(入力があるときのみ処理する)

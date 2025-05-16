@@ -35,6 +35,11 @@ public:
 	/// </summary>
 	void Command();
 
+	/// <summary>
+	/// アニメーションのコマンド
+	/// </summary>
+	void AnimCommand();
+
 private:
 	/// <summary>
 	/// 当たり判定を作成

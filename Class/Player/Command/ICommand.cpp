@@ -9,8 +9,8 @@ void NormalAttackCommand::Exec(Player& player) {
 }
 
 void ParryCommand::Exec(Player& player) {
-	// 攻撃中、回避中はパリィできない
-	if (player.GetSystemManager()->GetAttackSystem()->GetIsActive() || player.GetSystemManager()->GetEvasionSystem()->GetIsActive()) { return; }
+	// 攻撃中、回避中, 鞘がない状態はパリィできない
+	if (player.GetSystemManager()->GetAttackSystem()->GetIsActive() || player.GetSystemManager()->GetEvasionSystem()->GetIsActive() || player.GetSystemManager()->GetSheathSystem()->GetIsActionRestrict("Throw") || player.GetSystemManager()->GetSheathSystem()->GetIsActionRestrict("Collect")) { return; }
 
 	player.GetSystemManager()->GetParrySystem()->Command();
 }
@@ -21,7 +21,7 @@ void LockOnCommand::Exec(Player& player) {
 
 void EvasionCommand::Exec(Player& player) {
 	// パリィ中と攻撃中は回避できない
-	if (player.GetSystemManager()->GetParrySystem()->GetIsActive() || player.GetSystemManager()->GetAttackSystem()->GetIsActive()) { return; }
+	if (player.GetSystemManager()->GetParrySystem()->GetIsActive() || player.GetSystemManager()->GetAttackSystem()->GetIsActive() || player.GetSystemManager()->GetSheathSystem()->GetIsActionRestrict("Throw")) { return; }
 
 	player.GetSystemManager()->GetEvasionSystem()->Command();
 }

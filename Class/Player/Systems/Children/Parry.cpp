@@ -103,11 +103,15 @@ void Parry::Command() {
 		collider_.isActive = true;
 		aabb_.isShowWireFrame = true;
 		isMoveInput_ = false;
-		// ガードアニメーション開始
-		player_->ResetAnimation();
-		player_->StartAnimation("Gaurd", 10.0f, 0.0f);
 	}
 	eventOrder_.Start();
+}
+
+void Parry::AnimCommand() {
+	// ガードアニメーション開始
+	player_->ResetAnimation();
+	player_->StartAnimation("Gaurd", 0.1f, 0.0f);
+	//player_->StopAnimation();
 }
 
 void Parry::CreateCollision() {

@@ -7,6 +7,7 @@ private:
 		LWP::Math::Vector3* target;
 		LWP::Math::Vector3 start;
 		LWP::Math::Vector3 end;
+		float endSecond;
 		float t;
 		bool isEnd;
 	};
@@ -41,6 +42,11 @@ public:
 	/// </summary>
 	void Command();
 
+	/// <summary>
+	/// アニメーションのコマンド
+	/// </summary>
+	void AnimCommand();
+
 private:
 	/// <summary>
 	/// アクションイベントの生成
@@ -61,9 +67,6 @@ private:
 	/// 移動処理
 	/// </summary>
 	void Move();
-
-	float SmoothDampF(float current, float target, float& currentVelocity, float smoothTime, float maxSpeed, float deltaTime);
-	LWP::Math::Vector3 SmoothDamp(LWP::Math::Vector3 current, LWP::Math::Vector3 target, LWP::Math::Vector3& currentVelocity, float smoothTime, float maxSpeed, float deltaTime);
 
 public:// Getter, Setter
 #pragma region Getter
@@ -115,12 +118,8 @@ private:// jsonで保存する値
 	LWP::Math::Vector3 evasionMovement = { 0.0f, 0.0f, 10.0f };
 
 private:// プライベートな変数
-	// 回避終了時の予測座標
-	LWP::Object::TransformQuat evasionEndPos_;
-
 	// 回避時の速度
 	LWP::Math::Vector3 velocity_;
-	LWP::Math::Vector3 evasionStartPos_;
 	// 回避時の角度(ラジアン)
 	LWP::Math::Vector3 radian_;
 
