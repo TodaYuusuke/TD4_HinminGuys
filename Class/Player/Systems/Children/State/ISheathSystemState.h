@@ -1,6 +1,6 @@
 #pragma once
 #include "../Adapter/Adapter.h"
-
+#include "../../../Command/InputHandler.h"
 class Player;
 class Sheath;
 class ISheathSystemState {
@@ -69,6 +69,8 @@ public:// Getter, Setter
 protected:
 	Player* player_;
 	Sheath* sheathSystem_;
+	//　キー入力
+	InputHandler* inputHandler_;
 
 	// 状態の名前
 	std::string stateName_;

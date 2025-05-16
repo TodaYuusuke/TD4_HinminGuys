@@ -7,6 +7,7 @@
 #include "Children/Evasion.h"
 #include "Children/Sheath.h"
 #include "../Animator/PlayerAnimator.h"
+#include "../Command/InputHandler.h"
 #include <memory>
 
 class Player;
@@ -86,7 +87,6 @@ public:// Getter, Setter
 	/// </summary>
 	/// <returns></returns>
 	Sheath* GetSheathSystem() { return sheathSystem_.get(); }
-
 	/// <summary>
 	/// 速度を取得
 	/// </summary>
@@ -115,6 +115,8 @@ private:// 外部からポインタをもらう変数
 	FollowCamera* followCamera_;
 	// シーンで使用しているカメラ
 	LWP::Object::Camera* pCamera_;
+	//　キー入力
+	InputHandler* inputHandler_;
 
 private:
 	// ロックオン機能

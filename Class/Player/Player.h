@@ -7,6 +7,7 @@
 #include "Systems/SystemManager.h"
 #include "Gauge/HP/HP.h"
 #include "Gauge/Sheath/SheathGauge.h"
+#include "Command/InputHandler.h"
 #include <memory>
 
 class IEnemy;
@@ -61,6 +62,8 @@ public:// Getter,Setter
 	/// </summary>
 	/// <returns></returns>
 	SystemManager* GetSystemManager() { return systemManager_.get(); }
+
+	InputHandler* GetInputHandler() { return inputHandler_; }
 	/// <summary>
 	/// 自機のTransformQuatを取得
 	/// </summary>
@@ -100,6 +103,8 @@ public:// Getter,Setter
 	/// <param name="enemyManager">敵の管理クラスのポインタ</param>
 	void SetEnemyManager(EnemyManager* enemyManager) { enemyManager_ = enemyManager; }
 
+	void SetInputHandler(InputHandler* inputHandler) { inputHandler_ = inputHandler; }
+
 	/// <summary>
 	/// アニメーションを開始
 	/// </summary>
@@ -114,11 +119,7 @@ public:// Getter,Setter
 	/// <summary>
 	/// アニメーションを初期化
 	/// </summary>
-	void ResetAnimation() {
-		animation_.Loop(false);
-
-		/*animation_.playbackSpeed = 1.0f;*/
-	}
+	void ResetAnimation() { animation_.Loop(false); }
 	/// <summary>
 	/// ブレンドされているアニメーションを停止
 	/// </summary>
@@ -141,6 +142,7 @@ private:// 外部からポインタをもらう変数
 	EnemyManager* enemyManager_;
 	// 追従カメラ
 	FollowCamera* followCamera_;
+	InputHandler* inputHandler_;
 
 private:
 	// 体の判定

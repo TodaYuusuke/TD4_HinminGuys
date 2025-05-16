@@ -13,6 +13,9 @@ SystemManager::SystemManager(Player* player, EnemyManager* enemyManager, FollowC
 }
 
 void SystemManager::Initialize() {
+	// コマンドの登録
+	inputHandler_ = InputHandler::GetInstance();
+	inputHandler_->GetA();
 	// ロックオン機能
 	lockOnSystem_ = std::make_unique<LockOn>(pCamera_, player_);
 	lockOnSystem_->Initialize();
@@ -79,7 +82,7 @@ void SystemManager::DebugGUI() {
 void SystemManager::EnableInputMoveState() {
 	switch (inputState_) {
 	case InputState::kMove:
-		moveSystem_->SetIsActive(true);
+		//moveSystem_->SetIsActive(true);
 
 		// 速度を加算
 		velocity_ = moveSystem_->GetMoveVel();
@@ -89,7 +92,7 @@ void SystemManager::EnableInputMoveState() {
 		rotate_ = LWP::Math::Quaternion::CreateFromAxisAngle(LWP::Math::Vector3{ 0, 1, 0 }, radian_.y);
 		break;
 	case InputState::kAttack:
-		moveSystem_->SetIsActive(false);
+		//moveSystem_->SetIsActive(false);
 
 		// 速度を加算
 		velocity_ = LWP::Utility::Interpolation::Exponential(velocity_,attackSystem_->GetAttackAssistVel(), 0.9f);
@@ -102,6 +105,7 @@ void SystemManager::EnableInputMoveState() {
 		if (Vector3::Dot(velocity_, velocity_) != 0) {
 			moveSystem_->SetRotate(radian_);
 		}
+		moveSystem_->SetMoveVel({ 0,0,0 });
 		break;
 	case InputState::kParry:
 		// 速度を加算
@@ -120,19 +124,12 @@ void SystemManager::EnableInputMoveState() {
 		rotate_ = LWP::Math::Quaternion::CreateFromAxisAngle(LWP::Math::Vector3{ 0, 1, 0 }, radian_.y);
 		break;
 	case InputState::kSheath:
-		moveSystem_->SetIsActive(false);
+		//moveSystem_->SetIsActive(false);
 
 		// 速度を加算
 		velocity_ = LWP::Utility::Interpolation::Exponential(velocity_, sheathSystem_->GetVelocity(), 0.9f);
 		// 角度を加算
 		radian_ = sheathSystem_->GetRadian();
-
-	/*	if (!sheathSystem_->GetIsActionRestrict("Collect")) {
-			velocity_ += LWP::Utility::Interpolation::Exponential(velocity_, moveSystem_->GetMoveVel(), 0.9f); ;
-			radian_ += sheathSystem_->GetRadian();
-			moveSystem_->SetIsActive(true);
-		}*/
-
 		// クォータニオンに変換
 		rotate_ = LWP::Math::Quaternion::CreateFromAxisAngle(LWP::Math::Vector3{ 0, 1, 0 }, radian_.y);
 

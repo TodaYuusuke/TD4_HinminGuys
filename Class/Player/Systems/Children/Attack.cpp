@@ -30,6 +30,9 @@ Attack::~Attack() {
 }
 
 void Attack::Initialize() {
+	// コマンドの登録
+	inputHandler_ = InputHandler::GetInstance();
+	inputHandler_->GetA();
 	isActive_ = false;
 	isPreActive_ = false;
 

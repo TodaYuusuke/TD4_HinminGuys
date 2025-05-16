@@ -4,6 +4,7 @@
 #include "State/Move/Walk.h"
 #include "State/Move/Run.h"
 #include "State/Move/Dash.h"
+#include "State/Move/None.h"
 #include "../../../Camera/FollowCamera.h"
 
 using namespace LWP;
@@ -20,6 +21,9 @@ Move::~Move() {
 }
 
 void Move::Initialize() {
+	// コマンドの登録
+	inputHandler_ = InputHandler::GetInstance();
+	inputHandler_->GetA();
 	// 移動速度
 	moveVel_ = { 0.0f, 0.0f, 0.0f };
 	// 向いている角度
@@ -43,7 +47,15 @@ void Move::Initialize() {
 
 void Move::Update() {
 	// 機能を使えないなら早期リターン
-	if (!isActive_) { return; }
+	if (!isActive_) { 
+		// 移動状態をなくす
+		moveState_ = MoveState::kNone;
+		if (GetTriggerChangeMoveState(MoveState::kNone)) {
+			state_ = new None(this, player_);
+		}
+		preMoveState_ = moveState_;
+		return; 
+	}
 
 	// 入力処理
 	InputUpdate();
@@ -77,12 +89,18 @@ void Move::DebugGUI() {
 	}
 }
 
+void Move::Command() {
+	isActive_ = true;
+	enableInput_ = true;
+	player_->GetSystemManager()->SetInputState(InputState::kMove);
+}
+
 void Move::AnimCommand() {
 	CheckMoveState();
 }
 
 void Move::CheckMoveState() {
-	player_->GetSystemManager()->SetInputState(InputState::kMove);
+	//player_->GetSystemManager()->SetInputState(InputState::kMove);
 	// 待機状態に移行
 	if (!GetIsMove()) {
 		moveState_ = MoveState::kIdle;

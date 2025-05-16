@@ -16,13 +16,7 @@ Run::Run(Move* moveSystem, Player* player, const float& moveMultiply) {
 }
 
 void Run::Initialize() {
-	//if (!isActive_ && player_->GetAnimation()->GetProgress(LWP::Resource::Animation::TrackType::Main) >= 1.0f) {
-	//	isActive_ = true;
-	//	player_->StopAnimation(LWP::Resource::Animation::TrackType::Main);
-	//	// アニメーションを変更
-	//	player_->StartAnimation("Run", 0.1f, player_->GetAnimation()->GetProgress(LWP::Resource::Animation::TrackType::Blend), LWP::Resource::Animation::TrackType::Main);
-	//	player_->SetIsLoopAnimation(true);
-	//}
+
 }
 
 void Run::Update() {
@@ -34,16 +28,4 @@ void Run::AnimCommand() {
 	player_->StartAnimation("Run", 0.1f, 0.0f);
 	player_->SetAnimationPlaySpeed(1.0f);
 	player_->SetIsLoopAnimation(true);
-
-	//if (!player_->GetAnimation()->GetPlaying()) {
-	//	// アニメーションを変更
-	//	player_->StartAnimation("Run", 0.1f, 0.0f);
-	//	player_->SetIsLoopAnimation(true);
-	//}
-	//else {
-	//	// アニメーションを変更
-	//	player_->StartAnimation("Run", 0.1f, 0.0f, LWP::Resource::Animation::TrackType::Blend);
-	//	player_->SetIsLoopAnimation(true, LWP::Resource::Animation::TrackType::Blend);
-	//	player_->SetIsLoopAnimation(false, LWP::Resource::Animation::TrackType::Main);
-	//}
 }

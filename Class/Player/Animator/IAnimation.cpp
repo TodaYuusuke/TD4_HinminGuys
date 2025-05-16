@@ -7,6 +7,7 @@ void MoveAnim::Exec(Player& player) {
 
 void AttackAnim::Exec(Player& player) {
 	//player.GetSystemManager()->GetAttackSystem()->AnimCommand();
+	player;
 }
 
 void ParryAnim::Exec(Player& player) {

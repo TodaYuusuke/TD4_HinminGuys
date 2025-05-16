@@ -8,6 +8,7 @@
 class Move : public ISystem {
 public:
 enum class MoveState {
+	kNone,
 	kIdle,
 	kWalk,
 	kRun,
@@ -39,6 +40,11 @@ public:
 	/// ImGuiによるパラメータ表示
 	/// </summary>
 	void DebugGUI() override;
+
+	/// <summary>
+	/// 移動コマンド
+	/// </summary>
+	void Command();
 
 	/// <summary>
 	/// アニメーションのコマンド

@@ -2,11 +2,13 @@
 #include "../../../../Player.h"
 #include "../../Sheath.h"
 #include "Throw.h"
+#include "../../../../Command/InputHandler.h"
 
 Collect::Collect(Sheath* sheathSystem, Player* player) {
 	sheathSystem_ = sheathSystem;
 	player_ = player;
-
+	// コマンドの登録
+	inputHandler_ = InputHandler::GetInstance();
 	// 状態の名前
 	stateName_ = "Collect";
 }
@@ -37,9 +39,12 @@ void Collect::Update() {
 }
 
 void Collect::Command() {
-	isActive_ = true;
-	start_ = player_->GetWorldTF()->GetWorldPosition();
-	end_ = sheathSystem_->GetSheathWorldTF().GetWorldPosition();
+	if (!isActive_) {
+		isActive_ = true;
+		start_ = player_->GetWorldTF()->GetWorldPosition();
+		end_ = sheathSystem_->GetSheathWorldTF().GetWorldPosition();
+		inputHandler_->GetSheathCommand()->SetBanInput(inputHandler_->GetSheathCommand()->GetBanInput() | (BanMove));
+	}
 }
 
 void Collect::AnimCommand() {

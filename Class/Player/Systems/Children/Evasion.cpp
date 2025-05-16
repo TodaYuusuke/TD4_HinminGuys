@@ -14,6 +14,9 @@ Evasion::Evasion(LWP::Object::Camera* camera, Player* player) {
 }
 
 void Evasion::Initialize() {
+	// コマンドの登録
+	inputHandler_ = InputHandler::GetInstance();
+	inputHandler_->GetA();
 	isActive_ = false;
 	isPreActive_ = false;
 
