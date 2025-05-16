@@ -7,9 +7,10 @@
     "Vector3 :TargetDistance": [
         0.0,
         0.0,
-        -7.0
+        -18.360000610351563
     ],
-    "float :MaxRotateX": 60.0,
-    "float :MinRotateX": 10.0,
-    "float :Sensitivity": 1.0
+    "float :MaxRotateX": 70.0,
+    "float :MinRotateX": 4.0,
+    "float :Rate": 0.6000000238418579,
+    "float :Sensitivity": 1.100000023841858
 }
