@@ -13,7 +13,7 @@ public: // コンストラクタ等
 	/// <summary>
 	/// コンストラクタ
 	/// </summary>
-	ComboTree() = default;
+	ComboTree() : capsule_(collider_.SetBroadShape(LWP::Object::Collider::Capsule())) {}
 	/// <summary>
 	/// デストラクタ
 	/// </summary>
@@ -46,6 +46,18 @@ public: // アクセッサ等
 	/// </summary>
 	/// <returns></returns>
 	bool GetIsThisRoot() { return nowCombo_->GetIsRoot(); }
+
+	/// <summary>
+	/// 攻撃アシストの有効状態ゲッター
+	/// </summary>
+	/// <returns>攻撃アシストの有効状態</returns>
+	bool GetIsEnableAttackAssist() { return nowCombo_->GetIsAttackAssistActive(); }
+
+	/// <summary>
+	/// 攻撃アシストの移動量ゲッター
+	/// </summary>
+	/// <returns>攻撃アシストの移動量</returns>
+	LWP::Math::Vector3 GetAttackAssistMoveAmount() { return nowCombo_->GetAttackAssistMoveAmount(); }
 
 	/// <summary>
 	/// 現在コンボの硬直状態ゲッター
@@ -116,7 +128,8 @@ private: // メンバ変数
 	LWP::Resource::Animation* anim_ = nullptr;
 
 	// コライダー
-	LWP::Object::Collision* collider_;
+	LWP::Object::Collision collider_;
+	LWP::Object::Collider::Capsule& capsule_;
 
 	// 現在のコンボ
 	Combo* nowCombo_ = nullptr;

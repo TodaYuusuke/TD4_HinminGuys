@@ -71,26 +71,38 @@ void Attack::Update() {
 		}
 	}
 
-	//// 機能を使えないなら早期リターン
-	//if (!isActive_) {
-	//	return;
-	//}
+	// 攻撃アシストが有効になっている場合
+	if (comboTree_.GetIsEnableAttackAssist()) {
+		// ロックオン中なら対象に近づいて攻撃
+		if (lockOnSystem_->GetCurrentLockOnTarget()) {
+			// 自機とロックオン中の敵との距離
+			Vector3 attackTargetDist = (lockOnTarget_->GetWorldTF()->GetWorldPosition() - player_->GetWorldTF()->GetWorldPosition()) * 0.4f;
+			attackAssistVel_ = LWP::Utility::Interpolation::Slerp(comboTree_.GetAttackAssistMoveAmount(), attackTargetDist, 0.25f);
 
-	//// frameごとに起きるアクションイベント
-	//eventOrder_.Update();
+			// 移動速度からラジアンを求める
+			attackAssistRadian_.y = LWP::Utility::GetRadian(LWP::Math::Vector3{ 0,0,1 }, attackAssistVel_.Normalize(), LWP::Math::Vector3{ 0,1,0 });
+			attackAssistQuat_ = LWP::Math::Quaternion::CreateFromAxisAngle(LWP::Math::Vector3{ 0, 1, 0 }, attackAssistVel_.y);
+		}
+		else {
+			// 攻撃の移動量の取得
+			attackAssistVel_ = comboTree_.GetAttackAssistMoveAmount();
 
-	//// 攻撃のアクションイベント状態の確認
-	//CheckAttackState();
+			// 自機の方向ベクトル
+			Vector3 playerDir = { 0.0f,0.0f,1.0f };
+			// 回転行列を求める
+			Matrix4x4 rotMatrix = LWP::Math::Matrix4x4::CreateRotateXYZMatrix(player_->GetWorldTF()->rotation);
+			// 方向ベクトルを求める
+			playerDir = playerDir * rotMatrix;
+			playerDir.y = 0;
 
-	//// 状態
-	//state_->Update();
+			attackAssistVel_ = attackAssistVel_ * rotMatrix;
 
-	//// 全てのアクションイベントが終了しているなら機能停止
-	//if (eventOrder_.GetIsEnd()) {
-	//	Reset();
-	//}
+			// 移動速度からラジアンを求める
+			attackAssistRadian_.y = LWP::Utility::GetRadian(LWP::Math::Vector3{ 0,0,1 }, playerDir.Normalize(), LWP::Math::Vector3{ 0,1,0 });
+			attackAssistQuat_ = LWP::Math::Quaternion::CreateFromAxisAngle(LWP::Math::Vector3{ 0, 1, 0 }, attackAssistRadian_.y);
 
-	isPreActive_ = isActive_;
+		}
+	}
 }
 
 void Attack::Reset() {
@@ -137,11 +149,6 @@ void Attack::DebugGUI() {
 
 		ImGui::TreePop();
 	}
-}
-
-void Attack::NormalCommand() {
-	
-	//eventOrder_.Start();
 }
 
 void Attack::ChangeState(IAttackSystemState* pState) {

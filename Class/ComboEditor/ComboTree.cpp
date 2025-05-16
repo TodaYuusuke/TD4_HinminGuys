@@ -33,7 +33,7 @@ void ComboTree::Init(const std::string& fileName, LWP::Resource::SkinningModel* 
 	// 現在コンボのリセット
 	nowCombo_->Init();
 	// 現在コンボのスタート
-	nowCombo_->Start(anim_);
+	nowCombo_->Start(animModel_, anim_, &collider_);
 }
 
 void ComboTree::Update()
@@ -52,7 +52,7 @@ void ComboTree::Update()
 		// 現在のコンボを初期化して次のコンボへ
 		nowCombo_->Init();
 		nowCombo_ = std::move(nextCombo_);
-		nowCombo_->Start(anim_);
+		nowCombo_->Start(animModel_, anim_, &collider_);
 		return;
 	}
 
@@ -60,7 +60,7 @@ void ComboTree::Update()
 	if (nextCombo_ == nullptr && !nowCombo_->GetIsRecept()) {
 		nowCombo_->Init();
 		nowCombo_ = &rootCombo_;
-		nowCombo_->Start(anim_);
+		nowCombo_->Start(animModel_, anim_, &collider_);
 	}
 }
 

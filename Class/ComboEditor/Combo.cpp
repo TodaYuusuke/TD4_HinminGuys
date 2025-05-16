@@ -41,7 +41,7 @@ void Combo::Init(const std::string& name)
 	name_ = name;
 }
 
-void Combo::Start(LWP::Resource::Animation* anim)
+void Combo::Start(LWP::Resource::SkinningModel* model, LWP::Resource::Animation* anim, LWP::Object::Collision* collider)
 {
 	// 判定用タイマー開始
 	attackDecisionTimer_.Start(attackStartTime_);		// 攻撃判定
@@ -51,6 +51,9 @@ void Combo::Start(LWP::Resource::Animation* anim)
 
 	// 操作受付開始
 	isRecept_ = true;
+
+	// コライダーの有効状態を切っておく
+	collider->isActive = false;
 
 	// アニメーション名に何かしら入力されていれば
 	if (animName_ != "") {
@@ -67,7 +70,7 @@ void Combo::Update(LWP::Resource::SkinningModel* model, LWP::Resource::Animation
 	// 攻撃判定用のタイマーが動作している場合のみ更新を行う
 	if (attackDecisionTimer_.GetIsActive()) {
 		// 攻撃判定に関する更新
-		AttackActiveUpdate();
+		AttackActiveUpdate(model);
 	}
 
 	// 攻撃アシスト判定用のタイマーが動作している場合のみ更新を行う
@@ -230,17 +233,20 @@ void Combo::AddValue(LWP::Utility::JsonIO& json)
 {
 	// コンボ名でグループ開始、各パラメータの保存
 	json.BeginGroup(name_)
-		.AddValue("derivationPriority", &derivationProiority_)			// 派生優先度
-		.AddValue("AnimName", &animName_)								// アニメーション名
-		.AddValue("TransitionTime", &transitionTime_)					// 遷移時間
-		.AddValue("IsLoop", &isLoop_)									// ループ状態
-		.AddValue("AttackStartTime", &attackStartTime_)					// 判定開始時間
-		.AddValue("AttackEndTime", &attackEndTime_)						// 判定終了時間
-		.AddValue("AttackAssistStartTime", &attackAssistStartTime_)		// 攻撃アシスト開始時間
-		.AddValue("AttackAssistEnableTime", &attackAssistEnableTime_)	// 攻撃アシスト有効時間
-		.AddValue("AttackAssistMoveAmount", &attackAssistMoveAmount_)	// 攻撃アシスト移動量
-		.AddValue("StifnessTime", &stifnessTime_)						// 硬直時間
-		.AddValue("ReceptTime", &receptTime_);							// 受付時間
+		.AddValue("derivationPriority", &derivationProiority_)					// 派生優先度
+		.AddValue("AnimName", &animName_)										// アニメーション名
+		.AddValue("TransitionTime", &transitionTime_)							// 遷移時間
+		.AddValue("IsLoop", &isLoop_)											// ループ状態
+		.AddValue("AttackStartTime", &attackStartTime_)							// 判定開始時間
+		.AddValue("AttackEndTime", &attackEnableTime_)							// 判定有効時間
+		.AddValue("FollowJointName", &followJointName_)							// 追従するジョイント名
+		.AddValue("AttackColliderLengthOffset", &attackColliderLengthOffset_)	// 始点からのオフセット
+		.AddValue("AttackColliderRadius", &attackColliderRadius_)				// コライダーの半径
+		.AddValue("AttackAssistStartTime", &attackAssistStartTime_)				// 攻撃アシスト開始時間
+		.AddValue("AttackAssistEnableTime", &attackAssistEnableTime_)			// 攻撃アシスト有効時間
+		.AddValue("AttackAssistMoveAmount", &attackAssistMoveAmount_)			// 攻撃アシスト移動量
+		.AddValue("StifnessTime", &stifnessTime_)								// 硬直時間
+		.AddValue("ReceptTime", &receptTime_);									// 受付時間
 
 	// 開始条件の保存
 	int condCount = 1;
@@ -314,7 +320,7 @@ void Combo::AddCondition(LWP::Utility::ICondition* condition)
 	conditions_.push_back(std::move(condition));
 }
 
-void Combo::AttackActiveUpdate()
+void Combo::AttackActiveUpdate(LWP::Resource::SkinningModel* model)
 {
 	// タイマーの更新
 	attackDecisionTimer_.Update();
@@ -325,8 +331,8 @@ void Combo::AttackActiveUpdate()
 		if (!isAttackActive_) {
 			// 攻撃判定有効
 			isAttackActive_ = true;
-			// 攻撃判定終了秒数でタイマー開始
-			attackDecisionTimer_.Start(attackEndTime_);
+			// 攻撃判定有効秒数でタイマー開始
+			attackDecisionTimer_.Start(attackEnableTime_);
 		}
 		else {
 			// 攻撃判定無効
@@ -353,7 +359,7 @@ void Combo::AttackAssistUpdate()
 		}
 		else {
 			// 攻撃アシスト判定無効
-			isAttackActive_ = false;
+			isAttackAssistActive_ = false;
 			// 攻撃判定タイマーを非アクティブに
 			attackAssistTimer_.SetIsActive(false);
 		}
@@ -506,7 +512,10 @@ void Combo::AttackSettings()
 	// 開始時間
 	ImGui::DragFloat("StartTime", &attackStartTime_, 0.01f, 0.0f);
 	// 終了時間
-	ImGui::DragFloat("EndTime", &attackEndTime_, 0.01f, 0.0f);
+	ImGui::DragFloat("EndTime", &attackEnableTime_, 0.01f, 0.0f);
+
+	// コライダーの追従対象設定
+	Base::ImGuiManager::InputText("FollowJointName", followJointName_);
 
 	ImGui::Unindent();
 	ImGui::NewLine();

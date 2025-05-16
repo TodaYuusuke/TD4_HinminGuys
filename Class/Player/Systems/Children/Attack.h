@@ -39,11 +39,6 @@ public:
 	/// </summary>
 	void DebugComboGUI() { comboTree_.DebugGUI(); }
 
-	/// <summary>
-	/// 通常攻撃のコマンド
-	/// </summary>
-	void NormalCommand();
-
 private:
 	/// <summary>
 	/// 状態の遷移

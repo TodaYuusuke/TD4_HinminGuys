@@ -5,7 +5,7 @@ void NormalAttackCommand::Exec(Player& player) {
 	// パリィ中、回避中は攻撃できない
 	if (player.GetSystemManager()->GetParrySystem()->GetIsActive() || player.GetSystemManager()->GetEvasionSystem()->GetIsActive()) { return; }
 
-	player.GetSystemManager()->GetAttackSystem()->NormalCommand();
+	//player.GetSystemManager()->GetAttackSystem()->NormalCommand();
 }
 
 void ParryCommand::Exec(Player& player) {
