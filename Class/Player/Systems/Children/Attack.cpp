@@ -90,7 +90,7 @@ void Attack::Update() {
 			// 自機の方向ベクトル
 			Vector3 playerDir = { 0.0f,0.0f,1.0f };
 			// 回転行列を求める
-			Matrix4x4 rotMatrix = LWP::Math::Matrix4x4::CreateRotateXYZMatrix(player_->GetWorldTF()->rotation);
+			Matrix4x4 rotMatrix = LWP::Math::Matrix4x4::CreateRotateXYZMatrix(player_->GetSystemManager()->GetMoveSystem()->GetMoveQuat());
 			// 方向ベクトルを求める
 			playerDir = playerDir * rotMatrix;
 			playerDir.y = 0;
