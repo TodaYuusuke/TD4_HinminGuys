@@ -44,6 +44,7 @@ void SystemManager::Initialize() {
 	sheathSystem_->Initialize();
 	systems_.push_back(sheathSystem_.get());
 
+	// 自機のアニメーションを管理
 	animator_.Initialize(player_->GetAnimation());
 
 	// 入力状態
@@ -82,8 +83,6 @@ void SystemManager::DebugGUI() {
 void SystemManager::EnableInputMoveState() {
 	switch (inputState_) {
 	case InputState::kMove:
-		//moveSystem_->SetIsActive(true);
-
 		// 速度を加算
 		velocity_ = moveSystem_->GetMoveVel();
 		// 角度を加算
@@ -92,8 +91,6 @@ void SystemManager::EnableInputMoveState() {
 		rotate_ = LWP::Math::Quaternion::CreateFromAxisAngle(LWP::Math::Vector3{ 0, 1, 0 }, radian_.y);
 		break;
 	case InputState::kAttack:
-		//moveSystem_->SetIsActive(false);
-
 		// 速度を加算
 		velocity_ = LWP::Utility::Interpolation::Exponential(velocity_,attackSystem_->GetAttackAssistVel(), 0.9f);
 		// 角度を加算
@@ -117,15 +114,13 @@ void SystemManager::EnableInputMoveState() {
 		break;
 	case InputState::kEvasion:
 		// 速度を加算
-		velocity_ = LWP::Utility::Interpolation::Exponential(velocity_, evasionSystem_->GetVelocity() + moveSystem_->GetMoveVel(), 1.0f);
+		velocity_ = LWP::Utility::Interpolation::Exponential(velocity_, evasionSystem_->GetVelocity(), 1.0f);
 		// 角度を加算
 		radian_ = moveSystem_->GetMoveRadian();
 		// クォータニオンに変換
 		rotate_ = LWP::Math::Quaternion::CreateFromAxisAngle(LWP::Math::Vector3{ 0, 1, 0 }, radian_.y);
 		break;
 	case InputState::kSheath:
-		//moveSystem_->SetIsActive(false);
-
 		// 速度を加算
 		velocity_ = LWP::Utility::Interpolation::Exponential(velocity_, sheathSystem_->GetVelocity(), 0.9f);
 		// 角度を加算

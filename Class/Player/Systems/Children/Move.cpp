@@ -21,9 +21,6 @@ Move::~Move() {
 }
 
 void Move::Initialize() {
-	// コマンドの登録
-	inputHandler_ = InputHandler::GetInstance();
-	inputHandler_->GetA();
 	// 移動速度
 	moveVel_ = { 0.0f, 0.0f, 0.0f };
 	// 向いている角度
@@ -37,28 +34,29 @@ void Move::Initialize() {
 	// 値を保存する項目を作成
 	json_.Init("MoveData.json");
 	json_.AddValue<float>("WalkSpeedMultiply", &walkSpeedMultiply)
+		.AddValue<float>("RunSpeedMultiply", &runSpeedMultiply)
 		.AddValue<float>("DashSpeedMultiply", &dashSpeedMultiply)
 		.AddValue<float>("MoveSpeedRate", &moveSpeedRate)
+		.AddValue<float>("RunThreshold", &runThreshold)
 		.CheckJsonFile();
 
+	// 移動状態
 	moveState_ = MoveState::kIdle;
 	preMoveState_ = moveState_;
 }
 
 void Move::Update() {
 	// 機能を使えないなら早期リターン
-	if (!isActive_) { 
-		// 移動状態をなくす
-		moveState_ = MoveState::kNone;
-		if (GetTriggerChangeMoveState(MoveState::kNone)) {
-			state_ = new None(this, player_);
-		}
-		preMoveState_ = moveState_;
-		return; 
+	if (!isActive_) {
+		Reset();
+		return;
 	}
 
 	// 入力処理
 	InputUpdate();
+
+	// 移動の状態を更新
+	CheckMoveState();
 
 	isPreActive_ = isActive_;
 }
@@ -66,12 +64,15 @@ void Move::Update() {
 void Move::Reset() {
 	// 移動速度
 	moveVel_ = { 0.0f, 0.0f, 0.0f };
-	// 向いている角度
-	quat_ = { 0.0f,0.0f,0.0f,1.0f };
-	radian_ = { 0.0f, 0.0f, 0.0f };
-	// アニメーションを初期化
-	player_->ResetAnimation();
+	stickStrength_ = 0;
 	isMove_ = false;
+
+	// 移動状態をなくす
+	moveState_ = MoveState::kNone;
+	if (GetTriggerChangeMoveState(MoveState::kNone)) {
+		state_ = new None(this, player_);
+	}
+	preMoveState_ = moveState_;
 }
 
 void Move::DebugGUI() {
@@ -96,46 +97,75 @@ void Move::Command() {
 }
 
 void Move::AnimCommand() {
-	CheckMoveState();
+	
 }
 
 void Move::CheckMoveState() {
-	//player_->GetSystemManager()->SetInputState(InputState::kMove);
 	// 待機状態に移行
 	if (!GetIsMove()) {
 		moveState_ = MoveState::kIdle;
 		if (GetTriggerChangeMoveState(MoveState::kIdle) && stickStrength_ == 0) {
-			ChangeState(new Idle(this, player_));
 			// ダッシュ状態解除
-			player_->GetSystemManager()->GetEvasionSystem()->SetIsDash(false);	
+			player_->GetSystemManager()->GetEvasionSystem()->SetIsDash(false);
+			ChangeState(new Idle(this, player_));
 		}
 	}
 	// 移動状態に移行
 	else {
+		if (stickStrength_ > runThreshold) {
+			// 走り状態に移行
+			if (player_->GetSystemManager()->GetEvasionSystem()->GetIsDash()) {
+				moveState_ = MoveState::kDash;
+				// 走りモーション再生中なら状態遷移しない
+				if (GetTriggerChangeMoveState(MoveState::kDash)) {
+					ChangeState(new Dash(this, player_, dashSpeedMultiply));
+				}
+			}
+			else {
+				moveState_ = MoveState::kRun;
+				if (GetTriggerChangeMoveState(MoveState::kRun)) {
+					// ダッシュ状態解除
+					player_->GetSystemManager()->GetEvasionSystem()->SetIsDash(false);
+					ChangeState(new Run(this, player_, runSpeedMultiply));
+				}
+			}
+		}
+		// 歩行状態に移行
+		else {
+			moveState_ = MoveState::kWalk;
+			if (GetTriggerChangeMoveState(MoveState::kWalk)) {
+				// ダッシュ状態解除
+				player_->GetSystemManager()->GetEvasionSystem()->SetIsDash(false);
+				ChangeState(new Walk(this, player_, walkSpeedMultiply));
+			}
+		}
+
+
 		// 走り状態に移行
 		if (player_->GetSystemManager()->GetEvasionSystem()->GetIsDash()) {
 			moveState_ = MoveState::kDash;
 			// 走りモーション再生中なら状態遷移しない
-			if (!player_->GetAnimation()->GetPlaying("Dash") || state_->GetStateName() != "Dash") {
-				ChangeState(new Dash(this, player_, dashSpeedMultiply));			
+			if (GetTriggerChangeMoveState(MoveState::kDash)) {
+				ChangeState(new Dash(this, player_, dashSpeedMultiply));
 			}
 		}
 		else {
 			// 小走り状態に移行
-			if (stickStrength_ > 0.5f) {
+			if (stickStrength_ > runThreshold) {
 				moveState_ = MoveState::kRun;
 				if (GetTriggerChangeMoveState(MoveState::kRun)) {
-					ChangeState(new Run(this, player_, walkSpeedMultiply));
 					// ダッシュ状態解除
-					player_->GetSystemManager()->GetEvasionSystem()->SetIsDash(false);					
+					player_->GetSystemManager()->GetEvasionSystem()->SetIsDash(false);
+					ChangeState(new Run(this, player_, runSpeedMultiply));
 				}
 			}
+			// 歩き状態に移行
 			else {
 				moveState_ = MoveState::kWalk;
 				if (GetTriggerChangeMoveState(MoveState::kWalk)) {
-					ChangeState(new Walk(this, player_, walkSpeedMultiply));
 					// ダッシュ状態解除
-					player_->GetSystemManager()->GetEvasionSystem()->SetIsDash(false);	
+					player_->GetSystemManager()->GetEvasionSystem()->SetIsDash(false);
+					ChangeState(new Walk(this, player_, walkSpeedMultiply));
 				}
 			}
 		}
@@ -145,9 +175,9 @@ void Move::CheckMoveState() {
 }
 
 void Move::InputUpdate() {
-	if (!enableInput_) { 
-		moveVel_ = { 0,0,0 };
-		return; 
+	if (!enableInput_) {
+		Reset();
+		return;
 	}
 
 	// 方向を取得

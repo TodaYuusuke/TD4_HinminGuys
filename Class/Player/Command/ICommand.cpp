@@ -37,7 +37,8 @@ void NormalAttackCommand::Exec(Player& player, int& banInput) {
 }
 
 void NormalAttackCommand::Reset(Player& player, int& banInput) {
-
+	player;
+	banInput;
 }
 
 ParryCommand::ParryCommand() {
@@ -62,6 +63,7 @@ void ParryCommand::Reset(Player& player, int& banInput) {
 
 void LockOnCommand::Exec(Player& player, int& banInput) {
 	player.GetSystemManager()->GetLockOnSystem()->Command();
+	banInput;
 }
 
 void LockOnCommand::Reset(Player& player, int& banInput) {
@@ -92,7 +94,7 @@ void EvasionCommand::Reset(Player& player, int& banInput) {
 }
 
 SheathCommand::SheathCommand() {
-	banInput_ = BanParry | BanAttack | BanEvasion;
+	banInput_ = BanMove | BanParry | BanAttack | BanEvasion | BanSheath;
 	currentInput_ = ~BanSheath;
 }
 
