@@ -30,9 +30,7 @@ NormalAttackCommand::NormalAttackCommand() {
 
 void NormalAttackCommand::Exec(Player& player, int& banInput) {
 	// パリィ中、回避中は攻撃できない
-	//if (player.GetSystemManager()->GetParrySystem()->GetIsActive() || player.GetSystemManager()->GetEvasionSystem()->GetIsActive()) { return; }
-
-	player.GetSystemManager()->GetAttackSystem()->NormalCommand();
+	player;
 	banInput;
 }
 
