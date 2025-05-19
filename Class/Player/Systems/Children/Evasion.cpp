@@ -1,8 +1,12 @@
 #include "Evasion.h"
+
+#include <algorithm>       // ← std::max に必要
 #include "../../Player.h"
+#include "../../Command/InputConfig.h"
 
 using namespace LWP;
 using namespace LWP::Math;
+using namespace InputConfig;
 
 Evasion::Evasion(LWP::Object::Camera* camera, Player* player) {
 	pCamera_ = camera;
@@ -13,10 +17,6 @@ void Evasion::Initialize() {
 	isActive_ = false;
 	isPreActive_ = false;
 
-
-	animationPlaySpeed_.Add(&animPlaySpeed_, Vector3{ 0.05f, 0.0f, 0.0f }, 0.0f, 0.1f, LWP::Utility::Easing::Type::OutExpo)
-		.Add(&animPlaySpeed_, Vector3{ 1.0f, 0.0f, 0.0f }, 0.1f, 0.5f, LWP::Utility::Easing::Type::InExpo);
-
 	json_.Init("EvasionData.json");
 	json_.BeginGroup("EventOrder")
 		.BeginGroup("GraceTime")
@@ -25,8 +25,13 @@ void Evasion::Initialize() {
 		.AddValue<float>("RecoveryTime", &kEvasionRecoveryTime)
 		.EndGroup()
 		.EndGroup()
-		.AddValue<float>("EvasionMultiply", &moveMultiply)
+		.AddValue<float>("DashButtonHoldSeconds", &dashButtonHoldSeconds)
+		.AddValue<float>("MoveMultiply", &moveMultiply)
+		.AddValue<Vector3>("Movement", &evasionMovement)
 		.CheckJsonFile();
+
+	animationPlaySpeed_.Add(&animPlaySpeed_, Vector3{ 0.05f, 0.0f, 0.0f }, 0.0f, 0.1f, LWP::Utility::Easing::Type::OutExpo)
+		.Add(&animPlaySpeed_, Vector3{ 1.0f, 0.0f, 0.0f }, 0.1f, 0.5f, LWP::Utility::Easing::Type::InExpo);
 
 	// アクションイベントを生成
 	CreateEventOrder();
@@ -34,6 +39,9 @@ void Evasion::Initialize() {
 
 void Evasion::Update() {
 	if (!isActive_) { return; }
+
+	// ダッシュ条件を満たしているのかを確認
+	CheckDash();
 
 	// frameごとに起きるアクションイベント
 	eventOrder_.Update();
@@ -56,6 +64,8 @@ void Evasion::Update() {
 }
 
 void Evasion::Reset() {
+	evasionEndPos_.translation = { 0,0,0 };
+	t_ = 0;
 	eventOrder_.Reset();
 	isActive_ = false;
 	isPreActive_ = false;
@@ -88,6 +98,7 @@ void Evasion::DebugGUI() {
 
 		eventOrder_.DebugGUI();
 
+		ImGui::DragFloat3("Velocity", &velocity_.x);
 		ImGui::DragFloat3("AnimSpeed", &animPlaySpeed_.x);
 
 		ImGui::Checkbox("IsEvasion", &isActive_);
@@ -98,6 +109,9 @@ void Evasion::DebugGUI() {
 
 void Evasion::Command() {
 	if (eventOrder_.GetIsEnd()) {
+		// 回避状態に移行
+		player_->GetSystemManager()->SetInputState(InputState::kEvasion);
+		pressTime_ = 0.0f;
 		isActive_ = true;
 		animationPlaySpeed_.Start();
 		player_->ResetAnimation();
@@ -138,13 +152,73 @@ void Evasion::CheckEvasionState() {
 	}
 }
 
+void Evasion::CheckDash() {
+	// 長押ししている間
+	if (LWP::Input::Pad::GetPress(Command::GamePad::Evasion) || LWP::Input::Keyboard::GetPress(Command::Key::Evasion)) {
+		pressTime_++;
+		return;
+	}
+}
+
+float Evasion::SmoothDampF(float current, float target, float& currentVelocity, float smoothTime, float maxSpeed, float deltaTime) {
+	// Based on Game Programming Gems 4 Chapter 1.10
+	float limitTime;
+	limitTime = max(0.0001f, smoothTime);
+	float omega = 2.0f / limitTime;
+
+	float x = omega * deltaTime;
+	float exp = 1.0f / (1.0f + x + 0.48f * x * x + 0.235f * x * x * x);
+	float change = current - target;
+	float originalTo = target;
+
+	// Clamp maximum speed
+	float maxChange = maxSpeed * limitTime;
+	change = std::clamp<float>(change, -maxChange, maxChange);
+	float tValue = current - change;
+
+	float temp = (currentVelocity + omega * change) * deltaTime;
+	currentVelocity = (currentVelocity - omega * temp) * exp;
+	float output = tValue + (change + temp) * exp;
+
+	// Prevent overshooting
+	if (originalTo - current > 0.0f == output > originalTo)
+	{
+		output = originalTo;
+		currentVelocity = (output - originalTo) / deltaTime;
+	}
+
+	return output;
+}
+LWP::Math::Vector3 Evasion::SmoothDamp(LWP::Math::Vector3 current, LWP::Math::Vector3 target, LWP::Math::Vector3& currentVelocity, float smoothTime, float maxSpeed, float deltaTime) {
+	LWP::Math::Vector3 result = {
+		SmoothDampF(current.x, target.x, currentVelocity.x,smoothTime, maxSpeed, deltaTime),
+		SmoothDampF(current.y, target.y, currentVelocity.y,smoothTime, maxSpeed, deltaTime),
+		SmoothDampF(current.z, target.z, currentVelocity.z,smoothTime, maxSpeed, deltaTime)
+	};
+
+	return result;
+}
+
 void Evasion::Move() {
-	// カメラが向いている方向に進む
-	// 回転行列を求める
-	Matrix4x4 rotMatrix = LWP::Math::Matrix4x4::CreateRotateXYZMatrix(player_->GetSystemManager()->GetMoveSystem()->GetMoveQuat());
-	// 方向ベクトルを求める
-	velocity_ = Vector3{ 0.0f,0.0f,1.0f } * rotMatrix * moveMultiply;
-	velocity_.y = 0;
+	// 
+	if (GetTrigger()) {
+		evasionEndPos_.translation = player_->GetWorldTF()->GetWorldPosition() + evasionMovement * Matrix4x4::CreateRotateXYZMatrix(player_->GetSystemManager()->GetMoveSystem()->GetMoveQuat());
+		evasionStartPos_ = player_->GetWorldTF()->GetWorldPosition();
+
+		easeData_ = {
+			&velocity_,
+			evasionStartPos_,
+			evasionStartPos_ + evasionMovement * Matrix4x4::CreateRotateXYZMatrix(player_->GetSystemManager()->GetMoveSystem()->GetMoveQuat()),
+			false
+		};
+	}
+
+	// 回避の速度補間がなくなるまでイージングを行う
+	if (easeData_.t < 30.0f) {
+		easeData_.t++;
+		// イージングを行う
+		velocity_ = LWP::Utility::Interpolation::Lerp(easeData_.start, easeData_.end, LWP::Utility::Easing::OutExpo(easeData_.t / 30.0f)) - player_->GetWorldTF()->GetWorldPosition();
+	}
 
 	// 移動ベクトルから体の向きを算出(入力があるときのみ処理する)
 	// 移動速度からラジアンを求める

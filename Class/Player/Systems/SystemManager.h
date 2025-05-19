@@ -5,23 +5,25 @@
 #include "Children/Attack.h"
 #include "Children/LockOn.h"
 #include "Children/Evasion.h"
+#include "Children/Sheath.h"
 #include <memory>
 
 class Player;
 class EnemyManager;
 class FollowCamera;
+
+enum class InputState {
+	kMove,
+	kAttack,
+	kParry,
+	kLockOn,
+	kEvasion,
+	kSheath
+};
 class SystemManager {
-private:
-	enum class InputState {
-		kMove,
-		kAttack,
-		kParry,
-		kLockOn,
-		kEvasion
-	};
 public:
 	// コンストラクタ
-	SystemManager(Player* player,EnemyManager* enemyManager, FollowCamera* followCamera, LWP::Object::Camera* camera);
+	SystemManager(Player* player, EnemyManager* enemyManager, FollowCamera* followCamera, LWP::Object::Camera* camera);
 	// デストラクタ
 	~SystemManager() = default;
 
@@ -29,7 +31,7 @@ public:
 	/// 初期化
 	/// </summary>
 	void Initialize();
-	
+
 	/// <summary>
 	/// 更新処理
 	/// </summary>
@@ -78,6 +80,11 @@ public:// Getter, Setter
 	/// </summary>
 	/// <returns></returns>
 	Evasion* GetEvasionSystem() { return evasionSystem_.get(); }
+	/// <summary>
+	/// 鞘機能のアドレスを取得
+	/// </summary>
+	/// <returns></returns>
+	Sheath* GetSheathSystem() { return sheathSystem_.get(); }
 
 	/// <summary>
 	/// 速度を取得
@@ -92,7 +99,11 @@ public:// Getter, Setter
 #pragma endregion
 
 #pragma region Setter
-
+	/// <summary>
+	/// 入力状態を設定
+	/// </summary>
+	/// <param name="inputState"></param>
+	void SetInputState(InputState inputState) { inputState_ = inputState; }
 #pragma endregion
 
 private:// 外部からポインタをもらう変数
@@ -115,6 +126,8 @@ private:
 	std::unique_ptr<Move> moveSystem_;
 	// 回避機能
 	std::unique_ptr<Evasion> evasionSystem_;
+	// 鞘
+	std::unique_ptr<Sheath> sheathSystem_;
 
 	// 機能クラスをまとめた変数
 	std::vector<ISystem*> systems_;

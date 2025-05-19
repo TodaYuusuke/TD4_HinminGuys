@@ -21,6 +21,7 @@ void LockOn::Initialize() {
 	lockOnUI_.sprite.LoadTexture("lockOnReticle.png");
 	lockOnUI_.sprite.anchorPoint = lockOnUI_.defaultAnchorPoint;
 	lockOnUI_.sprite.isActive = false;
+	lockOnUI_.enableLockOnObj.isActive = false;
 
 	json_.Init("LockOnData.json");
 	json_.AddValue("Range", &kMaxRange)
@@ -143,6 +144,9 @@ void LockOn::SearchLockOnEnemy() {
 		lockOnData.enemyData = enemy;
 		lockOnData.ui.sprite.LoadTexture("arrow.png");
 		lockOnData.ui.sprite.anchorPoint = { 0.5f,0.5f };
+		lockOnData.ui.enableLockOnObj.LoadTexture("arrow.png");
+		lockOnData.ui.enableLockOnObj.anchorPoint = { 0.5f, 0.5f };
+		lockOnData.ui.enableLockOnObj.isActive = false;
 		lockOnEnableEnemies_.push_back(lockOnData);
 	}
 }
@@ -157,12 +161,6 @@ void LockOn::ClearLockOn() {
 		float radius = kMaxRange;
 		if ((p2e.x * p2e.x) + (p2e.y * p2e.y) + (p2e.z * p2e.z) > (radius * radius)) {
 			enemy->SetIsLocked(false);
-			/*for (int i = 0; i < lockOnEnableEnemies_.size(); i++) {
-				if (enemy->GetID() == lockOnEnableEnemies_[i].enemyData->GetID()) {
-					lockOnEnableEnemies_.erase(lockOnEnableEnemies_.begin() + i);
-					break;
-				}
-			}*/
 			auto it = std::find(lockOnEnableEnemies_.begin(), lockOnEnableEnemies_.end(), enemy);
 			if (it != lockOnEnableEnemies_.end()) {
 				lockOnEnableEnemies_.erase(std::remove(lockOnEnableEnemies_.begin(), lockOnEnableEnemies_.end(), enemy), lockOnEnableEnemies_.end());
@@ -178,12 +176,6 @@ void LockOn::ClearLockOn() {
 		cameraDir = cameraDir * rotMatrix;
 		if (IsObjectInOppositeDirection(enemy->GetPosition(), pCamera_->worldTF.translation, cameraDir)) {
 			enemy->SetIsLocked(false);
-			/*for (int i = 0; i < lockOnEnableEnemies_.size(); i++) {
-				if (enemy->GetID() == lockOnEnableEnemies_[i].enemyData->GetID()) {
-					lockOnEnableEnemies_.erase(lockOnEnableEnemies_.begin() + i);
-					break;
-				}
-			}*/
 			auto it = std::find(lockOnEnableEnemies_.begin(), lockOnEnableEnemies_.end(), enemy);
 			if (it != lockOnEnableEnemies_.end()) {
 				lockOnEnableEnemies_.erase(std::remove(lockOnEnableEnemies_.begin(), lockOnEnableEnemies_.end(), enemy), lockOnEnableEnemies_.end());
@@ -194,12 +186,6 @@ void LockOn::ClearLockOn() {
 		// スクリーン座標内にいないならリストから除外
 		if (!IsObjectInScreen(enemy->GetPosition())) {
 			enemy->SetIsLocked(false);
-			//for (int i = 0; i < lockOnEnableEnemies_.size(); i++) {
-			//	if (enemy->GetID() == lockOnEnableEnemies_[i].enemyData->GetID()) {
-			//		lockOnEnableEnemies_.erase(lockOnEnableEnemies_.begin() + i);
-			//		break;
-			//	}
-			//}
 			auto it = std::find(lockOnEnableEnemies_.begin(), lockOnEnableEnemies_.end(), enemy);
 			if (it != lockOnEnableEnemies_.end()) {
 				lockOnEnableEnemies_.erase(std::remove(lockOnEnableEnemies_.begin(), lockOnEnableEnemies_.end(), enemy), lockOnEnableEnemies_.end());
@@ -299,6 +285,9 @@ void LockOn::LockOnReticleUpdate() {
 			screenPos.y,
 			0
 		};
+		lockOnEnemy.ui.sprite.isActive = false;
+		lockOnEnemy.ui.enableLockOnObj.worldTF.translation = lockOnEnemy.enemyData->GetPosition() + Vector3{0.0f, 1.5f, 0.0f};
+		lockOnEnemy.ui.enableLockOnObj.isActive = true;
 	}
 }
 
