@@ -16,10 +16,10 @@ SpawnData::~SpawnData()
 void SpawnData::Update()
 {
 
-	waveData_.remove_if([](WaveData* waveData) {
+	waveData_.remove_if([](WaveData& waveData) {
 
 		//削除フラグ立っていたら消す
-		if (waveData->GetIsDelete()) {
+		if (waveData.GetIsDelete()) {
 			return true;
 		}
 
@@ -27,9 +27,9 @@ void SpawnData::Update()
 
 		});
 
-	for (WaveData* waveData : waveData_) {
+	for (WaveData& waveData : waveData_) {
 
-		waveData->Update();
+		waveData.Update();
 
 	}
 
@@ -52,12 +52,12 @@ void SpawnData::DebugGUI()
 
 	//ウェーブ追加
 	if (ImGui::Button("Add Wave")) {
-		WaveData* data = new WaveData();
+		WaveData data{};
 		waveData_.push_back(data);
 	}
 
 	//全ウェーブデータのデバッグ表示
-	for (int32_t i = 1; WaveData* waveData : waveData_) {
+	for (int32_t i = 1; WaveData& waveData : waveData_) {
 
 		//各ウェーブを区別するため数字をふる
 		std::string treeName = "Wave" + std::to_string(i);
@@ -67,21 +67,21 @@ void SpawnData::DebugGUI()
 
 			//追加ボタン
 			if (ImGui::Button("Add Enemy")) {
-				waveData->AddEnemyData(spawnPoint_);
+				waveData.AddEnemyData(spawnPoint_);
 			}
 
 			//ウェーブ削除用ツリー
 			if (ImGui::TreeNode("Delete Wave")) {
 				//ウェーブ削除
 				if (ImGui::Button("Delete Wave")) {
-					waveData->DeleteWave();
+					waveData.DeleteWave();
 				}
 
 				ImGui::TreePop();
 			}
 
 			//デバッグ表示
-			waveData->DebugGUI();
+			waveData.DebugGUI();
 
 			ImGui::TreePop();
 
@@ -93,19 +93,6 @@ void SpawnData::DebugGUI()
 
 }
 
-void SpawnData::ClearList()
-{
-
-	//リストを空にする
-	while (not waveData_.empty()) {
-
-		//deleteしてからpop
-		delete waveData_.back();
-		waveData_.pop_back();
-
-	}
-
-}
 
 void SpawnData::Save()
 {
@@ -113,14 +100,14 @@ void SpawnData::Save()
 	json_.Init("EnemySpawn.json");
 
 	//全ウェーブの保存
-	for (int32_t i = 1; WaveData* waveData : waveData_) {
+	for (int32_t i = 1; WaveData& waveData : waveData_) {
 
 		//ウェーブ+ウェーブ番号+ウェーブ内の敵数の順に文字列を作る
 		std::string groupName = "Wave|" + std::to_string(i);
 
 		json_.BeginGroup(groupName);
 
-		waveData->AddValue(json_);
+		waveData.AddValue(json_);
 
 		json_.EndGroup();
 
@@ -162,9 +149,9 @@ void SpawnData::Load()
 			
 			json_.BeginGroup(itr->name);
 
-			WaveData* waveData = new WaveData();
+			WaveData waveData{};
 			waveData_.push_back(waveData);
-			waveData_.back()->Load(json_, itr->list);
+			waveData_.back().Load(json_, itr->list);
 
 			json_.EndGroup();
 

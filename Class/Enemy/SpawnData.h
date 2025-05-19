@@ -18,9 +18,6 @@ public:
 	//デバッグ用のGUI表示
 	void DebugGUI();
 
-	//リストクリア
-	void ClearList();
-
 private:
 
 	//保存
@@ -31,7 +28,7 @@ private:
 private:
 
 	//敵出現リスト
-	std::list<WaveData*> waveData_;
+	std::list<WaveData> waveData_;
 
 	// jsonによるパラメータの保存、読み込み
 	LWP::Utility::JsonIO json_;

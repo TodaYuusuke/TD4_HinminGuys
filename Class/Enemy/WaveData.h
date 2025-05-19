@@ -6,10 +6,7 @@
 /// <summary>
 /// 敵スポーン情報
 /// </summary>
-class  EnemyData {
-public:
-	EnemyData() = default;
-	~EnemyData() = default;
+struct  EnemyData {
 	LWP::Resource::RigidModel model; //表示用モデル
 	std::string typeStr{}; //種類の名前タグ(保存用)
 	LWP::Math::Vector3 position; //位置
@@ -44,13 +41,11 @@ public:
 	int32_t GetEnemyCount() { return int32_t(enemyData_.size()); }
 	//ロード
 	void Load(LWP::Utility::JsonIO& json, LWP::Utility::NestedList& list);
-	//リストクリア
-	void ClearList();
 
 private:
 
 	//敵のスポーン地点
-	std::list<EnemyData*> enemyData_;
+	std::list<EnemyData> enemyData_;
 	//削除フラグ
 	bool isDelete_ = false;
 	//アクティブフラグ
