@@ -1,0 +1,42 @@
+{
+    "Group :Wave|1": {
+        "Group :Enemy|1": {
+            "Vector3 :position": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "float :delayTime": 0.0,
+            "string :type": "Normal"
+        },
+        "Group :Enemy|2": {
+            "Vector3 :position": [
+                1.7000000476837158,
+                0.0,
+                0.0
+            ],
+            "float :delayTime": 0.0,
+            "string :type": "Boss"
+        },
+        "Group :Enemy|3": {
+            "Vector3 :position": [
+                4.900000095367432,
+                0.0,
+                0.0
+            ],
+            "float :delayTime": 24.200000762939453,
+            "string :type": "Normal"
+        }
+    },
+    "Group :Wave|2": {
+        "Group :Enemy|1": {
+            "Vector3 :position": [
+                1.7000000476837158,
+                0.0,
+                0.0
+            ],
+            "float :delayTime": 0.0,
+            "string :type": "Normal"
+        }
+    }
+}

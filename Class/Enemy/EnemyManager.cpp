@@ -24,6 +24,8 @@ void EnemyManager::Finalize()
 void EnemyManager::Update()
 {
 
+	spawnData_.Update();
+
 	uint16_t closenessCounter = 0;
 
 	//全ての敵の更新
@@ -114,8 +116,6 @@ void EnemyManager::ClearList()
 void EnemyManager::DebugGUI()
 {
 
-	//ImGui::Begin("Enemy Manager");
-
 	//スポーンポイント設定
 	ImGui::DragFloat3("spawn point", &spawnPoint_.x, 0.1f);
 
@@ -179,10 +179,17 @@ void EnemyManager::DebugGUI()
 
 		}
 
+		//敵の共通ステート変数をいじる
+		if (ImGui::BeginTabItem("SpawnData")) {
+
+			spawnData_.DebugGUI();
+
+			ImGui::EndTabItem();
+
+		}
+
 		ImGui::EndTabBar();
 	}
-
-	//ImGui::End();
 
 }
 

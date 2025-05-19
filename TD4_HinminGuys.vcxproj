@@ -153,6 +153,7 @@
     <ClCompile Include="Class\ComboEditor\ComboTree.cpp" />
     <ClCompile Include="Class\Condition\child\Input\ButtonCondition.cpp" />
     <ClCompile Include="Class\DeltaTimer\DeltaTimer.cpp" />
+    <ClCompile Include="Class\Enemy\SpawnData.cpp" />
     <ClCompile Include="Class\Scene\GameScene.cpp" />
     <ClCompile Include="Class\ComboEditor\Combo.cpp" />
     <ClCompile Include="Class\Enemy\Childs\Boss\Boss.cpp" />
@@ -210,6 +211,7 @@
     <ClInclude Include="Class\Enemy\Childs\Normal\State\NormalEnemyAttack.h" />
     <ClInclude Include="Class\Enemy\Childs\Normal\State\NormalEnemyIdle.h" />
     <ClInclude Include="Class\Enemy\Childs\Normal\State\NormalEnemyMove.h" />
+    <ClInclude Include="Class\Enemy\SpawnData.h" />
     <ClInclude Include="Class\Enemy\States.h" />
     <ClInclude Include="Class\Enemy\WaveData.h" />
     <ClInclude Include="Class\Player\Command\InputConfig.h" />

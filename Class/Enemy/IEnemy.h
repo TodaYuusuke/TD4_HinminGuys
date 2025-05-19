@@ -27,6 +27,10 @@ class IEnemy
 public:
 	IEnemy();
 	virtual ~IEnemy();
+
+	//敵の全種類ネームタグ
+	static std::array<const char*, int(EnemyType::kMax)> enemyTypeName;
+
 	//初期化
 	virtual void Initialize(Player* player, const Vector3& position) = 0;
 	//更新

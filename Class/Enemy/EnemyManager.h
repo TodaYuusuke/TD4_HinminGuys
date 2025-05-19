@@ -6,6 +6,7 @@
 #include "Childs/Boss/Boss.h"
 #include <list>
 #include <memory>
+#include "SpawnData.h"
 
 class Player;
 
@@ -49,6 +50,8 @@ private:
 	//全ての敵を管理するリスト
 	std::list<IEnemy*> enemies_;
 
+	SpawnData spawnData_;
+
 #pragma region デバッグ用
 
 	//スポーン座標指定
@@ -62,9 +65,6 @@ private:
 	float attackEnemyDist_ = 1.5f;
 	//敵の出現上限
 	const uint16_t kMaxEnemyCount_ = 20;
-
-	// jsonによるパラメータの保存、読み込み
-	LWP::Utility::JsonIO json_;
 
 };
 

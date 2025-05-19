@@ -106,13 +106,13 @@ public:// Getter,Setter
 		animation_.Init();
 		animation_.Pause();
 		animation_.Loop(false);
-		animation_.playbackSpeed = 1.0f;
+		animation_.GetPlayBackSpeed() = 1.0f;
 	}
 	/// <summary>
 	/// アニメーションの再生速度を設定
 	/// </summary>
 	/// <param name="playSpeed"></param>
-	void SetAnimationPlaySpeed(const float& playSpeed) { animation_.playbackSpeed = playSpeed; }
+	void SetAnimationPlaySpeed(const float& playSpeed) { animation_.GetPlayBackSpeed() = playSpeed; }
 	/// <summary>
 	/// アニメーションをループするかを設定
 	/// </summary>
