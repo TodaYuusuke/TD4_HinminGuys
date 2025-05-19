@@ -1,6 +1,7 @@
 #pragma once
 #include "../Adapter/Adapter.h"
 #include "EventOrder.h"
+#include "../Command/InputHandler.h"
 
 class Player;
 /// <summary>
@@ -68,6 +69,9 @@ public:// Getter, Setter
 protected:
 	// 自機のアドレス
 	Player* player_;
+
+	//　キー入力
+	InputHandler* inputHandler_;
 
 	// シーンで使用しているカメラのポインタ
 	LWP::Object::Camera* pCamera_;

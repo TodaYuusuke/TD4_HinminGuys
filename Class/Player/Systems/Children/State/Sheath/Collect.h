@@ -35,8 +35,6 @@ private:
 	LWP::Math::Vector3 SmoothDamp(LWP::Math::Vector3 current, LWP::Math::Vector3 target, LWP::Math::Vector3& currentVelocity, float smoothTime, float maxSpeed, float deltaTime);
 
 private:
-	//LWP::Resource::Motion motion_;
-
 	LWP::Math::Vector3 velocity_;
 	LWP::Math::Vector3 start_;
 	LWP::Math::Vector3 end_;

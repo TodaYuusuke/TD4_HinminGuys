@@ -8,7 +8,14 @@ namespace InputConfig {
 	namespace Command {
 		// キーボード
 		namespace Key {
-			inline uint8_t NormalAttack = DIK_J;					// 通常攻撃
+			// 移動
+			namespace Move {
+				inline uint8_t Up = DIK_W;
+				inline uint8_t Down = DIK_S;
+				inline uint8_t Left = DIK_A;
+				inline uint8_t Right = DIK_D;
+			};
+			inline uint8_t NormalAttack = DIK_E;					// 通常攻撃
 			inline uint8_t Parry = DIK_SPACE;						// パリィ
 			inline uint8_t LockOn = DIK_Q;							// ロックオン
 			inline uint8_t Evasion = DIK_LSHIFT;					// 回避

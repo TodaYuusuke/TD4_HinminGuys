@@ -195,6 +195,7 @@
     <ClCompile Include="Class\Player\Gauge\Sheath\SheathGauge.cpp" />
     <ClCompile Include="Class\Player\Systems\Children\State\Sheath\Throw.cpp" />
     <ClCompile Include="Class\Player\Animator\PlayerAnimator.cpp" />
+    <ClCompile Include="Class\Player\Systems\Children\State\Move\None.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Class\ComboEditor\ComboTree.h" />
@@ -221,6 +222,7 @@
     <ClInclude Include="Class\Enemy\States.h" />
     <ClInclude Include="Class\Enemy\WaveData.h" />
     <ClInclude Include="Class\Player\Animator\AnimConfig.h" />
+    <ClInclude Include="Class\Player\Command\BanInput.h" />
     <ClInclude Include="Class\Player\Command\InputConfig.h" />
     <ClInclude Include="Class\Enemy\Childs\Normal\Normal.h" />
     <ClInclude Include="Class\Enemy\Childs\State\NormalAttack.h" />
@@ -261,6 +263,7 @@
     <ClInclude Include="Class\Player\Animator\PlayerAnimator.h" />
     <ClInclude Include="Class\Player\Animator\IAnimation.h" />
     <ClInclude Include="Class\Player\Systems\Children\State\Move\Dash.h" />
+    <ClInclude Include="Class\Player\Systems\Children\State\Move\None.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />

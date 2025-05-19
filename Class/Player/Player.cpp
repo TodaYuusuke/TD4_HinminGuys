@@ -17,9 +17,6 @@ Player::Player(LWP::Object::Camera* camera, EnemyManager* enemyManager, FollowCa
 	animation_.LoadFullPath("resources/model/player/Player_Simple.gltf", &model_);
 	animation_.Play("Idle");
 
-	// 自機機能を生成
-	CreateSystems();
-
 	// 当たり判定を作成
 	CreateCollision();
 
@@ -29,6 +26,9 @@ Player::Player(LWP::Object::Camera* camera, EnemyManager* enemyManager, FollowCa
 }
 
 void Player::Initialize() {
+	// 自機機能を生成
+	CreateSystems();
+
 	// 大きさを一時的に調整
 	model_.worldTF.scale = { 0.5f, 0.5f, 0.5f };
 }
@@ -42,8 +42,12 @@ void Player::Update() {
 	// 角度を代入
 	model_.worldTF.rotation = systemManager_->GetRotate();
 
+	// 無敵判定
+	CheckInvinsible();
+
 	// HP
 	hp_.Update();
+	// 鞘
 	sheathGauge_.Update();
 }
 
@@ -90,4 +94,16 @@ void Player::CreateCollision() {
 	collider_.stayLambda = [this](LWP::Object::Collision* hitTarget) {
 		hitTarget;
 		};
+}
+
+void Player::CheckInvinsible() {
+	if (!systemManager_->GetEvasionSystem()->GetIsInvinsible()) { 
+		collider_.isActive = true;
+		return;
+	}
+
+	// 回避無敵
+	if (systemManager_->GetEvasionSystem()->GetIsInvinsible()) {
+		collider_.isActive = false;
+	}
 }

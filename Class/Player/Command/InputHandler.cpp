@@ -4,9 +4,16 @@
 using namespace LWP::Input;
 using namespace InputConfig;
 
+InputHandler* InputHandler::GetInstance() {
+	static InputHandler instance;
+	return &instance;
+}
+
 void InputHandler::Initialize() {
 	// コマンド作成
 	CreateCommand();
+
+	banInput_ = BanNone;
 }
 
 void InputHandler::Update(Player& player) {
@@ -15,7 +22,15 @@ void InputHandler::Update(Player& player) {
 
 	// set Command
 	for (ICommand* cmd : commands_) {
-		cmd->Exec(player);
+		cmd->Exec(player, banInput_);
+
+		if (cmd->isActive_) {
+			currentCommand_ = cmd;
+		}
+	}
+	
+	if (currentCommand_) {
+		currentCommand_->Reset(player, banInput_);
 	}
 }
 
@@ -41,6 +56,7 @@ void InputHandler::CreateCommand() {
 	AssignLockOnCommand();
 	AssignEvasionCommand();
 	AssignSheathCommand();
+	AssignMoveCommand();
 }
 
 std::vector<ICommand*> InputHandler::HandleInput() {
@@ -66,8 +82,19 @@ std::vector<ICommand*> InputHandler::HandleInput() {
 	if (Keyboard::GetTrigger(Command::Key::Sheath) || Pad::GetTrigger(Command::GamePad::Sheath)) {
 		result.push_back(pressSheathCommand_);
 	}
+	// 移動入力
+	LWP::Math::Vector2 dir = Pad::GetLStick();
+	if (Keyboard::GetPress(Command::Key::Move::Up) || Keyboard::GetPress(Command::Key::Move::Down) || Keyboard::GetPress(Command::Key::Move::Left) || Keyboard::GetPress(Command::Key::Move::Right)
+		|| dir.Length() != 0.0f) {
+		result.push_back(pressMoveCommand_);
+	}
 
 	return result;
+}
+
+void InputHandler::AssignMoveCommand() {
+	ICommand* command = new MoveCommand();
+	this->pressMoveCommand_ = command;
 }
 
 void InputHandler::AssignNormalAttackCommand() {

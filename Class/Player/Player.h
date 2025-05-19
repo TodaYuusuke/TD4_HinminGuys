@@ -7,6 +7,7 @@
 #include "Systems/SystemManager.h"
 #include "Gauge/HP/HP.h"
 #include "Gauge/Sheath/SheathGauge.h"
+#include "Command/InputHandler.h"
 #include <memory>
 
 class IEnemy;
@@ -53,6 +54,11 @@ private:
 	/// 当たり判定を作成
 	/// </summary>
 	void CreateCollision();
+
+	/// <summary>
+	/// 無敵時間蚊を判定
+	/// </summary>
+	void CheckInvinsible();
 
 public:// Getter,Setter
 #pragma region Getter
@@ -109,7 +115,6 @@ public:// Getter,Setter
 	/// </summary>
 	/// <param name="enemyManager">敵の管理クラスのポインタ</param>
 	void SetEnemyManager(EnemyManager* enemyManager) { enemyManager_ = enemyManager; }
-
 	/// <summary>
 	/// アニメーションを開始
 	/// </summary>
@@ -124,10 +129,7 @@ public:// Getter,Setter
 	/// <summary>
 	/// アニメーションを初期化
 	/// </summary>
-	void ResetAnimation() {
-		animation_.Loop(false);
-		//animation_.playbackSpeed = 1.0f;
-	}
+	void ResetAnimation() { animation_.Loop(false); }
 	/// <summary>
 	/// ブレンドされているアニメーションを停止
 	/// </summary>

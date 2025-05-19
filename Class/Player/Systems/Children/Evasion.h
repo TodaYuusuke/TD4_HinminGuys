@@ -12,6 +12,11 @@ private:
 		bool isEnd;
 	};
 
+	enum class EventOrderState {
+		kInvincible		 = 0,		// 無敵
+		kAcceleration	 = 1		// 加速
+	};
+
 public:
 	// コンストラクタ
 	Evasion(LWP::Object::Camera* camera, Player* player);
@@ -49,6 +54,15 @@ public:
 
 private:
 	/// <summary>
+	/// 無敵タイミングのアクションイベントを作成
+	/// </summary>
+	void CreateInvincibleEventOrder();
+	/// <summary>
+	/// 加速タイミングのアクションイベントを作成
+	/// </summary>
+	void CreateAccelerationEventOrder();
+
+	/// <summary>
 	/// アクションイベントの生成
 	/// </summary>
 	void CreateEventOrder();
@@ -80,7 +94,16 @@ public:// Getter, Setter
 	/// </summary>
 	/// <returns></returns>
 	LWP::Math::Vector3 GetRadian() { return radian_; }
-
+	/// <summary>
+	/// 無敵状態かを取得
+	/// </summary>
+	/// <returns></returns>
+	bool GetIsInvinsible() {
+		if (eventOrders_[(int)EventOrderState::kInvincible].GetCurrentTimeEvent().name == "InvinsibleTime") {
+			return true;
+		}
+		return false;
+	}
 	/// <summary>
 	/// ダッシュするのに必要なボタンを長押ししているかを取得
 	/// </summary>
@@ -97,25 +120,40 @@ public:// Getter, Setter
 	/// </summary>
 	/// <param name="isDash"></param>
 	void SetIsDash(const bool& isDash) {
-		if (isDash) { pressTime_ = dashButtonHoldSeconds * 60.0f; }
+		if (isDash) {
+			pressTime_ = dashButtonHoldSeconds * 60.0f; 
+			return;
+		}
 		pressTime_ = 0.0f;
 	}
 #pragma endregion
 
 private:// jsonで保存する値
-	// 回避発動までにかかる時間[秒]
-	float kEvasionSwingTime = 0.0f;
+	// 回避の終了時間
+	float evasionFinishTime = 0.3f;
+
+	// 回避の無敵発動までにかかる時間[秒]
+	float invinsibleSwingTime = 0.0f;
 	// 回避の無敵時間[秒]
-	float kInvinsibleTime = 0.3f;
-	// 回避の硬直[秒]
-	float kEvasionRecoveryTime = 0.0f;
+	float invinsibleTime = 0.3f;
+	// 回避の無敵硬直[秒]
+	float invinsibleRecoveryTime = 0.0f;
+
+	// 回避の加速発動までにかかる時間[秒]
+	float accelerationSwingTime = 0.0f;
+	// 回避の加速時間[秒]
+	float accelerationTime = 0.3f;
+	// 回避の加速硬直[秒]
+	float accelerationRecoveryTime = 0.0f;
+
 	// ダッシュ移行するのに必要なボタンを押す時間
-	float dashButtonHoldSeconds = 60.0f * 0.4f;
+	float dashButtonHoldSeconds = 60.0f * 0.3f;
+
 	// 回避速度の係数
 	float moveMultiply = 1.0f;
 
 	// 回避の移動量
-	LWP::Math::Vector3 evasionMovement = { 0.0f, 0.0f, 10.0f };
+	LWP::Math::Vector3 evasionMovement = { 0.0f, 0.0f, 1.0f };
 
 private:// プライベートな変数
 	// 回避時の速度
@@ -128,8 +166,11 @@ private:// プライベートな変数
 	// アニメーションの再生速度
 	LWP::Math::Vector3 animPlaySpeed_;
 
-	float t_;
+	// 回避速度のイージング
 	EaseData easeData_;
+
+	// アクションイベント集
+	std::map<int, EventOrder> eventOrders_;
 
 	// 回避ボタンを押した時間
 	float pressTime_;
