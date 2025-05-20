@@ -52,6 +52,11 @@ public:
 	void DebugGUI() override;
 
 	/// <summary>
+	/// jsonファイルの作成
+	/// </summary>
+	void CreateJsonFIle() override;
+
+	/// <summary>
 	/// ロックオンコマンド
 	/// </summary>
 	void Command();
@@ -122,7 +127,7 @@ public:// Getter, Setter
 
 private:// jsonで保存する値
 	// ロックオンできる範囲
-	float kMaxRange = 50.0f;
+	static float kMaxRange;
 
 private:// 外部からポインタをもらう変数
 	// 敵のリスト

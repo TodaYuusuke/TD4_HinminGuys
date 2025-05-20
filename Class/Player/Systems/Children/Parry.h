@@ -31,6 +31,11 @@ public:
 	void DebugGUI() override;
 
 	/// <summary>
+	/// jsonファイルの作成
+	/// </summary>
+	void CreateJsonFIle() override;
+
+	/// <summary>
 	/// パリィのコマンド
 	/// </summary>
 	void Command();
@@ -63,13 +68,13 @@ public:// Getter, Setter
 
 private:// jsonで保存する値
 	// パリィ発動までにかかる時間[秒]
-	float kSwingTime = 0.0f;
+	static float kSwingTime;
 	// 通常パリィの猶予時間[秒]
-	float kGoodParryTime = 0.6f;
+	static float kGoodParryTime;
 	// ジャストパリィの猶予時間[秒]
-	float kJustParryTime = 0.2f;
+	static float kJustParryTime;
 	// パリィの硬直[秒]
-	float kRecoveryTime = 0.0f;
+	static float kRecoveryTime;
 
 private:
 	// パリィ判定

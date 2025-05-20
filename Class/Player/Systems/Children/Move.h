@@ -42,6 +42,11 @@ public:
 	void DebugGUI() override;
 
 	/// <summary>
+	/// jsonファイルの作成
+	/// </summary>
+	void CreateJsonFIle() override;
+
+	/// <summary>
 	/// 移動コマンド
 	/// </summary>
 	void Command();
@@ -182,16 +187,16 @@ public:// Getter, Setter
 
 private:// jsonで保存する値
 	// 歩き時の速度倍率
-	float walkSpeedMultiply = 1.0f;
+	static float walkSpeedMultiply;
 	// 小走りの速度倍率
-	float runSpeedMultiply = 1.0f;
+	static float runSpeedMultiply;
 	// 走り時の速度倍率
-	float dashSpeedMultiply = 1.0f;
+	static float dashSpeedMultiply;
 	// 移動の補間レート
-	float moveSpeedRate = 0.2f;
+	static float moveSpeedRate;
 
 	// 小走り状態に移行するのに必要なスティックの倒し具合(0.0f~1.0f)
-	float runThreshold = 0.5f;
+	static float runThreshold;
 
 private:// プライベートな変数
 	// 移動対象のモデルのアドレス

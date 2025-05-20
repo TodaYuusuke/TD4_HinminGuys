@@ -28,11 +28,31 @@ public:
 	/// </summary>
 	virtual void Reset() = 0;
 
-
+	/// <summary>
+	/// 
+	/// </summary>
 	virtual void DebugGUI() = 0;
+
+	/// <summary>
+	/// jsonファイルの作成
+	/// </summary>
+	virtual void CreateJsonFIle() = 0;
+
+private:
+	/// <summary>
+	/// 状態の遷移
+	/// </summary>
+	/// <param name="pState">次の状態</param>
+	void ChangeState(ISystem* pState);
 
 public:// Getter, Setter
 #pragma region Getter
+	int GetCurrentState() { return currentState_; }
+	/// <summary>
+	/// 次に遷移できるシステムを取得
+	/// </summary>
+	/// <returns></returns>
+	int GetNextState() { return nextState_; }
 	/// <summary>
 	/// 機能が使える状態かを取得
 	/// </summary>
@@ -66,6 +86,11 @@ public:// Getter, Setter
 	/// <param name="player"></param>
 	void SetPlayer(Player* player) { player_ = player; }
 	/// <summary>
+	/// 次に遷移できるシステムを設定
+	/// </summary>
+	/// <param name="nextState"></param>
+	void SetNextState(const int& nextState) { nextState_ = nextState; }
+	/// <summary>
 	/// 機能が使える状態かを設定
 	/// </summary>
 	void SetIsActive(bool isActive) { isActive_ = isActive; }
@@ -87,6 +112,11 @@ protected:
 
 	// フレーム単位で発生するアクションイベントを管理するクラス
 	EventOrder eventOrder_;
+
+
+	int currentState_;
+	// 次に遷移できるシステム(ビットで管理)
+	int nextState_;
 
 	// 機能が使える状態か
 	bool isActive_ = false;

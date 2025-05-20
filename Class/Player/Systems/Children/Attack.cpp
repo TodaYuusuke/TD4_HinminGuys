@@ -11,6 +11,13 @@ using namespace LWP::Object;
 using namespace LWP::Object::Collider;
 using namespace GameMask;
 
+// 通常攻撃発動までにかかる時間[秒]
+float Attack::kNormalSwingTime;
+// 通常攻撃の猶予時間[秒]
+float Attack::kNormalAttackTime;
+// 通常攻撃の硬直[秒]
+float Attack::kNormalRecoveryTime;
+
 Attack::Attack(LWP::Object::Camera* camera, Player* player)
 	: aabb_(collider_.SetBroadShape(LWP::Object::Collider::AABB()))
 {
@@ -19,6 +26,9 @@ Attack::Attack(LWP::Object::Camera* camera, Player* player)
 
 	// 攻撃の当たり判定作成
 	CreateCollision();
+
+	nextState_ = InputNone;
+	currentState_ = InputAttack;
 
 	// 状態作成
 	state_ = new NoneAttack(this);
@@ -32,19 +42,8 @@ Attack::~Attack() {
 void Attack::Initialize() {
 	// コマンドの登録
 	inputHandler_ = InputHandler::GetInstance();
-	inputHandler_->GetA();
 	isActive_ = false;
 	isPreActive_ = false;
-
-	json_.Init("AttackData.json");
-	json_.BeginGroup("EventOrder")
-		.BeginGroup("GraceTime")
-		.AddValue<float>("SwingTime", &kNormalSwingTime)
-		.AddValue<float>("AttackTime", &kNormalAttackTime)
-		.AddValue<float>("AttackRecoveryTime", &kNormalRecoveryTime)
-		.EndGroup()
-		.EndGroup()
-		.CheckJsonFile();
 
 	// フレーム単位で発生するアクションイベントを管理するクラス
 	CreateEventOrder();
@@ -119,6 +118,18 @@ void Attack::DebugGUI() {
 
 		ImGui::TreePop();
 	}
+}
+
+void Attack::CreateJsonFIle() {
+	json_.Init("AttackData.json");
+	json_.BeginGroup("EventOrder")
+		.BeginGroup("GraceTime")
+		.AddValue<float>("SwingTime", &kNormalSwingTime)
+		.AddValue<float>("AttackTime", &kNormalAttackTime)
+		.AddValue<float>("AttackRecoveryTime", &kNormalRecoveryTime)
+		.EndGroup()
+		.EndGroup()
+		.CheckJsonFile();
 }
 
 void Attack::NormalCommand() {

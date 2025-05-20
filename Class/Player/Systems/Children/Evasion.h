@@ -43,6 +43,11 @@ public:
 	void DebugGUI() override;
 
 	/// <summary>
+	/// jsonファイルの作成
+	/// </summary>
+	void CreateJsonFIle() override;
+
+	/// <summary>
 	/// 回避のコマンド
 	/// </summary>
 	void Command();
@@ -130,30 +135,30 @@ public:// Getter, Setter
 
 private:// jsonで保存する値
 	// 回避の終了時間
-	float evasionFinishTime = 0.3f;
+	static float evasionFinishTime;
 
 	// 回避の無敵発動までにかかる時間[秒]
-	float invinsibleSwingTime = 0.0f;
+	static float invinsibleSwingTime;
 	// 回避の無敵時間[秒]
-	float invinsibleTime = 0.3f;
+	static float invinsibleTime;
 	// 回避の無敵硬直[秒]
-	float invinsibleRecoveryTime = 0.0f;
+	static float invinsibleRecoveryTime;
 
 	// 回避の加速発動までにかかる時間[秒]
-	float accelerationSwingTime = 0.0f;
+	static float accelerationSwingTime;
 	// 回避の加速時間[秒]
-	float accelerationTime = 0.3f;
+	static float accelerationTime;
 	// 回避の加速硬直[秒]
-	float accelerationRecoveryTime = 0.0f;
+	static float accelerationRecoveryTime;
 
 	// ダッシュ移行するのに必要なボタンを押す時間
-	float dashButtonHoldSeconds = 60.0f * 0.3f;
+	static float dashButtonHoldSeconds;
 
 	// 回避速度の係数
-	float moveMultiply = 1.0f;
+	static float moveMultiply;
 
 	// 回避の移動量
-	LWP::Math::Vector3 evasionMovement = { 0.0f, 0.0f, 1.0f };
+	static LWP::Math::Vector3 evasionMovement;
 
 private:// プライベートな変数
 	// 回避時の速度

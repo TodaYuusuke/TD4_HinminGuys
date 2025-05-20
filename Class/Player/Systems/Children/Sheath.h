@@ -4,6 +4,12 @@
 
 class Sheath : public ISystem {
 public:
+	enum class SheathState {
+		kThrow		= 0,
+		kCollect	= 1
+	};
+
+public:
 	// コンストラクタ
 	Sheath(LWP::Object::Camera * camera, Player * player);
 	// デストラクタ
@@ -29,6 +35,11 @@ public:
 	void DebugGUI() override;
 
 	/// <summary>
+	/// jsonファイルの作成
+	/// </summary>
+	void CreateJsonFIle() override;
+
+	/// <summary>
 	/// 鞘を投げるor鞘に向かってダッシュコマンド
 	/// </summary>
 	void Command();
@@ -37,6 +48,10 @@ public:
 	/// アニメーションのコマンド
 	/// </summary>
 	void AnimCommand();
+
+	void CreateThrowEventOrder();
+
+	void CreateCollectEventOrder();
 
 	/// <summary>
 	/// 状態の遷移
@@ -102,7 +117,34 @@ public:// Getter, Setter
 	void SetRotate(const LWP::Math::Quaternion& quat) { quat_ = quat; }
 #pragma endregion
 
+public:// jsonに保存する値
+	// 鞘投げ発動までにかかる時間[秒]
+	static float throwSwingTime;
+	// 鞘を投げて到達するまでの時間[秒]
+	static float throwTime;
+	// 鞘投げの硬直[秒]
+	static float throwRecoveryTime;
+
+	// 鞘回収発動までにかかる時間[秒]
+	static float collectSwingTime;
+	// 鞘の場所に自機が到着するまでの時間[秒]
+	static float collectTime;
+	// 鞘回収の硬直[秒]
+	static float collectRecoveryTime;
+
+	// 鞘を投げた後の移動可能範囲
+	static float enableMoveRange;
+
+	// 鞘投げの範囲
+	static LWP::Math::Vector3 throwMovement;
+
+	// クールタイム
+	static float coolTime;
+
 private:// プライベートな変数
+	// アクションイベント集
+	std::map<int, EventOrder> eventOrders_;
+
 	// 状態遷移
 	ISheathSystemState* state_;
 

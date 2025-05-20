@@ -20,18 +20,26 @@ void InputHandler::Update(Player& player) {
 	// 入力されたコマンドを確認
 	commands_ = HandleInput();
 
+	// 削除
+	//if (!currentCommand_.empty()) {
+	//	currentCommand_[0]->Reset(player, banInput_);
+	//	if (!currentCommand_[0]->isActive_) {
+	//		currentCommand_.erase(currentCommand_.begin());
+	//	}
+	//}
+
 	// set Command
 	for (ICommand* cmd : commands_) {
-		cmd->Exec(player, banInput_);
+		//cmd->Exec(player, &currentCommand_, banInput_);
+	}
 
-		if (cmd->isActive_) {
-			currentCommand_ = cmd;
-		}
-	}
-	
-	if (currentCommand_) {
-		currentCommand_->Reset(player, banInput_);
-	}
+	// 入力不可を更新
+	//if (!currentCommand_.empty()) {
+	//	banInput_ = currentCommand_[0]->banInput_;
+	//}
+	//else {
+	//	banInput_ = BanNone;
+	//}
 }
 
 void InputHandler::DebugGUI() {
@@ -39,11 +47,7 @@ void InputHandler::DebugGUI() {
 		// 登録されているコマンド
 		if (ImGui::TreeNode("AllView")) {
 
-			ImGui::TreePop();
-		}
-		// 登録をし直す
-		if (ImGui::TreeNode("Reset")) {
-
+			ImGui::DragInt("BanBinary", &banInput_);
 			ImGui::TreePop();
 		}
 		ImGui::TreePop();

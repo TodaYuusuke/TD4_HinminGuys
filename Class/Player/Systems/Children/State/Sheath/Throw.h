@@ -8,7 +8,7 @@
 class Throw : public ISheathSystemState {
 public:
 	// コンストラクタ
-	Throw(Sheath* sheathSystem, Player* player);
+	Throw(Sheath* sheathSystem, Player* player, std::map<int, EventOrder>* eventOrders);
 	// デストラクタ
 	~Throw() override = default;
 

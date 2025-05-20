@@ -6,6 +6,15 @@
 using namespace LWP::Utility;
 using namespace GameMask;
 
+// パリィ発動までにかかる時間[秒]
+float Parry::kSwingTime = 0.0f;
+// 通常パリィの猶予時間[秒]
+float Parry::kGoodParryTime = 0.6f;
+// ジャストパリィの猶予時間[秒]
+float Parry::kJustParryTime = 0.2f;
+// パリィの硬直[秒]
+float Parry::kRecoveryTime = 0.0f;
+
 Parry::Parry(LWP::Object::Camera* camera, Player* player)
 	: aabb_(collider_.SetBroadShape(LWP::Object::Collider::AABB()))
 {
@@ -15,22 +24,13 @@ Parry::Parry(LWP::Object::Camera* camera, Player* player)
 	// パリィ判定生成
 	CreateCollision();
 
-	json_.Init("ParryData.json");
-	json_.BeginGroup("EventOrder")
-		.BeginGroup("GraceTime")
-		.AddValue<float>("SwingTime", &kSwingTime)
-		.AddValue<float>("JustParry", &kJustParryTime)
-		.AddValue<float>("GoodParry", &kGoodParryTime)
-		.AddValue<float>("RecoveryTime", &kRecoveryTime)
-		.EndGroup()
-		.EndGroup()
-		.CheckJsonFile();
+	nextState_ = InputNone;
+	currentState_ = InputParry;
 }
 
 void Parry::Initialize() {
 	// コマンドの登録
 	inputHandler_ = InputHandler::GetInstance();
-	inputHandler_->GetA();
 	isActive_ = false;
 	isPreActive_ = false;
 
@@ -96,6 +96,19 @@ void Parry::DebugGUI() {
 
 		ImGui::TreePop();
 	}
+}
+
+void Parry::CreateJsonFIle() {
+	json_.Init("ParryData.json");
+	json_.BeginGroup("EventOrder")
+		.BeginGroup("GraceTime")
+		.AddValue<float>("SwingTime", &kSwingTime)
+		.AddValue<float>("JustParry", &kJustParryTime)
+		.AddValue<float>("GoodParry", &kGoodParryTime)
+		.AddValue<float>("RecoveryTime", &kRecoveryTime)
+		.EndGroup()
+		.EndGroup()
+		.CheckJsonFile();
 }
 
 void Parry::Command() {

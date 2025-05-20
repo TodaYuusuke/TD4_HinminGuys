@@ -6,9 +6,38 @@ using namespace LWP;
 using namespace LWP::Math;
 using namespace InputConfig;
 
+// 回避の終了時間
+float Evasion::evasionFinishTime = 0.3f;
+
+// 回避の無敵発動までにかかる時間[秒]
+float Evasion::invinsibleSwingTime = 0.0f;
+// 回避の無敵時間[秒]
+float Evasion::invinsibleTime = 0.3f;
+// 回避の無敵硬直[秒]
+float Evasion::invinsibleRecoveryTime = 0.0f;
+
+// 回避の加速発動までにかかる時間[秒]
+float Evasion::accelerationSwingTime = 0.0f;
+// 回避の加速時間[秒]
+float Evasion::accelerationTime = 0.3f;
+// 回避の加速硬直[秒]
+float Evasion::accelerationRecoveryTime = 0.0f;
+
+// ダッシュ移行するのに必要なボタンを押す時間
+float Evasion::dashButtonHoldSeconds = 60.0f * 0.3f;
+
+// 回避速度の係数
+float Evasion::moveMultiply = 1.0f;
+
+// 回避の移動量
+LWP::Math::Vector3 Evasion::evasionMovement = { 0.0f, 0.0f, 1.0f };
+
 Evasion::Evasion(LWP::Object::Camera* camera, Player* player) {
 	pCamera_ = camera;
 	player_ = player;
+
+	nextState_ = InputNone;
+	currentState_ = InputEvasion;
 }
 
 void Evasion::Initialize() {
@@ -16,37 +45,6 @@ void Evasion::Initialize() {
 	inputHandler_ = InputHandler::GetInstance();
 	isActive_ = false;
 	isPreActive_ = false;
-
-	json_.Init("EvasionData.json");
-	json_.BeginGroup("EventOrder")
-		// 回避の無敵タイミングの設定
-		.BeginGroup("Invinsible")
-		.BeginGroup("GraceTime")
-		.AddValue<float>("SwingTime", &invinsibleSwingTime)
-		.AddValue<float>("InvinsibleTime", &invinsibleTime)
-		.AddValue<float>("RecoveryTime", &invinsibleRecoveryTime)
-		.EndGroup()
-		.EndGroup()
-		// 加速タイミングの設定
-		.BeginGroup("Acceleration")
-		.BeginGroup("GraceTime")
-		.AddValue<float>("SwingTime", &accelerationSwingTime)
-		.AddValue<float>("AccelerationTime", &accelerationTime)
-		.AddValue<float>("RecoveryTime", &accelerationRecoveryTime)
-		.EndGroup()
-		.EndGroup()
-		.EndGroup()
-		// ダッシュに関する設定
-		.BeginGroup("Dash")
-		.AddValue<float>("ButtonHoldSeconds", &dashButtonHoldSeconds)
-		.EndGroup()
-		// 回避の終了時間
-		.AddValue<float>("FinishTime", &evasionFinishTime)
-		// 回避速度の倍率
-		.AddValue<float>("MoveMultiply", &moveMultiply)
-		// 回避の移動距離
-		.AddValue<Vector3>("Movement", &evasionMovement)
-		.CheckJsonFile();
 
 	animationPlaySpeed_.Add(&animPlaySpeed_, Vector3{ 0.05f, 0.0f, 0.0f }, 0.0f, 0.1f, LWP::Utility::Easing::Type::OutExpo)
 		.Add(&animPlaySpeed_, Vector3{ 1.0f, 0.0f, 0.0f }, 0.1f, 0.5f, LWP::Utility::Easing::Type::InExpo);
@@ -137,6 +135,39 @@ void Evasion::DebugGUI() {
 
 		ImGui::TreePop();
 	}
+}
+
+void Evasion::CreateJsonFIle() {
+	json_.Init("EvasionData.json");
+	json_.BeginGroup("EventOrder")
+		// 回避の無敵タイミングの設定
+		.BeginGroup("Invinsible")
+		.BeginGroup("GraceTime")
+		.AddValue<float>("SwingTime", &invinsibleSwingTime)
+		.AddValue<float>("InvinsibleTime", &invinsibleTime)
+		.AddValue<float>("RecoveryTime", &invinsibleRecoveryTime)
+		.EndGroup()
+		.EndGroup()
+		// 加速タイミングの設定
+		.BeginGroup("Acceleration")
+		.BeginGroup("GraceTime")
+		.AddValue<float>("SwingTime", &accelerationSwingTime)
+		.AddValue<float>("AccelerationTime", &accelerationTime)
+		.AddValue<float>("RecoveryTime", &accelerationRecoveryTime)
+		.EndGroup()
+		.EndGroup()
+		.EndGroup()
+		// ダッシュに関する設定
+		.BeginGroup("Dash")
+		.AddValue<float>("ButtonHoldSeconds", &dashButtonHoldSeconds)
+		.EndGroup()
+		// 回避の終了時間
+		.AddValue<float>("FinishTime", &evasionFinishTime)
+		// 回避速度の倍率
+		.AddValue<float>("MoveMultiply", &moveMultiply)
+		// 回避の移動距離
+		.AddValue<Vector3>("Movement", &evasionMovement)
+		.CheckJsonFile();
 }
 
 void Evasion::Command() {

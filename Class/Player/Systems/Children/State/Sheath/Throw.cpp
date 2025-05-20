@@ -8,11 +8,14 @@ using namespace LWP;
 using namespace LWP::Math;
 using namespace LWP::Resource;
 
-Throw::Throw(Sheath* sheathSystem, Player* player) {
+Throw::Throw(Sheath* sheathSystem, Player* player, std::map<int, EventOrder>* eventOrders) {
 	sheathSystem_ = sheathSystem;
 	player_ = player;
 	// コマンドの登録
 	inputHandler_ = InputHandler::GetInstance();
+
+	eventOrders_ = eventOrders;
+
 	// 状態の名前
 	stateName_ = "Throw";
 }
@@ -27,7 +30,7 @@ void Throw::Update() {
 
 void Throw::Command() {
 	if (!isActive_) {
-		sheathSystem_->SetSheathPos(player_->GetWorldTF()->GetWorldPosition() + throwMovement_ * Matrix4x4::CreateRotateXYZMatrix(player_->GetSystemManager()->GetMoveSystem()->GetMoveRadian()));
+		sheathSystem_->SetSheathPos(player_->GetWorldTF()->GetWorldPosition() + sheathSystem_->throwMovement * Matrix4x4::CreateRotateXYZMatrix(player_->GetSystemManager()->GetMoveSystem()->GetMoveRadian()));
 		sheathSystem_->SetIsActive(true);
 		isActive_ = true;
 		// パリィ以外の入力禁止を解除
@@ -35,7 +38,8 @@ void Throw::Command() {
 		inputHandler_->GetSheathCommand()->SetBanInput(inputHandler_->GetSheathCommand()->GetBanInput() & ~(1 << GetSetBitPosition(BanAttack)));
 		inputHandler_->GetSheathCommand()->SetBanInput(inputHandler_->GetSheathCommand()->GetBanInput() & ~(1 << GetSetBitPosition(BanEvasion)));
 		inputHandler_->GetSheathCommand()->SetBanInput(inputHandler_->GetSheathCommand()->GetBanInput() & ~(1 << GetSetBitPosition(BanSheath)));
-		sheathSystem_->ChangeState(new Collect(sheathSystem_, player_));
+		inputHandler_->GetSheathCommand()->SetBanInput(inputHandler_->GetSheathCommand()->GetBanInput() | (BanParry));
+		sheathSystem_->ChangeState(new Collect(sheathSystem_, player_, eventOrders_));
 	}
 }
 

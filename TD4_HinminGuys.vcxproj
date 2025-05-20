@@ -151,6 +151,7 @@
     <ClCompile Include="Class\ComboEditor\ComboTree.cpp" />
     <ClCompile Include="Class\Condition\child\Input\ButtonCondition.cpp" />
     <ClCompile Include="Class\DeltaTimer\DeltaTimer.cpp" />
+    <ClCompile Include="Class\Player\Systems\ISystem.cpp" />
     <ClCompile Include="Class\Scene\GameScene.cpp" />
     <ClCompile Include="Class\ComboEditor\Combo.cpp" />
     <ClCompile Include="Class\Enemy\Childs\Boss\Boss.cpp" />
