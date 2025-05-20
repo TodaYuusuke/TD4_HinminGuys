@@ -18,7 +18,7 @@ void InputHandler::Initialize() {
 
 void InputHandler::Update(Player& player) {
 	// 入力されたコマンドを確認
-	commands_ = HandleInput();
+	//commands_ = HandleInput();
 
 	// 削除
 	//if (!currentCommand_.empty()) {
@@ -29,9 +29,9 @@ void InputHandler::Update(Player& player) {
 	//}
 
 	// set Command
-	for (ICommand* cmd : commands_) {
-		//cmd->Exec(player, &currentCommand_, banInput_);
-	}
+	//for (ICommand* cmd : commands_) {
+	//	cmd->Exec(player, banInput_);
+	//}
 
 	// 入力不可を更新
 	//if (!currentCommand_.empty()) {
@@ -40,6 +40,22 @@ void InputHandler::Update(Player& player) {
 	//else {
 	//	banInput_ = BanNone;
 	//}
+
+	// 入力されたコマンドを確認
+	commands_ = HandleInput();
+
+	// set Command
+	for (ICommand* cmd : commands_) {
+		cmd->Exec(player, banInput_);
+
+		if (cmd->isActive_) {
+			currentCommand_ = cmd;
+		}
+	}
+
+	if (currentCommand_) {
+		currentCommand_->Reset(player, banInput_);
+	}
 }
 
 void InputHandler::DebugGUI() {

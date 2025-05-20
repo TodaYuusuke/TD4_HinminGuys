@@ -11,24 +11,9 @@ using namespace LWP;
 using namespace LWP::Math;
 using namespace LWP::Input;
 
-// 歩き時の速度倍率
-float Move::walkSpeedMultiply = 1.0f;
-// 小走りの速度倍率
-float Move::runSpeedMultiply = 1.0f;
-// 走り時の速度倍率
-float Move::dashSpeedMultiply = 1.0f;
-// 移動の補間レート
-float Move::moveSpeedRate = 0.2f;
-
-// 小走り状態に移行するのに必要なスティックの倒し具合(0.0f~1.0f)
-float Move::runThreshold = 0.5f;
-
 Move::Move(LWP::Object::Camera* camera, Player* player) {
 	pCamera_ = camera;
 	player_ = player;
-
-	nextState_ = InputALL;
-	currentState_ = InputMove;
 }
 
 Move::~Move() {
@@ -41,6 +26,9 @@ void Move::Initialize() {
 	// 向いている角度
 	quat_ = { 0.0f,0.0f,0.0f,1.0f };
 	radian_ = { 0.0f, 0.0f, 0.0f };
+
+	// jsonで保存している値
+	CreateJsonFIle();
 
 	// 移動状態を生成
 	state_ = new Idle(this, player_);
@@ -61,7 +49,6 @@ void Move::Update() {
 	// 入力処理
 	InputUpdate();
 
-	// 移動の状態を更新
 	CheckMoveState();
 
 	isPreActive_ = isActive_;
@@ -72,13 +59,6 @@ void Move::Reset() {
 	moveVel_ = { 0.0f, 0.0f, 0.0f };
 	stickStrength_ = 0;
 	isMove_ = false;
-
-	// 移動状態をなくす
-	moveState_ = MoveState::kNone;
-	if (GetTriggerChangeMoveState(MoveState::kNone)) {
-		state_ = new None(this, player_);
-	}
-	preMoveState_ = moveState_;
 }
 
 void Move::DebugGUI() {

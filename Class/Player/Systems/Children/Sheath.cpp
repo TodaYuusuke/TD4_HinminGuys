@@ -2,29 +2,6 @@
 #include "State/Sheath/Throw.h"
 #include "../../Player.h"
 
-// 鞘投げ発動までにかかる時間[秒]
-float Sheath::throwSwingTime = 0.0f;
-// 鞘を投げて到達するまでの時間[秒]
-float Sheath::throwTime = 0.2f;
-// 鞘投げの硬直[秒]
-float Sheath::throwRecoveryTime = 0.0f;
-
-// 鞘回収発動までにかかる時間[秒]
-float Sheath::collectSwingTime = 0.0f;
-// 鞘の場所に自機が到着するまでの時間[秒]
-float Sheath::collectTime = 1.0f;
-// 鞘回収の硬直[秒]
-float Sheath::collectRecoveryTime = 0.0f;
-
-// 鞘を投げた後の移動可能範囲
-float Sheath::enableMoveRange = 50.0f;
-
-// 鞘投げの範囲
-LWP::Math::Vector3 Sheath::throwMovement = { 0,0,50.0f };
-
-// クールタイム
-float Sheath::coolTime = 0.0f;
-
 Sheath::Sheath(LWP::Object::Camera* camera, Player* player) {
 	pCamera_ = camera;
 	player_ = player;
@@ -40,6 +17,9 @@ Sheath::Sheath(LWP::Object::Camera* camera, Player* player) {
 void Sheath::Initialize() {
 	// コマンドの登録
 	inputHandler_ = InputHandler::GetInstance();
+
+	// jsonで保存している値
+	CreateJsonFIle();
 
 	// アクションイベント作成
 	CreateThrowEventOrder();

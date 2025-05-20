@@ -26,6 +26,8 @@ Player::Player(LWP::Object::Camera* camera, EnemyManager* enemyManager, FollowCa
 }
 
 void Player::Initialize() {
+	inputHandler_ = InputHandler::GetInstance();
+
 	// 自機機能を生成
 	CreateSystems();
 
@@ -42,12 +44,8 @@ void Player::Update() {
 	// 角度を代入
 	model_.worldTF.rotation = systemManager_->GetRotate();
 
-	// 無敵判定
-	CheckInvinsible();
-
 	// HP
 	hp_.Update();
-	// 鞘
 	sheathGauge_.Update();
 }
 
@@ -94,16 +92,4 @@ void Player::CreateCollision() {
 	collider_.stayLambda = [this](LWP::Object::Collision* hitTarget) {
 		hitTarget;
 		};
-}
-
-void Player::CheckInvinsible() {
-	if (!systemManager_->GetEvasionSystem()->GetIsInvinsible()) { 
-		collider_.isActive = true;
-		return;
-	}
-
-	// 回避無敵
-	if (systemManager_->GetEvasionSystem()->GetIsInvinsible()) {
-		collider_.isActive = false;
-	}
 }

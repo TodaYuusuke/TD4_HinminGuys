@@ -1,4 +1,6 @@
 #include "Evasion.h"
+
+#include <algorithm>       // ← std::max に必要
 #include "../../Player.h"
 #include "../../Command/InputConfig.h"
 
@@ -6,45 +8,45 @@ using namespace LWP;
 using namespace LWP::Math;
 using namespace InputConfig;
 
-// 回避の終了時間
-float Evasion::evasionFinishTime = 0.3f;
-
-// 回避の無敵発動までにかかる時間[秒]
-float Evasion::invinsibleSwingTime = 0.0f;
-// 回避の無敵時間[秒]
-float Evasion::invinsibleTime = 0.3f;
-// 回避の無敵硬直[秒]
-float Evasion::invinsibleRecoveryTime = 0.0f;
-
-// 回避の加速発動までにかかる時間[秒]
-float Evasion::accelerationSwingTime = 0.0f;
-// 回避の加速時間[秒]
-float Evasion::accelerationTime = 0.3f;
-// 回避の加速硬直[秒]
-float Evasion::accelerationRecoveryTime = 0.0f;
-
-// ダッシュ移行するのに必要なボタンを押す時間
-float Evasion::dashButtonHoldSeconds = 60.0f * 0.3f;
-
-// 回避速度の係数
-float Evasion::moveMultiply = 1.0f;
-
-// 回避の移動量
-LWP::Math::Vector3 Evasion::evasionMovement = { 0.0f, 0.0f, 1.0f };
-
 Evasion::Evasion(LWP::Object::Camera* camera, Player* player) {
 	pCamera_ = camera;
 	player_ = player;
-
-	nextState_ = InputNone;
-	currentState_ = InputEvasion;
 }
 
 void Evasion::Initialize() {
-	// コマンドの登録
-	inputHandler_ = InputHandler::GetInstance();
 	isActive_ = false;
 	isPreActive_ = false;
+
+	json_.Init("EvasionData.json");
+	json_.BeginGroup("EventOrder")
+		// 回避の無敵タイミングの設定
+		.BeginGroup("Invinsible")
+		.BeginGroup("GraceTime")
+		.AddValue<float>("SwingTime", &invinsibleSwingTime)
+		.AddValue<float>("InvinsibleTime", &invinsibleTime)
+		.AddValue<float>("RecoveryTime", &invinsibleRecoveryTime)
+		.EndGroup()
+		.EndGroup()
+		// 加速タイミングの設定
+		.BeginGroup("Acceleration")
+		.BeginGroup("GraceTime")
+		.AddValue<float>("SwingTime", &accelerationSwingTime)
+		.AddValue<float>("AccelerationTime", &accelerationTime)
+		.AddValue<float>("RecoveryTime", &accelerationRecoveryTime)
+		.EndGroup()
+		.EndGroup()
+		.EndGroup()
+		// ダッシュに関する設定
+		.BeginGroup("Dash")
+		.AddValue<float>("ButtonHoldSeconds", &dashButtonHoldSeconds)
+		.EndGroup()
+		// 回避の終了時間
+		.AddValue<float>("FinishTime", &evasionFinishTime)
+		// 回避速度の倍率
+		.AddValue<float>("MoveMultiply", &moveMultiply)
+		// 回避の移動距離
+		.AddValue<Vector3>("Movement", &evasionMovement)
+		.CheckJsonFile();
 
 	animationPlaySpeed_.Add(&animPlaySpeed_, Vector3{ 0.05f, 0.0f, 0.0f }, 0.0f, 0.1f, LWP::Utility::Easing::Type::OutExpo)
 		.Add(&animPlaySpeed_, Vector3{ 1.0f, 0.0f, 0.0f }, 0.1f, 0.5f, LWP::Utility::Easing::Type::InExpo);
@@ -61,9 +63,6 @@ void Evasion::Update() {
 
 	// frameごとに起きるアクションイベント
 	eventOrder_.Update();
-	for (int i = 0; i < eventOrders_.size(); i++) {
-		eventOrders_[i].Update();
-	}
 
 	// 移動処理
 	Move();
@@ -84,9 +83,6 @@ void Evasion::Update() {
 
 void Evasion::Reset() {
 	eventOrder_.Reset();
-	for (int i = 0; i < eventOrders_.size(); i++) {
-		eventOrders_[i].Reset();
-	}
 	isActive_ = false;
 	isPreActive_ = false;
 	// 回避時の速度
@@ -103,33 +99,23 @@ void Evasion::DebugGUI() {
 	if (ImGui::TreeNode("Evasion")) {
 		// 回避のアクションイベントを保存
 		if (ImGui::TreeNode("Json")) {
-			json_.DebugGUI();
 			// アクションイベントを実行してないときのみ変更可能
 			if (eventOrder_.GetIsEnd()) {
+				json_.DebugGUI();
 				// アクションイベントを再登録
 				eventOrder_.Initialize();
-				// 回避の無敵発生までの時間
-				eventOrder_.CreateTimeEvent(TimeEvent{ evasionFinishTime * 60.0f, "FinishTime" });
+				CreateEventOrder();
 			}
-			// 無敵アクションイベントを実行してないときのみ変更可能
-			if (eventOrders_[(int)EventOrderState::kInvincible].GetIsEnd()) {
-				// アクションイベントを再登録
-				eventOrders_[(int)EventOrderState::kInvincible].Initialize();
-				CreateInvincibleEventOrder();
+			else {
+				ImGui::Text("Event Running!");
 			}
-			// 加速アクションイベントを実行してないときのみ変更可能
-			if (eventOrders_[(int)EventOrderState::kAcceleration].GetIsEnd()) {
-				// アクションイベントを再登録
-				eventOrders_[(int)EventOrderState::kAcceleration].Initialize();
-				CreateAccelerationEventOrder();
-			}
-
 			ImGui::TreePop();
 		}
 
+		eventOrder_.DebugGUI();
+
 		ImGui::DragFloat3("Velocity", &velocity_.x);
 		ImGui::DragFloat3("AnimSpeed", &animPlaySpeed_.x);
-		ImGui::DragFloat("PressTime", &pressTime_);
 
 		ImGui::Checkbox("IsEvasion", &isActive_);
 
@@ -176,9 +162,6 @@ void Evasion::Command() {
 		player_->GetSystemManager()->SetInputState(InputState::kEvasion);
 		pressTime_ = 0.0f;
 		isActive_ = true;
-		for (int i = 0; i < eventOrders_.size(); i++) {
-			eventOrders_[i].Start();
-		}
 	}
 	eventOrder_.Start();
 }

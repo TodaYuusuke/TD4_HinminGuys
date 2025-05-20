@@ -32,8 +32,6 @@ void Throw::Command() {
 	if (!isActive_) {
 		sheathSystem_->SetSheathPos(player_->GetWorldTF()->GetWorldPosition() + sheathSystem_->throwMovement * Matrix4x4::CreateRotateXYZMatrix(player_->GetSystemManager()->GetMoveSystem()->GetMoveRadian()));
 		sheathSystem_->SetIsActive(true);
-		isActive_ = true;
-		// パリィ以外の入力禁止を解除
 		inputHandler_->GetSheathCommand()->SetBanInput(inputHandler_->GetSheathCommand()->GetBanInput() & ~(1 << GetSetBitPosition(BanMove)));
 		inputHandler_->GetSheathCommand()->SetBanInput(inputHandler_->GetSheathCommand()->GetBanInput() & ~(1 << GetSetBitPosition(BanAttack)));
 		inputHandler_->GetSheathCommand()->SetBanInput(inputHandler_->GetSheathCommand()->GetBanInput() & ~(1 << GetSetBitPosition(BanEvasion)));

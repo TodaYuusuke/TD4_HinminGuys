@@ -187,16 +187,17 @@ public:// Getter, Setter
 
 private:// jsonで保存する値
 	// 歩き時の速度倍率
-	static float walkSpeedMultiply;
+	float walkSpeedMultiply = 1.0f;
 	// 小走りの速度倍率
-	static float runSpeedMultiply;
+	float runSpeedMultiply = 1.0f;
 	// 走り時の速度倍率
-	static float dashSpeedMultiply;
+	float dashSpeedMultiply = 1.0f;
 	// 移動の補間レート
-	static float moveSpeedRate;
+	float moveSpeedRate = 0.2f;
 
 	// 小走り状態に移行するのに必要なスティックの倒し具合(0.0f~1.0f)
-	static float runThreshold;
+	float runThreshold = 0.5f;
+
 
 private:// プライベートな変数
 	// 移動対象のモデルのアドレス

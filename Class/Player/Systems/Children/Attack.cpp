@@ -45,6 +45,9 @@ void Attack::Initialize() {
 	isActive_ = false;
 	isPreActive_ = false;
 
+	// jsonで保存している値
+	CreateJsonFIle();
+
 	// フレーム単位で発生するアクションイベントを管理するクラス
 	CreateEventOrder();
 }

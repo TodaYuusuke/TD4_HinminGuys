@@ -68,13 +68,14 @@ public:// Getter, Setter
 
 private:// jsonで保存する値
 	// パリィ発動までにかかる時間[秒]
-	static float kSwingTime;
+	float kSwingTime = 0.0f;
 	// 通常パリィの猶予時間[秒]
-	static float kGoodParryTime;
+	float kGoodParryTime = 0.6f;
 	// ジャストパリィの猶予時間[秒]
-	static float kJustParryTime;
+	float kJustParryTime = 0.2f;
 	// パリィの硬直[秒]
-	static float kRecoveryTime;
+	float kRecoveryTime = 0.0f;
+
 
 private:
 	// パリィ判定

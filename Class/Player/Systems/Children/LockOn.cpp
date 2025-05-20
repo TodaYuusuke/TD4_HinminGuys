@@ -25,6 +25,9 @@ void LockOn::Initialize() {
 	lockOnUI_.sprite.anchorPoint = lockOnUI_.defaultAnchorPoint;
 	lockOnUI_.sprite.isActive = false;
 	lockOnUI_.enableLockOnObj.isActive = false;
+
+	// jsonで保存している値
+	CreateJsonFIle();
 }
 
 void LockOn::Update() {

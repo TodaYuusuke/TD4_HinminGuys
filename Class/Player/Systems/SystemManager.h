@@ -27,7 +27,7 @@ public:
 	// コンストラクタ
 	SystemManager(Player* player, EnemyManager* enemyManager, FollowCamera* followCamera, LWP::Object::Camera* camera);
 	// デストラクタ
-	~SystemManager();
+	~SystemManager() = default;
 
 	/// <summary>
 	/// 初期化

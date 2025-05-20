@@ -6,15 +6,6 @@
 using namespace LWP::Utility;
 using namespace GameMask;
 
-// パリィ発動までにかかる時間[秒]
-float Parry::kSwingTime = 0.0f;
-// 通常パリィの猶予時間[秒]
-float Parry::kGoodParryTime = 0.6f;
-// ジャストパリィの猶予時間[秒]
-float Parry::kJustParryTime = 0.2f;
-// パリィの硬直[秒]
-float Parry::kRecoveryTime = 0.0f;
-
 Parry::Parry(LWP::Object::Camera* camera, Player* player)
 	: aabb_(collider_.SetBroadShape(LWP::Object::Collider::AABB()))
 {
@@ -33,6 +24,9 @@ void Parry::Initialize() {
 	inputHandler_ = InputHandler::GetInstance();
 	isActive_ = false;
 	isPreActive_ = false;
+
+	// jsonで保存している値
+	CreateJsonFIle();
 
 	// フレーム単位で発生するアクションイベントを管理するクラス
 	CreateEventOrder();

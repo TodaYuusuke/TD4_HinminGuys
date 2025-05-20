@@ -95,7 +95,8 @@ public:
 private:
 	// 実行用のコマンド
 	std::vector<ICommand*> commands_;
-	std::vector<ICommand*> currentCommand_;
+	ICommand* currentCommand_;
+	//std::vector<ICommand*> currentCommand_;
 
 	// 移動コマンド
 	ICommand* pressMoveCommand_;

@@ -119,27 +119,27 @@ public:// Getter, Setter
 
 public:// jsonに保存する値
 	// 鞘投げ発動までにかかる時間[秒]
-	static float throwSwingTime;
+	float throwSwingTime = 0.0f;
 	// 鞘を投げて到達するまでの時間[秒]
-	static float throwTime;
+	float throwTime = 0.2f;
 	// 鞘投げの硬直[秒]
-	static float throwRecoveryTime;
+	float throwRecoveryTime = 0.0f;
 
 	// 鞘回収発動までにかかる時間[秒]
-	static float collectSwingTime;
+	float collectSwingTime = 0.0f;
 	// 鞘の場所に自機が到着するまでの時間[秒]
-	static float collectTime;
+	float collectTime = 1.0f;
 	// 鞘回収の硬直[秒]
-	static float collectRecoveryTime;
+	float collectRecoveryTime = 0.0f;
 
 	// 鞘を投げた後の移動可能範囲
-	static float enableMoveRange;
+	float enableMoveRange = 50.0f;
 
 	// 鞘投げの範囲
-	static LWP::Math::Vector3 throwMovement;
+	LWP::Math::Vector3 throwMovement = { 0,0,50.0f };
 
 	// クールタイム
-	static float coolTime;
+	float coolTime = 0.0f;
 
 private:// プライベートな変数
 	// アクションイベント集
