@@ -1,328 +1,118 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="ソース ファイル">
-      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
-      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
-    </Filter>
-    <Filter Include="ヘッダー ファイル">
-      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
-    </Filter>
-    <Filter Include="リソース ファイル">
-      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
-      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
-    </Filter>
+    <ClCompile Include="Class\ComboEditor\ComboTree.cpp" />
+    <ClCompile Include="Class\Condition\child\Input\ButtonCondition.cpp" />
+    <ClCompile Include="Class\DeltaTimer\DeltaTimer.cpp" />
+    <ClCompile Include="Class\Enemy\SpawnData.cpp" />
+    <ClCompile Include="Class\Scene\GameScene.cpp" />
+    <ClCompile Include="Class\ComboEditor\Combo.cpp" />
+    <ClCompile Include="Class\Enemy\Childs\Boss\Boss.cpp" />
+    <ClCompile Include="Class\Enemy\Childs\State\BossAttack.cpp" />
+    <ClCompile Include="Class\Enemy\Childs\State\BossIdle.cpp" />
+    <ClCompile Include="Class\Enemy\Childs\State\BossMove.cpp" />
+    <ClCompile Include="Class\Enemy\Childs\State\Following.cpp" />
+    <ClCompile Include="Class\Enemy\Childs\State\Spacing.cpp" />
+    <ClCompile Include="Class\Enemy\Childs\State\WaitingForAttack.cpp" />
+    <ClCompile Include="Class\Enemy\EnemyManager.cpp" />
+    <ClCompile Include="Class\Enemy\IEnemy.cpp" />
+    <ClCompile Include="Class\Enemy\Childs\Normal\Normal.cpp" />
+    <ClCompile Include="Class\Enemy\Childs\State\NormalAttack.cpp" />
+    <ClCompile Include="Class\Enemy\Childs\State\NormalIdle.cpp" />
+    <ClCompile Include="Class\Enemy\Childs\State\NormalMove.cpp" />
+    <ClCompile Include="Class\Enemy\WaveData.cpp" />
+    <ClCompile Include="Class\Player\Systems\Children\Attack.cpp" />
+    <ClCompile Include="Class\Player\Systems\Children\LockOn.cpp" />
+    <ClCompile Include="Class\Scene\SceneTransitioner.cpp" />
+    <ClCompile Include="Class\Scene\Title.cpp" />
+    <ClCompile Include="Class\Camera\FollowCamera.cpp" />
+    <ClCompile Include="Class\Player\Systems\EventOrder.cpp" />
+    <ClCompile Include="Class\Player\Command\ICommand.cpp" />
+    <ClCompile Include="Class\Player\Command\InputHandler.cpp" />
+    <ClCompile Include="Class\Player\Systems\Children\State\Attack\LockOnAttack.cpp" />
+    <ClCompile Include="Class\Player\Systems\Children\State\Attack\DefaultAttack.cpp" />
+    <ClCompile Include="Class\Player\Systems\Children\Evasion.cpp" />
+    <ClCompile Include="Class\Player\Systems\Children\State\Move\Idle.cpp" />
+    <ClCompile Include="Class\Player\Gauge\HP\HP.cpp" />
+    <ClCompile Include="Class\Player\Systems\Children\State\Sheath\Collect.cpp" />
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="Class\Player\Player.cpp" />
+    <ClCompile Include="Class\Player\Systems\Children\Move.cpp" />
+    <ClCompile Include="Class\Player\Systems\Children\Parry.cpp" />
+    <ClCompile Include="Class\Player\Systems\Children\Sheath.cpp" />
+    <ClCompile Include="Class\Player\Systems\SystemManager.cpp" />
+    <ClCompile Include="Class\Player\Systems\Children\State\Attack\NoneAttack.cpp" />
+    <ClCompile Include="Class\TestCollider.cpp" />
+    <ClCompile Include="Class\Player\Systems\Children\State\Move\Run.cpp" />
+    <ClCompile Include="Class\Player\Systems\Children\State\Move\Walk.cpp" />
+    <ClCompile Include="Class\Player\Gauge\Sheath\SheathGauge.cpp" />
+    <ClCompile Include="Class\Player\Systems\Children\State\Sheath\Throw.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="main.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Class\Scene\GameScene.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Class\Scene\Title.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Class\ComboEditor\Combo.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Class\DeltaTimer\DeltaTimer.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Class\ComboEditor\ComboTree.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Class\Condition\child\Input\ButtonCondition.cpp">
-    <ClCompile Include="Class\Enemy\EnemyManager.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Class\Player\Player.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Class\Player\Systems\Children\Move.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Class\Player\Systems\Children\Parry.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Class\Player\Systems\Children\Attack.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Class\Camera\FollowCamera.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Class\Player\Systems\Children\LockOn.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Class\Enemy\Childs\Boss\Boss.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Class\Enemy\Childs\State\BossAttack.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Class\Enemy\Childs\State\BossIdle.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Class\Enemy\Childs\State\BossMove.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Class\Enemy\IEnemy.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Class\Enemy\Childs\Normal\Normal.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Class\Enemy\Childs\State\NormalAttack.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Class\Enemy\Childs\State\NormalIdle.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Class\Enemy\Childs\State\NormalMove.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Class\Enemy\Childs\State\Spacing.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Class\Enemy\Childs\State\WaitingForAttack.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Class\Player\Systems\EventOrder.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Class\Player\Command\ICommand.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Class\Player\Command\InputHandler.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Class\Player\Systems\Children\Sheath.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Class\Player\Systems\SystemManager.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Class\Player\Systems\Children\State\Attack\LockOnAttack.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Class\Player\Systems\Children\State\Attack\DefaultAttack.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Class\Player\Systems\Children\State\Attack\NoneAttack.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Class\Player\Systems\Children\Evasion.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Class\TestCollider.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Class\Player\Systems\Children\State\Move\Walk.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Class\Player\Systems\Children\State\Move\Run.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Class\Player\Systems\Children\State\Move\Idle.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Class\Player\Gauge\HP\HP.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Class\Player\Gauge\Sheath\SheathGauge.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Class\Player\Systems\Children\State\Sheath\Throw.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Class\Player\Systems\Children\State\Sheath\Collect.cpp">
-
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="Class\Scene\GameScene.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Class\Scene\Title.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Class\ComboEditor\Combo.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Class\Condition\ICondition.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Class\DeltaTimer\DeltaTimer.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Class\ComboEditor\ComboTree.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Class\Condition\child\Input\ButtonCondition.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Class\Condition\ConditionEnums.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Class\Condition\ConditionList.h">
-    <ClInclude Include="Class\Enemy\IEnemy.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Class\Enemy\EnemyManager.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Class\Enemy\IEnemyState.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Class\Player\Systems\Children\LockOn.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Class\Enemy\Childs\Boss\Boss.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Class\Enemy\Childs\State\BossAttack.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Class\Enemy\Childs\State\BossIdle.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Class\Enemy\Childs\State\BossMove.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Class\Enemy\Childs\Normal\Normal.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Class\Enemy\Childs\State\NormalAttack.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Class\Enemy\Childs\State\NormalIdle.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Class\Enemy\Childs\State\NormalMove.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Class\Enemy\Childs\State\Spacing.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Class\Enemy\Childs\State\WaitingForAttack.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Class\Player\Systems\EventOrder.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Class\Player\Command\ICommand.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Class\Player\Command\InputHandler.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Class\Player\Command\InputConfig.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Class\Player\Systems\Children\Sheath.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Class\Player\Systems\SystemManager.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Class\Player\Systems\Children\State\IAttackSystemState.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Class\Player\Systems\Children\State\Attack\LockOnAttack.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Class\Player\Systems\Children\State\Attack\DefaultAttack.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Class\Player\Systems\Children\State\Attack\NoneAttack.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Class\Player\Systems\Children\Evasion.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Class\TestCollider.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Class\GameMask.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-
-    <ClInclude Include="Class\Enemy\Childs\State\Following.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Class\Enemy\Childs\Normal\NormalEnemy.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Class\Enemy\Childs\Normal\State\NormalEnemyAttack.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Class\Enemy\Childs\Normal\State\NormalEnemyIdle.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Class\Enemy\Childs\Normal\State\NormalEnemyMove.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Class\Enemy\States.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Class\Enemy\WaveData.h">
-
-    <ClInclude Include="Class\Player\Systems\Children\State\IMoveSystemState.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Class\Player\Systems\Children\State\Move\Walk.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Class\Player\Systems\Children\State\Move\Run.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Class\Player\Systems\Children\State\Move\Idle.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Class\Player\Gauge\IGauge.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Class\Player\Gauge\HP\HP.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Class\Player\Gauge\Sheath\SheathGauge.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Class\Player\Systems\Children\State\ISheathSystemState.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Class\Player\Systems\Children\State\Sheath\Throw.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Class\Player\Systems\Children\State\Sheath\Collect.h">
-
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
+    <ClInclude Include="Class\ComboEditor\ComboTree.h" />
+    <ClInclude Include="Class\Condition\child\Input\ButtonCondition.h" />
+    <ClInclude Include="Class\Condition\ConditionEnums.h" />
+    <ClInclude Include="Class\Condition\ConditionList.h" />
+    <ClInclude Include="Class\DeltaTimer\DeltaTimer.h" />
+    <ClInclude Include="Class\ComboEditor\Combo.h" />
+    <ClInclude Include="Class\Condition\ICondition.h" />
+    <ClInclude Include="Class\Enemy\Childs\Boss\Boss.h" />
+    <ClInclude Include="Class\Enemy\Childs\State\BossAttack.h" />
+    <ClInclude Include="Class\Enemy\Childs\State\BossIdle.h" />
+    <ClInclude Include="Class\Enemy\Childs\State\BossMove.h" />
+    <ClInclude Include="Class\Enemy\Childs\State\Following.h" />
+    <ClInclude Include="Class\Enemy\Childs\State\Spacing.h" />
+    <ClInclude Include="Class\Enemy\Childs\State\WaitingForAttack.h" />
+    <ClInclude Include="Class\Enemy\EnemyManager.h" />
+    <ClInclude Include="Class\Enemy\IEnemy.h" />
+    <ClInclude Include="Class\Enemy\IEnemyState.h" />
+    <ClInclude Include="Class\Enemy\Childs\Normal\NormalEnemy.h" />
+    <ClInclude Include="Class\Enemy\Childs\Normal\State\NormalEnemyAttack.h" />
+    <ClInclude Include="Class\Enemy\Childs\Normal\State\NormalEnemyIdle.h" />
+    <ClInclude Include="Class\Enemy\Childs\Normal\State\NormalEnemyMove.h" />
+    <ClInclude Include="Class\Enemy\SpawnData.h" />
+    <ClInclude Include="Class\Enemy\States.h" />
+    <ClInclude Include="Class\Enemy\WaveData.h" />
+    <ClInclude Include="Class\Player\Command\InputConfig.h" />
+    <ClInclude Include="Class\Enemy\Childs\Normal\Normal.h" />
+    <ClInclude Include="Class\Enemy\Childs\State\NormalAttack.h" />
+    <ClInclude Include="Class\Enemy\Childs\State\NormalIdle.h" />
+    <ClInclude Include="Class\Enemy\Childs\State\NormalMove.h" />
+    <ClInclude Include="Class\Player\ICharacter.h" />
+    <ClInclude Include="Class\Player\Systems\Children\Attack.h" />
+    <ClInclude Include="Class\Player\Systems\Children\State\IMoveSystemState.h" />
+    <ClInclude Include="Class\Player\Systems\Children\State\ISheathSystemState.h" />
+    <ClInclude Include="Class\Player\Systems\ISystem.h" />
+    <ClInclude Include="Class\Player\Systems\Children\LockOn.h" />
+    <ClInclude Include="Class\Scene\GameScene.h" />
+    <ClInclude Include="Class\Scene\SceneTransitioner.h" />
+    <ClInclude Include="Class\Scene\Title.h" />
+    <ClInclude Include="Class\Player\Player.h" />
+    <ClInclude Include="Class\Player\Systems\Children\Move.h" />
+    <ClInclude Include="Class\Player\Systems\Children\Parry.h" />
+    <ClInclude Include="Class\Camera\FollowCamera.h" />
+    <ClInclude Include="Class\Player\Systems\EventOrder.h" />
+    <ClInclude Include="Class\Player\Command\ICommand.h" />
+    <ClInclude Include="Class\Player\Command\InputHandler.h" />
+    <ClInclude Include="Class\Player\Systems\Children\Sheath.h" />
+    <ClInclude Include="Class\Player\Systems\SystemManager.h" />
+    <ClInclude Include="Class\Player\Systems\Children\State\IAttackSystemState.h" />
+    <ClInclude Include="Class\Player\Systems\Children\State\Attack\LockOnAttack.h" />
+    <ClInclude Include="Class\Player\Systems\Children\State\Attack\DefaultAttack.h" />
+    <ClInclude Include="Class\Player\Systems\Children\State\Attack\NoneAttack.h" />
+    <ClInclude Include="Class\Player\Systems\Children\Evasion.h" />
+    <ClInclude Include="Class\TestCollider.h" />
+    <ClInclude Include="Class\GameMask.h" />
+    <ClInclude Include="Class\Player\Systems\Children\State\Move\Idle.h" />
+    <ClInclude Include="Class\Player\Systems\Children\State\Move\Run.h" />
+    <ClInclude Include="Class\Player\Systems\Children\State\Move\Walk.h" />
+    <ClInclude Include="Class\Player\Gauge\IGauge.h" />
+    <ClInclude Include="Class\Player\Gauge\HP\HP.h" />
+    <ClInclude Include="Class\Player\Gauge\Sheath\SheathGauge.h" />
+    <ClInclude Include="Class\Player\Systems\Children\State\Sheath\Throw.h" />
+    <ClInclude Include="Class\Player\Systems\Children\State\Sheath\Collect.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />
-    <ClInclude Include="Class\Player\Player.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Class\Player\ICharacter.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Class\Player\Systems\Children\Move.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Class\Player\Systems\Children\Parry.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Class\Player\Systems\ISystem.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Class\Player\Systems\Children\Attack.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Class\Camera\FollowCamera.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
   </ItemGroup>
 </Project>

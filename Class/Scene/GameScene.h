@@ -7,6 +7,7 @@
 #include "../Player/Command/InputHandler.h"
 #include "../TestCollider.h"
 #include <set>
+#include "SceneTransitioner.h"
 
 class GameScene final
 	: public IScene {
@@ -49,5 +50,8 @@ private: // ** これより先に必要な処理や変数を記述 ** //
 
 	// 当たり判定テスト用のオブジェクト
 	TestCollider testCollider_;
+
+	//シーン切り替え
+	SceneTransitioner sceneTransitioner_;
 
 };

@@ -170,6 +170,7 @@
     <ClCompile Include="Class\Enemy\WaveData.cpp" />
     <ClCompile Include="Class\Player\Systems\Children\Attack.cpp" />
     <ClCompile Include="Class\Player\Systems\Children\LockOn.cpp" />
+    <ClCompile Include="Class\Scene\SceneTransitioner.cpp" />
     <ClCompile Include="Class\Scene\Title.cpp" />
     <ClCompile Include="Class\Camera\FollowCamera.cpp" />
     <ClCompile Include="Class\Player\Systems\EventOrder.cpp" />
@@ -231,6 +232,7 @@
     <ClInclude Include="Class\Player\Systems\ISystem.h" />
     <ClInclude Include="Class\Player\Systems\Children\LockOn.h" />
     <ClInclude Include="Class\Scene\GameScene.h" />
+    <ClInclude Include="Class\Scene\SceneTransitioner.h" />
     <ClInclude Include="Class\Scene\Title.h" />
     <ClInclude Include="Class\Player\Player.h" />
     <ClInclude Include="Class\Player\Systems\Children\Move.h" />

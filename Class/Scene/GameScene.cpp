@@ -49,29 +49,42 @@ void GameScene::Initialize() {
 
 	// 平行光源を配置(これも一時的に配置)
 	light_.worldTF.translation = { 0,10,0 };
+
+	//シーン切り替え機能生成
+	sceneTransitioner_.Initialize(this);
+
 }
 
 // 更新
 void GameScene::Update() {
 	// シーン遷移
 	if (Keyboard::GetTrigger(DIK_P)) {
-		nextSceneFunction = []() { return new Title(); };
+		//遷移先をタイトルにセット
+		sceneTransitioner_.SetNextScene(SceneName::kTitle);
+		sceneTransitioner_.SceneTransitionStart();
 	}
 
-	// 入力されたコマンドを確認
-	inputHandler_.Update(player_);
+	//シーン切り替えしていない間更新
+	if (not SceneTransitioner::GetIsSceneChange()) {
 
-	//敵全て
-	enemyManager_.Update();
+		// 入力されたコマンドを確認
+		inputHandler_.Update(player_);
 
-	// 追従カメラ
-	followCamera_.Update();
+		//敵全て
+		enemyManager_.Update();
 
-	// 自機
-	player_.Update();
+		// 追従カメラ
+		followCamera_.Update();
 
-	// デバッグ用のウィンドウ
-	DebugGUI();
+		// 自機
+		player_.Update();
+
+		// デバッグ用のウィンドウ
+		DebugGUI();
+	}
+
+	sceneTransitioner_.Update();
+
 }
 
 void GameScene::DebugGUI() {

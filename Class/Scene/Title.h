@@ -1,5 +1,6 @@
 #pragma once
 #include "scene/IScene.h"
+#include "SceneTransitioner.h"
 
 class Title final
 	: public IScene {
@@ -17,6 +18,7 @@ public:
 
 private: // ** これより先に必要な処理や変数を記述 ** //
 
-
+	//シーン切り替え
+	SceneTransitioner sceneTransitioner_;
 
 };

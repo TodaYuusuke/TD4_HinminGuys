@@ -11,11 +11,20 @@ using namespace LWP::Info;
 
 void Title::Initialize() {
   
+	//シーン切り替え機能生成
+	sceneTransitioner_.Initialize(this);
+
 }
 
 void Title::Update() {
 	// シーン遷移
 	if (Keyboard::GetTrigger(DIK_P)) {
-		nextSceneFunction = []() { return new GameScene(); };
+		//遷移先をタイトルにセット
+		sceneTransitioner_.SetNextScene(SceneName::kGameScene);
+		sceneTransitioner_.SceneTransitionStart();
 	}
+
+
+	sceneTransitioner_.Update();
+
 }
