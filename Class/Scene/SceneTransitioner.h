@@ -34,6 +34,10 @@ private:
 
 	//切り替え演出開始
 	void BeginTransitionEffect();
+	//VoidSceneに移行
+	void TransitionToVoidScene();
+	//VoidScene更新
+	void UpdateVoidScene();
 	//切り替え演出終了
 	void EndTransitionEffect();
 	//シーン切り替え
@@ -44,11 +48,13 @@ private:
 	//シーンのポインタ
 	IScene* scene_;
 	//次のシーンの名前
-	SceneName nextSceneName_;
+	static SceneName nextSceneName_;
 
-	//シーン切り替えの始まりと終わり
+	//シーン切り替えの始まりと終わり	
 	static bool isSceneChangeStart_;
 	static bool isSceneChangeEnd_;
+	//何もないシーンにいるかどうか
+	static bool isVoidScene_;
 	//シーン切り替え時の時間管理変数
 	static float sceneChangeCount_;
 	//フェードインアウトに使う画像

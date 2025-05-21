@@ -10,7 +10,10 @@ using namespace LWP::Object;
 using namespace LWP::Info;
 
 void Title::Initialize() {
-  
+
+	// 平行光源を配置(これも一時的に配置)
+	light_.worldTF.translation = { 0,10,0 };
+
 	//シーン切り替え機能生成
 	sceneTransitioner_.Initialize(this);
 

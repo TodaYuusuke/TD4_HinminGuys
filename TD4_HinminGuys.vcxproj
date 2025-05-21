@@ -182,6 +182,7 @@
     <ClCompile Include="Class\Player\Systems\Children\State\Move\Idle.cpp" />
     <ClCompile Include="Class\Player\Gauge\HP\HP.cpp" />
     <ClCompile Include="Class\Player\Systems\Children\State\Sheath\Collect.cpp" />
+    <ClCompile Include="Class\Scene\VoidScene.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Class\Player\Player.cpp" />
     <ClCompile Include="Class\Player\Systems\Children\Move.cpp" />
@@ -248,6 +249,7 @@
     <ClInclude Include="Class\Player\Systems\Children\State\Attack\DefaultAttack.h" />
     <ClInclude Include="Class\Player\Systems\Children\State\Attack\NoneAttack.h" />
     <ClInclude Include="Class\Player\Systems\Children\Evasion.h" />
+    <ClInclude Include="Class\Scene\VoidScene.h" />
     <ClInclude Include="Class\TestCollider.h" />
     <ClInclude Include="Class\GameMask.h" />
     <ClInclude Include="Class\Player\Systems\Children\State\Move\Idle.h" />

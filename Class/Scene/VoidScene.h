@@ -2,11 +2,14 @@
 #include "scene/IScene.h"
 #include "SceneTransitioner.h"
 
-class Title final
+/// <summary>
+/// 平行光源のないシーンを経由するための何もないシーン
+/// </summary>
+class VoidScene final
 	: public IScene {
 public:
-	Title() = default;
-	~Title() = default;
+	VoidScene() = default;
+	~VoidScene() = default;
 
 	// ** 純粋仮想関数の実体宣言 ** //
 
@@ -17,9 +20,6 @@ public:
 
 
 private: // ** これより先に必要な処理や変数を記述 ** //
-
-	//ライト
-	LWP::Object::DirectionLight light_;
 
 	//シーン切り替え
 	SceneTransitioner sceneTransitioner_;
