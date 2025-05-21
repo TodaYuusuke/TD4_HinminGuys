@@ -56,7 +56,6 @@ void Attack::Initialize() {
 }
 
 void Attack::Update() {
-
 	// コンボツリー自体は毎フレーム更新する
 	comboTree_.Update();
 
@@ -72,6 +71,7 @@ void Attack::Update() {
 		// 機能停止させる
 		if (isActive_) {
 			Reset();
+			isAttackRecovery_ = true;
 		}
 	}
 
@@ -117,7 +117,6 @@ void Attack::Update() {
 
 void Attack::Reset() {
 	isActive_ = false;
-	isNormalAttack_ = false;
 	collider_.isActive = false;
 	aabb_.isShowWireFrame = false;
 	attackAssistVel_ = { 0.0f,0.0f,0.0f };
@@ -153,7 +152,6 @@ void Attack::DebugGUI() {
 		ImGui::DragFloat3("Velocity", &attackAssistVel_.x, 0.1f, -10000, 10000);
 		ImGui::DragFloat3("Rotation", &attackAssistRadian_.x, 0.1f, -6.28f, 6.28f);
 		ImGui::DragFloat4("Quaternion", &attackAssistQuat_.x, 0.1f, -1, 1);
-		ImGui::Checkbox("IsNormalAttack", &isNormalAttack_);
 
 		ImGui::TreePop();
 	}
@@ -194,7 +192,6 @@ void Attack::CreateCollision() {
 		// 攻撃判定が出ているとき
 		if (eventOrder_.GetCurrentTimeEvent().name == "NormalAttackTime") {
 			collider_.isActive = true;
-			isNormalAttack_ = true;
 		}
 		};
 }
@@ -213,7 +210,6 @@ void Attack::CheckAttackState() {
 	// 振りかぶりの時
 	if (eventOrder_.GetCurrentTimeEvent().name == "NormalAttackSwingTime") {
 		collider_.isActive = false;
-		isNormalAttack_ = false;
 		// 攻撃が当たる位置に自機を移動させる
 		AttackAssistMovement();
 	}
@@ -223,7 +219,6 @@ void Attack::CheckAttackState() {
 	// 硬直
 	else if (eventOrder_.GetCurrentTimeEvent().name == "NormalAttackRecoveryTime") {
 		collider_.isActive = false;
-		isNormalAttack_ = false;
 	}
 	// 振りかぶり以外の時なら状態をリセット
 	else {

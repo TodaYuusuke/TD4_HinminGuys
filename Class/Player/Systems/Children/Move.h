@@ -8,11 +8,12 @@
 class Move : public ISystem {
 public:
 enum class MoveState {
-	kNone,
-	kIdle,
-	kWalk,
-	kRun,
-	kDash,
+	kNone,			// 何もなし
+	kIdle,			// 待機
+	kWalk,			// 歩き
+	kRun,			// 小走り
+	kDash,			// 走り
+	kAttackRecovery,// 攻撃後に何も移動キーを入力していない場合
 	kCount
 };
 
@@ -144,7 +145,7 @@ public:// Getter, Setter
 	/// <param name="moveState"></param>
 	/// <returns></returns>
 	bool GetTriggerChangeMoveState(MoveState moveState){
-		if (preMoveState_ != moveState_ && moveState_ == moveState) {
+		if (preMoveState_ != moveState /*&& preMoveState_ != moveState*/) {
 			return true;
 		}
 		return false;

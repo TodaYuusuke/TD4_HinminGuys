@@ -47,6 +47,8 @@ private:
 
 public:// Getter, Setter
 #pragma region Getter
+
+
 	int GetCurrentState() { return currentState_; }
 	/// <summary>
 	/// 次に遷移できるシステムを取得

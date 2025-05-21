@@ -148,6 +148,7 @@
     </Manifest>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Class\Player\Systems\Children\State\Move\AttackRecovery.cpp" />
     <ClCompile Include="Class\ComboEditor\ComboTree.cpp" />
     <ClCompile Include="Class\Condition\child\Input\ButtonCondition.cpp" />
     <ClCompile Include="Class\DeltaTimer\DeltaTimer.cpp" />
@@ -199,6 +200,7 @@
     <ClCompile Include="Class\Player\Systems\Children\State\Move\None.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Class\Player\Systems\Children\State\Move\AttackRecovery.h" />
     <ClInclude Include="Class\ComboEditor\ComboTree.h" />
     <ClInclude Include="Class\Condition\child\Input\ButtonCondition.h" />
     <ClInclude Include="Class\Condition\ConditionEnums.h" />

@@ -123,7 +123,7 @@
         "Group :StrongCombo1": {
             "Group :StartConditions|Button|1": {
                 "float :PressTime": 0.10000000149011612,
-                "int32_t :ButtonID": 512,
+                "int32_t :ButtonID": 1,
                 "int32_t :InputState": 0,
                 "int32_t :KeyID": 37
             },
