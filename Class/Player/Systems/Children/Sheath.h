@@ -69,6 +69,9 @@ public:
 	/// </summary>
 	void CoolTimeUpdate();
 
+
+	LWP::Math::Vector3 ClampToCircle(LWP::Math::Vector3& position);
+
 	/// <summary>
 	/// クールタイムが終了しているかを確認
 	/// </summary>

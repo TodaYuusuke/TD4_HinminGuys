@@ -55,6 +55,11 @@ private:
 	/// </summary>
 	void CreateCollision();
 
+	/// <summary>
+	/// 移動制限
+	/// </summary>
+	void LimitMoveArea();
+
 public:// Getter,Setter
 #pragma region Getter
 	/// <summary>

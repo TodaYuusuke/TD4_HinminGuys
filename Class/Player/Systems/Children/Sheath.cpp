@@ -164,3 +164,15 @@ void Sheath::CoolTimeUpdate() {
 
 	currentCoolTime_--;
 }
+
+LWP::Math::Vector3 Sheath::ClampToCircle(LWP::Math::Vector3& position) {
+	LWP::Math::Vector3 offset = position - sheathModel_.worldTF.GetWorldPosition();
+	float distance = offset.Length();
+
+	if (distance > enableMoveRange) {
+		offset = offset.Normalize() * enableMoveRange;
+		position = sheathModel_.worldTF.GetWorldPosition() + offset;
+	}
+
+	return position;
+}
