@@ -39,7 +39,7 @@ void NormalAttackCommand::Exec(Player& player, int& banInput) {
 	// パリィ中、回避中は攻撃できない
 	if (IsBitSame(banInput, BanAttack, GetSetBitPosition(BanAttack))) { return; }
 
-	player.GetSystemManager()->GetAttackSystem()->NormalCommand();
+	player.GetSystemManager()->GetAttackSystem()->Command();
 	banInput = banInput_;
 	isActive_ = true;
 }

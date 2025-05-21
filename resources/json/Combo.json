@@ -13,7 +13,7 @@
                         "Vector3 :AttackAssistMoveAmount": [
                             0.0,
                             0.0,
-                            0.0
+                            0.10000000149011612
                         ],
                         "Vector3 :AttackColliderLengthOffset": [
                             0.0,
@@ -21,7 +21,7 @@
                             0.0
                         ],
                         "bool :IsLoop": false,
-                        "float :AttackAssistEnableTime": 0.0,
+                        "float :AttackAssistEnableTime": 0.20000000298023224,
                         "float :AttackAssistStartTime": 0.0,
                         "float :AttackColliderRadius": 0.0,
                         "float :AttackEndTime": 0.0,
@@ -42,7 +42,7 @@
                     "Vector3 :AttackAssistMoveAmount": [
                         0.0,
                         0.0,
-                        0.0
+                        0.07500000298023224
                     ],
                     "Vector3 :AttackColliderLengthOffset": [
                         0.0,
@@ -50,8 +50,8 @@
                         0.0
                     ],
                     "bool :IsLoop": false,
-                    "float :AttackAssistEnableTime": 0.0,
-                    "float :AttackAssistStartTime": 0.0,
+                    "float :AttackAssistEnableTime": 0.10000000149011612,
+                    "float :AttackAssistStartTime": 0.25,
                     "float :AttackColliderRadius": 0.0,
                     "float :AttackEndTime": 0.0,
                     "float :AttackStartTime": 0.0,
@@ -71,7 +71,7 @@
                 "Vector3 :AttackAssistMoveAmount": [
                     0.0,
                     0.0,
-                    0.0
+                    0.10000000149011612
                 ],
                 "Vector3 :AttackColliderLengthOffset": [
                     0.0,
@@ -79,7 +79,7 @@
                     0.0
                 ],
                 "bool :IsLoop": false,
-                "float :AttackAssistEnableTime": 0.0,
+                "float :AttackAssistEnableTime": 0.10000000149011612,
                 "float :AttackAssistStartTime": 0.0,
                 "float :AttackColliderRadius": 0.0,
                 "float :AttackEndTime": 0.0,
@@ -213,7 +213,7 @@
         "Vector3 :AttackAssistMoveAmount": [
             0.0,
             0.0,
-            0.0
+            0.10000000149011612
         ],
         "Vector3 :AttackColliderLengthOffset": [
             0.0,
@@ -221,7 +221,7 @@
             0.0
         ],
         "bool :IsLoop": false,
-        "float :AttackAssistEnableTime": 0.0,
+        "float :AttackAssistEnableTime": 0.20000000298023224,
         "float :AttackAssistStartTime": 0.0,
         "float :AttackColliderRadius": 0.0,
         "float :AttackEndTime": 0.0,
