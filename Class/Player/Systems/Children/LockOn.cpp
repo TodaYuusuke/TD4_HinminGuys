@@ -4,6 +4,9 @@
 
 using namespace LWP::Math;
 
+// ロックオンできる範囲
+float LockOn::kMaxRange = 50.0f;
+
 LockOn::LockOn(LWP::Object::Camera* camera, Player* player) {
 	pCamera_ = camera;
 	player_ = player;
@@ -23,9 +26,8 @@ void LockOn::Initialize() {
 	lockOnUI_.sprite.isActive = false;
 	lockOnUI_.enableLockOnObj.isActive = false;
 
-	json_.Init("LockOnData.json");
-	json_.AddValue("Range", &kMaxRange)
-		.CheckJsonFile();
+	// jsonで保存している値
+	CreateJsonFIle();
 }
 
 void LockOn::Update() {
@@ -71,6 +73,12 @@ void LockOn::DebugGUI() {
 		ImGui::Checkbox("IsChangeLocked", &isChangeLocked_);
 		ImGui::TreePop();
 	}
+}
+
+void LockOn::CreateJsonFIle() {
+	json_.Init("LockOnData.json");
+	json_.AddValue("Range", &kMaxRange)
+		.CheckJsonFile();
 }
 
 void LockOn::Command() {

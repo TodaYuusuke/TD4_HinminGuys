@@ -34,6 +34,11 @@ public:
 	void DebugGUI() override;
 
 	/// <summary>
+	/// jsonファイルの作成
+	/// </summary>
+	void CreateJsonFIle() override;
+
+	/// <summary>
 	/// 通常攻撃のコマンド
 	/// </summary>
 	void NormalCommand();
@@ -109,11 +114,11 @@ public:// Getter, Setter
 
 private:// jsonで保存する値
 	// 通常攻撃発動までにかかる時間[秒]
-	float kNormalSwingTime = 0.25f;
+	static float kNormalSwingTime;
 	// 通常攻撃の猶予時間[秒]
-	float kNormalAttackTime = 0.6f;
+	static float kNormalAttackTime;
 	// 通常攻撃の硬直[秒]
-	float kNormalRecoveryTime = 0.2f;
+	static float kNormalRecoveryTime;
 
 private:// 外部からポインタをもらう変数
 	// ロックオン機能

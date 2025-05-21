@@ -66,7 +66,7 @@ void IEnemy::SetAnimation(const std::string& animName, bool isLoop, float speed)
 {
     animation_.Play(animName);
 	animation_.Loop(isLoop);
-	animation_.GetPlayBackSpeed() = speed;
+	//animation_.playbackSpeed = speed;
 }
 
 void IEnemy::SetState(IEnemyState* state)

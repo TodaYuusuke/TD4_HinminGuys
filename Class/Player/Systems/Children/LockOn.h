@@ -7,12 +7,12 @@ class FollowCamera;
 class LockOn : public ISystem {
 public:// 構造体
 	struct LockOnUI {
-		LWP::Primitive::Sprite sprite;		// ロックオン可能UIのスプライト
+		LWP::Primitive::Sprite sprite;				// ロックオン可能UIのスプライト
 		LWP::Primitive::Billboard3D enableLockOnObj;
-		LWP::Object::TransformQuat offset;	// 補間の値を格納
-		Vector3 defaultPos;					// ロックオン可能UIの初期座標
-		Vector3 defaultScale;				// ロックオン可能UIの初期サイズ
-		Vector2 defaultAnchorPoint;			// ロックオン可能UIの初期中心点
+		LWP::Object::TransformQuat offset;			// 補間の値を格納
+		Vector3 defaultPos;							// ロックオン可能UIの初期座標
+		Vector3 defaultScale;						// ロックオン可能UIの初期サイズ
+		Vector2 defaultAnchorPoint = { 0.5f, 0.5f };// ロックオン可能UIの初期中心点
 	};
 
 	// ロックオン時に必要な情報
@@ -50,6 +50,11 @@ public:
 	/// デバッグ用のタブを表示(Debug時のみ)
 	/// </summary>
 	void DebugGUI() override;
+
+	/// <summary>
+	/// jsonファイルの作成
+	/// </summary>
+	void CreateJsonFIle() override;
 
 	/// <summary>
 	/// ロックオンコマンド
@@ -103,7 +108,7 @@ public:// Getter, Setter
 	/// 現在ロックオンしている敵の情報を取得
 	/// </summary>
 	/// <returns></returns>
-	IEnemy* GetCurrentLockOnTarget() { return lockOnEnemy_;	}
+	IEnemy* GetCurrentLockOnTarget() { return lockOnEnemy_; }
 #pragma endregion
 
 #pragma region Setter
@@ -122,7 +127,7 @@ public:// Getter, Setter
 
 private:// jsonで保存する値
 	// ロックオンできる範囲
-	float kMaxRange = 50.0f;
+	static float kMaxRange;
 
 private:// 外部からポインタをもらう変数
 	// 敵のリスト

@@ -1,13 +1,13 @@
-#include "Walk.h"
+#include "Dash.h"
 #include "../../Move.h"
 #include "../../../../Player.h"
 
-Walk::Walk(Move* moveSystem, Player* player, const float& moveMultiply) {
+Dash::Dash(Move* moveSystem, Player* player, const float& moveMultiply) {
 	moveSystem_ = moveSystem;
 	player_ = player;
 
 	// 状態の名前を付与
-	stateName_ = "Walk";
+	stateName_ = "Dash";
 
 	// 移動速度の倍率を設定
 	moveSystem_->SetMoveMultiply(moveMultiply);
@@ -15,17 +15,17 @@ Walk::Walk(Move* moveSystem, Player* player, const float& moveMultiply) {
 	AnimCommand();
 }
 
-void Walk::Initialize() {
+void Dash::Initialize() {
 
 }
 
-void Walk::Update() {
+void Dash::Update() {
 
 }
 
-void Walk::AnimCommand() {
+void Dash::AnimCommand() {
 	// アニメーションを変更
-	player_->StartAnimation("Walk", 0.1f, 0.0f);
+	player_->StartAnimation("Dash", 0.0f, 0.0f);
 	player_->SetAnimationPlaySpeed(1.0f);
 	player_->SetIsLoopAnimation(true);
 }

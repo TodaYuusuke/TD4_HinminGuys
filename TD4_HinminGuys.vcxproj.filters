@@ -4,9 +4,9 @@
     <ClCompile Include="Class\ComboEditor\ComboTree.cpp" />
     <ClCompile Include="Class\Condition\child\Input\ButtonCondition.cpp" />
     <ClCompile Include="Class\DeltaTimer\DeltaTimer.cpp" />
-    <ClCompile Include="Class\Enemy\SpawnData.cpp" />
     <ClCompile Include="Class\Scene\GameScene.cpp" />
     <ClCompile Include="Class\ComboEditor\Combo.cpp" />
+    <ClCompile Include="Class\Enemy\SpawnData.cpp" />
     <ClCompile Include="Class\Enemy\Childs\Boss\Boss.cpp" />
     <ClCompile Include="Class\Enemy\Childs\State\BossAttack.cpp" />
     <ClCompile Include="Class\Enemy\Childs\State\BossIdle.cpp" />
@@ -47,6 +47,11 @@
     <ClCompile Include="Class\Player\Systems\Children\State\Move\Walk.cpp" />
     <ClCompile Include="Class\Player\Gauge\Sheath\SheathGauge.cpp" />
     <ClCompile Include="Class\Player\Systems\Children\State\Sheath\Throw.cpp" />
+    <ClCompile Include="Class\Player\Animator\PlayerAnimator.cpp" />
+    <ClCompile Include="Class\Player\Animator\IAnimation.cpp" />
+    <ClCompile Include="Class\Player\Systems\Children\State\Move\Dash.cpp" />
+    <ClCompile Include="Class\Player\Systems\Children\State\Move\None.cpp" />
+    <ClCompile Include="Class\Player\Systems\ISystem.cpp" />
     <ClCompile Include="Class\Scene\VoidScene.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -71,7 +76,7 @@
     <ClInclude Include="Class\Enemy\Childs\Normal\State\NormalEnemyAttack.h" />
     <ClInclude Include="Class\Enemy\Childs\Normal\State\NormalEnemyIdle.h" />
     <ClInclude Include="Class\Enemy\Childs\Normal\State\NormalEnemyMove.h" />
-    <ClInclude Include="Class\Enemy\SpawnData.h" />
+     <ClInclude Include="Class\Enemy\SpawnData.h" />
     <ClInclude Include="Class\Enemy\States.h" />
     <ClInclude Include="Class\Enemy\WaveData.h" />
     <ClInclude Include="Class\Player\Command\InputConfig.h" />
@@ -112,6 +117,12 @@
     <ClInclude Include="Class\Player\Gauge\Sheath\SheathGauge.h" />
     <ClInclude Include="Class\Player\Systems\Children\State\Sheath\Throw.h" />
     <ClInclude Include="Class\Player\Systems\Children\State\Sheath\Collect.h" />
+    <ClInclude Include="Class\Player\Animator\PlayerAnimator.h" />
+    <ClInclude Include="Class\Player\Animator\IAnimation.h" />
+    <ClInclude Include="Class\Player\Animator\AnimConfig.h" />
+    <ClInclude Include="Class\Player\Systems\Children\State\Move\Dash.h" />
+    <ClInclude Include="Class\Player\Command\BanInput.h" />
+    <ClInclude Include="Class\Player\Systems\Children\State\Move\None.h" />
     <ClInclude Include="Class\Scene\VoidScene.h" />
   </ItemGroup>
   <ItemGroup>

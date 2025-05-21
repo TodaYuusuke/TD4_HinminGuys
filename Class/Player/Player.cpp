@@ -15,9 +15,7 @@ Player::Player(LWP::Object::Camera* camera, EnemyManager* enemyManager, FollowCa
 	// モデルを読み込む
 	model_.LoadShortPath("player/Player_Simple.gltf");
 	animation_.LoadFullPath("resources/model/player/Player_Simple.gltf", &model_);
-
-	// 自機機能を生成
-	CreateSystems();
+	animation_.Play("Idle");
 
 	// 当たり判定を作成
 	CreateCollision();
@@ -28,6 +26,11 @@ Player::Player(LWP::Object::Camera* camera, EnemyManager* enemyManager, FollowCa
 }
 
 void Player::Initialize() {
+	inputHandler_ = InputHandler::GetInstance();
+
+	// 自機機能を生成
+	CreateSystems();
+
 	// 大きさを一時的に調整
 	model_.worldTF.scale = { 0.5f, 0.5f, 0.5f };
 }

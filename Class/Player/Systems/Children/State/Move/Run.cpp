@@ -7,20 +7,25 @@ Run::Run(Move* moveSystem, Player* player, const float& moveMultiply) {
 	player_ = player;
 
 	// 状態の名前を付与
-	stateName_ = "Dash";
+	stateName_ = "Run";
 
 	// 移動速度の倍率を設定
 	moveSystem_->SetMoveMultiply(moveMultiply);
 
-	// アニメーションを変更
-	player_->StartAnimation("Dash", 1.0f, 0.0f);
-	player_->SetAnimationPlaySpeed(1.0f);
-	player_->SetIsLoopAnimation(true);
+	AnimCommand();
 }
 
-void Run::Initialize()
-{
+void Run::Initialize() {
+
 }
 
 void Run::Update() {
+
+}
+
+void Run::AnimCommand() {
+	// アニメーションを変更
+	player_->StartAnimation("Run", 0.1f, 0.0f);
+	player_->SetAnimationPlaySpeed(1.0f);
+	player_->SetIsLoopAnimation(true);
 }

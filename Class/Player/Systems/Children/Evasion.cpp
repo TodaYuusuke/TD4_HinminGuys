@@ -19,14 +19,32 @@ void Evasion::Initialize() {
 
 	json_.Init("EvasionData.json");
 	json_.BeginGroup("EventOrder")
+		// 回避の無敵タイミングの設定
+		.BeginGroup("Invinsible")
 		.BeginGroup("GraceTime")
-		.AddValue<float>("SwingTime", &kEvasionSwingTime)
-		.AddValue<float>("InvinsibleTime", &kInvinsibleTime)
-		.AddValue<float>("RecoveryTime", &kEvasionRecoveryTime)
+		.AddValue<float>("SwingTime", &invinsibleSwingTime)
+		.AddValue<float>("InvinsibleTime", &invinsibleTime)
+		.AddValue<float>("RecoveryTime", &invinsibleRecoveryTime)
 		.EndGroup()
 		.EndGroup()
-		.AddValue<float>("DashButtonHoldSeconds", &dashButtonHoldSeconds)
+		// 加速タイミングの設定
+		.BeginGroup("Acceleration")
+		.BeginGroup("GraceTime")
+		.AddValue<float>("SwingTime", &accelerationSwingTime)
+		.AddValue<float>("AccelerationTime", &accelerationTime)
+		.AddValue<float>("RecoveryTime", &accelerationRecoveryTime)
+		.EndGroup()
+		.EndGroup()
+		.EndGroup()
+		// ダッシュに関する設定
+		.BeginGroup("Dash")
+		.AddValue<float>("ButtonHoldSeconds", &dashButtonHoldSeconds)
+		.EndGroup()
+		// 回避の終了時間
+		.AddValue<float>("FinishTime", &evasionFinishTime)
+		// 回避速度の倍率
 		.AddValue<float>("MoveMultiply", &moveMultiply)
+		// 回避の移動距離
 		.AddValue<Vector3>("Movement", &evasionMovement)
 		.CheckJsonFile();
 
@@ -64,8 +82,6 @@ void Evasion::Update() {
 }
 
 void Evasion::Reset() {
-	evasionEndPos_.translation = { 0,0,0 };
-	t_ = 0;
 	eventOrder_.Reset();
 	isActive_ = false;
 	isPreActive_ = false;
@@ -100,11 +116,45 @@ void Evasion::DebugGUI() {
 
 		ImGui::DragFloat3("Velocity", &velocity_.x);
 		ImGui::DragFloat3("AnimSpeed", &animPlaySpeed_.x);
+		ImGui::DragFloat("pressTime", &pressTime_);
 
 		ImGui::Checkbox("IsEvasion", &isActive_);
 
 		ImGui::TreePop();
 	}
+}
+
+void Evasion::CreateJsonFIle() {
+	json_.Init("EvasionData.json");
+	json_.BeginGroup("EventOrder")
+		// 回避の無敵タイミングの設定
+		.BeginGroup("Invinsible")
+		.BeginGroup("GraceTime")
+		.AddValue<float>("SwingTime", &invinsibleSwingTime)
+		.AddValue<float>("InvinsibleTime", &invinsibleTime)
+		.AddValue<float>("RecoveryTime", &invinsibleRecoveryTime)
+		.EndGroup()
+		.EndGroup()
+		// 加速タイミングの設定
+		.BeginGroup("Acceleration")
+		.BeginGroup("GraceTime")
+		.AddValue<float>("SwingTime", &accelerationSwingTime)
+		.AddValue<float>("AccelerationTime", &accelerationTime)
+		.AddValue<float>("RecoveryTime", &accelerationRecoveryTime)
+		.EndGroup()
+		.EndGroup()
+		.EndGroup()
+		// ダッシュに関する設定
+		.BeginGroup("Dash")
+		.AddValue<float>("ButtonHoldSeconds", &dashButtonHoldSeconds)
+		.EndGroup()
+		// 回避の終了時間
+		.AddValue<float>("FinishTime", &evasionFinishTime)
+		// 回避速度の倍率
+		.AddValue<float>("MoveMultiply", &moveMultiply)
+		// 回避の移動距離
+		.AddValue<Vector3>("Movement", &evasionMovement)
+		.CheckJsonFile();
 }
 
 void Evasion::Command() {
@@ -113,43 +163,63 @@ void Evasion::Command() {
 		player_->GetSystemManager()->SetInputState(InputState::kEvasion);
 		pressTime_ = 0.0f;
 		isActive_ = true;
-		animationPlaySpeed_.Start();
-		player_->ResetAnimation();
-		player_->StartAnimation("Dash", 1.0f, 0.0f);
-		player_->SetIsLoopAnimation(true);
 	}
 	eventOrder_.Start();
 }
 
-void Evasion::CreateEventOrder() {
-	eventOrder_.Initialize();
-	// 回避発生までの時間
-	eventOrder_.CreateTimeEvent(TimeEvent{ kEvasionSwingTime * 60.0f, "EvasionSwingTime" });
+void Evasion::AnimCommand() {
+	animationPlaySpeed_.Start();
+	player_->ResetAnimation();
+	player_->StartAnimation("Dash", 0.1f, 0.0f);
+	player_->SetIsLoopAnimation(true);
+}
+
+void Evasion::CreateInvincibleEventOrder() {
+	eventOrders_[(int)EventOrderState::kInvincible].Initialize();
+	// 回避の無敵発生までの時間
+	eventOrders_[(int)EventOrderState::kInvincible].CreateTimeEvent(TimeEvent{ invinsibleSwingTime * 60.0f, "SwingTime" });
 	// 回避の無敵猶予時間
-	eventOrder_.CreateTimeEvent(TimeEvent{ kInvinsibleTime * 60.0f, "InvinsibleTime" });
-	// 回避の硬直時間
-	eventOrder_.CreateTimeEvent(TimeEvent{ kEvasionRecoveryTime * 60.0f, "EvasionRecoveryTime" });
+	eventOrders_[(int)EventOrderState::kInvincible].CreateTimeEvent(TimeEvent{ invinsibleTime * 60.0f, "InvinsibleTime" });
+	// 回避の無敵硬直時間
+	eventOrders_[(int)EventOrderState::kInvincible].CreateTimeEvent(TimeEvent{ invinsibleRecoveryTime * 60.0f, "RecoveryTime" });
+}
+
+void Evasion::CreateAccelerationEventOrder() {
+	eventOrders_[(int)EventOrderState::kAcceleration].Initialize();
+	// 回避の加速発生までの時間
+	eventOrders_[(int)EventOrderState::kAcceleration].CreateTimeEvent(TimeEvent{ accelerationSwingTime * 60.0f, "SwingTime" });
+	// 回避の加速時間
+	eventOrders_[(int)EventOrderState::kAcceleration].CreateTimeEvent(TimeEvent{ accelerationTime * 60.0f, "AccelerationTime" });
+	// 回避の加速硬直時間
+	eventOrders_[(int)EventOrderState::kAcceleration].CreateTimeEvent(TimeEvent{ accelerationRecoveryTime * 60.0f, "RecoveryTime" });
+}
+
+void Evasion::CreateEventOrder() {
+	// 回避終了時間
+	if (eventOrder_.GetIsEnd()) {
+		eventOrder_.Initialize();
+		// 回避の無敵発生までの時間
+		eventOrder_.CreateTimeEvent(TimeEvent{ evasionFinishTime * 60.0f, "FinishTime" });
+	}
+	// 無敵タイミング
+	CreateInvincibleEventOrder();
+	// 加速タイミング
+	CreateAccelerationEventOrder();
 }
 
 void Evasion::CheckEvasionState() {
-	// 予備動作
-	if (eventOrder_.GetCurrentTimeEvent().name == "EvasionSwingTime") {
-		//collider_.isActive = false;
-		//isJustParry_ = false;
-		//isGoodParry_ = false;
-	}
-	// 無敵時間
-	else if (eventOrder_.GetCurrentTimeEvent().name == "InvinsibleTime") {
-		//collider_.isActive = false;
-		//isJustParry_ = false;
-		//isGoodParry_ = false;
-	}
-	// 硬直時間
-	else if (eventOrder_.GetCurrentTimeEvent().name == "EvasionRecoveryTime") {
-		//collider_.isActive = false;
-		//isJustParry_ = false;
-		//isGoodParry_ = false;
-	}
+	//// 予備動作
+	//if (eventOrder_.GetCurrentTimeEvent().name == "EvasionSwingTime") {
+
+	//}
+	//// 無敵時間
+	//else if (eventOrder_.GetCurrentTimeEvent().name == "InvinsibleTime") {
+
+	//}
+	//// 硬直時間
+	//else if (eventOrder_.GetCurrentTimeEvent().name == "EvasionRecoveryTime") {
+
+	//}
 }
 
 void Evasion::CheckDash() {
@@ -160,64 +230,28 @@ void Evasion::CheckDash() {
 	}
 }
 
-float Evasion::SmoothDampF(float current, float target, float& currentVelocity, float smoothTime, float maxSpeed, float deltaTime) {
-	// Based on Game Programming Gems 4 Chapter 1.10
-	float limitTime;
-	limitTime = max(0.0001f, smoothTime);
-	float omega = 2.0f / limitTime;
-
-	float x = omega * deltaTime;
-	float exp = 1.0f / (1.0f + x + 0.48f * x * x + 0.235f * x * x * x);
-	float change = current - target;
-	float originalTo = target;
-
-	// Clamp maximum speed
-	float maxChange = maxSpeed * limitTime;
-	change = std::clamp<float>(change, -maxChange, maxChange);
-	float tValue = current - change;
-
-	float temp = (currentVelocity + omega * change) * deltaTime;
-	currentVelocity = (currentVelocity - omega * temp) * exp;
-	float output = tValue + (change + temp) * exp;
-
-	// Prevent overshooting
-	if (originalTo - current > 0.0f == output > originalTo)
-	{
-		output = originalTo;
-		currentVelocity = (output - originalTo) / deltaTime;
-	}
-
-	return output;
-}
-LWP::Math::Vector3 Evasion::SmoothDamp(LWP::Math::Vector3 current, LWP::Math::Vector3 target, LWP::Math::Vector3& currentVelocity, float smoothTime, float maxSpeed, float deltaTime) {
-	LWP::Math::Vector3 result = {
-		SmoothDampF(current.x, target.x, currentVelocity.x,smoothTime, maxSpeed, deltaTime),
-		SmoothDampF(current.y, target.y, currentVelocity.y,smoothTime, maxSpeed, deltaTime),
-		SmoothDampF(current.z, target.z, currentVelocity.z,smoothTime, maxSpeed, deltaTime)
-	};
-
-	return result;
-}
-
 void Evasion::Move() {
-	// 
+	// 回避開始した瞬間
 	if (GetTrigger()) {
-		evasionEndPos_.translation = player_->GetWorldTF()->GetWorldPosition() + evasionMovement * Matrix4x4::CreateRotateXYZMatrix(player_->GetSystemManager()->GetMoveSystem()->GetMoveQuat());
-		evasionStartPos_ = player_->GetWorldTF()->GetWorldPosition();
-
 		easeData_ = {
 			&velocity_,
-			evasionStartPos_,
-			evasionStartPos_ + evasionMovement * Matrix4x4::CreateRotateXYZMatrix(player_->GetSystemManager()->GetMoveSystem()->GetMoveQuat()),
+			Vector3{0,0,0},
+			evasionMovement * Matrix4x4::CreateRotateXYZMatrix(player_->GetSystemManager()->GetRotate()),
+			accelerationTime * 60.0f,
+			0.0f,
 			false
 		};
 	}
 
 	// 回避の速度補間がなくなるまでイージングを行う
-	if (easeData_.t < 30.0f) {
+	if (easeData_.t < easeData_.endSecond) {
 		easeData_.t++;
 		// イージングを行う
-		velocity_ = LWP::Utility::Interpolation::Lerp(easeData_.start, easeData_.end, LWP::Utility::Easing::OutExpo(easeData_.t / 30.0f)) - player_->GetWorldTF()->GetWorldPosition();
+		velocity_ = LWP::Utility::Interpolation::Lerp(easeData_.start, easeData_.end, LWP::Utility::Easing::OutExpo(easeData_.t / easeData_.endSecond)) * moveMultiply;
+	}
+	// 徐々に減速
+	else {
+		velocity_ = LWP::Utility::Interpolation::Exponential(velocity_, Vector3{ 0,0,0 }, 0.1f);
 	}
 
 	// 移動ベクトルから体の向きを算出(入力があるときのみ処理する)

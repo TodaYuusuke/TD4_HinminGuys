@@ -3,7 +3,6 @@
 #include "../Player/Player.h"
 #include "../Camera/FollowCamera.h"
 #include "../Enemy/EnemyManager.h"
-#include "../Player/Command/ICommand.h"
 #include "../Player/Command/InputHandler.h"
 #include "../TestCollider.h"
 #include <set>
@@ -29,10 +28,11 @@ public:
 
 
 private: // ** これより先に必要な処理や変数を記述 ** //
+	//　キー入力
+	InputHandler* inputHandler_;
+
 	// 自機
 	Player player_;
-	//　キー入力
-	InputHandler inputHandler_;
 
 	// 追従カメラ
 	FollowCamera followCamera_;

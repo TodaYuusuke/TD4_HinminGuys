@@ -4,18 +4,41 @@
 using namespace LWP::Input;
 using namespace InputConfig;
 
+InputHandler* InputHandler::GetInstance() {
+	static InputHandler instance;
+	return &instance;
+}
+
 void InputHandler::Initialize() {
 	// コマンド作成
 	CreateCommand();
+
+	banInput_ = BanNone;
 }
 
 void InputHandler::Update(Player& player) {
 	// 入力されたコマンドを確認
 	commands_ = HandleInput();
 
-	// set Command
+	// 現在の入力がなくなったら入力禁止状態を初期化
+	if (currentCommand_) {
+		currentCommand_->Reset(player, banInput_);
+	}
+
+	// コマンドの実行
 	for (ICommand* cmd : commands_) {
-		cmd->Exec(player);
+		cmd->Exec(player, banInput_);
+
+		// 現在入力されて実行しているものを更新
+		if (cmd->isActive_) {
+			currentCommand_ = cmd;
+		}
+	}
+
+	// 例外
+	// 入力が何もない場合入力キーを押している状態にする
+	if (commands_.empty()) {
+		pressMoveCommand_->Exec(player, banInput_);
 	}
 }
 
@@ -24,11 +47,7 @@ void InputHandler::DebugGUI() {
 		// 登録されているコマンド
 		if (ImGui::TreeNode("AllView")) {
 
-			ImGui::TreePop();
-		}
-		// 登録をし直す
-		if (ImGui::TreeNode("Reset")) {
-
+			ImGui::DragInt("BanBinary", &banInput_);
 			ImGui::TreePop();
 		}
 		ImGui::TreePop();
@@ -41,6 +60,7 @@ void InputHandler::CreateCommand() {
 	AssignLockOnCommand();
 	AssignEvasionCommand();
 	AssignSheathCommand();
+	AssignMoveCommand();
 }
 
 std::vector<ICommand*> InputHandler::HandleInput() {
@@ -66,8 +86,19 @@ std::vector<ICommand*> InputHandler::HandleInput() {
 	if (Keyboard::GetTrigger(Command::Key::Sheath) || Pad::GetTrigger(Command::GamePad::Sheath)) {
 		result.push_back(pressSheathCommand_);
 	}
+	// 移動入力
+	LWP::Math::Vector2 dir = Pad::GetLStick();
+	if (Keyboard::GetPress(Command::Key::Move::Up) || Keyboard::GetPress(Command::Key::Move::Down) || Keyboard::GetPress(Command::Key::Move::Left) || Keyboard::GetPress(Command::Key::Move::Right)
+		|| dir.Length() != 0.0f) {
+		result.push_back(pressMoveCommand_);
+	}
 
 	return result;
+}
+
+void InputHandler::AssignMoveCommand() {
+	ICommand* command = new MoveCommand();
+	this->pressMoveCommand_ = command;
 }
 
 void InputHandler::AssignNormalAttackCommand() {

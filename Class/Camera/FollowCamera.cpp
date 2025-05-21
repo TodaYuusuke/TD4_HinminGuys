@@ -14,6 +14,7 @@ void FollowCamera::Initialize() {
 		.AddValue<float>("MinRotateX", &kMinRotateX)
 		.AddValue<float>("MaxRotateX", &kMaxRotateX)
 		.AddValue<float>("Sensitivity", &sensitivity)
+		.AddValue<float>("Rate", &interTargetRate)
 		.CheckJsonFile();
 
 	// x軸回転
@@ -29,8 +30,11 @@ void FollowCamera::Update() {
 	// ロックオン処理
 	LockOnUpdate();
 
+	// 座標の補間をしていない座標
+	defaultPos_ = (*targetPos_) + kTargetDist * LWP::Math::Matrix4x4::CreateRotateXYZMatrix(camera_->worldTF.rotation);
 	// カメラの座標を決定
-	camera_->worldTF.translation = (*targetPos_) + kTargetDist * LWP::Math::Matrix4x4::CreateRotateXYZMatrix(camera_->worldTF.rotation);
+	interTarget_ = LWP::Utility::Interpolation::Exponential(interTarget_, (*targetPos_), interTargetRate);
+	camera_->worldTF.translation = interTarget_ + kTargetDist * LWP::Math::Matrix4x4::CreateRotateXYZMatrix(camera_->worldTF.rotation);
 }
 
 void FollowCamera::DebugGUI() {

@@ -4,6 +4,12 @@
 
 class Sheath : public ISystem {
 public:
+	enum class SheathState {
+		kThrow		= 0,
+		kCollect	= 1
+	};
+
+public:
 	// コンストラクタ
 	Sheath(LWP::Object::Camera * camera, Player * player);
 	// デストラクタ
@@ -29,9 +35,23 @@ public:
 	void DebugGUI() override;
 
 	/// <summary>
+	/// jsonファイルの作成
+	/// </summary>
+	void CreateJsonFIle() override;
+
+	/// <summary>
 	/// 鞘を投げるor鞘に向かってダッシュコマンド
 	/// </summary>
 	void Command();
+
+	/// <summary>
+	/// アニメーションのコマンド
+	/// </summary>
+	void AnimCommand();
+
+	void CreateThrowEventOrder();
+
+	void CreateCollectEventOrder();
 
 	/// <summary>
 	/// 状態の遷移
@@ -66,6 +86,16 @@ public:// Getter, Setter
 	/// </summary>
 	/// <returns></returns>
 	ISheathSystemState* GetSheathState() { return state_; }
+	/// <summary>
+	/// 行動制限を行うのかを取得
+	/// </summary>
+	/// <returns></returns>
+	bool GetIsActionRestrict(std::string stateName) { 
+		if (stateName == state_->GetStateName()) {
+			return state_->GetIsActive();
+		}
+		return false;
+	}
 #pragma endregion
 
 #pragma region Setter
@@ -87,7 +117,34 @@ public:// Getter, Setter
 	void SetRotate(const LWP::Math::Quaternion& quat) { quat_ = quat; }
 #pragma endregion
 
+public:// jsonに保存する値
+	// 鞘投げ発動までにかかる時間[秒]
+	float throwSwingTime = 0.0f;
+	// 鞘を投げて到達するまでの時間[秒]
+	float throwTime = 0.2f;
+	// 鞘投げの硬直[秒]
+	float throwRecoveryTime = 0.0f;
+
+	// 鞘回収発動までにかかる時間[秒]
+	float collectSwingTime = 0.0f;
+	// 鞘の場所に自機が到着するまでの時間[秒]
+	float collectTime = 1.0f;
+	// 鞘回収の硬直[秒]
+	float collectRecoveryTime = 0.0f;
+
+	// 鞘を投げた後の移動可能範囲
+	float enableMoveRange = 50.0f;
+
+	// 鞘投げの範囲
+	LWP::Math::Vector3 throwMovement = { 0,0,50.0f };
+
+	// クールタイム
+	float coolTime = 0.0f;
+
 private:// プライベートな変数
+	// アクションイベント集
+	std::map<int, EventOrder> eventOrders_;
+
 	// 状態遷移
 	ISheathSystemState* state_;
 

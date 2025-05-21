@@ -6,6 +6,8 @@
 #include "Children/LockOn.h"
 #include "Children/Evasion.h"
 #include "Children/Sheath.h"
+#include "../Animator/PlayerAnimator.h"
+#include "../Command/InputHandler.h"
 #include <memory>
 
 class Player;
@@ -47,6 +49,12 @@ public:
 	/// </summary>
 	void DebugGUI();
 
+	/// <summary>
+	/// 状態の遷移
+	/// </summary>
+	/// <param name="pState">次の状態</param>
+	void ChangeState(ISystem* pState);
+
 private:
 	/// <summary>
 	/// 移動入力が可能な状態なら自機に速度を加算
@@ -85,7 +93,6 @@ public:// Getter, Setter
 	/// </summary>
 	/// <returns></returns>
 	Sheath* GetSheathSystem() { return sheathSystem_.get(); }
-
 	/// <summary>
 	/// 速度を取得
 	/// </summary>
@@ -96,6 +103,16 @@ public:// Getter, Setter
 	/// </summary>
 	/// <returns></returns>
 	Quaternion GetRotate() { return rotate_; }
+	/// <summary>
+	/// 現在起動しているシステム
+	/// </summary>
+	/// <returns></returns>
+	ISystem* GetCurrentState() { return currentState_; }
+	/// <summary>
+	/// 次に遷移できるシステムを取得
+	/// </summary>
+	/// <returns></returns>
+	int GetNextEnableState() { return nextEnableState_; }
 #pragma endregion
 
 #pragma region Setter
@@ -104,6 +121,11 @@ public:// Getter, Setter
 	/// </summary>
 	/// <param name="inputState"></param>
 	void SetInputState(InputState inputState) { inputState_ = inputState; }
+	/// <summary>
+	/// 次に遷移できるシステムを設定
+	/// </summary>
+	/// <param name="nextState"></param>
+	void SetNextEnableState(const int& nextState) { nextEnableState_ = nextState; }
 #pragma endregion
 
 private:// 外部からポインタをもらう変数
@@ -114,6 +136,8 @@ private:// 外部からポインタをもらう変数
 	FollowCamera* followCamera_;
 	// シーンで使用しているカメラ
 	LWP::Object::Camera* pCamera_;
+	//　キー入力
+	InputHandler* inputHandler_;
 
 private:
 	// ロックオン機能
@@ -132,9 +156,25 @@ private:
 	// 機能クラスをまとめた変数
 	std::vector<ISystem*> systems_;
 
+	// 遷移可能システムをまとめる
+	std::vector<ISystem*> isChangeSystems_;
+
+	// 使用している機能
+	ISystem* currentState_;
+	ISystem* preState_;
+
+	// 次に遷移できるシステム
+	int nextEnableState_;
+	int preEnableState_;
+
+	// アニメーションの遷移を管理するクラス
+	PlayerAnimator animator_;
+
 	// 速度
 	LWP::Math::Vector3 velocity_;
+
 	// 角度
+	LWP::Math::Vector3 radian_;
 	LWP::Math::Quaternion rotate_;
 
 	// 入力状態

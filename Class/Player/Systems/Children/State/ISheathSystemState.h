@@ -1,5 +1,7 @@
 #pragma once
 #include "../Adapter/Adapter.h"
+#include "../../../Command/InputHandler.h"
+#include "../../EventOrder.h"
 
 class Player;
 class Sheath;
@@ -19,6 +21,11 @@ public:
 	/// コマンド
 	/// </summary>
 	virtual void Command() = 0;
+
+	/// <summary>
+	/// アニメーションのコマンド
+	/// </summary>
+	virtual void AnimCommand() = 0;
 
 public:// Getter, Setter
 #pragma region Getter
@@ -64,6 +71,11 @@ public:// Getter, Setter
 protected:
 	Player* player_;
 	Sheath* sheathSystem_;
+	//　キー入力
+	InputHandler* inputHandler_;
+
+	// アクションイベント
+	std::map<int, EventOrder>* eventOrders_;
 
 	// 状態の名前
 	std::string stateName_;

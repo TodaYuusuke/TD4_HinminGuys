@@ -15,21 +15,18 @@ Parry::Parry(LWP::Object::Camera* camera, Player* player)
 	// パリィ判定生成
 	CreateCollision();
 
-	json_.Init("ParryData.json");
-	json_.BeginGroup("EventOrder")
-		.BeginGroup("GraceTime")
-		.AddValue<float>("SwingTime", &kSwingTime)
-		.AddValue<float>("JustParry", &kJustParryTime)
-		.AddValue<float>("GoodParry", &kGoodParryTime)
-		.AddValue<float>("RecoveryTime", &kRecoveryTime)
-		.EndGroup()
-		.EndGroup()
-		.CheckJsonFile();
+	nextState_ = InputNone;
+	currentState_ = InputParry;
 }
 
 void Parry::Initialize() {
+	// コマンドの登録
+	inputHandler_ = InputHandler::GetInstance();
 	isActive_ = false;
 	isPreActive_ = false;
+
+	// jsonで保存している値
+	CreateJsonFIle();
 
 	// フレーム単位で発生するアクションイベントを管理するクラス
 	CreateEventOrder();
@@ -95,6 +92,19 @@ void Parry::DebugGUI() {
 	}
 }
 
+void Parry::CreateJsonFIle() {
+	json_.Init("ParryData.json");
+	json_.BeginGroup("EventOrder")
+		.BeginGroup("GraceTime")
+		.AddValue<float>("SwingTime", &kSwingTime)
+		.AddValue<float>("JustParry", &kJustParryTime)
+		.AddValue<float>("GoodParry", &kGoodParryTime)
+		.AddValue<float>("RecoveryTime", &kRecoveryTime)
+		.EndGroup()
+		.EndGroup()
+		.CheckJsonFile();
+}
+
 void Parry::Command() {
 	if (eventOrder_.GetIsEnd()) {
 		// パリィ状態に移行
@@ -103,11 +113,15 @@ void Parry::Command() {
 		collider_.isActive = true;
 		aabb_.isShowWireFrame = true;
 		isMoveInput_ = false;
-		// ガードアニメーション開始
-		player_->ResetAnimation();
-		player_->StartAnimation("Gaurd", 10.0f, 0.0f);
 	}
 	eventOrder_.Start();
+}
+
+void Parry::AnimCommand() {
+	// ガードアニメーション開始
+	player_->ResetAnimation();
+	player_->StartAnimation("Gaurd", 0.1f, 0.0f);
+	//player_->StopAnimation();
 }
 
 void Parry::CreateCollision() {

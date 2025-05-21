@@ -28,7 +28,7 @@ public:// Getter, Setter
 	/// </summary>
 	/// <returns></returns>
 	bool GetValueEmpty() {
-		if (value <= 0.0f) { return true; }
+		if (value_ <= 0.0f) { return true; }
 		return false;
 	}
 #pragma endregion

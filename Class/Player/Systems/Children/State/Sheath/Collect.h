@@ -7,7 +7,7 @@
 class Collect : public ISheathSystemState {
 public:
 	// コンストラクタ
-	Collect(Sheath* sheathSystem, Player* player);
+	Collect(Sheath* sheathSystem, Player* player, std::map<int, EventOrder>* eventOrders);
 	// デストラクタ
 	~Collect() override = default;
 
@@ -25,12 +25,22 @@ public:
 	/// </summary>
 	void Command() override;
 
+	/// <summary>
+	/// アニメーションのコマンド
+	/// </summary>
+	void AnimCommand() override;
+
+private:
+	/// <summary>
+	/// 鞘を回収するときの挙動
+	/// </summary>
+	void CollectMove();
+
+private:
 	float SmoothDampF(float current, float target, float& currentVelocity, float smoothTime, float maxSpeed, float deltaTime);
 	LWP::Math::Vector3 SmoothDamp(LWP::Math::Vector3 current, LWP::Math::Vector3 target, LWP::Math::Vector3& currentVelocity, float smoothTime, float maxSpeed, float deltaTime);
 
 private:
-	//LWP::Resource::Motion motion_;
-
 	LWP::Math::Vector3 velocity_;
 	LWP::Math::Vector3 start_;
 	LWP::Math::Vector3 end_;

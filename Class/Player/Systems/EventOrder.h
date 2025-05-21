@@ -63,6 +63,11 @@ public:// Getter, Setter
 		return TimeEvent();
 	}
 	/// <summary>
+	/// 現在実行中のアクションイベントの経過時間を取得
+	/// </summary>
+	/// <returns></returns>
+	float GetCurrentFrame() { return currentTime_; }
+	/// <summary>
 	/// 機能が使える状態かを取得
 	/// </summary>
 	/// <returns></returns>

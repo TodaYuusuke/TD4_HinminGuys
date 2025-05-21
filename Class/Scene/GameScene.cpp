@@ -23,7 +23,8 @@ GameScene::~GameScene() {
 // 初期化
 void GameScene::Initialize() {
 	// コマンドの登録
-	inputHandler_.Initialize();
+	inputHandler_ = InputHandler::GetInstance();
+	inputHandler_->Initialize();
 
 	// 敵管理クラス
 	enemyManager_.Initialize();
@@ -33,6 +34,7 @@ void GameScene::Initialize() {
 	followCamera_.Initialize();
 
 	// 自機の動作確認のため生成
+	//player_.SetInputHandler(inputHandler_);
 	player_.Initialize();
 
 #pragma region フィールドを一時的に生成
@@ -64,11 +66,8 @@ void GameScene::Update() {
 		sceneTransitioner_.SceneTransitionStart();
 	}
 
-	//シーン切り替えしていない間更新
-	if (not SceneTransitioner::GetIsSceneChange()) {
-
-		// 入力されたコマンドを確認
-		inputHandler_.Update(player_);
+	// 入力されたコマンドを確認
+	inputHandler_->Update(player_);
 
 		//敵全て
 		enemyManager_.Update();
@@ -81,7 +80,6 @@ void GameScene::Update() {
 
 		// デバッグ用のウィンドウ
 		DebugGUI();
-	}
 
 	sceneTransitioner_.Update();
 
@@ -98,7 +96,7 @@ void GameScene::DebugGUI() {
 		}
 		// キーコンフィグ
 		if (ImGui::BeginTabItem("InputHandler")) {
-			inputHandler_.DebugGUI();
+			inputHandler_->DebugGUI();
 			ImGui::EndTabItem();
 		}
 		// 追従カメラ
