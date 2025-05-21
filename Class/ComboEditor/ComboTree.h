@@ -13,7 +13,7 @@ public: // コンストラクタ等
 	/// <summary>
 	/// コンストラクタ
 	/// </summary>
-	ComboTree() = default;
+	ComboTree() : capsule_(collider_.SetBroadShape(LWP::Object::Collider::Capsule())) {}
 	/// <summary>
 	/// デストラクタ
 	/// </summary>
@@ -24,7 +24,10 @@ public: // メンバ関数
 	/// <summary>
 	/// 初期化関数
 	/// </summary>
-	void Init(LWP::Resource::SkinningModel* model, LWP::Resource::Animation* anim);
+	/// <param name="fileName">読み込み保存するファイル名<param>
+	/// <param name="model">アニメーションさせるモデル</param>
+	/// <param name="anim">アニメーション</param>
+	void Init(const std::string& fileName, LWP::Resource::SkinningModel* model, LWP::Resource::Animation* anim);
 
 	/// <summary>
 	/// 更新関数
@@ -37,6 +40,24 @@ public: // メンバ関数
 	void DebugGUI();
 
 public: // アクセッサ等
+
+	/// <summary>
+	/// 現在のコンボが大元のコンボであるかどうかのゲッター
+	/// </summary>
+	/// <returns></returns>
+	bool GetIsThisRoot() { return nowCombo_->GetIsRoot(); }
+
+	/// <summary>
+	/// 攻撃アシストの有効状態ゲッター
+	/// </summary>
+	/// <returns>攻撃アシストの有効状態</returns>
+	bool GetIsEnableAttackAssist() { return nowCombo_->GetIsAttackAssistActive(); }
+
+	/// <summary>
+	/// 攻撃アシストの移動量ゲッター
+	/// </summary>
+	/// <returns>攻撃アシストの移動量</returns>
+	LWP::Math::Vector3 GetAttackAssistMoveAmount() { return nowCombo_->GetAttackAssistMoveAmount(); }
 
 	/// <summary>
 	/// 現在コンボの硬直状態ゲッター
@@ -64,7 +85,8 @@ private: // プライベートなメンバ関数
 	/// <summary>
 	/// コンボのロード関数
 	/// </summary>
-	void LoadCombo();
+	/// <param name="fileName">ファイル名</param>
+	void LoadCombo(const std::string& fileName);
 
 	/// <summary>
 	/// <エディタ用> 同名コンボがいくつあるかのカウンター
@@ -106,7 +128,8 @@ private: // メンバ変数
 	LWP::Resource::Animation* anim_ = nullptr;
 
 	// コライダー
-	LWP::Object::Collision* collider_;
+	LWP::Object::Collision collider_;
+	LWP::Object::Collider::Capsule& capsule_;
 
 	// 現在のコンボ
 	Combo* nowCombo_ = nullptr;
@@ -114,6 +137,9 @@ private: // メンバ変数
 	Combo* nextCombo_ = nullptr;
 
 #pragma region エディタ用変数
+
+	// 保存先ファイル名
+	std::string fileName_{};
 
 	// jsonIO
 	LWP::Utility::JsonIO jsonIO_;

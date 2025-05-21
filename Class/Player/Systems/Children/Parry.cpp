@@ -52,7 +52,6 @@ void Parry::Update() {
 
 void Parry::Reset() {
 	isActive_ = false;
-	isMoveInput_ = true;
 	isJustParry_ = false;
 	isGoodParry_ = false;
 	collider_.isActive = false;
@@ -112,7 +111,7 @@ void Parry::Command() {
 		isActive_ = true;
 		collider_.isActive = true;
 		aabb_.isShowWireFrame = true;
-		isMoveInput_ = false;
+		//isMoveInput_ = false;
 	}
 	eventOrder_.Start();
 }

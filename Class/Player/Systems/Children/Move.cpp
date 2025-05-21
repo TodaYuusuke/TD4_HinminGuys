@@ -37,6 +37,8 @@ void Move::Initialize() {
 	// 移動状態
 	moveState_ = MoveState::kIdle;
 	preMoveState_ = moveState_;
+
+	enableInput_ = true;
 }
 
 void Move::Update() {

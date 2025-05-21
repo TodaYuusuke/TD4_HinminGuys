@@ -36,8 +36,10 @@ public: // メンバ関数
 	/// <summary>
 	/// 開始関数
 	/// </summary>
+	/// <param name="model">モデル</param>
 	/// <param name="anim">アニメーション</param>
-	void Start(LWP::Resource::Animation* anim);
+	/// <param name="collider">コライダー</param>
+	void Start(LWP::Resource::SkinningModel* model, LWP::Resource::Animation* anim, LWP::Object::Collision* collider);
 
 	/// <summary>
 	/// 更新関数
@@ -67,6 +69,17 @@ public: // メンバ関数
 public: // アクセッサ等
 	
 	/// <summary>
+	/// 無操作状態のコンボであるかのセッター
+	/// </summary>
+	/// <param name="isRoot">状態</param>
+	void SetIsRoot(const bool isRoot) { isRoot_ = isRoot; }
+	/// <summary>
+	/// 無操作状態のコンボであるかのゲッター
+	/// </summary>
+	/// <returns>状態</returns>
+	bool GetIsRoot() { return isRoot_; }
+
+	/// <summary>
 	/// 開始条件の達成状況ゲッター
 	/// </summary>
 	/// <returns>コンボの開始条件を満たしているか</returns>
@@ -77,6 +90,18 @@ public: // アクセッサ等
 	/// </summary>
 	/// <returns>攻撃判定の有効状態</returns>
 	bool GetIsAttackActivate() { return isAttackActive_; }
+
+	/// <summary>
+	/// 攻撃のアシスト判定の有効状態ゲッター
+	/// </summary>
+	/// <returns>攻撃アシスト判定の有効状態</returns>
+	bool GetIsAttackAssistActive() { return isAttackAssistActive_; }
+
+	/// <summary>
+	/// 攻撃アシストの移動量ゲッター
+	/// </summary>
+	/// <returns>攻撃アシスト時の移動量</returns>
+	LWP::Math::Vector3 GetAttackAssistMoveAmount() { return attackAssistMoveAmount_; }
 
 	/// <summary>
 	/// 硬直状態ゲッター
@@ -167,7 +192,14 @@ private: // プライベートなメンバ関数
 	/// <summary>
 	/// 攻撃判定の有効判定関係の更新
 	/// </summary>
-	void AttackActiveUpdate();
+	/// <param name="model">モデル</param>
+	/// <param name="collider">コライダー</param>
+	void AttackActiveUpdate(LWP::Resource::SkinningModel* model);
+
+	/// <summary>
+	/// 攻撃アシストの有効判定関係の更新
+	/// </summary>
+	void AttackAssistUpdate();
 
 	/// <summary>
 	/// 硬直時間関係の更新
@@ -221,6 +253,10 @@ private: // メンバ変数
 
 	// 再生されるアニメーション名
 	std::string animName_ = "";
+	// 遷移秒数
+	float transitionTime_ = 0.0f;
+	// ループフラグ
+	bool isLoop_ = false;
 
 	// 派生コンボ先配列
 	std::list<Combo*> childs_;
@@ -233,12 +269,29 @@ private: // メンバ変数
 
 	// 攻撃判定開始秒数
 	float attackStartTime_ = 0.0f;
-	// 攻撃判定終了秒数
-	float attackEndTime_ = 0.0f;
+	// 攻撃判定有効秒数
+	float attackEnableTime_ = 0.0f;
 	// 攻撃判定処理用タイマー
 	LWP::Utility::DeltaTimer attackDecisionTimer_{};
 	// 攻撃判定の有効フラグ
 	bool isAttackActive_ = false;
+	// 攻撃判定の追従先ジョイント名
+	std::string followJointName_{};
+	// 攻撃判定のオフセット
+	LWP::Math::Vector3 attackColliderLengthOffset_{};
+	// 攻撃判定半径
+	float attackColliderRadius_ = 0.0f;
+
+	// 攻撃アシストの開始秒数
+	float attackAssistStartTime_ = 0.0f;
+	// 攻撃アシストの有効秒数
+	float attackAssistEnableTime_ = 0.0f;
+	// アシスト時の移動量
+	LWP::Math::Vector3 attackAssistMoveAmount_{};
+	// 攻撃アシスト処理用タイマー
+	LWP::Utility::DeltaTimer attackAssistTimer_{};
+	// 攻撃アシストの有効フラグ
+	bool isAttackAssistActive_ = false;
 
 	// 硬直時間
 	float stifnessTime_ = 0.0f;
@@ -258,6 +311,9 @@ private: // メンバ変数
 	bool isReturnSelf_ = false;
 
 	#pragma region エディタ用変数
+
+	// 無操作状態のコンボか
+	bool isRoot_ = false;
 
 	// ImGui上で選択されているフラグ
 	bool imGuiSelected_ = false;

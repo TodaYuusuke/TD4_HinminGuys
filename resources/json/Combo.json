@@ -10,12 +10,28 @@
                             "int32_t :InputState": 0,
                             "int32_t :KeyID": 36
                         },
+                        "Vector3 :AttackAssistMoveAmount": [
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
+                        "Vector3 :AttackColliderLengthOffset": [
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
+                        "bool :IsLoop": false,
+                        "float :AttackAssistEnableTime": 0.0,
+                        "float :AttackAssistStartTime": 0.0,
+                        "float :AttackColliderRadius": 0.0,
                         "float :AttackEndTime": 0.0,
                         "float :AttackStartTime": 0.0,
                         "float :ReceptTime": 1.5,
                         "float :StifnessTime": 0.20000000298023224,
+                        "float :TransitionTime": 0.10000000149011612,
                         "int32_t :derivationPriority": 0,
-                        "string :AnimName": "LightAttack4"
+                        "string :AnimName": "LightAttack4",
+                        "string :FollowJointName": ""
                     },
                     "Group :StartConditions|Button|1": {
                         "float :PressTime": 0.10000000149011612,
@@ -23,12 +39,28 @@
                         "int32_t :InputState": 0,
                         "int32_t :KeyID": 36
                     },
+                    "Vector3 :AttackAssistMoveAmount": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "Vector3 :AttackColliderLengthOffset": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "bool :IsLoop": false,
+                    "float :AttackAssistEnableTime": 0.0,
+                    "float :AttackAssistStartTime": 0.0,
+                    "float :AttackColliderRadius": 0.0,
                     "float :AttackEndTime": 0.0,
                     "float :AttackStartTime": 0.0,
                     "float :ReceptTime": 1.0,
                     "float :StifnessTime": 0.125,
+                    "float :TransitionTime": 0.10000000149011612,
                     "int32_t :derivationPriority": 0,
-                    "string :AnimName": "LightAttack3"
+                    "string :AnimName": "LightAttack3",
+                    "string :FollowJointName": ""
                 },
                 "Group :StartConditions|Button|1": {
                     "float :PressTime": 0.10000000149011612,
@@ -36,12 +68,28 @@
                     "int32_t :InputState": 0,
                     "int32_t :KeyID": 36
                 },
+                "Vector3 :AttackAssistMoveAmount": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Vector3 :AttackColliderLengthOffset": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "bool :IsLoop": false,
+                "float :AttackAssistEnableTime": 0.0,
+                "float :AttackAssistStartTime": 0.0,
+                "float :AttackColliderRadius": 0.0,
                 "float :AttackEndTime": 0.0,
                 "float :AttackStartTime": 0.0,
                 "float :ReceptTime": 0.5,
                 "float :StifnessTime": 0.15000000596046448,
+                "float :TransitionTime": 0.10000000149011612,
                 "int32_t :derivationPriority": 0,
-                "string :AnimName": "LightAttack2"
+                "string :AnimName": "LightAttack2",
+                "string :FollowJointName": ""
             },
             "Group :StartConditions|Button|1": {
                 "float :PressTime": 0.10000000149011612,
@@ -49,17 +97,33 @@
                 "int32_t :InputState": 0,
                 "int32_t :KeyID": 36
             },
+            "Vector3 :AttackAssistMoveAmount": [
+                0.0,
+                0.0,
+                0.10000000149011612
+            ],
+            "Vector3 :AttackColliderLengthOffset": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "bool :IsLoop": false,
+            "float :AttackAssistEnableTime": 0.10000000149011612,
+            "float :AttackAssistStartTime": 0.0,
+            "float :AttackColliderRadius": 0.0,
             "float :AttackEndTime": 0.0,
             "float :AttackStartTime": 0.0,
             "float :ReceptTime": 0.5,
             "float :StifnessTime": 0.10000000149011612,
+            "float :TransitionTime": 0.05000000074505806,
             "int32_t :derivationPriority": 1,
-            "string :AnimName": "LightAttack1"
+            "string :AnimName": "LightAttack1",
+            "string :FollowJointName": ""
         },
         "Group :StrongCombo1": {
             "Group :StartConditions|Button|1": {
                 "float :PressTime": 0.10000000149011612,
-                "int32_t :ButtonID": 16384,
+                "int32_t :ButtonID": 512,
                 "int32_t :InputState": 0,
                 "int32_t :KeyID": 37
             },
@@ -77,32 +141,96 @@
                         "int32_t :InputState": 0,
                         "int32_t :KeyID": 37
                     },
+                    "Vector3 :AttackAssistMoveAmount": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "Vector3 :AttackColliderLengthOffset": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "bool :IsLoop": false,
+                    "float :AttackAssistEnableTime": 0.0,
+                    "float :AttackAssistStartTime": 0.0,
+                    "float :AttackColliderRadius": 0.0,
                     "float :AttackEndTime": 0.0,
                     "float :AttackStartTime": 0.0,
                     "float :ReceptTime": 1.5,
                     "float :StifnessTime": 0.0,
+                    "float :TransitionTime": 0.0,
                     "int32_t :derivationPriority": 0,
-                    "string :AnimName": "LightAttack4"
+                    "string :AnimName": "LightAttack4",
+                    "string :FollowJointName": ""
                 },
+                "Vector3 :AttackAssistMoveAmount": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Vector3 :AttackColliderLengthOffset": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "bool :IsLoop": false,
+                "float :AttackAssistEnableTime": 0.0,
+                "float :AttackAssistStartTime": 0.0,
+                "float :AttackColliderRadius": 0.0,
                 "float :AttackEndTime": 0.0,
                 "float :AttackStartTime": 0.0,
                 "float :ReceptTime": 0.5,
                 "float :StifnessTime": 1.0,
+                "float :TransitionTime": 0.0,
                 "int32_t :derivationPriority": 0,
-                "string :AnimName": "WeakParry"
+                "string :AnimName": "WeakParry",
+                "string :FollowJointName": ""
             },
+            "Vector3 :AttackAssistMoveAmount": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "Vector3 :AttackColliderLengthOffset": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "bool :IsLoop": false,
+            "float :AttackAssistEnableTime": 0.0,
+            "float :AttackAssistStartTime": 0.0,
+            "float :AttackColliderRadius": 0.0,
             "float :AttackEndTime": 0.0,
             "float :AttackStartTime": 0.0,
             "float :ReceptTime": 0.75,
             "float :StifnessTime": 0.0,
+            "float :TransitionTime": 0.0,
             "int32_t :derivationPriority": 0,
-            "string :AnimName": "Gaurd"
+            "string :AnimName": "Gaurd",
+            "string :FollowJointName": ""
         },
+        "Vector3 :AttackAssistMoveAmount": [
+            0.0,
+            0.0,
+            0.0
+        ],
+        "Vector3 :AttackColliderLengthOffset": [
+            0.0,
+            0.0,
+            0.0
+        ],
+        "bool :IsLoop": false,
+        "float :AttackAssistEnableTime": 0.0,
+        "float :AttackAssistStartTime": 0.0,
+        "float :AttackColliderRadius": 0.0,
         "float :AttackEndTime": 0.0,
         "float :AttackStartTime": 0.0,
         "float :ReceptTime": 1.0,
         "float :StifnessTime": 0.0,
+        "float :TransitionTime": 0.0,
         "int32_t :derivationPriority": 0,
-        "string :AnimName": ""
+        "string :AnimName": "",
+        "string :FollowJointName": ""
     }
 }

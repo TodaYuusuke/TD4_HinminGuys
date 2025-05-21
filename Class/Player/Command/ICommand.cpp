@@ -31,19 +31,24 @@ void MoveCommand::Reset(Player& player, int& banInput) {
 }
 
 NormalAttackCommand::NormalAttackCommand() {
-
+	banInput_ = BanMove | BanParry | BanEvasion | BanSheath;
+	currentInput_ = ~BanAttack;
 }
 
 void NormalAttackCommand::Exec(Player& player, int& banInput) {
 	// パリィ中、回避中は攻撃できない
-	//if (player.GetSystemManager()->GetParrySystem()->GetIsActive() || player.GetSystemManager()->GetEvasionSystem()->GetIsActive()) { return; }
+	if (IsBitSame(banInput, BanAttack, GetSetBitPosition(BanAttack))) { return; }
 
 	player.GetSystemManager()->GetAttackSystem()->NormalCommand();
-	banInput;
+	banInput = banInput_;
+	isActive_ = true;
 }
 
 void NormalAttackCommand::Reset(Player& player, int& banInput) {
-
+	if (!player.GetSystemManager()->GetAttackSystem()->GetIsActive()) {
+		banInput = BanNone;
+		isActive_ = false;
+	}
 }
 
 ParryCommand::ParryCommand() {
