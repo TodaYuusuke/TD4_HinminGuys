@@ -59,6 +59,13 @@ void Move::Reset() {
 	moveVel_ = { 0.0f, 0.0f, 0.0f };
 	stickStrength_ = 0;
 	isMove_ = false;
+
+	// 移動状態をなくす
+	moveState_ = MoveState::kNone;
+	if (GetTriggerChangeMoveState(MoveState::kNone)) {
+		state_ = new None(this, player_);
+	}
+	preMoveState_ = moveState_;
 }
 
 void Move::DebugGUI() {
