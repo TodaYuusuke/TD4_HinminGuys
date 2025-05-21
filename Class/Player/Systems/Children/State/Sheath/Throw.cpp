@@ -30,6 +30,9 @@ void Throw::Update() {
 
 void Throw::Command() {
 	if (!isActive_) {
+		// 鞘クラスの速度を自機に適用
+		player_->GetSystemManager()->SetInputState(InputState::kSheath);
+
 		sheathSystem_->SetSheathPos(player_->GetWorldTF()->GetWorldPosition() + sheathSystem_->throwMovement * Matrix4x4::CreateRotateXYZMatrix(player_->GetSystemManager()->GetMoveSystem()->GetMoveRadian()));
 		sheathSystem_->SetIsActive(true);
 		inputHandler_->GetSheathCommand()->SetBanInput(inputHandler_->GetSheathCommand()->GetBanInput() & ~(1 << GetSetBitPosition(BanMove)));

@@ -7,14 +7,17 @@ MoveCommand::MoveCommand() {
 }
 
 void MoveCommand::Exec(Player& player, int& banInput) {
-	if (IsBitSame(banInput, BanMove, GetSetBitPosition(BanMove))) { 
+	// 入力不可
+	if (IsBitSame(banInput, BanMove, GetSetBitPosition(BanMove))) {
 		player.GetSystemManager()->GetMoveSystem()->SetEnableInput(false);
 		player.GetSystemManager()->GetMoveSystem()->SetIsActive(false);
 		isActive_ = false;
-		return; 
+		return;
 	}
 
+	// 入力時に必要な情報を設定
 	player.GetSystemManager()->GetMoveSystem()->Command();
+	// 入力禁止設定(移動時は入力禁止なし)
 	banInput = banInput_;
 
 	// 例外
@@ -22,6 +25,12 @@ void MoveCommand::Exec(Player& player, int& banInput) {
 	if (player.GetSystemManager()->GetSheathSystem()->GetIsActive()) {
 		banInput |= BanParry;
 	}
+	// 鞘投げのクールタイム中は投げれない
+	if (!player.GetSystemManager()->GetSheathSystem()->CheckCoolTime()) {
+		banInput |= BanSheath;
+	}
+
+
 	isActive_ = true;
 }
 
@@ -45,9 +54,11 @@ void NormalAttackCommand::Exec(Player& player, int& banInput) {
 }
 
 void NormalAttackCommand::Reset(Player& player, int& banInput) {
-	if (!player.GetSystemManager()->GetAttackSystem()->GetIsActive()) {
-		banInput = BanNone;
-		isActive_ = false;
+	if (player.GetSystemManager()->GetAttackSystem()->GetIsThisRoot()) {
+		if (player.GetSystemManager()->GetAttackSystem()->GetIsAttackRecovery()) {
+			banInput = BanNone;
+			isActive_ = false;
+		}
 	}
 }
 

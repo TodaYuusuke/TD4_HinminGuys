@@ -20,17 +20,12 @@ void InputHandler::Update(Player& player) {
 	// 入力されたコマンドを確認
 	commands_ = HandleInput();
 
-	// 現在の入力がなくなったら入力禁止状態を初期化
-	if (currentCommand_) {
-		currentCommand_->Reset(player, banInput_);
-	}
-
 	// コマンドの実行
 	for (ICommand* cmd : commands_) {
 		cmd->Exec(player, banInput_);
 
-		// 現在入力されて実行しているものを更新
-		if (cmd->isActive_) {
+		// 現在入力されて実行しているものを更新(移動入力はこれに該当しない)
+		if (cmd->isActive_ && currentCommand_ == nullptr && cmd->currentInput_ != ~BanMove) {
 			currentCommand_ = cmd;
 		}
 	}
@@ -39,6 +34,12 @@ void InputHandler::Update(Player& player) {
 	// 入力が何もない場合入力キーを押している状態にする
 	if (commands_.empty()) {
 		pressMoveCommand_->Exec(player, banInput_);
+	}
+
+	// 現在の入力がなくなったら入力禁止状態を初期化
+	if (currentCommand_) {
+		currentCommand_->Reset(player, banInput_);
+		if (!currentCommand_->isActive_) { currentCommand_ = nullptr; }
 	}
 }
 

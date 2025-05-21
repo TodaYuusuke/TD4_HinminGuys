@@ -56,8 +56,11 @@ void Attack::Initialize() {
 }
 
 void Attack::Update() {
-	// コンボツリー自体は毎フレーム更新する
-	comboTree_.Update();
+	// パリィ中、回避中は攻撃できない
+	if (!IsBitSame(inputHandler_->GetBanInput(), BanAttack, GetSetBitPosition(BanAttack))) {
+		// コンボツリー自体は毎フレーム更新する
+		comboTree_.Update();
+	}
 
 	// コンボが無操作状態のコンボでない場合
 	if (!comboTree_.GetIsThisRoot()) {
@@ -170,7 +173,7 @@ void Attack::CreateJsonFIle() {
 }
 
 void Attack::Command() {
-
+	//isEnableInput_ = true;
 }
 
 void Attack::ChangeState(IAttackSystemState* pState) {

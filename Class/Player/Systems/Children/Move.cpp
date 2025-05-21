@@ -118,6 +118,7 @@ void Move::CheckMoveState() {
 				// 連続で同じ状態なら変更しないようにする
 				if (GetTriggerChangeMoveState(MoveState::kAttackRecovery)) {
 					moveState_ = MoveState::kAttackRecovery;
+					player_->GetSystemManager()->GetEvasionSystem()->SetIsDash(false);
 					ChangeState(new AttackRecovery(this, player_));
 				}
 				return;

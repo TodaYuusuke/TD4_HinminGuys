@@ -28,9 +28,13 @@ void Collect::Update() {
 	// 鞘回収の移動処理
 	CollectMove();
 
+	// 全ての移動処理終了
 	if ((*eventOrders_)[(int)Sheath::SheathState::kCollect].GetIsEnd()) {
 		sheathSystem_->Reset();
 		(*eventOrders_)[(int)Sheath::SheathState::kCollect].Reset();
+		// クールタイム開始
+		sheathSystem_->SetCoolTime();
+		// 投げ可能状態に変更
 		sheathSystem_->ChangeState(new Throw(sheathSystem_, player_, eventOrders_));
 		return;
 	}
@@ -38,6 +42,9 @@ void Collect::Update() {
 
 void Collect::Command() {
 	if ((*eventOrders_)[(int)Sheath::SheathState::kCollect].GetIsEnd()) {
+		// 鞘クラスの速度を自機に適用
+		player_->GetSystemManager()->SetInputState(InputState::kSheath);
+
 		isActive_ = true;
 		// アクションイベント開始
 		(*eventOrders_)[(int)Sheath::SheathState::kCollect].Start();
