@@ -116,7 +116,9 @@ public:// Getter, Setter
 	/// </summary>
 	/// <returns></returns>
 	bool GetIsDash() {
-		if (pressTime_ >= dashButtonHoldSeconds * 60.0f) { return true; }
+		if (pressTime_ >= dashButtonHoldSeconds * 60.0f) { 
+			return true; 
+		}
 		return false;
 	}
 #pragma endregion

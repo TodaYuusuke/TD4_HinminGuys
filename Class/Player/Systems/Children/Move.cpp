@@ -94,7 +94,7 @@ void Move::Command() {
 }
 
 void Move::AnimCommand() {
-	
+	//CheckMoveState();
 }
 
 void Move::CheckMoveState() {
@@ -121,9 +121,9 @@ void Move::CheckMoveState() {
 			else {
 				moveState_ = MoveState::kRun;
 				if (GetTriggerChangeMoveState(MoveState::kRun)) {
+					ChangeState(new Run(this, player_, runSpeedMultiply));
 					// ダッシュ状態解除
 					player_->GetSystemManager()->GetEvasionSystem()->SetIsDash(false);
-					ChangeState(new Run(this, player_, runSpeedMultiply));
 				}
 			}
 		}
@@ -137,36 +137,6 @@ void Move::CheckMoveState() {
 			}
 		}
 	}
-
-	//	// 走り状態に移行
-	//	if (player_->GetSystemManager()->GetEvasionSystem()->GetIsDash()) {
-	//		moveState_ = MoveState::kDash;
-	//		// 走りモーション再生中なら状態遷移しない
-	//		if (GetTriggerChangeMoveState(MoveState::kDash)) {
-	//			ChangeState(new Dash(this, player_, dashSpeedMultiply));
-	//		}
-	//	}
-	//	else {
-	//		// 小走り状態に移行
-	//		if (stickStrength_ > runThreshold) {
-	//			moveState_ = MoveState::kRun;
-	//			if (GetTriggerChangeMoveState(MoveState::kRun)) {
-	//				// ダッシュ状態解除
-	//				player_->GetSystemManager()->GetEvasionSystem()->SetIsDash(false);
-	//				ChangeState(new Run(this, player_, runSpeedMultiply));
-	//			}
-	//		}
-	//		// 歩き状態に移行
-	//		else {
-	//			moveState_ = MoveState::kWalk;
-	//			if (GetTriggerChangeMoveState(MoveState::kWalk)) {
-	//				// ダッシュ状態解除
-	//				player_->GetSystemManager()->GetEvasionSystem()->SetIsDash(false);
-	//				ChangeState(new Walk(this, player_, walkSpeedMultiply));
-	//			}
-	//		}
-	//	}
-	//}
 
 	preMoveState_ = moveState_;
 }

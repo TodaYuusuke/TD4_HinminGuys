@@ -116,6 +116,7 @@ void Evasion::DebugGUI() {
 
 		ImGui::DragFloat3("Velocity", &velocity_.x);
 		ImGui::DragFloat3("AnimSpeed", &animPlaySpeed_.x);
+		ImGui::DragFloat("pressTime", &pressTime_);
 
 		ImGui::Checkbox("IsEvasion", &isActive_);
 

@@ -10,6 +10,7 @@ void MoveCommand::Exec(Player& player, int& banInput) {
 	if (IsBitSame(banInput, BanMove, GetSetBitPosition(BanMove))) { 
 		player.GetSystemManager()->GetMoveSystem()->SetEnableInput(false);
 		player.GetSystemManager()->GetMoveSystem()->SetIsActive(false);
+		//player.GetSystemManager()->GetMoveSystem()->Reset();
 		isActive_ = false;
 		return; 
 	}
