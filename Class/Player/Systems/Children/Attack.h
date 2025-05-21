@@ -103,11 +103,6 @@ public:// Getter, Setter
 	/// </summary>
 	/// <returns></returns>
 	bool GetIsAttackRecovery() { return isAttackRecovery_; }
-	/// <summary>
-	/// 攻撃入力可能状態かを取得
-	/// </summary>
-	/// <returns></returns>
-	bool GetIsEnableInput() { return isEnableInput_; }
 #pragma endregion
 
 #pragma region Setter
@@ -136,11 +131,6 @@ public:// Getter, Setter
 	/// </summary>
 	/// <returns></returns>
 	void SetIsAttackRecovery(const bool& isAttackRecovery) { isAttackRecovery_ = isAttackRecovery; }
-	/// <summary>
-	/// 攻撃入力可能状態かを設定
-	/// </summary>
-	/// <param name="isEnableInput"></param>
-	void SetIsEnableInput(const bool& isEnableInput) { isEnableInput_ = isEnableInput; }
 #pragma endregion
 
 private:// jsonで保存する値
@@ -175,7 +165,4 @@ private:
 
 	// 攻撃が全て終わった後か
 	bool isAttackRecovery_;
-
-	// 攻撃入力可能状態か
-	bool isEnableInput_ = true;
 };
