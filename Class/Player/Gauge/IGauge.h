@@ -35,8 +35,8 @@ public:
 	/// </summary>
 	void ColGaugeSize(std::string name){	
 		// HPバーの長さ計算
-		// 今のHPバーのサイズ = 最大HPの時のバーのサイズ × (今のHP ÷ 最大HP)
-		sprite_[name].size.x = (maxSize_.x * (value_ / maxValue_));
+		// 今のHPバーのスケール = 最大HPの時のバーのサイズ × (今のHP ÷ 最大HP)
+		sprite_[name].worldTF.scale.x = (maxSize_.x * (value_ / maxValue_));
 
 		isPreHit_ = isHit_;
 	}

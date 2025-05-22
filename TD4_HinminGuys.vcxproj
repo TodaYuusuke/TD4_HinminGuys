@@ -184,6 +184,7 @@
     <ClCompile Include="Class\Player\Systems\Children\State\Sheath\Collect.cpp" />
     <ClCompile Include="Class\Player\Animator\IAnimation.cpp" />
     <ClCompile Include="Class\Player\Systems\Children\State\Move\Dash.cpp" />
+    <ClCompile Include="Class\Player\Systems\Children\Hit.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Class\Player\Player.cpp" />
     <ClCompile Include="Class\Player\Systems\Children\Move.cpp" />
@@ -267,6 +268,7 @@
     <ClInclude Include="Class\Player\Animator\IAnimation.h" />
     <ClInclude Include="Class\Player\Systems\Children\State\Move\Dash.h" />
     <ClInclude Include="Class\Player\Systems\Children\State\Move\None.h" />
+    <ClInclude Include="Class\Player\Systems\Children\Hit.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />
