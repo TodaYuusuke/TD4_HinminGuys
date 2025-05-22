@@ -114,7 +114,7 @@ void EvasionCommand::Reset(Player& player, int& banInput) {
 }
 
 SheathCommand::SheathCommand() {
-	banInput_ = BanParry | BanAttack | BanEvasion;
+	banInput_ = BanMove | BanParry | BanAttack | BanEvasion | BanSheath;
 	currentInput_ = ~BanSheath;
 }
 

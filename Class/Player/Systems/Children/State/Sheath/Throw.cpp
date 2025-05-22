@@ -48,7 +48,6 @@ void Throw::Update() {
 }
 
 void Throw::Command() {
-	//if (!isActive_) {
 	if ((*eventOrders_)[(int)Sheath::SheathState::kThrow].GetIsEnd()) {
 		// 鞘クラスの速度を自機に適用
 		player_->GetSystemManager()->SetInputState(InputState::kSheath);
@@ -61,6 +60,10 @@ void Throw::Command() {
 		// イージングの始点終点を設定
 		start_ = player_->GetWorldTF()->GetWorldPosition();
 		end_ = player_->GetWorldTF()->GetWorldPosition() + sheathSystem_->throwMovement * Matrix4x4::CreateRotateXYZMatrix(player_->GetSystemManager()->GetMoveSystem()->GetMoveRadian());
+
+		// 自機の角度を最後に向いている方向に固定
+		sheathSystem_->SetRotate(player_->GetSystemManager()->GetMoveSystem()->GetMoveRadian());
+		sheathSystem_->SetRotate(player_->GetSystemManager()->GetMoveSystem()->GetMoveQuat());
 	}
 }
 
