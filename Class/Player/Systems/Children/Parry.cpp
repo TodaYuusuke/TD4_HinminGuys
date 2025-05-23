@@ -129,7 +129,7 @@ void Parry::CreateCollision() {
 	aabb_.min = { -1.0f, -1.0f, -1.0f };
 	aabb_.max = { 1.0f, 1.0f, 1.0f };
 	aabb_.isShowWireFrame = false;
-	collider_.SetFollowTarget(player_->GetWorldTF());
+	collider_.SetFollow(player_->GetWorldTF());
 	collider_.isActive = false;
 	collider_.worldTF.translation = { 0.0f, 1.0f, 0.0f };
 	collider_.mask.SetBelongFrag(GetPlayer());
