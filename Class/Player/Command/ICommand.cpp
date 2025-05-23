@@ -29,6 +29,10 @@ void MoveCommand::Exec(Player& player, int& banInput) {
 	if (!player.GetSystemManager()->GetSheathSystem()->CheckCoolTime()) {
 		banInput |= BanSheath;
 	}
+	// 鞘投げのクールタイム中は投げれない
+	if (player.GetSystemManager()->GetAttackSystem()->GetIsEditingMode()) {
+		banInput |= BanAttack;
+	}
 
 
 	isActive_ = true;

@@ -94,6 +94,11 @@ public:// Getter, Setter
 	/// <returns></returns>
 	Vector3 GetAttackAssistRadian() { return attackAssistRadian_; }
 	/// <summary>
+	/// 編集モード中かどうかのゲッター
+	/// </summary>
+	/// <returns></returns>
+	bool GetIsEditingMode() { return comboTree_.GetIsEditingMode(); }
+	/// <summary>
 	/// 現在のコンボが大元のコンボであるかどうかを取得
 	/// </summary>
 	/// <returns></returns>
