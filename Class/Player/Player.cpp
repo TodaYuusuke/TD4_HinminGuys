@@ -84,7 +84,7 @@ void Player::CreateSystems() {
 
 void Player::CreateCollision() {
 	// 体の判定生成
-	collider_.SetFollowTarget(&model_.worldTF);
+	collider_.SetFollow(&model_.worldTF);
 	collider_.isActive = true;
 	collider_.worldTF.translation = { 0.0f, 1.0f, 0.0f };
 	// 自機の所属しているマスクを設定
