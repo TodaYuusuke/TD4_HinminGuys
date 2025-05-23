@@ -129,7 +129,8 @@ void Move::CheckMoveState() {
 		if (GetTriggerChangeMoveState(MoveState::kIdle) && stickStrength_ == 0) {
 			moveState_ = MoveState::kIdle;
 			// ダッシュ状態解除
-			player_->GetSystemManager()->GetEvasionSystem()->SetIsDash(false);
+			player_->GetSystemManager()->GetEvasionSystem()->SetIsDash(false);				
+			player_->GetSystemManager()->GetAttackSystem()->ComboReset();
 			ChangeState(new Idle(this, player_));
 		}
 	}

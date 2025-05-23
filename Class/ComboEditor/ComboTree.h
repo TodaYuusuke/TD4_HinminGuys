@@ -65,10 +65,16 @@ public: // アクセッサ等
 	bool GetIsEnableAttackAssist() { return nowCombo_->GetIsAttackAssistActive(); }
 
 	/// <summary>
-	/// 硬直の有効状態のげぅたー
+	/// 硬直の有効状態のゲッター
 	/// </summary>
 	/// <returns>硬直の有効状態</returns>
 	bool GetIsStifness() { return nowCombo_->GetIsStifness(); }
+
+	/// <summary>
+	/// コンボの受付状態のゲッター
+	/// </summary>
+	/// <returns>コンボの受付状態</returns>
+	bool GetIsRecept() { return nowCombo_->GetIsRecept(); }
 
 	/// <summary>
 	/// 攻撃アシストの移動量ゲッター

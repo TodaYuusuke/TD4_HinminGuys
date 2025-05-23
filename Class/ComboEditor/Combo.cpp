@@ -26,7 +26,7 @@ void Combo::Init()
 	isAttackAssistActive_ = false;
 
 	// 硬直関係変数のリセット
-	isStifness_ = true;
+	isStifness_ = false;
 
 	// コンボ受付関係変数のリセット
 	isRecept_ = false;
@@ -46,20 +46,20 @@ void Combo::Start(LWP::Resource::SkinningModel* model, LWP::Resource::Animation*
 	// 判定用タイマー開始
 	attackDecisionTimer_.Start(attackStartTime_);		// 攻撃判定
 	attackAssistTimer_.Start(attackAssistStartTime_);	// 攻撃アシスト判
-	if (stifnessTime_ != 0.0f) {
-		stifnessTimer_.Start(stifnessTime_);				// 硬直時間
+	if (stifnessTime_ > 0.0f) { // 硬直時間
+		// 硬直秒数が0秒以上の場合タイマーを開始する
+		stifnessTimer_.Start(stifnessTime_);
+		isStifness_ = true;
 	}
-	else {
-		isStifness_ = false;
+	if (receptTime_ > 0.0f) { // 受付時間
+		// 硬直秒数が0秒以上の場合タイマーを開始する
+		receptTimer_.Start(receptTime_);
+		isRecept_ = true;
 	}
-	receptTimer_.Start(receptTime_);					// 受付時間
 
 	// 有効秒数が0以下ならそもそもタイマーを無効化する
 	if (attackEnableTime_ == 0.0f) { attackDecisionTimer_.SetIsActive(false); }
 	if (attackAssistEnableTime_ == 0.0f) { attackAssistTimer_.SetIsActive(false); }
-
-	// 操作受付開始
-	isRecept_ = true;
 
 	// コライダーの有効状態を切っておく
 	collider->isActive = false;

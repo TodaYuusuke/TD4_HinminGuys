@@ -16,12 +16,15 @@ void AttackRecovery::Initialize() {
 }
 
 void AttackRecovery::Update() {
-	// アニメーションの再生が終わったらIdle状態に移行
-	if (!player_->GetAnimation()->GetPlaying()) {
+	// コンボの受付状態が終了したらIdle状態に移行
+	if (!player_->GetSystemManager()->GetAttackSystem()->GetIsRecept()) {
 		player_->GetSystemManager()->GetAttackSystem()->SetIsAttackRecovery(false);
 	}
 }
 
 void AttackRecovery::AnimCommand() {
-
+	// コンボの受付状態が終了したらIdle状態に移行
+	if (!player_->GetSystemManager()->GetAttackSystem()->GetIsRecept()) {
+		player_->GetSystemManager()->GetAttackSystem()->SetIsAttackRecovery(false);
+	}
 }
