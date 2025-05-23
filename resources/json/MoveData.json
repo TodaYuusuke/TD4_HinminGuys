@@ -1,7 +1,7 @@
 {
-    "float :DashSpeedMultiply": 0.6000000238418579,
-    "float :MoveSpeedRate": 0.20000000298023224,
-    "float :RunSpeedMultiply": 0.20000000298023224,
+    "float :DashSpeedMultiply": 0.23999999463558197,
+    "float :MoveSpeedRate": 0.6000000238418579,
+    "float :RunSpeedMultiply": 0.10000000149011612,
     "float :RunThreshold": 0.5,
-    "float :WalkSpeedMultiply": 0.10000000149011612
+    "float :WalkSpeedMultiply": 0.14000000059604645
 }
