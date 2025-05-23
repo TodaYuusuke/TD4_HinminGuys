@@ -49,6 +49,11 @@ public:
 	/// </summary>
 	void Command();
 
+	/// <summary>
+	/// コンボのリセット
+	/// </summary>
+	void ComboReset() { comboTree_.ResetCombo(); }
+
 private:
 	/// <summary>
 	/// 状態の遷移
@@ -103,6 +108,11 @@ public:// Getter, Setter
 	/// </summary>
 	/// <returns></returns>
 	bool GetIsThisRoot() { return comboTree_.GetIsThisRoot(); }
+	/// <summary>
+	/// 攻撃中に入力処理を受け付けていないかを取得
+	/// </summary>
+	/// <returns></returns>
+	bool GetIsStiffness() { return comboTree_.GetIsStiffness(); }
 	/// <summary>
 	/// 攻撃が全て終わった後か
 	/// </summary>

@@ -29,11 +29,10 @@ void MoveCommand::Exec(Player& player, int& banInput) {
 	if (!player.GetSystemManager()->GetSheathSystem()->CheckCoolTime()) {
 		banInput |= BanSheath;
 	}
-	// 鞘投げのクールタイム中は投げれない
+	// 攻撃の変種モード中は攻撃できない
 	if (player.GetSystemManager()->GetAttackSystem()->GetIsEditingMode()) {
 		banInput |= BanAttack;
 	}
-
 
 	isActive_ = true;
 }
@@ -58,7 +57,7 @@ void NormalAttackCommand::Exec(Player& player, int& banInput) {
 }
 
 void NormalAttackCommand::Reset(Player& player, int& banInput) {
-	if (player.GetSystemManager()->GetAttackSystem()->GetIsThisRoot()) {
+	if (!player.GetSystemManager()->GetAttackSystem()->GetIsStiffness()) {
 		if (player.GetSystemManager()->GetAttackSystem()->GetIsAttackRecovery()) {
 			banInput = BanNone;
 			isActive_ = false;

@@ -113,7 +113,7 @@ void Move::CheckMoveState() {
 	if (!GetIsMove()) {
 		// 例外
 		// 攻撃後の硬直中はIdleモーションを再生しない
-		if (player_->GetSystemManager()->GetAttackSystem()->GetIsThisRoot()) {
+		if (!player_->GetSystemManager()->GetAttackSystem()->GetIsStiffness()) {
 			if (player_->GetSystemManager()->GetAttackSystem()->GetIsAttackRecovery()) {
 				// 連続で同じ状態なら変更しないようにする
 				if (GetTriggerChangeMoveState(MoveState::kAttackRecovery)) {
@@ -141,10 +141,10 @@ void Move::CheckMoveState() {
 		if (stickStrength_ > runThreshold) {
 			// 走り状態に移行
 			if (player_->GetSystemManager()->GetEvasionSystem()->GetIsDash()) {
-			
 				// 走りモーション再生中なら状態遷移しない
 				if (GetTriggerChangeMoveState(MoveState::kDash)) {
 					moveState_ = MoveState::kDash;
+					player_->GetSystemManager()->GetAttackSystem()->ComboReset();
 					ChangeState(new Dash(this, player_, dashSpeedMultiply));
 				}
 			}
@@ -152,6 +152,7 @@ void Move::CheckMoveState() {
 				
 				if (GetTriggerChangeMoveState(MoveState::kRun)) {
 					moveState_ = MoveState::kRun;
+					player_->GetSystemManager()->GetAttackSystem()->ComboReset();
 					ChangeState(new Run(this, player_, runSpeedMultiply));
 					// ダッシュ状態解除
 					player_->GetSystemManager()->GetEvasionSystem()->SetIsDash(false);
@@ -163,6 +164,7 @@ void Move::CheckMoveState() {
 			
 			if (GetTriggerChangeMoveState(MoveState::kWalk)) {
 				moveState_ = MoveState::kWalk;
+				player_->GetSystemManager()->GetAttackSystem()->ComboReset();
 				// ダッシュ状態解除
 				player_->GetSystemManager()->GetEvasionSystem()->SetIsDash(false);
 				ChangeState(new Walk(this, player_, walkSpeedMultiply));
