@@ -126,6 +126,9 @@ private:// jsonで保存する値
 
 	float maxLength = 50.0f;
 
+	// 追従対象との距離を補間するレート
+	float targetDistRate = 0.1f;
+
 	// 回転角の始点
 	const float kOriginRotateX = 90.0f;
 

@@ -1,16 +1,17 @@
 #include "Evasion.h"
-
-#include <algorithm>       // ← std::max に必要
 #include "../../Player.h"
 #include "../../Command/InputConfig.h"
+#include <algorithm>       // ← std::max に必要
 
 using namespace LWP;
 using namespace LWP::Math;
+using namespace LWP::Input;
 using namespace InputConfig;
 
 Evasion::Evasion(LWP::Object::Camera* camera, Player* player) {
 	pCamera_ = camera;
 	player_ = player;
+	inputHandler_ = InputHandler::GetInstance();
 }
 
 void Evasion::Initialize() {
@@ -63,9 +64,8 @@ void Evasion::Update() {
 
 	// frameごとに起きるアクションイベント
 	eventOrder_.Update();
-
-	// 移動処理
-	Move();
+	eventOrders_[(int)EventOrderState::kInvincible].Update();
+	eventOrders_[(int)EventOrderState::kAcceleration].Update();
 
 	// アクションイベントの確認
 	CheckEvasionState();
@@ -83,6 +83,8 @@ void Evasion::Update() {
 
 void Evasion::Reset() {
 	eventOrder_.Reset();
+	eventOrders_[(int)EventOrderState::kInvincible].Reset();
+	eventOrders_[(int)EventOrderState::kAcceleration].Reset();
 	isActive_ = false;
 	isPreActive_ = false;
 	// 回避時の速度
@@ -161,6 +163,8 @@ void Evasion::Command() {
 	if (eventOrder_.GetIsEnd()) {
 		// 回避状態に移行
 		player_->GetSystemManager()->SetInputState(InputState::kEvasion);
+		eventOrders_[(int)EventOrderState::kInvincible].Start();
+		eventOrders_[(int)EventOrderState::kAcceleration].Start();
 		pressTime_ = 0.0f;
 		isActive_ = true;
 	}
@@ -208,18 +212,60 @@ void Evasion::CreateEventOrder() {
 }
 
 void Evasion::CheckEvasionState() {
-	//// 予備動作
-	//if (eventOrder_.GetCurrentTimeEvent().name == "EvasionSwingTime") {
+	// 予備動作
+	if (eventOrders_[(int)EventOrderState::kAcceleration].GetCurrentTimeEvent().name == "SwingTime") {
+		// 方向を取得
+		LWP::Math::Vector3 dir{ 0.0f, 0.0f, 0.0f };
+#pragma region ゲームパッド
+		// y軸方向の移動をしないようにする
+		LWP::Math::Vector3 stickMovement = { LWP::Input::Controller::GetLStick().x, 0, LWP::Input::Controller::GetLStick().y };
+		dir = stickMovement;
+#pragma endregion
 
-	//}
-	//// 無敵時間
-	//else if (eventOrder_.GetCurrentTimeEvent().name == "InvinsibleTime") {
+#pragma region キーボード
+		if (lwp::Keyboard::GetPress(DIK_W)) {
+			dir.z = 1.0f;
+		}
+		if (lwp::Keyboard::GetPress(DIK_S)) {
+			dir.z = -1.0f;
+		}
+		if (lwp::Keyboard::GetPress(DIK_A)) {
+			dir.x = -1.0f;
+		}
+		if (lwp::Keyboard::GetPress(DIK_D)) {
+			dir.x = 1.0f;
+		}
+#pragma endregion
 
-	//}
-	//// 硬直時間
-	//else if (eventOrder_.GetCurrentTimeEvent().name == "EvasionRecoveryTime") {
+		easeData_ = {
+			&velocity_,
+			Vector3{0,0,0},
+			evasionMovement * Matrix4x4::CreateRotateXYZMatrix(player_->GetSystemManager()->GetMoveSystem()->GetMoveQuat()),
+			accelerationTime * 60.0f,
+			0.0f,
+			false
+		};
+	}
+	// 無敵時間
+	else if (eventOrders_[(int)EventOrderState::kAcceleration].GetCurrentTimeEvent().name == "AccelerationTime") {
+		// 予備動作が無いとき用
+		if (GetTrigger()) {
+			easeData_ = {
+				&velocity_,
+				Vector3{0,0,0},
+				evasionMovement * Matrix4x4::CreateRotateXYZMatrix(player_->GetSystemManager()->GetRotate()),
+				accelerationTime * 60.0f,
+				0.0f,
+				false
+			};
+		}
 
-	//}
+		Move();
+	}
+	// 硬直時間
+	else if (eventOrders_[(int)EventOrderState::kAcceleration].GetCurrentTimeEvent().name == "RecoveryTime") {
+
+	}
 }
 
 void Evasion::CheckDash() {
@@ -231,17 +277,17 @@ void Evasion::CheckDash() {
 }
 
 void Evasion::Move() {
-	// 回避開始した瞬間
-	if (GetTrigger()) {
-		easeData_ = {
-			&velocity_,
-			Vector3{0,0,0},
-			evasionMovement * Matrix4x4::CreateRotateXYZMatrix(player_->GetSystemManager()->GetRotate()),
-			accelerationTime * 60.0f,
-			0.0f,
-			false
-		};
-	}
+	//// 回避開始した瞬間
+	//if (GetTrigger()) {
+	//	easeData_ = {
+	//		&velocity_,
+	//		Vector3{0,0,0},
+	//		evasionMovement * Matrix4x4::CreateRotateXYZMatrix(player_->GetSystemManager()->GetRotate()),
+	//		accelerationTime * 60.0f,
+	//		0.0f,
+	//		false
+	//	};
+	//}
 
 	// 回避の速度補間がなくなるまでイージングを行う
 	if (easeData_.t < easeData_.endSecond) {

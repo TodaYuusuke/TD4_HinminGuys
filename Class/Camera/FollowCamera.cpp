@@ -12,7 +12,10 @@ void FollowCamera::Initialize() {
 		.AddValue<float>("MinRotateX", &kMinRotateX)
 		.AddValue<float>("MaxRotateX", &kMaxRotateX)
 		.AddValue<float>("Sensitivity", &sensitivity)
-		.AddValue<float>("Rate", &interTargetRate)
+		.BeginGroup("Rate")
+		.AddValue<float>("InterTarget", &interTargetRate)
+		.AddValue<float>("TargetDist", &targetDistRate)
+		.EndGroup()
 		.CheckJsonFile();
 
 	defaultTargetDist_ = kTargetDist;
@@ -98,11 +101,11 @@ void FollowCamera::InputUpdate() {
 void FollowCamera::LockOnUpdate() {
 	// ロックオン対象がいないなら早期リターン
 	if (!lockOnData_.targetTransform) {
-		kTargetDist = LWP::Utility::Interpolation::Exponential(kTargetDist, defaultTargetDist_, 0.01f);
+		kTargetDist = LWP::Utility::Interpolation::Exponential(kTargetDist, defaultTargetDist_, targetDistRate);
 		return;
 	}
 	if (!lockOnData_.isLocked) {
-		kTargetDist = LWP::Utility::Interpolation::Exponential(kTargetDist, defaultTargetDist_, 0.01f);
+		kTargetDist = LWP::Utility::Interpolation::Exponential(kTargetDist, defaultTargetDist_, targetDistRate);
 		return;
 	}
 
@@ -114,7 +117,7 @@ void FollowCamera::LockOnUpdate() {
 	// ロックオン対象から遠いほどカメラが上に行く
 	lockOnOffset_.y = defaultTargetDist_.y + (2.0f * (lockOnTargetDist / maxLength));
 	lockOnOffset_.z = defaultTargetDist_.z - (3.0f * (lockOnTargetDist / maxLength));
-	kTargetDist = LWP::Utility::Interpolation::Exponential(kTargetDist, lockOnOffset_, 0.01f);
+	kTargetDist = LWP::Utility::Interpolation::Exponential(kTargetDist, lockOnOffset_, targetDistRate);
 
 	// ロックオン対象とカメラとの方向ベクトルを算出
 	LWP::Math::Vector3 cameraPos = camera_->worldTF.translation;

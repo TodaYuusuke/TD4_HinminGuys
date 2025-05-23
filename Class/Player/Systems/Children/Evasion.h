@@ -99,7 +99,6 @@ public:// Getter, Setter
 	/// </summary>
 	/// <returns></returns>
 	LWP::Math::Vector3 GetRadian() { return radian_; }
-
 	/// <summary>
 	/// 無敵状態かを取得
 	/// </summary>
