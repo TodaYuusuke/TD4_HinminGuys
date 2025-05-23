@@ -25,7 +25,7 @@ void Dash::Update() {
 
 void Dash::AnimCommand() {
 	// アニメーションを変更
-	player_->StartAnimation("Dash", 0.1f, 0.0f);
+	player_->StartAnimation("Dash", 0.0f, 0.0f);
 	player_->SetAnimationPlaySpeed(1.0f);
 	player_->SetIsLoopAnimation(true);
 }

@@ -1,6 +1,8 @@
 #pragma once
 #include "../Adapter/Adapter.h"
 #include "../../../Command/InputHandler.h"
+#include "../../EventOrder.h"
+
 class Player;
 class Sheath;
 class ISheathSystemState {
@@ -71,6 +73,9 @@ protected:
 	Sheath* sheathSystem_;
 	//　キー入力
 	InputHandler* inputHandler_;
+
+	// アクションイベント
+	std::map<int, EventOrder>* eventOrders_;
 
 	// 状態の名前
 	std::string stateName_;

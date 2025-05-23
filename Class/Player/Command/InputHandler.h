@@ -65,6 +65,28 @@ private:
 	void AssignSheathCommand();
 
 public:
+	/// <summary>
+	/// 入力可能なコマンドかを取得
+	/// </summary>
+	/// <param name="value"></param>
+	/// <returns></returns>
+	bool CheckEnableCommand(const int& value) {
+		for (ICommand* cmd : commands_) {
+			if (IsBitSame(value, cmd->currentInput_, GetSetBitPosition(cmd->currentInput_))) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	int GetBanInput() { return banInput_; }
+
+	/// <summary>
+	/// 入力のあったコマンドを取得
+	/// </summary>
+	/// <returns></returns>
+	std::vector<ICommand*> InputCommands() { return commands_; }
+
 	ICommand* GetMoveCommand() { return pressMoveCommand_; }
 	ICommand* GetAttackCommand() { return pressNormalAttackCommand_; }
 	ICommand* GetParryCommand() { return pressParryCommand_; }
@@ -72,12 +94,11 @@ public:
 	ICommand* GetEvasionCommand() { return pressEvasionCommand_; }
 	ICommand* GetSheathCommand() { return pressSheathCommand_; }
 
-	int GetA() { return banInput_; }
-
 private:
 	// 実行用のコマンド
 	std::vector<ICommand*> commands_;
 	ICommand* currentCommand_;
+	//std::vector<ICommand*> currentCommand_;
 
 	// 移動コマンド
 	ICommand* pressMoveCommand_;

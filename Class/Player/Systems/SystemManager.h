@@ -50,6 +50,12 @@ public:
 	void DebugGUI();
 
 	/// <summary>
+	/// 状態の遷移
+	/// </summary>
+	/// <param name="pState">次の状態</param>
+	void ChangeState(ISystem* pState);
+
+	/// <summary>
 	/// ImGuiによるコンボのGUI表示
 	/// </summary>
 	void DebugComboGUI() { attackSystem_->DebugComboGUI(); }
@@ -102,6 +108,16 @@ public:// Getter, Setter
 	/// </summary>
 	/// <returns></returns>
 	Quaternion GetRotate() { return rotate_; }
+	/// <summary>
+	/// 現在起動しているシステム
+	/// </summary>
+	/// <returns></returns>
+	ISystem* GetCurrentState() { return currentState_; }
+	/// <summary>
+	/// 次に遷移できるシステムを取得
+	/// </summary>
+	/// <returns></returns>
+	int GetNextEnableState() { return nextEnableState_; }
 #pragma endregion
 
 #pragma region Setter
@@ -110,6 +126,11 @@ public:// Getter, Setter
 	/// </summary>
 	/// <param name="inputState"></param>
 	void SetInputState(InputState inputState) { inputState_ = inputState; }
+	/// <summary>
+	/// 次に遷移できるシステムを設定
+	/// </summary>
+	/// <param name="nextState"></param>
+	void SetNextEnableState(const int& nextState) { nextEnableState_ = nextState; }
 #pragma endregion
 
 private:// 外部からポインタをもらう変数
@@ -139,6 +160,17 @@ private:
 
 	// 機能クラスをまとめた変数
 	std::vector<ISystem*> systems_;
+
+	// 遷移可能システムをまとめる
+	std::vector<ISystem*> isChangeSystems_;
+
+	// 使用している機能
+	ISystem* currentState_;
+	ISystem* preState_;
+
+	// 次に遷移できるシステム
+	int nextEnableState_;
+	int preEnableState_;
 
 	// アニメーションの遷移を管理するクラス
 	PlayerAnimator animator_;

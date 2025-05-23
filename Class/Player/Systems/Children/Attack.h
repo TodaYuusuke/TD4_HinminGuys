@@ -35,9 +35,19 @@ public:
 	void DebugGUI() override;
 
 	/// <summary>
+	/// jsonファイルの作成
+	/// </summary>
+	void CreateJsonFIle() override;
+
+	/// <summary>
 	/// ImGuiによるコンボのGUI表示
 	/// </summary>
 	void DebugComboGUI() { comboTree_.DebugGUI(); }
+
+	/// <summary>
+	/// 攻撃のコマンド
+	/// </summary>
+	void Command();
 
 private:
 	/// <summary>
@@ -69,7 +79,7 @@ private:
 public:// Getter, Setter
 #pragma region Getter
 	/// <summary>
-	/// 攻撃時の位置アシスト用のベクトル
+	/// 攻撃時の位置アシスト用のベクトルを取得
 	/// </summary>
 	/// <returns></returns>
 	Vector3 GetAttackAssistVel() { return attackAssistVel_; }
@@ -83,6 +93,16 @@ public:// Getter, Setter
 	/// </summary>
 	/// <returns></returns>
 	Vector3 GetAttackAssistRadian() { return attackAssistRadian_; }
+	/// <summary>
+	/// 現在のコンボが大元のコンボであるかどうかを取得
+	/// </summary>
+	/// <returns></returns>
+	bool GetIsThisRoot() { return comboTree_.GetIsThisRoot(); }
+	/// <summary>
+	/// 攻撃が全て終わった後か
+	/// </summary>
+	/// <returns></returns>
+	bool GetIsAttackRecovery() { return isAttackRecovery_; }
 #pragma endregion
 
 #pragma region Setter
@@ -106,15 +126,20 @@ public:// Getter, Setter
 	/// </summary>
 	/// <returns></returns>
 	void SetAttackAssistRadian(Vector3 attackAssistRadian) {  attackAssistRadian_ = attackAssistRadian; }
+	/// <summary>
+	/// 攻撃が全て終わった後かを設定
+	/// </summary>
+	/// <returns></returns>
+	void SetIsAttackRecovery(const bool& isAttackRecovery) { isAttackRecovery_ = isAttackRecovery; }
 #pragma endregion
 
 private:// jsonで保存する値
 	// 通常攻撃発動までにかかる時間[秒]
-	float kNormalSwingTime = 0.25f;
+	static float kNormalSwingTime;
 	// 通常攻撃の猶予時間[秒]
-	float kNormalAttackTime = 0.6f;
+	static float kNormalAttackTime;
 	// 通常攻撃の硬直[秒]
-	float kNormalRecoveryTime = 0.2f;
+	static float kNormalRecoveryTime;
 
 private:// 外部からポインタをもらう変数
 	// ロックオン機能
@@ -138,6 +163,6 @@ private:
 	Quaternion attackAssistQuat_;
 	IEnemy* lockOnTarget_;
 
-	// 通常攻撃の判定が出ているか
-	bool isNormalAttack_;
+	// 攻撃が全て終わった後か
+	bool isAttackRecovery_;
 };

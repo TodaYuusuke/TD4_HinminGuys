@@ -56,9 +56,9 @@ private:
 	void CreateCollision();
 
 	/// <summary>
-	/// 無敵時間蚊を判定
+	/// 移動制限
 	/// </summary>
-	void CheckInvinsible();
+	void LimitMoveArea();
 
 public:// Getter,Setter
 #pragma region Getter
@@ -72,6 +72,8 @@ public:// Getter,Setter
 	/// </summary>
 	/// <returns></returns>
 	SystemManager* GetSystemManager() { return systemManager_.get(); }
+
+	InputHandler* GetInputHandler() { return inputHandler_; }
 	/// <summary>
 	/// 自機のTransformQuatを取得
 	/// </summary>
@@ -115,6 +117,9 @@ public:// Getter,Setter
 	/// </summary>
 	/// <param name="enemyManager">敵の管理クラスのポインタ</param>
 	void SetEnemyManager(EnemyManager* enemyManager) { enemyManager_ = enemyManager; }
+
+	void SetInputHandler(InputHandler* inputHandler) { inputHandler_ = inputHandler; }
+
 	/// <summary>
 	/// アニメーションを開始
 	/// </summary>
@@ -152,6 +157,7 @@ private:// 外部からポインタをもらう変数
 	EnemyManager* enemyManager_;
 	// 追従カメラ
 	FollowCamera* followCamera_;
+	InputHandler* inputHandler_;
 
 private:
 	// 体の判定

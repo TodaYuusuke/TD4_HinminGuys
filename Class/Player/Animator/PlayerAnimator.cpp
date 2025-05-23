@@ -45,21 +45,21 @@ void PlayerAnimator::CreateCommand() {
 std::vector<IAnimation*> PlayerAnimator::HandleAnimation(Player& player) {
 	std::vector<IAnimation*> result;
 
-	// 移動アニメーション
-	if (!player.GetSystemManager()->GetParrySystem()->GetIsActive() && !player.GetSystemManager()->GetAttackSystem()->GetIsActive() && !player.GetSystemManager()->GetEvasionSystem()->GetIsActive() && !player.GetSystemManager()->GetSheathSystem()->GetIsActive()) {
-		result.push_back(moveAnim_);
-	}
-	// 攻撃中、回避中はパリィできない
+	// パリィ
 	if (player.GetSystemManager()->GetParrySystem()->GetIsActive()) {
 		result.push_back(parryAnim_);
 	}
-	// パリィ中と攻撃中は回避できない
+	// 回避
 	if (player.GetSystemManager()->GetEvasionSystem()->GetIsActive()) {
 		result.push_back(evasionAnim_);
 	}
-	// パリィ中、回避中、攻撃中は鞘関連の行動ができない
+	// 鞘
 	if (player.GetSystemManager()->GetSheathSystem()->GetIsActive()) { 
 		result.push_back(sheathAnim_);
+	}
+	// 移動
+	if (!player.GetSystemManager()->GetParrySystem()->GetIsActive() && !player.GetSystemManager()->GetAttackSystem()->GetIsActive() && !player.GetSystemManager()->GetEvasionSystem()->GetIsActive() && !player.GetSystemManager()->GetSheathSystem()->GetIsActive()) {
+		result.push_back(moveAnim_);
 	}
 
 	return result;

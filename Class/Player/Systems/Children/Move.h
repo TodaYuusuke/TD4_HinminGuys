@@ -8,11 +8,12 @@
 class Move : public ISystem {
 public:
 enum class MoveState {
-	kNone,
-	kIdle,
-	kWalk,
-	kRun,
-	kDash,
+	kNone,			// 何もなし
+	kIdle,			// 待機
+	kWalk,			// 歩き
+	kRun,			// 小走り
+	kDash,			// 走り
+	kAttackRecovery,// 攻撃後に何も移動キーを入力していない場合
 	kCount
 };
 
@@ -40,6 +41,11 @@ public:
 	/// ImGuiによるパラメータ表示
 	/// </summary>
 	void DebugGUI() override;
+
+	/// <summary>
+	/// jsonファイルの作成
+	/// </summary>
+	void CreateJsonFIle() override;
 
 	/// <summary>
 	/// 移動コマンド
@@ -139,7 +145,7 @@ public:// Getter, Setter
 	/// <param name="moveState"></param>
 	/// <returns></returns>
 	bool GetTriggerChangeMoveState(MoveState moveState){
-		if (preMoveState_ != moveState_ && moveState_ == moveState) {
+		if (preMoveState_ != moveState /*&& preMoveState_ != moveState*/) {
 			return true;
 		}
 		return false;
@@ -192,6 +198,7 @@ private:// jsonで保存する値
 
 	// 小走り状態に移行するのに必要なスティックの倒し具合(0.0f~1.0f)
 	float runThreshold = 0.5f;
+
 
 private:// プライベートな変数
 	// 移動対象のモデルのアドレス

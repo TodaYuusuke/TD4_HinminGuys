@@ -31,6 +31,11 @@ public:
 	void DebugGUI() override;
 
 	/// <summary>
+	/// jsonファイルの作成
+	/// </summary>
+	void CreateJsonFIle() override;
+
+	/// <summary>
 	/// パリィのコマンド
 	/// </summary>
 	void Command();
@@ -70,6 +75,7 @@ private:// jsonで保存する値
 	float kJustParryTime = 0.2f;
 	// パリィの硬直[秒]
 	float kRecoveryTime = 0.0f;
+
 
 private:
 	// パリィ判定

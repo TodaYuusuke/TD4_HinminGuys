@@ -1,20 +1,40 @@
 {
-    "Group :WorldTransform": {
-        "Vector3 :Scale": [
-            1.0,
-            1.0,
-            1.0
-        ],
-        "Vector3 :Translation": [
-            44.0,
-            112.0,
+    "Group :Gauge": {
+        "Group :WorldTransform": {
+            "Vector3 :Scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "Vector3 :Translation": [
+                74.0,
+                145.0,
+                0.0
+            ]
+        },
+        "Vector2 :AnchorPoint": [
+            0.0,
             0.0
         ]
     },
-    "Vector2 :AnchorPoint": [
-        0.1860000044107437,
-        0.5
-    ],
+    "Group :GaugeBackGround": {
+        "Group :WorldTransform": {
+            "Vector3 :Scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "Vector3 :Translation": [
+                54.0,
+                128.0,
+                0.0
+            ]
+        },
+        "Vector2 :AnchorPoint": [
+            0.0,
+            0.0
+        ]
+    },
     "float :DeltaValue": -10.0,
     "float :MaxHpValue": 100.0,
     "float :Multiply": 1.0

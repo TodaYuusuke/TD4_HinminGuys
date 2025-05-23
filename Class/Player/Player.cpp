@@ -26,6 +26,8 @@ Player::Player(LWP::Object::Camera* camera, EnemyManager* enemyManager, FollowCa
 }
 
 void Player::Initialize() {
+	inputHandler_ = InputHandler::GetInstance();
+
 	// 自機機能を生成
 	CreateSystems();
 
@@ -42,12 +44,11 @@ void Player::Update() {
 	// 角度を代入
 	model_.worldTF.rotation = systemManager_->GetRotate();
 
-	// 無敵判定
-	CheckInvinsible();
+	// 移動制限
+	LimitMoveArea();
 
 	// HP
 	hp_.Update();
-	// 鞘
 	sheathGauge_.Update();
 }
 
@@ -96,14 +97,9 @@ void Player::CreateCollision() {
 		};
 }
 
-void Player::CheckInvinsible() {
-	if (!systemManager_->GetEvasionSystem()->GetIsInvinsible()) { 
-		collider_.isActive = true;
-		return;
-	}
-
-	// 回避無敵
-	if (systemManager_->GetEvasionSystem()->GetIsInvinsible()) {
-		collider_.isActive = false;
+void Player::LimitMoveArea() {
+	// 鞘を投げた後鞘を中心に移動制限をかける(円形)
+	if (systemManager_->GetSheathSystem()->GetSheathState()->GetStateName() == "Collect") {
+		systemManager_->GetSheathSystem()->ClampToCircle(model_.worldTF.translation);
 	}
 }

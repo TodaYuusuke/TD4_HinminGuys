@@ -15,24 +15,18 @@ Parry::Parry(LWP::Object::Camera* camera, Player* player)
 	// パリィ判定生成
 	CreateCollision();
 
-	json_.Init("ParryData.json");
-	json_.BeginGroup("EventOrder")
-		.BeginGroup("GraceTime")
-		.AddValue<float>("SwingTime", &kSwingTime)
-		.AddValue<float>("JustParry", &kJustParryTime)
-		.AddValue<float>("GoodParry", &kGoodParryTime)
-		.AddValue<float>("RecoveryTime", &kRecoveryTime)
-		.EndGroup()
-		.EndGroup()
-		.CheckJsonFile();
+	nextState_ = InputNone;
+	currentState_ = InputParry;
 }
 
 void Parry::Initialize() {
 	// コマンドの登録
 	inputHandler_ = InputHandler::GetInstance();
-	inputHandler_->GetA();
 	isActive_ = false;
 	isPreActive_ = false;
+
+	// jsonで保存している値
+	CreateJsonFIle();
 
 	// フレーム単位で発生するアクションイベントを管理するクラス
 	CreateEventOrder();
@@ -97,6 +91,19 @@ void Parry::DebugGUI() {
 	}
 }
 
+void Parry::CreateJsonFIle() {
+	json_.Init("ParryData.json");
+	json_.BeginGroup("EventOrder")
+		.BeginGroup("GraceTime")
+		.AddValue<float>("SwingTime", &kSwingTime)
+		.AddValue<float>("JustParry", &kJustParryTime)
+		.AddValue<float>("GoodParry", &kGoodParryTime)
+		.AddValue<float>("RecoveryTime", &kRecoveryTime)
+		.EndGroup()
+		.EndGroup()
+		.CheckJsonFile();
+}
+
 void Parry::Command() {
 	if (eventOrder_.GetIsEnd()) {
 		// パリィ状態に移行
@@ -112,7 +119,7 @@ void Parry::Command() {
 void Parry::AnimCommand() {
 	// ガードアニメーション開始
 	player_->ResetAnimation();
-	player_->StartAnimation("Gaurd", 0.1f, 0.0f);
+	player_->StartAnimation("Gaurd", 0.0f, 0.0f);
 	//player_->StopAnimation();
 }
 
@@ -137,7 +144,7 @@ void Parry::CreateCollision() {
 			isGoodParry_ = false;
 			// ガードアニメーション開始
 			player_->ResetAnimation();
-			player_->StartAnimation("WeakParry", 1.0f, 0.0f);
+			player_->StartAnimation("WeakParry", 0.0f, 0.0f);
 		}
 		// 甘めパリィ
 		else if (eventOrder_.GetCurrentTimeEvent().name == "GoodParry") {
@@ -145,7 +152,7 @@ void Parry::CreateCollision() {
 			isJustParry_ = false;
 			// ガードアニメーション開始
 			player_->ResetAnimation();
-			player_->StartAnimation("WeakParry", 1.0f, 0.0f);
+			player_->StartAnimation("WeakParry", 0.0f, 0.0f);
 		}
 		};
 }

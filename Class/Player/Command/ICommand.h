@@ -6,7 +6,7 @@ class Player;
 class ICommand {
 public:
 	virtual ~ICommand() = default;
-	virtual void Exec(Player& player, int& banInput) = 0;
+	virtual void Exec(Player& player,  int& banInput) = 0;
 	virtual void Reset(Player& player, int& banInput) = 0;
 	inline void SetBanInput(const int& banInput) { banInput_ = banInput; }
 	inline int GetBanInput() { return banInput_; }
@@ -24,7 +24,7 @@ public:
 class MoveCommand : public ICommand {
 public:
 	MoveCommand();
-	void Exec(Player& player, int& banInput)override;
+	void Exec(Player& player,  int& banInput)override;
 	void Reset(Player& player, int& banInput) override;
 };
 /// <summary>
@@ -33,7 +33,7 @@ public:
 class NormalAttackCommand : public ICommand {
 public:
 	NormalAttackCommand();
-	void Exec(Player& player, int& banInput)override;
+	void Exec(Player& player,  int& banInput)override;
 	void Reset(Player& player, int& banInput) override;
 };
 /// <summary>
@@ -42,7 +42,7 @@ public:
 class ParryCommand : public ICommand {
 public:
 	ParryCommand();
-	void Exec(Player& player, int& banInput)override;
+	void Exec(Player& player,  int& banInput)override;
 	void Reset(Player& player, int& banInput) override;
 };
 /// <summary>
@@ -50,7 +50,7 @@ public:
 /// </summary>
 class LockOnCommand : public ICommand {
 public:
-	void Exec(Player& player, int& banInput)override;
+	void Exec(Player& player,  int& banInput)override;
 	void Reset(Player& player, int& banInput) override;
 };
 /// <summary>
@@ -59,7 +59,7 @@ public:
 class EvasionCommand : public ICommand {
 public:
 	EvasionCommand();
-	void Exec(Player& player, int& banInput)override;
+	void Exec(Player& player,  int& banInput)override;
 	void Reset(Player& player, int& banInput) override;
 };
 /// <summary>
@@ -68,6 +68,6 @@ public:
 class SheathCommand : public ICommand {
 public:
 	SheathCommand();
-	void Exec(Player& player, int& banInput)override;
+	void Exec(Player& player,  int& banInput)override;
 	void Reset(Player& player, int& banInput) override;
 };

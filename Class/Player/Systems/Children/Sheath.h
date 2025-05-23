@@ -4,6 +4,12 @@
 
 class Sheath : public ISystem {
 public:
+	enum class SheathState {
+		kThrow		= 0,
+		kCollect	= 1
+	};
+
+public:
 	// コンストラクタ
 	Sheath(LWP::Object::Camera * camera, Player * player);
 	// デストラクタ
@@ -29,6 +35,11 @@ public:
 	void DebugGUI() override;
 
 	/// <summary>
+	/// jsonファイルの作成
+	/// </summary>
+	void CreateJsonFIle() override;
+
+	/// <summary>
 	/// 鞘を投げるor鞘に向かってダッシュコマンド
 	/// </summary>
 	void Command();
@@ -39,10 +50,39 @@ public:
 	void AnimCommand();
 
 	/// <summary>
+	/// 投げるときのアクションイベントを生成
+	/// </summary>
+	void CreateThrowEventOrder();
+	/// <summary>
+	/// 回収するときのアクションイベントを生成
+	/// </summary>
+	void CreateCollectEventOrder();
+
+	/// <summary>
 	/// 状態の遷移
 	/// </summary>
 	/// <param name="pState">次の状態</param>
 	void ChangeState(ISheathSystemState* pState);
+
+	/// <summary>
+	/// クールタイムの更新
+	/// </summary>
+	void CoolTimeUpdate();
+
+
+	LWP::Math::Vector3 ClampToCircle(LWP::Math::Vector3& position);
+
+	/// <summary>
+	/// クールタイムが終了しているかを確認
+	/// </summary>
+	/// <returns>true = 既定の時間を越している</returns>
+	bool CheckCoolTime() {
+		// 既定の時間を越している
+		if (currentCoolTime_ <= 0.0f) {
+			return true;
+		}
+		return false;
+	}
 
 public:// Getter, Setter
 #pragma region Getter
@@ -100,9 +140,41 @@ public:// Getter, Setter
 	/// </summary>
 	/// <param name="quat">向かせる方向(クォータニオン)</param>
 	void SetRotate(const LWP::Math::Quaternion& quat) { quat_ = quat; }
+	/// <summary>
+	/// クールタイムを設定
+	/// </summary>
+	/// <param name="time"></param>
+	void SetCoolTime() { currentCoolTime_ = coolTime * 60.0f; }
 #pragma endregion
 
+public:// jsonに保存する値
+	// 鞘投げ発動までにかかる時間[秒]
+	float throwSwingTime = 0.0f;
+	// 鞘を投げて到達するまでの時間[秒]
+	float throwTime = 0.2f;
+	// 鞘投げの硬直[秒]
+	float throwRecoveryTime = 0.0f;
+
+	// 鞘回収発動までにかかる時間[秒]
+	float collectSwingTime = 0.0f;
+	// 鞘の場所に自機が到着するまでの時間[秒]
+	float collectTime = 1.0f;
+	// 鞘回収の硬直[秒]
+	float collectRecoveryTime = 0.0f;
+
+	// 鞘を投げた後の移動可能範囲
+	float enableMoveRange = 50.0f;
+
+	// 鞘投げの範囲
+	LWP::Math::Vector3 throwMovement = { 0,0,50.0f };
+
+	// クールタイム
+	float coolTime = 0.0f;
+
 private:// プライベートな変数
+	// アクションイベント集
+	std::map<int, EventOrder> eventOrders_;
+
 	// 状態遷移
 	ISheathSystemState* state_;
 
@@ -114,4 +186,7 @@ private:// プライベートな変数
 	// 向いている角度
 	LWP::Math::Quaternion quat_ = { 0.0f,0.0f,0.0f,1.0f };
 	LWP::Math::Vector3 radian_;
+
+	// クールタイムの経過時間
+	float currentCoolTime_;
 };

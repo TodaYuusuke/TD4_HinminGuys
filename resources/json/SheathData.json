@@ -1,0 +1,23 @@
+{
+    "Group :Collect": {
+        "Group :GraceTime": {
+            "float :CollectFinishTime": 0.699999988079071,
+            "float :RecoveryTime": 0.0,
+            "float :SwingTime": 0.0
+        }
+    },
+    "Group :Throw": {
+        "Group :GraceTime": {
+            "float :RecoveryTime": 0.0,
+            "float :SwingTime": 0.0,
+            "float :ThrowFinishTime": 1.00000000298023224
+        },
+        "Vector3 :Movement": [
+            0.0,
+            0.0,
+            10.0
+        ]
+    },
+    "float :CoolTime": 1.0,
+    "float :MoveRange": 25.0
+}

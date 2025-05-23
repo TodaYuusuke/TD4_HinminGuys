@@ -11,6 +11,13 @@ using namespace LWP::Object;
 using namespace LWP::Object::Collider;
 using namespace GameMask;
 
+// 通常攻撃発動までにかかる時間[秒]
+float Attack::kNormalSwingTime;
+// 通常攻撃の猶予時間[秒]
+float Attack::kNormalAttackTime;
+// 通常攻撃の硬直[秒]
+float Attack::kNormalRecoveryTime;
+
 Attack::Attack(LWP::Object::Camera* camera, Player* player)
 	: aabb_(collider_.SetBroadShape(LWP::Object::Collider::AABB()))
 {
@@ -19,6 +26,9 @@ Attack::Attack(LWP::Object::Camera* camera, Player* player)
 
 	// 攻撃の当たり判定作成
 	CreateCollision();
+
+	nextState_ = InputNone;
+	currentState_ = InputAttack;
 
 	// 状態作成
 	state_ = new NoneAttack(this);
@@ -35,28 +45,22 @@ Attack::~Attack() {
 void Attack::Initialize() {
 	// コマンドの登録
 	inputHandler_ = InputHandler::GetInstance();
-	inputHandler_->GetA();
 	isActive_ = false;
 	isPreActive_ = false;
 
-	json_.Init("AttackData.json");
-	json_.BeginGroup("EventOrder")
-		.BeginGroup("GraceTime")
-		.AddValue<float>("SwingTime", &kNormalSwingTime)
-		.AddValue<float>("AttackTime", &kNormalAttackTime)
-		.AddValue<float>("AttackRecoveryTime", &kNormalRecoveryTime)
-		.EndGroup()
-		.EndGroup()
-		.CheckJsonFile();
+	// jsonで保存している値
+	CreateJsonFIle();
 
 	// フレーム単位で発生するアクションイベントを管理するクラス
 	CreateEventOrder();
 }
 
 void Attack::Update() {
-
-	// コンボツリー自体は毎フレーム更新する
-	comboTree_.Update();
+	// パリィ中、回避中は攻撃できない
+	if (!IsBitSame(inputHandler_->GetBanInput(), BanAttack, GetSetBitPosition(BanAttack))) {
+		// コンボツリー自体は毎フレーム更新する
+		comboTree_.Update();
+	}
 
 	// コンボが無操作状態のコンボでない場合
 	if (!comboTree_.GetIsThisRoot()) {
@@ -70,11 +74,12 @@ void Attack::Update() {
 		// 機能停止させる
 		if (isActive_) {
 			Reset();
+			isAttackRecovery_ = true;
 		}
 	}
 
 	// 攻撃アシストが有効になっている場合
-	if (comboTree_.GetIsEnableAttackAssist()) {
+	if (comboTree_.GetIsEnableAttackAssist() && !comboTree_.GetIsThisRoot()) {
 		// ロックオン中なら対象に近づいて攻撃
 		if (lockOnSystem_->GetCurrentLockOnTarget() != NULL) {
 			// 現状のロックオン対象を取得
@@ -105,7 +110,6 @@ void Attack::Update() {
 			// 移動速度からラジアンを求める
 			attackAssistRadian_.y = LWP::Utility::GetRadian(LWP::Math::Vector3{ 0,0,1 }, playerDir.Normalize(), LWP::Math::Vector3{ 0,1,0 });
 			attackAssistQuat_ = LWP::Math::Quaternion::CreateFromAxisAngle(LWP::Math::Vector3{ 0, 1, 0 }, attackAssistRadian_.y);
-
 		}
 	}
 	else {
@@ -116,7 +120,6 @@ void Attack::Update() {
 
 void Attack::Reset() {
 	isActive_ = false;
-	isNormalAttack_ = false;
 	collider_.isActive = false;
 	aabb_.isShowWireFrame = false;
 	attackAssistVel_ = { 0.0f,0.0f,0.0f };
@@ -152,10 +155,25 @@ void Attack::DebugGUI() {
 		ImGui::DragFloat3("Velocity", &attackAssistVel_.x, 0.1f, -10000, 10000);
 		ImGui::DragFloat3("Rotation", &attackAssistRadian_.x, 0.1f, -6.28f, 6.28f);
 		ImGui::DragFloat4("Quaternion", &attackAssistQuat_.x, 0.1f, -1, 1);
-		ImGui::Checkbox("IsNormalAttack", &isNormalAttack_);
 
 		ImGui::TreePop();
 	}
+}
+
+void Attack::CreateJsonFIle() {
+	json_.Init("AttackData.json");
+	json_.BeginGroup("EventOrder")
+		.BeginGroup("GraceTime")
+		.AddValue<float>("SwingTime", &kNormalSwingTime)
+		.AddValue<float>("AttackTime", &kNormalAttackTime)
+		.AddValue<float>("AttackRecoveryTime", &kNormalRecoveryTime)
+		.EndGroup()
+		.EndGroup()
+		.CheckJsonFile();
+}
+
+void Attack::Command() {
+	//isEnableInput_ = true;
 }
 
 void Attack::ChangeState(IAttackSystemState* pState) {
@@ -177,7 +195,6 @@ void Attack::CreateCollision() {
 		// 攻撃判定が出ているとき
 		if (eventOrder_.GetCurrentTimeEvent().name == "NormalAttackTime") {
 			collider_.isActive = true;
-			isNormalAttack_ = true;
 		}
 		};
 }
@@ -196,7 +213,6 @@ void Attack::CheckAttackState() {
 	// 振りかぶりの時
 	if (eventOrder_.GetCurrentTimeEvent().name == "NormalAttackSwingTime") {
 		collider_.isActive = false;
-		isNormalAttack_ = false;
 		// 攻撃が当たる位置に自機を移動させる
 		AttackAssistMovement();
 	}
@@ -206,7 +222,6 @@ void Attack::CheckAttackState() {
 	// 硬直
 	else if (eventOrder_.GetCurrentTimeEvent().name == "NormalAttackRecoveryTime") {
 		collider_.isActive = false;
-		isNormalAttack_ = false;
 	}
 	// 振りかぶり以外の時なら状態をリセット
 	else {

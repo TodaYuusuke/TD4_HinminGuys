@@ -148,9 +148,11 @@
     </Manifest>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Class\Player\Systems\Children\State\Move\AttackRecovery.cpp" />
     <ClCompile Include="Class\ComboEditor\ComboTree.cpp" />
     <ClCompile Include="Class\Condition\child\Input\ButtonCondition.cpp" />
     <ClCompile Include="Class\DeltaTimer\DeltaTimer.cpp" />
+    <ClCompile Include="Class\Player\Systems\ISystem.cpp" />
     <ClCompile Include="Class\Scene\GameScene.cpp" />
     <ClCompile Include="Class\ComboEditor\Combo.cpp" />
     <ClCompile Include="Class\Enemy\Childs\Boss\Boss.cpp" />
@@ -182,6 +184,7 @@
     <ClCompile Include="Class\Player\Systems\Children\State\Sheath\Collect.cpp" />
     <ClCompile Include="Class\Player\Animator\IAnimation.cpp" />
     <ClCompile Include="Class\Player\Systems\Children\State\Move\Dash.cpp" />
+    <ClCompile Include="Class\Player\Systems\Children\Hit.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Class\Player\Player.cpp" />
     <ClCompile Include="Class\Player\Systems\Children\Move.cpp" />
@@ -198,6 +201,7 @@
     <ClCompile Include="Class\Player\Systems\Children\State\Move\None.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Class\Player\Systems\Children\State\Move\AttackRecovery.h" />
     <ClInclude Include="Class\ComboEditor\ComboTree.h" />
     <ClInclude Include="Class\Condition\child\Input\ButtonCondition.h" />
     <ClInclude Include="Class\Condition\ConditionEnums.h" />
@@ -264,6 +268,7 @@
     <ClInclude Include="Class\Player\Animator\IAnimation.h" />
     <ClInclude Include="Class\Player\Systems\Children\State\Move\Dash.h" />
     <ClInclude Include="Class\Player\Systems\Children\State\Move\None.h" />
+    <ClInclude Include="Class\Player\Systems\Children\Hit.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />
