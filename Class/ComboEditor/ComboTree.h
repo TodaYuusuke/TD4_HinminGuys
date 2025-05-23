@@ -42,6 +42,12 @@ public: // メンバ関数
 public: // アクセッサ等
 
 	/// <summary>
+	/// 編集モード中かどうかのゲッター
+	/// </summary>
+	/// <returns>編集モード中か</returns>
+	bool GetIsEditingMode() { return enableEditMode_; }
+
+	/// <summary>
 	/// 現在のコンボが大元のコンボであるかどうかのゲッター
 	/// </summary>
 	/// <returns></returns>
