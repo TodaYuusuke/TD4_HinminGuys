@@ -52,7 +52,6 @@ void Parry::Update() {
 
 void Parry::Reset() {
 	isActive_ = false;
-	isMoveInput_ = true;
 	isJustParry_ = false;
 	isGoodParry_ = false;
 	collider_.isActive = false;
@@ -112,7 +111,7 @@ void Parry::Command() {
 		isActive_ = true;
 		collider_.isActive = true;
 		aabb_.isShowWireFrame = true;
-		isMoveInput_ = false;
+		//isMoveInput_ = false;
 	}
 	eventOrder_.Start();
 }
@@ -120,7 +119,7 @@ void Parry::Command() {
 void Parry::AnimCommand() {
 	// ガードアニメーション開始
 	player_->ResetAnimation();
-	player_->StartAnimation("Gaurd", 0.1f, 0.0f);
+	player_->StartAnimation("Gaurd", 0.0f, 0.0f);
 	//player_->StopAnimation();
 }
 
@@ -145,7 +144,7 @@ void Parry::CreateCollision() {
 			isGoodParry_ = false;
 			// ガードアニメーション開始
 			player_->ResetAnimation();
-			player_->StartAnimation("WeakParry", 1.0f, 0.0f);
+			player_->StartAnimation("WeakParry", 0.0f, 0.0f);
 		}
 		// 甘めパリィ
 		else if (eventOrder_.GetCurrentTimeEvent().name == "GoodParry") {
@@ -153,7 +152,7 @@ void Parry::CreateCollision() {
 			isJustParry_ = false;
 			// ガードアニメーション開始
 			player_->ResetAnimation();
-			player_->StartAnimation("WeakParry", 1.0f, 0.0f);
+			player_->StartAnimation("WeakParry", 0.0f, 0.0f);
 		}
 		};
 }

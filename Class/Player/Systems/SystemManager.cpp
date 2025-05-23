@@ -25,11 +25,6 @@ void SystemManager::Initialize() {
 	parrySystem_ = std::make_unique<Parry>(pCamera_, player_);
 	parrySystem_->Initialize();
 	systems_.push_back(parrySystem_.get());
-	// 攻撃機能
-	attackSystem_ = std::make_unique<Attack>(pCamera_, player_);
-	attackSystem_->Initialize();
-	attackSystem_->SetLockOnSystem(lockOnSystem_.get());
-	systems_.push_back(attackSystem_.get());
 	// 回避機能
 	evasionSystem_ = std::make_unique<Evasion>(pCamera_, player_);
 	evasionSystem_->Initialize();
@@ -38,6 +33,11 @@ void SystemManager::Initialize() {
 	moveSystem_ = std::make_unique<Move>(pCamera_, player_);
 	moveSystem_->Initialize();
 	systems_.push_back(moveSystem_.get());
+	// 攻撃機能
+	attackSystem_ = std::make_unique<Attack>(pCamera_, player_);
+	attackSystem_->Initialize();
+	attackSystem_->SetLockOnSystem(lockOnSystem_.get());
+	systems_.push_back(attackSystem_.get());
 	// 鞘機能
 	sheathSystem_ = std::make_unique<Sheath>(pCamera_, player_);
 	sheathSystem_->Initialize();

@@ -39,6 +39,11 @@ public:
 	/// </summary>
 	void DebugGUI();
 
+	/// <summary>
+	/// ImGuiによるコンボのGUI表示
+	/// </summary>
+	void DebugComboGUI() { systemManager_->DebugComboGUI(); }
+
 private:
 	/// <summary>
 	/// 自機機能を全て生成
@@ -49,6 +54,11 @@ private:
 	/// 当たり判定を作成
 	/// </summary>
 	void CreateCollision();
+
+	/// <summary>
+	/// 移動制限
+	/// </summary>
+	void LimitMoveArea();
 
 public:// Getter,Setter
 #pragma region Getter
@@ -74,6 +84,11 @@ public:// Getter,Setter
 	/// </summary>
 	/// <returns></returns>
 	LWP::Resource::Animation* GetAnimation() { return &animation_; }
+	/// <summary>
+	/// モデルを取得
+	/// </summary>
+	/// <returns></returns>
+	LWP::Resource::SkinningModel* GetModel() { return &model_; }
 	/// <summary>
 	/// 自機の座標を取得
 	/// </summary>

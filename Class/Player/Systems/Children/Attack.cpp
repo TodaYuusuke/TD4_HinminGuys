@@ -33,6 +33,9 @@ Attack::Attack(LWP::Object::Camera* camera, Player* player)
 	// 状態作成
 	state_ = new NoneAttack(this);
 	state_->Initialize();
+
+	// コンボツリーの初期化
+	comboTree_.Init("Combo.json", player_->GetModel(), player_->GetAnimation());
 }
 
 Attack::~Attack() {
@@ -53,38 +56,73 @@ void Attack::Initialize() {
 }
 
 void Attack::Update() {
-	// 機能を使えないなら早期リターン
-	if (!isActive_) {
-		isMoveInput_ = true;
-		return;
+	// パリィ中、回避中は攻撃できない
+	if (!IsBitSame(inputHandler_->GetBanInput(), BanAttack, GetSetBitPosition(BanAttack))) {
+		// コンボツリー自体は毎フレーム更新する
+		comboTree_.Update();
 	}
 
-	// frameごとに起きるアクションイベント
-	eventOrder_.Update();
-
-	// 攻撃のアクションイベント状態の確認
-	CheckAttackState();
-
-	// 状態
-	state_->Update();
-
-	// 全てのアクションイベントが終了しているなら機能停止
-	if (eventOrder_.GetIsEnd()) {
-		Reset();
+	// コンボが無操作状態のコンボでない場合
+	if (!comboTree_.GetIsThisRoot()) {
+		// 攻撃しているものとみなし、攻撃状態に移行
+		if (!isActive_) {
+			player_->GetSystemManager()->SetInputState(InputState::kAttack);
+			isActive_ = true;
+		}
+	}
+	else { // 無操作状態のコンボが選択されている場合
+		// 機能停止させる
+		if (isActive_) {
+			Reset();
+			isAttackRecovery_ = true;
+		}
 	}
 
-	isPreActive_ = isActive_;
+	// 攻撃アシストが有効になっている場合
+	if (comboTree_.GetIsEnableAttackAssist() && !comboTree_.GetIsThisRoot()) {
+		// ロックオン中なら対象に近づいて攻撃
+		if (lockOnSystem_->GetCurrentLockOnTarget() != NULL) {
+			// 現状のロックオン対象を取得
+			lockOnTarget_ = lockOnSystem_->GetCurrentLockOnTarget();
+
+			// 自機とロックオン中の敵との距離
+			Vector3 attackTargetDist = (lockOnTarget_->GetWorldTF()->GetWorldPosition() - player_->GetWorldTF()->GetWorldPosition()) * 0.1f;
+			attackAssistVel_ = LWP::Utility::Interpolation::Slerp(comboTree_.GetAttackAssistMoveAmount(), attackTargetDist, 0.25f);
+
+			// 移動速度からラジアンを求める
+			attackAssistRadian_.y = LWP::Utility::GetRadian(LWP::Math::Vector3{ 0,0,1 }, attackAssistVel_.Normalize(), LWP::Math::Vector3{ 0,1,0 });
+			attackAssistQuat_ = LWP::Math::Quaternion::CreateFromAxisAngle(LWP::Math::Vector3{ 0, 1, 0 }, attackAssistVel_.y);
+		}
+		else {
+			// 攻撃の移動量の取得
+			attackAssistVel_ = comboTree_.GetAttackAssistMoveAmount();
+
+			// 自機の方向ベクトル
+			Vector3 playerDir = { 0.0f,0.0f,1.0f };
+			// 回転行列を求める
+			Matrix4x4 rotMatrix = LWP::Math::Matrix4x4::CreateRotateXYZMatrix(player_->GetSystemManager()->GetMoveSystem()->GetMoveQuat());
+			// 方向ベクトルを求める
+			playerDir = playerDir * rotMatrix;
+			playerDir.y = 0;
+
+			attackAssistVel_ = attackAssistVel_ * rotMatrix;
+
+			// 移動速度からラジアンを求める
+			attackAssistRadian_.y = LWP::Utility::GetRadian(LWP::Math::Vector3{ 0,0,1 }, playerDir.Normalize(), LWP::Math::Vector3{ 0,1,0 });
+			attackAssistQuat_ = LWP::Math::Quaternion::CreateFromAxisAngle(LWP::Math::Vector3{ 0, 1, 0 }, attackAssistRadian_.y);
+		}
+	}
+	else {
+		// アシストの移動ベクトルリセット
+		attackAssistVel_ = { 0.0f,0.0f,0.0f };
+	}
 }
 
 void Attack::Reset() {
 	isActive_ = false;
-	isMoveInput_ = true;
-	isNormalAttack_ = false;
 	collider_.isActive = false;
 	aabb_.isShowWireFrame = false;
 	attackAssistVel_ = { 0.0f,0.0f,0.0f };
-	attackAssistRadian_ = { 0.0f,0.0f,0.0f };
-	attackAssistQuat_ = { 0.0f,0.0f,0.0f,1.0f };
 	// アニメーションを初期化
 	player_->ResetAnimation();
 }
@@ -117,7 +155,6 @@ void Attack::DebugGUI() {
 		ImGui::DragFloat3("Velocity", &attackAssistVel_.x, 0.1f, -10000, 10000);
 		ImGui::DragFloat3("Rotation", &attackAssistRadian_.x, 0.1f, -6.28f, 6.28f);
 		ImGui::DragFloat4("Quaternion", &attackAssistQuat_.x, 0.1f, -1, 1);
-		ImGui::Checkbox("IsNormalAttack", &isNormalAttack_);
 
 		ImGui::TreePop();
 	}
@@ -135,18 +172,8 @@ void Attack::CreateJsonFIle() {
 		.CheckJsonFile();
 }
 
-void Attack::NormalCommand() {
-	if (eventOrder_.GetIsEnd()) {
-		// 攻撃状態に移行
-		player_->GetSystemManager()->SetInputState(InputState::kAttack);
-		isActive_ = true;
-		isMoveInput_ = false;
-		collider_.isActive = true;
-		aabb_.isShowWireFrame = true;
-		player_->ResetAnimation();
-		player_->StartAnimation("LightAttack1", 0.6f, 0.0f);
-	}
-	eventOrder_.Start();
+void Attack::Command() {
+	//isEnableInput_ = true;
 }
 
 void Attack::ChangeState(IAttackSystemState* pState) {
@@ -168,7 +195,6 @@ void Attack::CreateCollision() {
 		// 攻撃判定が出ているとき
 		if (eventOrder_.GetCurrentTimeEvent().name == "NormalAttackTime") {
 			collider_.isActive = true;
-			isNormalAttack_ = true;
 		}
 		};
 }
@@ -187,7 +213,6 @@ void Attack::CheckAttackState() {
 	// 振りかぶりの時
 	if (eventOrder_.GetCurrentTimeEvent().name == "NormalAttackSwingTime") {
 		collider_.isActive = false;
-		isNormalAttack_ = false;
 		// 攻撃が当たる位置に自機を移動させる
 		AttackAssistMovement();
 	}
@@ -197,7 +222,6 @@ void Attack::CheckAttackState() {
 	// 硬直
 	else if (eventOrder_.GetCurrentTimeEvent().name == "NormalAttackRecoveryTime") {
 		collider_.isActive = false;
-		isNormalAttack_ = false;
 	}
 	// 振りかぶり以外の時なら状態をリセット
 	else {

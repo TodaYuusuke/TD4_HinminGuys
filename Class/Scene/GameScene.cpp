@@ -128,5 +128,9 @@ void GameScene::DebugGUI() {
 	}
 
 	ImGui::End();
+
+	// コンボのデバッグGUIの表示
+	player_.DebugComboGUI();
+
 #endif // _DEBUG
 }

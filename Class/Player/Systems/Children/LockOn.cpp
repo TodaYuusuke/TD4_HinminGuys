@@ -103,10 +103,10 @@ void LockOn::ChangeLockOnTarget() {
 		dir.y -= 1.0f;
 	}
 	// コントローラーでの回転
-	dir.y += LWP::Input::Pad::GetRStick().y;
+	dir.x += LWP::Input::Pad::GetRStick().x;
 #pragma endregion
 
-	inputCameraRotateY_ = dir.y;
+	inputCameraRotateY_ = dir.x;
 
 	// ロックオン中に入力があった
 	if (inputCameraRotateY_ != 0.0f) {
@@ -153,7 +153,7 @@ void LockOn::SearchLockOnEnemy() {
 		lockOnData.ui.sprite.LoadTexture("arrow.png");
 		lockOnData.ui.sprite.anchorPoint = { 0.5f,0.5f };
 		lockOnData.ui.enableLockOnObj.LoadTexture("arrow.png");
-		lockOnData.ui.enableLockOnObj.anchorPoint = { 0.5f, 0.5f };
+		//lockOnData.ui.enableLockOnObj.anchorPoint = { 0.5f, 0.5f };
 		lockOnData.ui.enableLockOnObj.isActive = false;
 		lockOnEnableEnemies_.push_back(lockOnData);
 	}

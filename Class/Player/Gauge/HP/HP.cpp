@@ -9,30 +9,36 @@ HP::HP() {
 	// HP画像を作成
 	sprite_["HpBar"].LoadTexture("UI/Gauge/HpBar.png");
 	sprite_["HpBar"].Init();
-	sprite_["HpBar"].anchorPoint = { 0.0f, 0.5f };
-	sprite_["HpBar"].worldTF.translation = { LWP::Info::GetWindowWidthF() / 2, 20.0f, 0.0f };
 	sprite_["HpBar"].isUI = true;
 	sprite_["HpBar"].isActive = true;
-	maxSize_ = sprite_["HpBar"].size;
 
 	// jsonに保存する値を設定
 	json_.Init("HP.json");
-	json_.BeginGroup("WorldTransform")
+	// HPバー
+	json_.BeginGroup("Gauge")
+		.BeginGroup("WorldTransform")
 		.AddValue<LWP::Math::Vector3>("Translation", &sprite_["HpBar"].worldTF.translation)
 		.AddValue<LWP::Math::Vector3>("Scale", &sprite_["HpBar"].worldTF.scale)
 		.EndGroup()
 		.AddValue<LWP::Math::Vector2>("AnchorPoint", &sprite_["HpBar"].anchorPoint)
+		.EndGroup()
+		// HPバーの背景
+		.BeginGroup("GaugeBackGround")
+		.BeginGroup("WorldTransform")
+		.AddValue<LWP::Math::Vector3>("Translation", &sprite_["HpBarBG"].worldTF.translation)
+		.AddValue<LWP::Math::Vector3>("Scale", &sprite_["HpBarBG"].worldTF.scale)
+		.EndGroup()
+		.AddValue<LWP::Math::Vector2>("AnchorPoint", &sprite_["HpBarBG"].anchorPoint)
+		.EndGroup()
+		
 		.AddValue<float>("MaxHpValue", &maxValue_)
 		.AddValue<float>("DeltaValue", &deltaValue_)
 		.AddValue<float>("Multiply", &multiply_)
 		.CheckJsonFile();
 
+	maxSize_ = { 1.0f, 1.0f };
 	// HPを最大値にする
 	value_ = maxValue_;
-
-	// HPバーと値をそろえる
-	sprite_["HpBarBG"].anchorPoint = sprite_["HpBar"].anchorPoint;
-	sprite_["HpBarBG"].worldTF.translation = sprite_["HpBar"].worldTF.translation;
 }
 
 void HP::Initialize() {
@@ -45,9 +51,6 @@ void HP::Update() {
 
 	// HPバーの長さ計算
 	ColGaugeSize("HpBar");
-
-	// ゲージの背景の座標を代入
-	//sprite["HpBarBG"].worldTF.translation = sprite["HpBar"].worldTF.translation;
 }
 
 void HP::DebugGUI() {

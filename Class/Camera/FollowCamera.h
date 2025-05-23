@@ -124,6 +124,8 @@ private:// jsonで保存する値
 	// カメラの補間レート
 	float interTargetRate = 0.5f;
 
+	float maxLength = 50.0f;
+
 	// 回転角の始点
 	const float kOriginRotateX = 90.0f;
 
@@ -140,10 +142,16 @@ private:
 	LWP::Math::Vector3 interTarget_;
 	LWP::Math::Vector3 defaultPos_;
 
+	// 追従対象との初期距離
+	LWP::Math::Vector3 defaultTargetDist_;
+
 	// ロックオン時に使う情報
 	LockOnData lockOnData_;
 
 	// パラメーターの保存
 	LWP::Utility::JsonIO json_;
+
+	LWP::Math::Vector3 radian_;
+	LWP::Math::Quaternion quat_;
 };
 

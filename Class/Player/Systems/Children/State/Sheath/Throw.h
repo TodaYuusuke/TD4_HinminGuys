@@ -40,4 +40,9 @@ private:
 private:
 	// さや投げの移動量
 	LWP::Math::Vector3 throwMovement_ = {0,0,10};
+
+	LWP::Math::Vector3 velocity_;
+	LWP::Math::Vector3 start_;
+	LWP::Math::Vector3 end_;
+	float t_;
 };

@@ -10,7 +10,7 @@
         "Group :GraceTime": {
             "float :RecoveryTime": 0.0,
             "float :SwingTime": 0.0,
-            "float :ThrowFinishTime": 0.20000000298023224
+            "float :ThrowFinishTime": 1.00000000298023224
         },
         "Vector3 :Movement": [
             0.0,
@@ -18,6 +18,6 @@
             10.0
         ]
     },
-    "float :CoolTime": 0.0,
-    "float :MoveRange": 50.0
+    "float :CoolTime": 1.0,
+    "float :MoveRange": 25.0
 }

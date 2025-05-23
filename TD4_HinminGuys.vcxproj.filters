@@ -52,6 +52,8 @@
     <ClCompile Include="Class\Player\Systems\Children\State\Move\Dash.cpp" />
     <ClCompile Include="Class\Player\Systems\Children\State\Move\None.cpp" />
     <ClCompile Include="Class\Player\Systems\ISystem.cpp" />
+    <ClCompile Include="Class\Player\Systems\Children\State\Move\AttackRecovery.cpp" />
+    <ClCompile Include="Class\Player\Systems\Children\Hit.cpp" />
     <ClCompile Include="Class\Scene\VoidScene.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -123,6 +125,8 @@
     <ClInclude Include="Class\Player\Systems\Children\State\Move\Dash.h" />
     <ClInclude Include="Class\Player\Command\BanInput.h" />
     <ClInclude Include="Class\Player\Systems\Children\State\Move\None.h" />
+    <ClInclude Include="Class\Player\Systems\Children\State\Move\AttackRecovery.h" />
+    <ClInclude Include="Class\Player\Systems\Children\Hit.h" />
     <ClInclude Include="Class\Scene\VoidScene.h" />
   </ItemGroup>
   <ItemGroup>

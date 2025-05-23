@@ -23,6 +23,7 @@ void Combo::Init()
 {
 	// 攻撃関係変数のリセット
 	isAttackActive_ = false;
+	isAttackAssistActive_ = false;
 
 	// 硬直関係変数のリセット
 	isStifness_ = true;
@@ -40,20 +41,31 @@ void Combo::Init(const std::string& name)
 	name_ = name;
 }
 
-void Combo::Start(LWP::Resource::Animation* anim)
+void Combo::Start(LWP::Resource::SkinningModel* model, LWP::Resource::Animation* anim, LWP::Object::Collision* collider)
 {
 	// 判定用タイマー開始
-	attackDecisionTimer_.Start(attackStartTime_);	// 攻撃判定
-	stifnessTimer_.Start(stifnessTime_);			// 硬直時間
-	receptTimer_.Start(receptTime_);				// 受付時間
+	attackDecisionTimer_.Start(attackStartTime_);		// 攻撃判定
+	attackAssistTimer_.Start(attackAssistStartTime_);	// 攻撃アシスト判定
+	stifnessTimer_.Start(stifnessTime_);				// 硬直時間
+	receptTimer_.Start(receptTime_);					// 受付時間
+
+	// 有効秒数が0以下ならそもそもタイマーを無効化する
+	if (attackEnableTime_ == 0.0f) { attackDecisionTimer_.SetIsActive(false); }
+	if (attackAssistEnableTime_ == 0.0f) { attackAssistTimer_.SetIsActive(false); }
 
 	// 操作受付開始
 	isRecept_ = true;
 
+	// コライダーの有効状態を切っておく
+	collider->isActive = false;
+
 	// アニメーション名に何かしら入力されていれば
 	if (animName_ != "") {
+		// ループ設定
+		anim->Loop(isLoop_);
+
 		// アニメーションの再生を行う
-		anim->Play(animName_);
+		anim->Play(animName_, transitionTime_);
 	}
 }
 
@@ -62,7 +74,13 @@ void Combo::Update(LWP::Resource::SkinningModel* model, LWP::Resource::Animation
 	// 攻撃判定用のタイマーが動作している場合のみ更新を行う
 	if (attackDecisionTimer_.GetIsActive()) {
 		// 攻撃判定に関する更新
-		AttackActiveUpdate();
+		AttackActiveUpdate(model);
+	}
+
+	// 攻撃アシスト判定用のタイマーが動作している場合のみ更新を行う
+	if (attackAssistTimer_.GetIsActive()) {
+		// 攻撃アシスト判定に関する更新
+		AttackAssistUpdate();
 	}
 
 	// 硬直時間タイマーが動作している場合のみ更新を行う
@@ -149,7 +167,13 @@ void Combo::DebugGUI()
 	ImGui::Separator();
 
 	// コンボ名称の編集
-	Base::ImGuiManager::InputText("Name", name_);
+	if (!isRoot_) { // 無操作状態のコンボで無ければ
+		Base::ImGuiManager::InputText("Name", name_);
+	}
+	else { // 無操作状態のコンボであれば
+		// 名称を変更出来ないことを伝える
+		ImGui::Text("This Is RootCombo! You Can't Change Name");
+	}
 
 	ImGui::NewLine();
 
@@ -213,12 +237,20 @@ void Combo::AddValue(LWP::Utility::JsonIO& json)
 {
 	// コンボ名でグループ開始、各パラメータの保存
 	json.BeginGroup(name_)
-		.AddValue("derivationPriority", &derivationProiority_)	// 派生優先度
-		.AddValue("AnimName", &animName_)						// アニメーション名
-		.AddValue("AttackStartTime", &attackStartTime_)			// 判定開始時間
-		.AddValue("AttackEndTime", &attackEndTime_)				// 判定終了時間
-		.AddValue("StifnessTime", &stifnessTime_)				// 硬直時間
-		.AddValue("ReceptTime", &receptTime_);					// 受付時間
+		.AddValue("derivationPriority", &derivationProiority_)					// 派生優先度
+		.AddValue("AnimName", &animName_)										// アニメーション名
+		.AddValue("TransitionTime", &transitionTime_)							// 遷移時間
+		.AddValue("IsLoop", &isLoop_)											// ループ状態
+		.AddValue("AttackStartTime", &attackStartTime_)							// 判定開始時間
+		.AddValue("AttackEndTime", &attackEnableTime_)							// 判定有効時間
+		.AddValue("FollowJointName", &followJointName_)							// 追従するジョイント名
+		.AddValue("AttackColliderLengthOffset", &attackColliderLengthOffset_)	// 始点からのオフセット
+		.AddValue("AttackColliderRadius", &attackColliderRadius_)				// コライダーの半径
+		.AddValue("AttackAssistStartTime", &attackAssistStartTime_)				// 攻撃アシスト開始時間
+		.AddValue("AttackAssistEnableTime", &attackAssistEnableTime_)			// 攻撃アシスト有効時間
+		.AddValue("AttackAssistMoveAmount", &attackAssistMoveAmount_)			// 攻撃アシスト移動量
+		.AddValue("StifnessTime", &stifnessTime_)								// 硬直時間
+		.AddValue("ReceptTime", &receptTime_);									// 受付時間
 
 	// 開始条件の保存
 	int condCount = 1;
@@ -292,7 +324,7 @@ void Combo::AddCondition(LWP::Utility::ICondition* condition)
 	conditions_.push_back(std::move(condition));
 }
 
-void Combo::AttackActiveUpdate()
+void Combo::AttackActiveUpdate(LWP::Resource::SkinningModel* model)
 {
 	// タイマーの更新
 	attackDecisionTimer_.Update();
@@ -303,14 +335,37 @@ void Combo::AttackActiveUpdate()
 		if (!isAttackActive_) {
 			// 攻撃判定有効
 			isAttackActive_ = true;
-			// 攻撃判定終了秒数でタイマー開始
-			attackDecisionTimer_.Start(attackEndTime_);
+			// 攻撃判定有効秒数でタイマー開始
+			attackDecisionTimer_.Start(attackEnableTime_);
 		}
 		else {
 			// 攻撃判定無効
 			isAttackActive_ = false;
 			// 攻撃判定タイマーを非アクティブに
 			attackDecisionTimer_.SetIsActive(false);
+		}
+	}
+}
+
+void Combo::AttackAssistUpdate()
+{
+	// タイマーの更新
+	attackAssistTimer_.Update();
+
+	// 攻撃アシスト判定タイマーが終了していれば
+	if (attackAssistTimer_.GetIsFinish()) {
+		// 攻撃アシスト判定が有効になっていなければ
+		if (!isAttackAssistActive_) {
+			// 攻撃判定有効
+			isAttackAssistActive_ = true;
+			// 攻撃判定終了秒数でタイマー開始
+			attackAssistTimer_.Start(attackAssistEnableTime_);
+		}
+		else {
+			// 攻撃アシスト判定無効
+			isAttackAssistActive_ = false;
+			// 攻撃判定タイマーを非アクティブに
+			attackAssistTimer_.SetIsActive(false);
 		}
 	}
 }
@@ -442,6 +497,11 @@ void Combo::AnimSettings()
 	// 再生されるアニメーションの設定
 	Base::ImGuiManager::InputText("AnimName", animName_);
 
+	// 遷移秒数の設定
+	ImGui::DragFloat("TransitionTime", &transitionTime_, 0.01f, 0.0f);
+	// ループ状態の設定
+	ImGui::Checkbox("IsLoop", &isLoop_);
+
 	ImGui::Unindent();
 	ImGui::NewLine();
 }
@@ -456,7 +516,26 @@ void Combo::AttackSettings()
 	// 開始時間
 	ImGui::DragFloat("StartTime", &attackStartTime_, 0.01f, 0.0f);
 	// 終了時間
-	ImGui::DragFloat("EndTime", &attackEndTime_, 0.01f, 0.0f);
+	ImGui::DragFloat("EndTime", &attackEnableTime_, 0.01f, 0.0f);
+
+	// コライダーの追従対象設定
+	Base::ImGuiManager::InputText("FollowJointName", followJointName_);
+
+	ImGui::Unindent();
+	ImGui::NewLine();
+
+	// 攻撃アシストの設定
+	ImGui::SeparatorText("Attack Assist Settings");
+
+	ImGui::Indent();
+
+	// 攻撃アシストの開始時間
+	ImGui::DragFloat("AssistStartTime", &attackAssistStartTime_, 0.01f, 0.0f);
+	// 攻撃アシストの有効時間
+	ImGui::DragFloat("AssistEnableTime", &attackAssistEnableTime_, 0.01f, 0.0f);
+
+	// 移動量の指定
+	ImGui::DragFloat3("AssistMoveAmount", &attackAssistMoveAmount_.x);
 
 	ImGui::Unindent();
 	ImGui::NewLine();

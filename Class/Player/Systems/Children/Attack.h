@@ -2,6 +2,7 @@
 #include "../ISystem.h"
 #include "LockOn.h"
 #include "State/IAttackSystemState.h"
+#include "../../../ComboEditor/ComboTree.h"
 
 class IEnemy;
 /// <summary>
@@ -39,9 +40,14 @@ public:
 	void CreateJsonFIle() override;
 
 	/// <summary>
-	/// 通常攻撃のコマンド
+	/// ImGuiによるコンボのGUI表示
 	/// </summary>
-	void NormalCommand();
+	void DebugComboGUI() { comboTree_.DebugGUI(); }
+
+	/// <summary>
+	/// 攻撃のコマンド
+	/// </summary>
+	void Command();
 
 private:
 	/// <summary>
@@ -73,7 +79,7 @@ private:
 public:// Getter, Setter
 #pragma region Getter
 	/// <summary>
-	/// 攻撃時の位置アシスト用のベクトル
+	/// 攻撃時の位置アシスト用のベクトルを取得
 	/// </summary>
 	/// <returns></returns>
 	Vector3 GetAttackAssistVel() { return attackAssistVel_; }
@@ -87,6 +93,21 @@ public:// Getter, Setter
 	/// </summary>
 	/// <returns></returns>
 	Vector3 GetAttackAssistRadian() { return attackAssistRadian_; }
+	/// <summary>
+	/// 編集モード中かどうかのゲッター
+	/// </summary>
+	/// <returns></returns>
+	bool GetIsEditingMode() { return comboTree_.GetIsEditingMode(); }
+	/// <summary>
+	/// 現在のコンボが大元のコンボであるかどうかを取得
+	/// </summary>
+	/// <returns></returns>
+	bool GetIsThisRoot() { return comboTree_.GetIsThisRoot(); }
+	/// <summary>
+	/// 攻撃が全て終わった後か
+	/// </summary>
+	/// <returns></returns>
+	bool GetIsAttackRecovery() { return isAttackRecovery_; }
 #pragma endregion
 
 #pragma region Setter
@@ -110,6 +131,11 @@ public:// Getter, Setter
 	/// </summary>
 	/// <returns></returns>
 	void SetAttackAssistRadian(Vector3 attackAssistRadian) {  attackAssistRadian_ = attackAssistRadian; }
+	/// <summary>
+	/// 攻撃が全て終わった後かを設定
+	/// </summary>
+	/// <returns></returns>
+	void SetIsAttackRecovery(const bool& isAttackRecovery) { isAttackRecovery_ = isAttackRecovery; }
 #pragma endregion
 
 private:// jsonで保存する値
@@ -125,6 +151,10 @@ private:// 外部からポインタをもらう変数
 	LockOn* lockOnSystem_;
 
 private:
+
+	// コンボ攻撃用クラス
+	ComboTree comboTree_;
+
 	// 状態遷移
 	IAttackSystemState* state_;
 
@@ -138,6 +168,6 @@ private:
 	Quaternion attackAssistQuat_;
 	IEnemy* lockOnTarget_;
 
-	// 通常攻撃の判定が出ているか
-	bool isNormalAttack_;
+	// 攻撃が全て終わった後か
+	bool isAttackRecovery_;
 };

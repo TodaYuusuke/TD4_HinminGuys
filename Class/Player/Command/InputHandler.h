@@ -79,6 +79,8 @@ public:
 		return false;
 	}
 
+	int GetBanInput() { return banInput_; }
+
 	/// <summary>
 	/// 入力のあったコマンドを取得
 	/// </summary>

@@ -44,6 +44,9 @@ void Player::Update() {
 	// 角度を代入
 	model_.worldTF.rotation = systemManager_->GetRotate();
 
+	// 移動制限
+	LimitMoveArea();
+
 	// HP
 	hp_.Update();
 	sheathGauge_.Update();
@@ -92,4 +95,11 @@ void Player::CreateCollision() {
 	collider_.stayLambda = [this](LWP::Object::Collision* hitTarget) {
 		hitTarget;
 		};
+}
+
+void Player::LimitMoveArea() {
+	// 鞘を投げた後鞘を中心に移動制限をかける(円形)
+	if (systemManager_->GetSheathSystem()->GetSheathState()->GetStateName() == "Collect") {
+		systemManager_->GetSheathSystem()->ClampToCircle(model_.worldTF.translation);
+	}
 }

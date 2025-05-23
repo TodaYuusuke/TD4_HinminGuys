@@ -31,6 +31,9 @@ void Sheath::Initialize() {
 }
 
 void Sheath::Update() {
+	// クールタイムの時間更新
+	CoolTimeUpdate();
+
 	if (!isActive_) { return; }
 
 	// 状態
@@ -80,6 +83,7 @@ void Sheath::DebugGUI() {
 
 		ImGui::DragFloat3("Velocity", &velocity_.x);
 		ImGui::DragFloat3("Radian", &radian_.x);
+		ImGui::DragFloat("CoolTime", &currentCoolTime_);
 
 		ImGui::Checkbox("IsEvasion", &isActive_);
 
@@ -118,8 +122,6 @@ void Sheath::CreateJsonFIle() {
 }
 
 void Sheath::Command() {
-	// 鞘クラスの速度を自機に適用
-	player_->GetSystemManager()->SetInputState(InputState::kSheath);
 	// 状態によって変更
 	state_->Command();
 }
@@ -152,4 +154,25 @@ void Sheath::CreateCollectEventOrder() {
 void Sheath::ChangeState(ISheathSystemState* pState) {
 	delete state_;
 	state_ = pState;
+}
+
+void Sheath::CoolTimeUpdate() {
+	// 既定の時間を越していなかったら鞘投げを使えない
+	if (CheckCoolTime()) {
+		return;
+	}
+
+	currentCoolTime_--;
+}
+
+LWP::Math::Vector3 Sheath::ClampToCircle(LWP::Math::Vector3& position) {
+	LWP::Math::Vector3 offset = position - sheathModel_.worldTF.GetWorldPosition();
+	float distance = offset.Length();
+
+	if (distance > enableMoveRange) {
+		offset = offset.Normalize() * enableMoveRange;
+		position = sheathModel_.worldTF.GetWorldPosition() + offset;
+	}
+
+	return position;
 }

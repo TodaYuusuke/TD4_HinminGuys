@@ -49,8 +49,13 @@ public:
 	/// </summary>
 	void AnimCommand();
 
+	/// <summary>
+	/// 投げるときのアクションイベントを生成
+	/// </summary>
 	void CreateThrowEventOrder();
-
+	/// <summary>
+	/// 回収するときのアクションイベントを生成
+	/// </summary>
 	void CreateCollectEventOrder();
 
 	/// <summary>
@@ -58,6 +63,26 @@ public:
 	/// </summary>
 	/// <param name="pState">次の状態</param>
 	void ChangeState(ISheathSystemState* pState);
+
+	/// <summary>
+	/// クールタイムの更新
+	/// </summary>
+	void CoolTimeUpdate();
+
+
+	LWP::Math::Vector3 ClampToCircle(LWP::Math::Vector3& position);
+
+	/// <summary>
+	/// クールタイムが終了しているかを確認
+	/// </summary>
+	/// <returns>true = 既定の時間を越している</returns>
+	bool CheckCoolTime() {
+		// 既定の時間を越している
+		if (currentCoolTime_ <= 0.0f) {
+			return true;
+		}
+		return false;
+	}
 
 public:// Getter, Setter
 #pragma region Getter
@@ -115,6 +140,11 @@ public:// Getter, Setter
 	/// </summary>
 	/// <param name="quat">向かせる方向(クォータニオン)</param>
 	void SetRotate(const LWP::Math::Quaternion& quat) { quat_ = quat; }
+	/// <summary>
+	/// クールタイムを設定
+	/// </summary>
+	/// <param name="time"></param>
+	void SetCoolTime() { currentCoolTime_ = coolTime * 60.0f; }
 #pragma endregion
 
 public:// jsonに保存する値
@@ -156,4 +186,7 @@ private:// プライベートな変数
 	// 向いている角度
 	LWP::Math::Quaternion quat_ = { 0.0f,0.0f,0.0f,1.0f };
 	LWP::Math::Vector3 radian_;
+
+	// クールタイムの経過時間
+	float currentCoolTime_;
 };
