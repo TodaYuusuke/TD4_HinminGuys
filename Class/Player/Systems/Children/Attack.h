@@ -114,6 +114,11 @@ public:// Getter, Setter
 	/// <returns></returns>
 	bool GetIsStiffness() { return comboTree_.GetIsStiffness(); }
 	/// <summary>
+	/// コンボの受付状態を習得
+	/// </summary>
+	/// <returns>コンボの受付状態を取得</returns>
+	bool GetIsRecept() { return comboTree_.GetIsRecept(); }
+	/// <summary>
 	/// 攻撃が全て終わった後か
 	/// </summary>
 	/// <returns></returns>

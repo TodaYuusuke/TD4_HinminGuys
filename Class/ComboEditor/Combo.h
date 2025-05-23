@@ -128,6 +128,11 @@ public: // アクセッサ等
 	std::string GetName() { return name_; }
 
 	/// <summary>
+	/// アニメーション名ゲッター
+	/// </summary>
+	/// <returns>アニメーション名</returns>
+	std::string GetAnimName() { return animName_; }
+	/// <summary>
 	/// アニメーション名のセッター
 	/// </summary>
 	/// <param name="name">設定するアニメーション名</param>

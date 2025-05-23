@@ -48,7 +48,12 @@ void ComboTree::Update()
 	nextCombo_ = nowCombo_->ReceptUpdate();
 
 	// 次のコンボが存在する、かつ硬直時間終了時
-	if ((nextCombo_ != nullptr && nextCombo_->GetIsStifness())) {
+	if ((nextCombo_ != nullptr && !nowCombo_->GetIsStifness())) {
+		if (nextCombo_->GetAnimName() == "LightAttack2") {
+			int a = 10;
+			a;
+		}
+
 		// 現在のコンボを初期化して次のコンボへ
 		nowCombo_->Init();
 		nowCombo_ = std::move(nextCombo_);
@@ -165,11 +170,14 @@ void ComboTree::ResetCombo()
 
 bool ComboTree::GetIsStiffness()
 {
-	// 現在コンボに何も入っていなければfalseに
-	if (nowCombo_ == nullptr) { return false; }
-
-	// 硬直状態を返す
+	assert(nowCombo_ != nullptr);
 	return nowCombo_->GetIsStifness();
+}
+
+bool ComboTree::GetIsRecept()
+{
+	assert(nowCombo_ != nullptr);
+	return nowCombo_->GetIsRecept();
 }
 
 void ComboTree::FileMenu()

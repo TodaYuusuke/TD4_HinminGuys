@@ -65,22 +65,22 @@ public: // アクセッサ等
 	bool GetIsEnableAttackAssist() { return nowCombo_->GetIsAttackAssistActive(); }
 
 	/// <summary>
-	/// 硬直の有効状態のげぅたー
+	/// 現在コンボの硬直状態ゲッター
 	/// </summary>
-	/// <returns>硬直の有効状態</returns>
-	bool GetIsStifness() { return nowCombo_->GetIsStifness(); }
+	/// <returns>硬直状態</returns>
+	bool GetIsStiffness();
+
+	/// <summary>
+	/// コンボの受付状態のゲッター
+	/// </summary>
+	/// <returns>コンボの受付状態</returns>
+	bool GetIsRecept();
 
 	/// <summary>
 	/// 攻撃アシストの移動量ゲッター
 	/// </summary>
 	/// <returns>攻撃アシストの移動量</returns>
 	LWP::Math::Vector3 GetAttackAssistMoveAmount() { return nowCombo_->GetAttackAssistMoveAmount(); }
-
-	/// <summary>
-	/// 現在コンボの硬直状態ゲッター
-	/// </summary>
-	/// <returns>硬直状態</returns>
-	bool GetIsStiffness();
 
 private: // プライベートなメンバ関数
 
