@@ -7,7 +7,7 @@ FollowCamera::FollowCamera(LWP::Object::Camera* camera, LWP::Math::Vector3* targ
 
 void FollowCamera::Initialize() {
 	json_.Init("FollowCameraData.json");
-	json_.AddValue<LWP::Math::Vector3>("TargetDistance", &kTargetDist)
+	json_.AddValue<LWP::Math::Vector3>("TargetDistance", &defaultTargetDist_)
 		.AddValue<LWP::Math::Vector3>("GameStartAngle", &kStartAngle)
 		.AddValue<float>("MinRotateX", &kMinRotateX)
 		.AddValue<float>("MaxRotateX", &kMaxRotateX)
