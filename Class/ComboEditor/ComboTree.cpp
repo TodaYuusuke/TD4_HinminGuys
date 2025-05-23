@@ -165,11 +165,14 @@ void ComboTree::ResetCombo()
 
 bool ComboTree::GetIsStiffness()
 {
-	// 現在コンボに何も入っていなければfalseに
-	if (nowCombo_ == nullptr) { return false; }
-
-	// 硬直状態を返す
+	assert(nowCombo_ != nullptr);
 	return nowCombo_->GetIsStifness();
+}
+
+bool ComboTree::GetIsRecept()
+{
+	assert(nowCombo_ != nullptr);
+	return nowCombo_->GetIsRecept();
 }
 
 void ComboTree::FileMenu()

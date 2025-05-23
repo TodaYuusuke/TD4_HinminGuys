@@ -23,8 +23,4 @@ void AttackRecovery::Update() {
 }
 
 void AttackRecovery::AnimCommand() {
-	// コンボの受付状態が終了したらIdle状態に移行
-	if (!player_->GetSystemManager()->GetAttackSystem()->GetIsRecept()) {
-		player_->GetSystemManager()->GetAttackSystem()->SetIsAttackRecovery(false);
-	}
 }

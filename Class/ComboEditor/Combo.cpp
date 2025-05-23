@@ -58,8 +58,8 @@ void Combo::Start(LWP::Resource::SkinningModel* model, LWP::Resource::Animation*
 	}
 
 	// 有効秒数が0以下ならそもそもタイマーを無効化する
-	if (attackEnableTime_ == 0.0f) { attackDecisionTimer_.SetIsActive(false); }
-	if (attackAssistEnableTime_ == 0.0f) { attackAssistTimer_.SetIsActive(false); }
+	if (attackEnableTime_ <= 0.0f) { attackDecisionTimer_.SetIsActive(false); }
+	if (attackAssistEnableTime_ <= 0.0f) { attackAssistTimer_.SetIsActive(false); }
 
 	// コライダーの有効状態を切っておく
 	collider->isActive = false;
