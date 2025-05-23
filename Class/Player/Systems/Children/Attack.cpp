@@ -121,7 +121,7 @@ void Attack::Update() {
 void Attack::Reset() {
 	isActive_ = false;
 	collider_.isActive = false;
-	aabb_.isShowWireFrame = false;
+	aabb_.isShowWireFrame = true;
 	attackAssistVel_ = { 0.0f,0.0f,0.0f };
 	// アニメーションを初期化
 	player_->ResetAnimation();
@@ -173,6 +173,7 @@ void Attack::CreateJsonFIle() {
 }
 
 void Attack::Command() {
+	collider_.isActive = true;
 	//isEnableInput_ = true;
 }
 
@@ -183,19 +184,16 @@ void Attack::ChangeState(IAttackSystemState* pState) {
 
 void Attack::CreateCollision() {
 	// 攻撃判定生成
-	aabb_.isShowWireFrame = false;
+	//aabb_.isShowWireFrame = false;
 	collider_.SetFollow(player_->GetWorldTF());
 	collider_.worldTF.translation = { 0,1,2 };
 	collider_.isActive = false;
 	collider_.mask.SetBelongFrag(GetAttack());
 	collider_.mask.SetHitFrag(GetEnemy());
-	collider_.stayLambda = [this](LWP::Object::Collision* hitTarget) {
+	collider_.enterLambda = [this](LWP::Object::Collision* hitTarget) {
 		hitTarget;
-
-		// 攻撃判定が出ているとき
-		if (eventOrder_.GetCurrentTimeEvent().name == "NormalAttackTime") {
-			collider_.isActive = true;
-		}
+		// 鞘のゲージを減少
+		player_->GetUIManager()->ChangeSheathGauge(-10.0f);
 		};
 }
 

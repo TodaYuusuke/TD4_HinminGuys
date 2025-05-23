@@ -54,7 +54,7 @@ void HP::Update() {
 }
 
 void HP::DebugGUI() {
-	if (ImGui::TreeNode("HP")) {
+	if (ImGui::TreeNode("Bar")) {
 		// 保存する値
 		if (ImGui::TreeNode("Json")) {
 			json_.DebugGUI();

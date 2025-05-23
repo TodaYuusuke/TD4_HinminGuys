@@ -55,6 +55,7 @@
     <ClCompile Include="Class\Player\Systems\Children\State\Move\AttackRecovery.cpp" />
     <ClCompile Include="Class\Player\Systems\Children\Hit.cpp" />
     <ClCompile Include="Class\Scene\VoidScene.cpp" />
+    <ClCompile Include="Class\UI\UIManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Class\ComboEditor\ComboTree.h" />
@@ -78,7 +79,7 @@
     <ClInclude Include="Class\Enemy\Childs\Normal\State\NormalEnemyAttack.h" />
     <ClInclude Include="Class\Enemy\Childs\Normal\State\NormalEnemyIdle.h" />
     <ClInclude Include="Class\Enemy\Childs\Normal\State\NormalEnemyMove.h" />
-     <ClInclude Include="Class\Enemy\SpawnData.h" />
+    <ClInclude Include="Class\Enemy\SpawnData.h" />
     <ClInclude Include="Class\Enemy\States.h" />
     <ClInclude Include="Class\Enemy\WaveData.h" />
     <ClInclude Include="Class\Player\Command\InputConfig.h" />
@@ -128,6 +129,7 @@
     <ClInclude Include="Class\Player\Systems\Children\State\Move\AttackRecovery.h" />
     <ClInclude Include="Class\Player\Systems\Children\Hit.h" />
     <ClInclude Include="Class\Scene\VoidScene.h" />
+    <ClInclude Include="Class\UI\UIManager.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />

@@ -153,7 +153,9 @@ void LockOn::SearchLockOnEnemy() {
 		lockOnData.ui.sprite.LoadTexture("arrow.png");
 		lockOnData.ui.sprite.anchorPoint = { 0.5f,0.5f };
 		lockOnData.ui.enableLockOnObj.LoadTexture("arrow.png");
-		//lockOnData.ui.enableLockOnObj.anchorPoint = { 0.5f, 0.5f };
+		lockOnData.ui.enableLockOnObj.Init();
+		lockOnData.ui.enableLockOnObj.name = "billbard";
+		lockOnData.ui.enableLockOnObj.anchorPoint = { 0.5f, 0.5f };
 		lockOnData.ui.enableLockOnObj.isActive = false;
 		lockOnEnableEnemies_.push_back(lockOnData);
 	}
@@ -294,7 +296,8 @@ void LockOn::LockOnReticleUpdate() {
 			0
 		};
 		lockOnEnemy.ui.sprite.isActive = false;
-		lockOnEnemy.ui.enableLockOnObj.worldTF.translation = lockOnEnemy.enemyData->GetPosition() + Vector3{0.0f, 1.5f, 0.0f};
+		lockOnEnemy.ui.enableLockOnObj.worldTF.Parent(lockOnEnemy.enemyData->GetWorldTF());
+		lockOnEnemy.ui.enableLockOnObj.worldTF.translation = Vector3{0.0f, 0.6f, 0.0f};
 		lockOnEnemy.ui.enableLockOnObj.isActive = true;
 	}
 }

@@ -49,7 +49,7 @@ void SheathGauge::Update() {
 	if (GetValueEmpty()) { value_ = 0.0f; }
 
 	// HPバーの長さ計算
-	//ColGaugeSize("SheathBar");
+	ColGaugeSize("SheathBar");
 }
 
 void SheathGauge::DebugGUI() {

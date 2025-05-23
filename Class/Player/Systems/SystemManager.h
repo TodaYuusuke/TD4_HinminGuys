@@ -6,6 +6,7 @@
 #include "Children/LockOn.h"
 #include "Children/Evasion.h"
 #include "Children/Sheath.h"
+#include "Children/Hit.h"
 #include "../Animator/PlayerAnimator.h"
 #include "../Command/InputHandler.h"
 #include <memory>
@@ -50,12 +51,6 @@ public:
 	void DebugGUI();
 
 	/// <summary>
-	/// 状態の遷移
-	/// </summary>
-	/// <param name="pState">次の状態</param>
-	void ChangeState(ISystem* pState);
-
-	/// <summary>
 	/// ImGuiによるコンボのGUI表示
 	/// </summary>
 	void DebugComboGUI() { attackSystem_->DebugComboGUI(); }
@@ -98,6 +93,11 @@ public:// Getter, Setter
 	/// </summary>
 	/// <returns></returns>
 	Sheath* GetSheathSystem() { return sheathSystem_.get(); }
+	/// <summary>
+	/// 被弾機能のアドレスを取得
+	/// </summary>
+	/// <returns></returns>
+	Hit* GetHitSystem() { return hitSystem_.get(); }
 	/// <summary>
 	/// 速度を取得
 	/// </summary>
@@ -155,8 +155,10 @@ private:
 	std::unique_ptr<Move> moveSystem_;
 	// 回避機能
 	std::unique_ptr<Evasion> evasionSystem_;
-	// 鞘
+	// 鞘機能
 	std::unique_ptr<Sheath> sheathSystem_;
+	// 被弾機能
+	std::unique_ptr<Hit> hitSystem_;
 
 	// 機能クラスをまとめた変数
 	std::vector<ISystem*> systems_;

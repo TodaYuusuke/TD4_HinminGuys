@@ -72,6 +72,13 @@ public:
 
 	LWP::Math::Vector3 ClampToCircle(LWP::Math::Vector3& position);
 
+
+	//void StartDamage(const float& damageValue, const float& multiply = 1.0f) {
+	//	sheathGauge_.SetDeltaValue(damageValue);
+	//	sheathGauge_.SetMultiply(multiply);
+	//	sheathGauge_.Hit();
+	//}
+
 	/// <summary>
 	/// クールタイムが終了しているかを確認
 	/// </summary>

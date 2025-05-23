@@ -1,11 +1,17 @@
 #pragma once
 #include "../ISystem.h"
 #include "../../Gauge/HP/HP.h"
+#include "../EventOrder.h"
 
 class Hit : public ISystem {
 public:
-	Hit() = default;
-	~Hit() = default;
+	enum class EventOrderState {
+		kInvinsible
+	};
+
+public:
+	Hit(LWP::Object::Camera* camera, Player* player);
+	~Hit() override = default;
 
 	/// <summary>
 	/// 初期化
@@ -37,12 +43,18 @@ private:
 	/// </summary>
 	void HitUpdate();
 
+	/// <summary>
+	/// アクションイベントの作成
+	/// </summary>
+	void CreateEventOrders();
+
 public:
 #pragma region Setter
 	void StartDamage(const float& damageValue, const float& multiply = 1.0f) {
-		hp_.SetDeltaValue(damageValue);
-		hp_.SetMultiply(damageValue);
-		hp_.Hit();
+		//hp_.SetDeltaValue(damageValue);
+		//hp_.SetMultiply(multiply);
+		//hp_.Hit();
+		eventOrders_[(int)EventOrderState::kInvinsible].Start();
 	}
 	/// <summary>
 	/// 被弾演出開始
@@ -53,7 +65,7 @@ public:
 	/// </summary>
 	/// <param name="maxHP"></param>
 	void SetMaxHP(const float& maxHP) {
-		hp_.SetMaxValue(maxHP);
+		//hp_.SetMaxValue(maxHP);
 	}
 	/// <summary>
 	/// 演出終了時間を設定
@@ -67,17 +79,28 @@ public:
 
 #pragma region Getter
 	/// <summary>
+	/// 無敵時間中かを取得
+	/// </summary>
+	/// <returns></returns>
+	bool GetIsInvinsible() { 
+		if (eventOrders_[(int)EventOrderState::kInvinsible].GetCurrentTimeEvent().name == "InvinsibleTime") {
+			return true;
+		}
+		return false;
+	}
+	/// <summary>
 	/// 被弾演出中か
 	/// </summary>
 	/// <returns></returns>
-	const bool& GetIsHit() { return isHit_; }
+	const bool& GetIsHitEffect() { return isHit_; }
 #pragma endregion
 
 private:// jsonで保存する値
+	// 無敵時間
+	float invinsibleTime = 1.0f;
 
 private:
-	// HP
-	HP hp_;
+	std::map<int, EventOrder> eventOrders_;
 
 	// 演出終了時間
 	float endFrame_;

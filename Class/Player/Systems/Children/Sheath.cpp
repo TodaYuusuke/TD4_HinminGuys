@@ -31,6 +31,7 @@ void Sheath::Initialize() {
 }
 
 void Sheath::Update() {
+
 	// クールタイムの時間更新
 	CoolTimeUpdate();
 

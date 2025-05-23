@@ -145,6 +145,8 @@ void Parry::CreateCollision() {
 			// ガードアニメーション開始
 			player_->ResetAnimation();
 			player_->StartAnimation("WeakParry", 0.0f, 0.0f);
+			// 鞘のゲージを減少
+			player_->GetUIManager()->ChangeSheathGauge(-20.0f);
 		}
 		// 甘めパリィ
 		else if (eventOrder_.GetCurrentTimeEvent().name == "GoodParry") {
@@ -153,6 +155,8 @@ void Parry::CreateCollision() {
 			// ガードアニメーション開始
 			player_->ResetAnimation();
 			player_->StartAnimation("WeakParry", 0.0f, 0.0f);
+			// 鞘のゲージを減少
+			player_->GetUIManager()->ChangeSheathGauge(-10.0f);
 		}
 		};
 }

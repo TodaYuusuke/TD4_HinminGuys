@@ -9,7 +9,7 @@ using namespace LWP::Object;
 using namespace LWP::Info;
 
 GameScene::GameScene()
-	: player_(&mainCamera, &enemyManager_, &followCamera_),
+	: player_(&mainCamera, &enemyManager_, &followCamera_, &uiManager_),
 	followCamera_(&mainCamera, player_.GetModelPos())
 {
 	enemyManager_.Initialize();
@@ -25,6 +25,9 @@ void GameScene::Initialize() {
 	inputHandler_ = InputHandler::GetInstance();
 	inputHandler_->Initialize();
 
+	// UIの管理クラスを生成
+	uiManager_.Initialize();
+
 	// 敵管理クラス
 	enemyManager_.Initialize();
 	enemyManager_.SetPlayer(&player_);
@@ -33,7 +36,6 @@ void GameScene::Initialize() {
 	followCamera_.Initialize();
 
 	// 自機の動作確認のため生成
-	//player_.SetInputHandler(inputHandler_);
 	player_.Initialize();
 
 #pragma region フィールドを一時的に生成
@@ -68,17 +70,20 @@ void GameScene::Update() {
 	// 入力されたコマンドを確認
 	inputHandler_->Update(player_);
 
-		//敵全て
-		enemyManager_.Update();
+	//敵全て
+	enemyManager_.Update();
 
-		// 追従カメラ
-		followCamera_.Update();
+	// 追従カメラ
+	followCamera_.Update();
 
-		// 自機
-		player_.Update();
+	// 自機
+	player_.Update();
 
-		// デバッグ用のウィンドウ
-		DebugGUI();
+	// uiの管理クラス
+	uiManager_.Update();
+
+	// デバッグ用のウィンドウ
+	DebugGUI();
 
 	sceneTransitioner_.Update();
 
@@ -87,7 +92,7 @@ void GameScene::Update() {
 void GameScene::DebugGUI() {
 #ifdef _DEBUG
 	ImGui::Begin("DebugWindow");
-	if (ImGui::BeginTabBar("GameObject")) {		
+	if (ImGui::BeginTabBar("GameObject")) {
 		// 自機
 		if (ImGui::BeginTabItem("Player")) {
 			player_.DebugGUI();

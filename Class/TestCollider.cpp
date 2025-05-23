@@ -7,6 +7,7 @@ TestCollider::TestCollider()
 	: aabb_(collider_.SetBroadShape(LWP::Object::Collider::AABB()))
 {
 	model_.LoadShortPath("player/Player_Simple.gltf");
+	model_.worldTF.translation = { 0,0, 10 };
 
 	// 攻撃判定生成
 	aabb_.min.y = 0.0f;

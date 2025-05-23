@@ -8,6 +8,7 @@
 #include "Gauge/HP/HP.h"
 #include "Gauge/Sheath/SheathGauge.h"
 #include "Command/InputHandler.h"
+#include "../UI/UIManager.h"
 #include <memory>
 
 class IEnemy;
@@ -16,7 +17,7 @@ class FollowCamera;
 class Player : public ICharacter {
 public:
 	// コンストラクタ
-	Player(LWP::Object::Camera* camera, EnemyManager* enemyManager, FollowCamera* followCamera);
+	Player(LWP::Object::Camera* camera, EnemyManager* enemyManager, FollowCamera* followCamera, UIManager* uiManager);
 	// デストラクタ
 	~Player() override = default;
 
@@ -56,6 +57,11 @@ private:
 	void CreateCollision();
 
 	/// <summary>
+	/// 無敵時間かを更新
+	/// </summary>
+	void InvinsibleUpdate();
+
+	/// <summary>
 	/// 移動制限
 	/// </summary>
 	void LimitMoveArea();
@@ -68,12 +74,15 @@ public:// Getter,Setter
 	/// <returns></returns>
 	FollowCamera* GetFollowCamera() { return followCamera_; }
 	/// <summary>
+	/// UIの管理クラスを取得
+	/// </summary>
+	/// <returns></returns>
+	UIManager* GetUIManager() { return uiManager_; }
+	/// <summary>
 	/// 各機能をまとめているクラスのアドレスを取得
 	/// </summary>
 	/// <returns></returns>
 	SystemManager* GetSystemManager() { return systemManager_.get(); }
-
-	InputHandler* GetInputHandler() { return inputHandler_; }
 	/// <summary>
 	/// 自機のTransformQuatを取得
 	/// </summary>
@@ -157,7 +166,10 @@ private:// 外部からポインタをもらう変数
 	EnemyManager* enemyManager_;
 	// 追従カメラ
 	FollowCamera* followCamera_;
+	// コマンドの管理クラス
 	InputHandler* inputHandler_;
+	// UIの管理クラス
+	UIManager* uiManager_;
 
 private:
 	// 体の判定
@@ -166,10 +178,4 @@ private:
 
 	// 機能まとめ
 	std::unique_ptr<SystemManager> systemManager_;
-
-	// HP
-	HP hp_;
-
-	// 鞘ゲージ
-	SheathGauge sheathGauge_;
 };
