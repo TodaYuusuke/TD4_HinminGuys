@@ -1,9 +1,21 @@
 {
+    "Group :Dash": {
+        "float :ButtonHoldSeconds": 0.20000000298023224
+    },
     "Group :EventOrder": {
-        "Group :GraceTime": {
-            "float :InvinsibleTime": 0.10000000149011612,
-            "float :RecoveryTime": 0.0,
-            "float :SwingTime": 0.0
+        "Group :Acceleration": {
+            "Group :GraceTime": {
+                "float :AccelerationTime": 0.30000001192092896,
+                "float :RecoveryTime": 0.0,
+                "float :SwingTime": 0.0
+            }
+        },
+        "Group :Invinsible": {
+            "Group :GraceTime": {
+                "float :InvinsibleTime": 0.30000001192092896,
+                "float :RecoveryTime": 0.0,
+                "float :SwingTime": 0.0
+            }
         }
     },
     "Vector3 :Movement": [
@@ -11,6 +23,6 @@
         0.0,
         0.6000000238418579
     ],
-    "float :DashButtonHoldSeconds": 0.0989999994635582,
+    "float :FinishTime": 0.30000001192092896,
     "float :MoveMultiply": 1.0
 }
