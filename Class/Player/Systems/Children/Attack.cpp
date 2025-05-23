@@ -184,7 +184,7 @@ void Attack::ChangeState(IAttackSystemState* pState) {
 void Attack::CreateCollision() {
 	// 攻撃判定生成
 	aabb_.isShowWireFrame = false;
-	collider_.SetFollowTarget(player_->GetWorldTF());
+	collider_.SetFollow(player_->GetWorldTF());
 	collider_.worldTF.translation = { 0,1,2 };
 	collider_.isActive = false;
 	collider_.mask.SetBelongFrag(GetAttack());
