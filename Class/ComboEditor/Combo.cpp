@@ -45,8 +45,13 @@ void Combo::Start(LWP::Resource::SkinningModel* model, LWP::Resource::Animation*
 {
 	// 判定用タイマー開始
 	attackDecisionTimer_.Start(attackStartTime_);		// 攻撃判定
-	attackAssistTimer_.Start(attackAssistStartTime_);	// 攻撃アシスト判定
-	stifnessTimer_.Start(stifnessTime_);				// 硬直時間
+	attackAssistTimer_.Start(attackAssistStartTime_);	// 攻撃アシスト判
+	if (stifnessTime_ != 0.0f) {
+		stifnessTimer_.Start(stifnessTime_);				// 硬直時間
+	}
+	else {
+		isStifness_ = false;
+	}
 	receptTimer_.Start(receptTime_);					// 受付時間
 
 	// 有効秒数が0以下ならそもそもタイマーを無効化する
@@ -86,7 +91,7 @@ void Combo::Update(LWP::Resource::SkinningModel* model, LWP::Resource::Animation
 	// 硬直時間タイマーが動作している場合のみ更新を行う
 	if (stifnessTimer_.GetIsActive()) {
 		// 硬直に関する更新
-		stifnessTimer_.Update();
+		StifnessTimeUpdate();
 	}
 
 	// コンボ受付判定用のタイマーが動作している場合のみ更新を行う

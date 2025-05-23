@@ -39,6 +39,11 @@ public: // メンバ関数
 	/// </summary>
 	void DebugGUI();
 
+	/// <summary>
+	/// 無操作状態コンボに強制的に戻す関数
+	/// </summary>
+	void ResetCombo();
+
 public: // アクセッサ等
 
 	/// <summary>

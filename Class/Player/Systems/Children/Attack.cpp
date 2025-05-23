@@ -63,7 +63,7 @@ void Attack::Update() {
 	}
 
 	// コンボが無操作状態のコンボでない場合
-	if (!comboTree_.GetIsThisRoot()) {
+	if (comboTree_.GetIsStiffness()) {
 		// 攻撃しているものとみなし、攻撃状態に移行
 		if (!isActive_) {
 			player_->GetSystemManager()->SetInputState(InputState::kAttack);

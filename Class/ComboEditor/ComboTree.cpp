@@ -151,6 +151,18 @@ void ComboTree::DebugGUI()
 	ImGui::End();
 }
 
+void ComboTree::ResetCombo()
+{
+	// 次のコンボをnullptrに
+	nextCombo_ = nullptr;
+
+	// 現在コンボを強制初期化
+	nowCombo_->Init();
+	// 現在コンボを無操作状態にリセットする
+	nowCombo_ = &rootCombo_;
+	nowCombo_->Start(animModel_, anim_, &collider_);
+}
+
 bool ComboTree::GetIsStiffness()
 {
 	// 現在コンボに何も入っていなければfalseに
