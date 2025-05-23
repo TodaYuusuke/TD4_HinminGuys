@@ -121,17 +121,16 @@ void Move::CheckMoveState() {
 					player_->GetSystemManager()->GetEvasionSystem()->SetIsDash(false);
 					ChangeState(new AttackRecovery(this, player_));
 				}
-				return;
-			}		
-		}
-
-		// 待機状態
-		if (GetTriggerChangeMoveState(MoveState::kIdle) && stickStrength_ == 0) {
-			moveState_ = MoveState::kIdle;
-			// ダッシュ状態解除
-			player_->GetSystemManager()->GetEvasionSystem()->SetIsDash(false);				
-			player_->GetSystemManager()->GetAttackSystem()->ComboReset();
-			ChangeState(new Idle(this, player_));
+			}
+			else {
+				// 待機状態
+				if (GetTriggerChangeMoveState(MoveState::kIdle) && stickStrength_ == 0) {
+					moveState_ = MoveState::kIdle;
+					// ダッシュ状態解除
+					player_->GetSystemManager()->GetEvasionSystem()->SetIsDash(false);
+					ChangeState(new Idle(this, player_));
+				}
+			}
 		}
 	}
 	// 移動状態に移行
@@ -150,7 +149,7 @@ void Move::CheckMoveState() {
 				}
 			}
 			else {
-				
+
 				if (GetTriggerChangeMoveState(MoveState::kRun)) {
 					moveState_ = MoveState::kRun;
 					player_->GetSystemManager()->GetAttackSystem()->ComboReset();
@@ -162,7 +161,7 @@ void Move::CheckMoveState() {
 		}
 		// 歩行状態に移行
 		else {
-			
+
 			if (GetTriggerChangeMoveState(MoveState::kWalk)) {
 				moveState_ = MoveState::kWalk;
 				player_->GetSystemManager()->GetAttackSystem()->ComboReset();

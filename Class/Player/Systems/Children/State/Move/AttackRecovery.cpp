@@ -17,7 +17,7 @@ void AttackRecovery::Initialize() {
 
 void AttackRecovery::Update() {
 	// コンボの受付状態が終了したらIdle状態に移行
-	if (!player_->GetSystemManager()->GetAttackSystem()->GetIsRecept()) {
+	if (!player_->GetSystemManager()->GetAttackSystem()->GetIsRecept() || !player_->GetAnimation()->GetPlaying()) {
 		player_->GetSystemManager()->GetAttackSystem()->SetIsAttackRecovery(false);
 	}
 }

@@ -49,6 +49,11 @@ void ComboTree::Update()
 
 	// 次のコンボが存在する、かつ硬直時間終了時
 	if ((nextCombo_ != nullptr && !nowCombo_->GetIsStifness())) {
+		if (nextCombo_->GetAnimName() == "LightAttack2") {
+			int a = 10;
+			a;
+		}
+
 		// 現在のコンボを初期化して次のコンボへ
 		nowCombo_->Init();
 		nowCombo_ = std::move(nextCombo_);
