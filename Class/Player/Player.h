@@ -7,6 +7,7 @@
 #include "Systems/SystemManager.h"
 #include "Gauge/HP/HP.h"
 #include "Gauge/Sheath/SheathGauge.h"
+#include "PlayerParameter.h"
 #include "Command/InputHandler.h"
 #include "../UI/UIManager.h"
 #include <memory>
@@ -113,6 +114,11 @@ public:// Getter,Setter
 	/// </summary>
 	/// <returns></returns>
 	LWP::Math::Quaternion GetQuat() { return systemManager_->GetRotate(); }
+	/// <summary>
+	/// 各種パラメータの取得
+	/// </summary>
+	/// <returns></returns>
+	PlayerParameter GetParameter() { return parameter_; }
 #pragma endregion
 
 #pragma region Setter
@@ -127,8 +133,25 @@ public:// Getter,Setter
 	/// <param name="enemyManager">敵の管理クラスのポインタ</param>
 	void SetEnemyManager(EnemyManager* enemyManager) { enemyManager_ = enemyManager; }
 
-	void SetInputHandler(InputHandler* inputHandler) { inputHandler_ = inputHandler; }
+#pragma region パラメータ
+	/// <summary>
+	/// 攻撃のパラメータを設定
+	/// </summary>
+	/// <returns></returns>
+	void SetAttackParameter(const float& strength, const float& multiply = 1.0f) { parameter_.SetAttackParameter(IParameter::ParameterData{ strength , multiply }); }
+	/// <summary>
+	/// 速度のパラメータを設定
+	/// </summary>
+	/// <returns></returns>
+	void SetSpeedParameter(const float& strength, const float& multiply = 1.0f) { parameter_.SetSpeedParameter(IParameter::ParameterData{ strength , multiply }); }
+	/// <summary>
+	/// 鞘のパラメータを設定
+	/// </summary>
+	/// <returns></returns>
+	void SetSheathParameter(const float& strength, const float& multiply = 1.0f) { parameter_.SetSheathParameter(IParameter::ParameterData{ strength , multiply }); }
+#pragma endregion 
 
+#pragma region アニメーション
 	/// <summary>
 	/// アニメーションを開始
 	/// </summary>
@@ -136,8 +159,6 @@ public:// Getter,Setter
 	/// <param name="transitionTime">モーションの遷移にかかる時間(0.0f以上)</param>
 	/// <param name="startTime">開始時間(0.0f ~ 1.0f)</param>
 	void StartAnimation(const std::string& animName, const float& transitionTime, const float& startTime, LWP::Resource::Animation::TrackType type = LWP::Resource::Animation::TrackType::Main) {
-		// アニメーションが再生されているなら早期リターン
-		//if (animation_.GetPlaying(animName)) { return; }
 		animation_.Play(animName, transitionTime, startTime, type);
 	}
 	/// <summary>
@@ -158,7 +179,7 @@ public:// Getter,Setter
 	/// </summary>
 	/// <param name="isLoop"></param>
 	void SetIsLoopAnimation(const bool& isLoop, LWP::Resource::Animation::TrackType type = LWP::Resource::Animation::TrackType::Main) { animation_.Loop(isLoop, type); }
-	void SetPos(LWP::Math::Vector3 pos) { model_.worldTF.translation = pos; }
+#pragma endregion
 #pragma endregion
 
 private:// 外部からポインタをもらう変数
@@ -172,10 +193,16 @@ private:// 外部からポインタをもらう変数
 	UIManager* uiManager_;
 
 private:
+	// 攻撃力や鞘ゲージの減少量などのパラメータ
+	PlayerParameter parameter_;
+
 	// 体の判定
 	LWP::Object::Collision collider_;
 	LWP::Object::Collider::AABB& aabb_;
 
 	// 機能まとめ
 	std::unique_ptr<SystemManager> systemManager_;
+
+	// いきているか
+	bool isAlive_ = true;
 };

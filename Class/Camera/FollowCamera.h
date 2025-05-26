@@ -52,6 +52,11 @@ private:
 	void LockOnUpdate();
 
 	/// <summary>
+	/// パリィ時のロックオン
+	/// </summary>
+	void ParryLockOnUpdate();
+
+	/// <summary>
 	/// 角度制限の処理
 	/// </summary>
 	/// <param name="target">制限対象</param>

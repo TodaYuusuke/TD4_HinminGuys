@@ -37,6 +37,11 @@ public:
 	/// </summary>
 	/// <returns></returns>
 	SheathGauge GetSheathGauge() { return sheathGauge_; }
+	/// <summary>
+	/// 鞘ゲージが0になっているかを取得
+	/// </summary>
+	/// <returns></returns>
+	bool GetIsSheathEmpty() { return sheathGauge_.GetValueEmpty(); }
 #pragma endregion
 
 #pragma region Setter
@@ -70,8 +75,13 @@ public:
 #pragma endregion
 
 private:
+	LWP::Utility::JsonIO json_;
+
 	// HPゲージ
 	HP hp_;
 	// 鞘ゲージ
 	SheathGauge sheathGauge_;
+
+	// 操作ガイド
+	std::vector<LWP::Primitive::Sprite> guideOperation_;
 };

@@ -18,6 +18,9 @@ Throw::Throw(Sheath* sheathSystem, Player* player, std::map<int, EventOrder>* ev
 
 	// 状態の名前
 	stateName_ = "Throw";
+
+	// 鞘破壊状態でなくす
+	sheathSystem_->SetIsBreak(false);
 }
 
 void Throw::Initialize() {

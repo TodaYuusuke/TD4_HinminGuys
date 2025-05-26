@@ -193,7 +193,7 @@ void Attack::CreateCollision() {
 	collider_.enterLambda = [this](LWP::Object::Collision* hitTarget) {
 		hitTarget;
 		// 鞘のゲージを減少
-		player_->GetUIManager()->ChangeSheathGauge(-10.0f);
+		player_->GetUIManager()->ChangeSheathGauge(10.0f);
 		};
 }
 

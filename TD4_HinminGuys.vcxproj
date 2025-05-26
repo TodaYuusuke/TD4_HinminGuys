@@ -148,6 +148,7 @@
     </Manifest>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Class\Player\Systems\Children\State\Sheath\Break.cpp" />
     <ClCompile Include="Class\Player\Systems\Children\State\Move\AttackRecovery.cpp" />
     <ClCompile Include="Class\ComboEditor\ComboTree.cpp" />
     <ClCompile Include="Class\Condition\child\Input\ButtonCondition.cpp" />
@@ -188,6 +189,8 @@
     <ClCompile Include="Class\Player\Systems\Children\State\Move\Dash.cpp" />
     <ClCompile Include="Class\Player\Systems\Children\Hit.cpp" />
     <ClCompile Include="Class\Scene\VoidScene.cpp" />
+    <ClCompile Include="Class\Camera\State\InputCamera.cpp" />
+    <ClCompile Include="Class\Camera\State\LockOnCamera.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Class\Player\Player.cpp" />
     <ClCompile Include="Class\Player\Systems\Children\Move.cpp" />
@@ -203,8 +206,12 @@
     <ClCompile Include="Class\Player\Animator\PlayerAnimator.cpp" />
     <ClCompile Include="Class\Player\Systems\Children\State\Move\None.cpp" />
     <ClCompile Include="Class\UI\UIManager.cpp" />
+    <ClCompile Include="Class\Camera\State\ParryCamera.cpp" />
+    <ClCompile Include="Class\Player\PlayerParameter.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Class\Player\Systems\Children\State\Sheath\Break.h" />
+    <ClInclude Include="Class\IParameter.h" />
     <ClInclude Include="Class\Player\Systems\Children\State\Move\AttackRecovery.h" />
     <ClInclude Include="Class\ComboEditor\ComboTree.h" />
     <ClInclude Include="Class\Condition\child\Input\ButtonCondition.h" />
@@ -277,6 +284,11 @@
     <ClInclude Include="Class\Player\Systems\Children\State\Move\None.h" />
     <ClInclude Include="Class\Player\Systems\Children\Hit.h" />
     <ClInclude Include="Class\UI\UIManager.h" />
+    <ClInclude Include="Class\Camera\State\IFollowCameraState.h" />
+    <ClInclude Include="Class\Camera\State\InputCamera.h" />
+    <ClInclude Include="Class\Camera\State\ParryCamera.h" />
+    <ClInclude Include="Class\Camera\State\LockOnCamera.h" />
+    <ClInclude Include="Class\Player\PlayerParameter.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />

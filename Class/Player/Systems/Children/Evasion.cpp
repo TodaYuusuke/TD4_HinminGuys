@@ -277,18 +277,6 @@ void Evasion::CheckDash() {
 }
 
 void Evasion::Move() {
-	//// 回避開始した瞬間
-	//if (GetTrigger()) {
-	//	easeData_ = {
-	//		&velocity_,
-	//		Vector3{0,0,0},
-	//		evasionMovement * Matrix4x4::CreateRotateXYZMatrix(player_->GetSystemManager()->GetRotate()),
-	//		accelerationTime * 60.0f,
-	//		0.0f,
-	//		false
-	//	};
-	//}
-
 	// 回避の速度補間がなくなるまでイージングを行う
 	if (easeData_.t < easeData_.endSecond) {
 		easeData_.t++;

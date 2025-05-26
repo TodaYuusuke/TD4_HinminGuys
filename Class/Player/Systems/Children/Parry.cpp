@@ -111,7 +111,8 @@ void Parry::Command() {
 		isActive_ = true;
 		collider_.isActive = true;
 		aabb_.isShowWireFrame = true;
-		//isMoveInput_ = false;
+		radian_ = player_->GetSystemManager()->GetMoveSystem()->GetMoveRadian();
+		quat_ = player_->GetSystemManager()->GetMoveSystem()->GetMoveQuat();
 	}
 	eventOrder_.Start();
 }
@@ -120,7 +121,6 @@ void Parry::AnimCommand() {
 	// ガードアニメーション開始
 	player_->ResetAnimation();
 	player_->StartAnimation("Gaurd", 0.0f, 0.0f);
-	//player_->StopAnimation();
 }
 
 void Parry::CreateCollision() {
@@ -134,9 +134,10 @@ void Parry::CreateCollision() {
 	collider_.mask.SetBelongFrag(GetPlayer());
 	collider_.mask.SetHitFrag(GetEnemy() | GetAttack());
 	collider_.stayLambda = [this](LWP::Object::Collision* hitTarget) {
-		hitTarget;
 		// すでにジャスパor甘パリィなら処理しない
 		if (isGoodParry_ || isJustParry_) { return; }
+
+		LWP::Math::Vector3 p2t = (hitTarget->GetWorldPosition() - player_->GetWorldTF()->GetWorldPosition()).Normalize();
 
 		// ジャストパリィ
 		if (eventOrder_.GetCurrentTimeEvent().name == "JustParry") {
@@ -146,7 +147,12 @@ void Parry::CreateCollision() {
 			player_->ResetAnimation();
 			player_->StartAnimation("WeakParry", 0.0f, 0.0f);
 			// 鞘のゲージを減少
-			player_->GetUIManager()->ChangeSheathGauge(-20.0f);
+			player_->GetUIManager()->ChangeSheathGauge(100.0f);
+			// 相手の座標を代入
+			parryTargetPos_ = hitTarget->GetWorldPosition();
+
+			radian_.y = LWP::Utility::GetRadian(LWP::Math::Vector3{ 0,0,1 }, p2t, LWP::Math::Vector3{ 0,1,0 });
+			quat_ = LWP::Math::Quaternion::CreateFromAxisAngle(LWP::Math::Vector3{ 0, 1, 0 }, radian_.y);
 		}
 		// 甘めパリィ
 		else if (eventOrder_.GetCurrentTimeEvent().name == "GoodParry") {
@@ -156,7 +162,12 @@ void Parry::CreateCollision() {
 			player_->ResetAnimation();
 			player_->StartAnimation("WeakParry", 0.0f, 0.0f);
 			// 鞘のゲージを減少
-			player_->GetUIManager()->ChangeSheathGauge(-10.0f);
+			player_->GetUIManager()->ChangeSheathGauge(10.0f);
+			// 相手の座標を代入
+			parryTargetPos_ = hitTarget->GetWorldPosition();
+
+			radian_.y = LWP::Utility::GetRadian(LWP::Math::Vector3{ 0,0,1 }, p2t, LWP::Math::Vector3{ 0,1,0 });
+			quat_ = LWP::Math::Quaternion::CreateFromAxisAngle(LWP::Math::Vector3{ 0, 1, 0 }, radian_.y);
 		}
 		};
 }

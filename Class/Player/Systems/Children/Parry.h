@@ -63,7 +63,29 @@ private:
 
 public:// Getter, Setter
 #pragma region Getter
+	/// <summary>
+	/// 向いている方向を取得(クォータニオン)
+	/// </summary>
+	/// <returns></returns>
+	LWP::Math::Quaternion GetMoveQuat() { return quat_; }
+	/// <summary>
+	/// 向いている方向を取得(ラジアン)
+	/// </summary>
+	/// <returns></returns>
+	LWP::Math::Vector3 GetMoveRadian() { return radian_; }
+#pragma endregion
 
+#pragma region Setter
+	/// <summary>
+	/// 向いている方向を設定
+	/// </summary>
+	/// <param name="radian">向かせる方向(ラジアン)</param>
+	void SetRotate(const LWP::Math::Vector3& radian) { radian_ = radian; }
+	/// <summary>
+	/// 向いている方向を設定
+	/// </summary>
+	/// <param name="quat">向かせる方向(クォータニオン)</param>
+	void SetRotate(const LWP::Math::Quaternion& quat) { quat_ = quat; }
 #pragma endregion
 
 private:// jsonで保存する値
@@ -76,11 +98,17 @@ private:// jsonで保存する値
 	// パリィの硬直[秒]
 	float kRecoveryTime = 0.0f;
 
-
 private:
 	// パリィ判定
 	LWP::Object::Collision collider_;
 	LWP::Object::Collider::AABB& aabb_;
+
+	// パリィできた攻撃をしてきた相手の座標
+	LWP::Math::Vector3 parryTargetPos_;
+
+	// 向いている角度
+	LWP::Math::Quaternion quat_ = { 0.0f,0.0f,0.0f,1.0f };
+	LWP::Math::Vector3 radian_;
 
 	bool isJustParry_;
 	bool isGoodParry_;

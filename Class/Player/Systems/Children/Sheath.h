@@ -5,13 +5,14 @@
 class Sheath : public ISystem {
 public:
 	enum class SheathState {
-		kThrow		= 0,
-		kCollect	= 1
+		kThrow = 0,
+		kCollect = 1,
+		kBreak = 2
 	};
 
 public:
 	// コンストラクタ
-	Sheath(LWP::Object::Camera * camera, Player * player);
+	Sheath(LWP::Object::Camera* camera, Player* player);
 	// デストラクタ
 	~Sheath() override = default;
 
@@ -57,6 +58,10 @@ public:
 	/// 回収するときのアクションイベントを生成
 	/// </summary>
 	void CreateCollectEventOrder();
+	/// <summary>
+	/// 鞘破壊されているときのアクションイベントを生成
+	/// </summary>
+	void CreateBreakEventOrder();
 
 	/// <summary>
 	/// 状態の遷移
@@ -69,15 +74,12 @@ public:
 	/// </summary>
 	void CoolTimeUpdate();
 
-
+	/// <summary>
+	/// 移動制限
+	/// </summary>
+	/// <param name="position"></param>
+	/// <returns></returns>
 	LWP::Math::Vector3 ClampToCircle(LWP::Math::Vector3& position);
-
-
-	//void StartDamage(const float& damageValue, const float& multiply = 1.0f) {
-	//	sheathGauge_.SetDeltaValue(damageValue);
-	//	sheathGauge_.SetMultiply(multiply);
-	//	sheathGauge_.Hit();
-	//}
 
 	/// <summary>
 	/// クールタイムが終了しているかを確認
@@ -122,7 +124,7 @@ public:// Getter, Setter
 	/// 行動制限を行うのかを取得
 	/// </summary>
 	/// <returns></returns>
-	bool GetIsActionRestrict(std::string stateName) { 
+	bool GetIsActionRestrict(std::string stateName) {
 		if (stateName == state_->GetStateName()) {
 			return state_->GetIsActive();
 		}
@@ -152,6 +154,8 @@ public:// Getter, Setter
 	/// </summary>
 	/// <param name="time"></param>
 	void SetCoolTime() { currentCoolTime_ = coolTime * 60.0f; }
+
+	void SetIsBreak(const bool& isBreak) { isBreak_ = isBreak; }
 #pragma endregion
 
 public:// jsonに保存する値
@@ -168,6 +172,13 @@ public:// jsonに保存する値
 	float collectTime = 1.0f;
 	// 鞘回収の硬直[秒]
 	float collectRecoveryTime = 0.0f;
+
+	// ダッシュ攻撃発動までにかかる時間[秒]
+	float dashAttackSwingTime = 0.0f;
+	// ダッシュ攻撃時間[秒]
+	float dashAttackFinishTime = 0.2f;
+	// ダッシュ攻撃の硬直[秒]
+	float dashAttackRecoveryTime = 0.0f;
 
 	// 鞘を投げた後の移動可能範囲
 	float enableMoveRange = 50.0f;
@@ -196,4 +207,7 @@ private:// プライベートな変数
 
 	// クールタイムの経過時間
 	float currentCoolTime_;
+
+	// 鞘破壊状態か
+	bool isBreak_;
 };

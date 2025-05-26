@@ -25,10 +25,7 @@ public:
 	/// <summary>
 	/// ゲージ量を変える
 	/// </summary>
-	void Hit() {
-		// ゲージ量 += 変化量 * 倍率
-		value_ += deltaValue_ * multiply_;
-	}
+	virtual void Hit() = 0;
 
 	/// <summary>
 	/// ゲージ量を最大値に戻す
@@ -62,12 +59,12 @@ public:// Getter, Setter
 	/// <returns></returns>
 	inline float GetPercent() { return value_ / maxValue_ * 100.0f; }
 	/// <summary>
-	/// 指定したパーセント > 体力の割合が下かを取得
+	/// 指定したパーセント >= 体力の割合が下かを取得
 	/// </summary>
 	/// <param name="percent"></param>
 	/// <returns></returns>
 	inline bool GetIsBelowPercent(float percent) {
-		if (percent > GetPercent()) { return true; }
+		if (percent >= GetPercent()) { return true; }
 		return false;
 	}
 #pragma endregion

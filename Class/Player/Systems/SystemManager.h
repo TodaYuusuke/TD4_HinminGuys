@@ -186,4 +186,7 @@ private:
 
 	// 入力状態
 	InputState inputState_;
+
+	// 鞘ゲージがなくなっているか
+	bool isNoneSheathGauge_;
 };

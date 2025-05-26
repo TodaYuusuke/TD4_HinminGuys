@@ -145,6 +145,10 @@ void FollowCamera::LockOnUpdate() {
 	camera_->worldTF.rotation = LWP::Math::Quaternion::CreateFromAxisAngle(LWP::Math::Vector3{ 0, 1, 0 }, dir.y) * camera_->worldTF.rotation;
 }
 
+void FollowCamera::ParryLockOnUpdate() {
+
+}
+
 void FollowCamera::ClampAngle(float& target, LWP::Math::Vector3 distance, float minLimitAngle, float maxLimitAngle) {
 	// ターゲットとカメラの角度を求める
 	float limitX = std::acos(LWP::Math::Vector3::Dot({ 0,1,0 }, distance));

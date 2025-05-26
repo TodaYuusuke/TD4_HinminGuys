@@ -22,6 +22,9 @@ Player::Player(LWP::Object::Camera* camera, EnemyManager* enemyManager, FollowCa
 void Player::Initialize() {
 	inputHandler_ = InputHandler::GetInstance();
 
+	// 各種パラメータを作成
+	parameter_.Initialize();
+
 	// 当たり判定を作成
 	CreateCollision();
 
@@ -33,6 +36,12 @@ void Player::Initialize() {
 }
 
 void Player::Update() {
+	// 体力がないなら自機は死亡
+	if (uiManager_->GetHPGauge().GetIsBelowPercent(0.0f)) { 
+		isAlive_ = false; 
+		return;
+	}
+
 	// 各機能
 	systemManager_->Update();
 

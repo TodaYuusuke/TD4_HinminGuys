@@ -55,7 +55,6 @@ void GameScene::Initialize() {
 
 	//シーン切り替え機能生成
 	sceneTransitioner_.Initialize(this);
-
 }
 
 // 更新
@@ -116,6 +115,11 @@ void GameScene::DebugGUI() {
 		// 地面
 		if (ImGui::BeginTabItem("Ground")) {
 			plane.DebugGUI();
+			ImGui::EndTabItem();
+		}
+		// UI管理クラス
+		if (ImGui::BeginTabItem("UI")) {
+			uiManager_.DebugGUI();
 			ImGui::EndTabItem();
 		}
 		// デバッグ用のカメラ

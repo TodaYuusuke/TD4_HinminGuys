@@ -1,5 +1,6 @@
 #include "Sheath.h"
 #include "State/Sheath/Throw.h"
+#include "State/Sheath/Break.h"
 #include "../../Player.h"
 
 Sheath::Sheath(LWP::Object::Camera* camera, Player* player) {
@@ -24,6 +25,7 @@ void Sheath::Initialize() {
 	// アクションイベント作成
 	CreateThrowEventOrder();
 	CreateCollectEventOrder();
+	CreateBreakEventOrder();
 
 	// 状態の生成
 	state_ = new Throw(this, player_, &eventOrders_);
@@ -31,10 +33,8 @@ void Sheath::Initialize() {
 }
 
 void Sheath::Update() {
-
 	// クールタイムの時間更新
 	CoolTimeUpdate();
-
 	if (!isActive_) { return; }
 
 	// 状態
@@ -69,6 +69,12 @@ void Sheath::DebugGUI() {
 				eventOrders_[(int)SheathState::kCollect].Initialize();
 				CreateCollectEventOrder();
 			}
+			// ダッシュ攻撃のアクションイベントを実行してないときのみ変更可能
+			if (eventOrders_[(int)SheathState::kBreak].GetIsEnd()) {
+				// アクションイベントを再登録
+				eventOrders_[(int)SheathState::kBreak].Initialize();
+				CreateBreakEventOrder();
+			}
 
 			ImGui::TreePop();
 		}
@@ -79,6 +85,10 @@ void Sheath::DebugGUI() {
 		}
 		if (ImGui::TreeNode("Collect")) {
 			eventOrders_[(int)SheathState::kCollect].DebugGUI();
+			ImGui::TreePop();
+		}
+		if (ImGui::TreeNode("DashAttack")) {
+			eventOrders_[(int)SheathState::kBreak].DebugGUI();
 			ImGui::TreePop();
 		}
 
@@ -114,6 +124,15 @@ void Sheath::CreateJsonFIle() {
 		.EndGroup()
 		.EndGroup()
 
+		// ダッシュ攻撃の設定
+		.BeginGroup("DashAttack")
+		.BeginGroup("GraceTime")
+		.AddValue<float>("SwingTime", &dashAttackSwingTime)
+		.AddValue<float>("DashAttackFinishTime", &dashAttackFinishTime)
+		.AddValue<float>("RecoveryTime", &dashAttackRecoveryTime)
+		.EndGroup()
+		.EndGroup()
+
 		// 移動可能範囲
 		.AddValue<float>("MoveRange", &enableMoveRange)
 		// クールタイム
@@ -123,6 +142,12 @@ void Sheath::CreateJsonFIle() {
 }
 
 void Sheath::Command() {
+	// 鞘破壊状態に移行
+	if (player_->GetUIManager()->GetSheathGauge().GetIsIncrease() && !isBreak_ && !isActive_) {
+		isBreak_ = true;
+		ChangeState(new Break(this, player_, &eventOrders_));
+	}
+
 	// 状態によって変更
 	state_->Command();
 }
@@ -150,6 +175,16 @@ void Sheath::CreateCollectEventOrder() {
 	eventOrders_[(int)SheathState::kCollect].CreateTimeEvent(TimeEvent{ collectTime * 60.0f, "CollectFinishTime" });
 	// 回避の加速硬直時間
 	eventOrders_[(int)SheathState::kCollect].CreateTimeEvent(TimeEvent{ collectRecoveryTime * 60.0f, "RecoveryTime" });
+}
+
+void Sheath::CreateBreakEventOrder() {
+	eventOrders_[(int)SheathState::kBreak].Initialize();
+	// ダッシュ攻撃発生までの時間
+	eventOrders_[(int)SheathState::kBreak].CreateTimeEvent(TimeEvent{ dashAttackSwingTime * 60.0f, "SwingTime" });
+	// ダッシュ攻撃時間
+	eventOrders_[(int)SheathState::kBreak].CreateTimeEvent(TimeEvent{ dashAttackFinishTime * 60.0f, "DashAttackFinishTime" });
+	// ダッシュ攻撃硬直時間
+	eventOrders_[(int)SheathState::kBreak].CreateTimeEvent(TimeEvent{ dashAttackRecoveryTime * 60.0f, "RecoveryTime" });
 }
 
 void Sheath::ChangeState(ISheathSystemState* pState) {
