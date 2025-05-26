@@ -77,6 +77,12 @@ public: // アクセッサ等
 	bool GetIsRecept();
 
 	/// <summary>
+	/// 受付時間終了遷移確認トリガーの状態ゲッター
+	/// </summary>
+	/// <returns>受付時間終了遷移確認</returns>
+	bool GetIsReceptEndTrigger() { return isReceptEndTrigger_; }
+	
+	/// <summary>
 	/// 攻撃アシストの移動量ゲッター
 	/// </summary>
 	/// <returns>攻撃アシストの移動量</returns>
@@ -152,6 +158,9 @@ private: // メンバ変数
 	Combo* nowCombo_ = nullptr;
 	// 次のコンボ
 	Combo* nextCombo_ = nullptr;
+
+	// 受付終了で遷移したかどうかのトリガー
+	bool isReceptEndTrigger_ = false;
 
 #pragma region エディタ用変数
 

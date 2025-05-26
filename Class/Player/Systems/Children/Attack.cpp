@@ -78,6 +78,11 @@ void Attack::Update() {
 		}
 	}
 
+	// 受付時間が終了していればコンボ中断
+	if (comboTree_.GetIsReceptEndTrigger()) {
+		isAttackRecovery_ = false;
+	}
+
 	// 攻撃アシストが有効になっている場合
 	if (comboTree_.GetIsEnableAttackAssist() && !comboTree_.GetIsThisRoot()) {
 		// ロックオン中なら対象に近づいて攻撃

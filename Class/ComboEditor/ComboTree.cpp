@@ -38,6 +38,9 @@ void ComboTree::Init(const std::string& fileName, LWP::Resource::SkinningModel* 
 
 void ComboTree::Update()
 {
+	// 受付終了遷移確認トリガーをリセット
+	isReceptEndTrigger_ = false;
+
 	// もし編集モードが有効であれば更新処理をスキップ
 	if (enableEditMode_) { return; }
 
@@ -49,11 +52,6 @@ void ComboTree::Update()
 
 	// 次のコンボが存在する、かつ硬直時間終了時
 	if ((nextCombo_ != nullptr && !nowCombo_->GetIsStifness())) {
-		if (nextCombo_->GetAnimName() == "LightAttack2") {
-			int a = 10;
-			a;
-		}
-
 		// 現在のコンボを初期化して次のコンボへ
 		nowCombo_->Init();
 		nowCombo_ = std::move(nextCombo_);
@@ -66,6 +64,8 @@ void ComboTree::Update()
 		nowCombo_->Init();
 		nowCombo_ = &rootCombo_;
 		nowCombo_->Start(animModel_, anim_, &collider_);
+		// 受付終了で遷移したことを伝える
+		isReceptEndTrigger_ = true;
 	}
 }
 

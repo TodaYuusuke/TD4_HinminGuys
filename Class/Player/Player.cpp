@@ -16,6 +16,7 @@ Player::Player(LWP::Object::Camera* camera, EnemyManager* enemyManager, FollowCa
 	model_.LoadShortPath("player/Player_Simple.gltf");
 	animation_.LoadFullPath("resources/model/player/Player_Simple.gltf", &model_);
 	animation_.Play("Idle");
+	swordModel_.LoadShortPath("player/SimpleWeapon.gltf");
 
 	// 当たり判定を作成
 	CreateCollision();
@@ -33,6 +34,9 @@ void Player::Initialize() {
 
 	// 大きさを一時的に調整
 	model_.worldTF.scale = { 0.5f, 0.5f, 0.5f };
+
+	// 刀モデルをプレイヤーの手に追従させる
+	swordModel_.GetJoint("Grip")->localTF.Parent(&model_, "WeaponAnchor");
 }
 
 void Player::Update() {
@@ -41,7 +45,7 @@ void Player::Update() {
 
 	// 速度を加算
 	model_.worldTF.translation += systemManager_->GetVelocity();
-	// 角度を代入
+	// 角度を代入S
 	model_.worldTF.rotation = systemManager_->GetRotate();
 
 	// 移動制限

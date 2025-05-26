@@ -160,6 +160,10 @@ private:// 外部からポインタをもらう変数
 	InputHandler* inputHandler_;
 
 private:
+
+	// 刀モデル
+	LWP::Resource::SkinningModel swordModel_;
+
 	// 体の判定
 	LWP::Object::Collision collider_;
 	LWP::Object::Collider::AABB& aabb_;
