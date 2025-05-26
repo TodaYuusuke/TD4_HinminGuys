@@ -23,8 +23,8 @@ Player::Player(LWP::Object::Camera* camera, EnemyManager* enemyManager, FollowCa
 	CreateCollision();
 
 	// HPを作成
-	hp_.Initialize();
-	sheathGauge_.Initialize();
+	/*hp_.Initialize();
+	sheathGauge_.Initialize();*/
 }
 
 void Player::Initialize() {
