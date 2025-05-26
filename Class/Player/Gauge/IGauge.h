@@ -25,15 +25,17 @@ public:
 	/// <summary>
 	/// ゲージ量を変える
 	/// </summary>
-	void Hit() {
-		// ゲージ量 += 変化量 * 倍率
-		value_ += deltaValue_ * multiply_;
-	}
+	virtual void Hit() = 0;
+
+	/// <summary>
+	/// ゲージ量を最大値に戻す
+	/// </summary>
+	void ResetValue() { value_ = maxValue_; }
 
 	/// <summary>
 	/// ゲージのサイズを計算
 	/// </summary>
-	void ColGaugeSize(std::string name){	
+	void ColGaugeSize(std::string name) {
 		// HPバーの長さ計算
 		// 今のHPバーのスケール = 最大HPの時のバーのサイズ × (今のHP ÷ 最大HP)
 		sprite_[name].worldTF.scale.x = (maxSize_.x * (value_ / maxValue_));
@@ -57,12 +59,12 @@ public:// Getter, Setter
 	/// <returns></returns>
 	inline float GetPercent() { return value_ / maxValue_ * 100.0f; }
 	/// <summary>
-	/// 指定したパーセント > 体力の割合が下かを取得
+	/// 指定したパーセント >= 体力の割合が下かを取得
 	/// </summary>
 	/// <param name="percent"></param>
 	/// <returns></returns>
 	inline bool GetIsBelowPercent(float percent) {
-		if (percent > GetPercent()) { return true; }
+		if (percent >= GetPercent()) { return true; }
 		return false;
 	}
 #pragma endregion
@@ -90,22 +92,22 @@ protected:
 	LWP::Utility::JsonIO json_;
 
 	// ゲージの描画
-	std::map<std::string, LWP::Primitive::Sprite> sprite_;	
+	std::map<std::string, LWP::Primitive::Sprite> sprite_;
 
 	// ゲージの大きさ
-	LWP::Math::Vector2 size_;	
+	LWP::Math::Vector2 size_;
 	// 体力画像の最大サイズ(今回でいうと初期の画像サイズ)
-	LWP::Math::Vector2 maxSize_;	
+	LWP::Math::Vector2 maxSize_;
 
 	// ゲージの変動量						
-	float deltaValue_;										
+	float deltaValue_;
 	// ゲージの上昇倍率
-	float multiply_;				
+	float multiply_;
 
 	// 値
-	float value_;											
+	float value_;
 	// 最大値
-	float maxValue_;		
+	float maxValue_;
 
 	bool isHit_;
 	bool isPreHit_;

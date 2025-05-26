@@ -1,0 +1,46 @@
+{
+    "Group :Button": {
+        "Group :Attack": {
+            "Vector3 :Translation": [
+                1866.0,
+                54.0,
+                0.0
+            ]
+        },
+        "Group :Dash": {
+            "Vector3 :Translation": [
+                0.0,
+                0.0,
+                0.0
+            ]
+        },
+        "Group :Evasion": {
+            "Vector3 :Translation": [
+                1866.0,
+                300.0,
+                0.0
+            ]
+        },
+        "Group :LockOn": {
+            "Vector3 :Translation": [
+                1866.0,
+                400.0,
+                0.0
+            ]
+        },
+        "Group :Move": {
+            "Vector3 :Translation": [
+                0.0,
+                0.0,
+                0.0
+            ]
+        },
+        "Group :Parry": {
+            "Vector3 :Translation": [
+                1866.0,
+                200.0,
+                0.0
+            ]
+        }
+    }
+}

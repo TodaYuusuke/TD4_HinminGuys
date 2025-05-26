@@ -168,6 +168,7 @@ void Attack::CreateJsonFIle() {
 }
 
 void Attack::Command() {
+	collider_.isActive = true;
 	//isEnableInput_ = true;
 }
 

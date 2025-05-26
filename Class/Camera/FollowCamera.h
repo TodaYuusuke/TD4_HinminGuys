@@ -52,6 +52,11 @@ private:
 	void LockOnUpdate();
 
 	/// <summary>
+	/// パリィ時のロックオン
+	/// </summary>
+	void ParryLockOnUpdate();
+
+	/// <summary>
 	/// 角度制限の処理
 	/// </summary>
 	/// <param name="target">制限対象</param>
@@ -125,6 +130,9 @@ private:// jsonで保存する値
 	float interTargetRate = 0.5f;
 
 	float maxLength = 50.0f;
+
+	// 追従対象との距離を補間するレート
+	float targetDistRate = 0.1f;
 
 	// 回転角の始点
 	const float kOriginRotateX = 90.0f;

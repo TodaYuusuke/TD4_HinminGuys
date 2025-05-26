@@ -5,13 +5,15 @@
 class Sheath : public ISystem {
 public:
 	enum class SheathState {
-		kThrow		= 0,
-		kCollect	= 1
+		kThrow = 0,
+		kCollect = 1,
+		kBreak = 2,
+		kInvinsible = 3,
 	};
 
 public:
 	// コンストラクタ
-	Sheath(LWP::Object::Camera * camera, Player * player);
+	Sheath(LWP::Object::Camera* camera, Player* player);
 	// デストラクタ
 	~Sheath() override = default;
 
@@ -43,11 +45,15 @@ public:
 	/// 鞘を投げるor鞘に向かってダッシュコマンド
 	/// </summary>
 	void Command();
-
 	/// <summary>
 	/// アニメーションのコマンド
 	/// </summary>
 	void AnimCommand();
+
+	/// <summary>
+	/// 当たり判定の作成
+	/// </summary>
+	void CreateCollision();
 
 	/// <summary>
 	/// 投げるときのアクションイベントを生成
@@ -57,6 +63,19 @@ public:
 	/// 回収するときのアクションイベントを生成
 	/// </summary>
 	void CreateCollectEventOrder();
+	/// <summary>
+	/// 鞘破壊されているときのアクションイベントを生成
+	/// </summary>
+	void CreateBreakEventOrder();
+	/// <summary>
+	/// 無敵のアクションイベントを生成
+	/// </summary>
+	void CreateInvinsibleEventOrder();
+
+	/// <summary>
+	/// 無敵開始
+	/// </summary>
+	void StartInvinsible() { eventOrders_[(int)SheathState::kInvinsible].Start(); }
 
 	/// <summary>
 	/// 状態の遷移
@@ -69,7 +88,11 @@ public:
 	/// </summary>
 	void CoolTimeUpdate();
 
-
+	/// <summary>
+	/// 移動制限
+	/// </summary>
+	/// <param name="position"></param>
+	/// <returns></returns>
 	LWP::Math::Vector3 ClampToCircle(LWP::Math::Vector3& position);
 
 	/// <summary>
@@ -112,10 +135,20 @@ public:// Getter, Setter
 	/// <returns></returns>
 	ISheathSystemState* GetSheathState() { return state_; }
 	/// <summary>
+	/// 無敵状態かを判定
+	/// </summary>
+	/// <returns></returns>
+	bool GetIsInvinsible() {
+		if (eventOrders_[(int)SheathState::kInvinsible].GetCurrentTimeEvent().name == "InvinsibleTime") {
+			return true;
+		}
+		return false;
+	}
+	/// <summary>
 	/// 行動制限を行うのかを取得
 	/// </summary>
 	/// <returns></returns>
-	bool GetIsActionRestrict(std::string stateName) { 
+	bool GetIsActionRestrict(std::string stateName) {
 		if (stateName == state_->GetStateName()) {
 			return state_->GetIsActive();
 		}
@@ -145,6 +178,20 @@ public:// Getter, Setter
 	/// </summary>
 	/// <param name="time"></param>
 	void SetCoolTime() { currentCoolTime_ = coolTime * 60.0f; }
+
+	/// <summary>
+	/// 当たり判定をとるかを設定
+	/// </summary>
+	/// <param name="isCollision"></param>
+	void SetIsCollision(const bool& isCollision) {
+		collider_.isActive = isCollision;
+		aabb_.isShowWireFrame = isCollision;
+	}
+	/// <summary>
+	/// 鞘破壊状態かを設定
+	/// </summary>
+	/// <param name="isBreak"></param>
+	void SetIsBreak(const bool& isBreak) { isBreak_ = isBreak; }
 #pragma endregion
 
 public:// jsonに保存する値
@@ -161,6 +208,20 @@ public:// jsonに保存する値
 	float collectTime = 1.0f;
 	// 鞘回収の硬直[秒]
 	float collectRecoveryTime = 0.0f;
+
+	// ダッシュ攻撃発動までにかかる時間[秒]
+	float dashAttackSwingTime = 0.0f;
+	// ダッシュ攻撃時間[秒]
+	float dashAttackFinishTime = 0.2f;
+	// ダッシュ攻撃の硬直[秒]
+	float dashAttackRecoveryTime = 0.0f;
+
+	// 無敵発動までにかかる時間[秒]
+	float invinsibleSwingTime = 0.0f;
+	// 無敵時間[秒]
+	float invinsibleFinishTime = 0.2f;
+	// 無敵の硬直[秒]
+	float invinsibleRecoveryTime = 0.0f;
 
 	// 鞘を投げた後の移動可能範囲
 	float enableMoveRange = 50.0f;
@@ -181,6 +242,10 @@ private:// プライベートな変数
 	// 鞘のモデル
 	LWP::Resource::RigidModel sheathModel_;
 
+	// ダッシュ攻撃判定
+	LWP::Object::Collision collider_;
+	LWP::Object::Collider::AABB& aabb_;
+
 	// 移動速度
 	LWP::Math::Vector3 velocity_;
 	// 向いている角度
@@ -189,4 +254,7 @@ private:// プライベートな変数
 
 	// クールタイムの経過時間
 	float currentCoolTime_;
+
+	// 鞘破壊状態か
+	bool isBreak_;
 };

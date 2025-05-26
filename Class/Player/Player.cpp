@@ -5,12 +5,13 @@
 using namespace LWP::Utility;
 using namespace GameMask;
 
-Player::Player(LWP::Object::Camera* camera, EnemyManager* enemyManager, FollowCamera* followCamera)
+Player::Player(LWP::Object::Camera* camera, EnemyManager* enemyManager, FollowCamera* followCamera, UIManager* uiManager)
 	: aabb_(collider_.SetBroadShape(LWP::Object::Collider::AABB()))
 {
 	pCamera_ = camera;
 	enemyManager_ = enemyManager;
 	followCamera_ = followCamera;
+	uiManager_ = uiManager;
 
 	// モデルを読み込む
 	model_.LoadShortPath("player/Player_Simple.gltf");
@@ -29,6 +30,12 @@ Player::Player(LWP::Object::Camera* camera, EnemyManager* enemyManager, FollowCa
 void Player::Initialize() {
 	inputHandler_ = InputHandler::GetInstance();
 
+	// 各種パラメータを作成
+	parameter_.Initialize();
+
+	// 当たり判定を作成
+	CreateCollision();
+
 	// 自機機能を生成
 	CreateSystems();
 
@@ -40,6 +47,12 @@ void Player::Initialize() {
 }
 
 void Player::Update() {
+	// 体力がないなら自機は死亡
+	if (uiManager_->GetHPGauge().GetIsBelowPercent(0.0f)) { 
+		isAlive_ = false; 
+		return;
+	}
+
 	// 各機能
 	systemManager_->Update();
 
@@ -51,9 +64,8 @@ void Player::Update() {
 	// 移動制限
 	LimitMoveArea();
 
-	// HP
-	hp_.Update();
-	sheathGauge_.Update();
+	// 無敵時間
+	InvinsibleUpdate();
 }
 
 void Player::Reset() {
@@ -68,9 +80,6 @@ void Player::DebugGUI() {
 		systemManager_->DebugGUI();
 		ImGui::TreePop();
 	}
-	// HP
-	hp_.DebugGUI();
-	sheathGauge_.DebugGUI();
 	// アニメーション
 	if (ImGui::TreeNode("Animation")) {
 		animation_.DebugGUI();
@@ -96,9 +105,36 @@ void Player::CreateCollision() {
 	collider_.mask.SetBelongFrag(GetPlayer());
 	// 当たり判定をとる対象のマスクを設定
 	collider_.mask.SetHitFrag(GetAttack());
-	collider_.stayLambda = [this](LWP::Object::Collision* hitTarget) {
+	collider_.enterLambda = [this](LWP::Object::Collision* hitTarget) {
 		hitTarget;
+		// HPを減少
+		uiManager_->ChangeHPGauge(-10.0f);
+		// 被弾演出開始
+		systemManager_->GetHitSystem()->StartEffect();
 		};
+}
+
+void Player::InvinsibleUpdate() {
+	// 被弾時
+	if (systemManager_->GetHitSystem()->GetIsInvinsible()) {
+		collider_.isActive = false;
+		aabb_.isShowWireFrame = false;
+	}
+	// 回避時
+	else if (systemManager_->GetEvasionSystem()->GetIsInvinsible()) {
+		collider_.isActive = false;
+		aabb_.isShowWireFrame = false;
+	}
+	// 鞘のダッシュ攻撃時
+	else if (systemManager_->GetSheathSystem()->GetIsInvinsible()) {
+		collider_.isActive = false;
+		aabb_.isShowWireFrame = false;
+	}
+	// 全て当てはまらないなら当たり判定を戻す
+	else {
+		collider_.isActive = true;
+		aabb_.isShowWireFrame = true;
+	}
 }
 
 void Player::LimitMoveArea() {

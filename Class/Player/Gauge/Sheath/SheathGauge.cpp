@@ -21,7 +21,7 @@ SheathGauge::SheathGauge() {
 		.EndGroup()
 		.AddValue<LWP::Math::Vector2>("AnchorPoint", &sprite_["SheathBar"].anchorPoint)
 		.EndGroup()
-		
+
 		.BeginGroup("GaugeBackGround")
 		.BeginGroup("WorldTransform")
 		.AddValue<LWP::Math::Vector3>("Translation", &sprite_["SheathBarBG"].worldTF.translation)
@@ -33,6 +33,7 @@ SheathGauge::SheathGauge() {
 		.AddValue<float>("MaxHpValue", &maxValue_)
 		.AddValue<float>("DeltaValue", &deltaValue_)
 		.AddValue<float>("Multiply", &multiply_)
+		.AddValue<float>("IncreaseTime", &increaseTime)
 		.CheckJsonFile();
 
 	maxSize_ = { 1.0f, 1.0f };
@@ -45,11 +46,14 @@ void SheathGauge::Initialize() {
 }
 
 void SheathGauge::Update() {
-	// HPが0よりも下にならないようにする
-	if (GetValueEmpty()) { value_ = 0.0f; }
+	// ゲージの増加
+	IncreaseGauge();
+
+	// HPの最大値最小値制限
+	value_ = std::clamp<float>(value_, 0.0f, maxValue_);
 
 	// HPバーの長さ計算
-	//ColGaugeSize("SheathBar");
+	ColGaugeSize("SheathBar");
 }
 
 void SheathGauge::DebugGUI() {
@@ -71,4 +75,31 @@ void SheathGauge::DebugGUI() {
 		ImGui::Checkbox("IsHit", &isHit_);
 		ImGui::TreePop();
 	}
+}
+
+void SheathGauge::StartIncreaseGauge() {
+	// 半透明にする
+	sprite_["SheathBar"].material.color.A = 120.0f;
+	isIncrease_ = true;
+	t_ = 0.0f;
+}
+
+void SheathGauge::IncreaseGauge() {
+	// ゲージがなくなったら増加開始
+	if (GetValueEmpty()) {
+		if (!isIncrease_) { StartIncreaseGauge(); }
+	}
+
+	if (!isIncrease_) { 
+		sprite_["SheathBar"].material.color.A = 255.0f;
+		return; }
+
+	t_++;
+	t_ = std::clamp<float>(t_, 0.0f, increaseTime * 60.0f);
+
+	// ゲージを増加
+	value_ = LWP::Utility::Interpolation::LerpF(0.0f, maxValue_, t_ / (increaseTime * 60.0f));
+
+	// 増加時間終了
+	if (t_ >= increaseTime * 60.0f) { isIncrease_ = false; }
 }
