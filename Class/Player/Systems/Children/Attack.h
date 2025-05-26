@@ -62,11 +62,6 @@ private:
 	void ChangeState(IAttackSystemState* pState);
 
 	/// <summary>
-	/// 当たり判定を作成
-	/// </summary>
-	void CreateCollision();
-
-	/// <summary>
 	/// アクションイベントの生成
 	/// </summary>
 	void CreateEventOrder();
@@ -162,6 +157,7 @@ private:// jsonで保存する値
 	static float kNormalRecoveryTime;
 
 private:// 外部からポインタをもらう変数
+
 	// ロックオン機能
 	LockOn* lockOnSystem_;
 
@@ -172,10 +168,6 @@ private:
 
 	// 状態遷移
 	IAttackSystemState* state_;
-
-	// 攻撃判定
-	LWP::Object::Collision collider_;
-	LWP::Object::Collider::AABB& aabb_;
 
 	// 攻撃時の位置アシスト用のベクトル
 	Vector3 attackAssistVel_;

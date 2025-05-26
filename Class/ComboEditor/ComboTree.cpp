@@ -3,7 +3,12 @@
 using namespace LWP::Utility::Condition;
 using namespace LWP;
 
-ComboTree::~ComboTree()
+ComboTree::ComboTree() : capsule_(collider_.SetBroadShape(LWP::Object::Collider::Capsule()))
+{
+
+}
+
+ComboTree::~ComboTree() 
 {
 	
 }
@@ -45,7 +50,7 @@ void ComboTree::Update()
 	if (enableEditMode_) { return; }
 
 	// 現在コンボの更新
-	nowCombo_->Update(animModel_, anim_);
+	nowCombo_->Update(animModel_, anim_, &collider_, &capsule_);
 
 	// コンボの受付処理
 	nextCombo_ = nowCombo_->ReceptUpdate();
@@ -168,6 +173,30 @@ void ComboTree::ResetCombo()
 	nowCombo_->Start(animModel_, anim_, &collider_);
 }
 
+void ComboTree::SetColliderMaskFrag(uint32_t maskID, uint32_t hitID)
+{
+	// マスクIDの設定
+	collider_.mask.SetBelongFrag(maskID);
+	collider_.mask.SetHitFrag(hitID);
+}
+
+void ComboTree::AddCollisionLamda(int collisionState, LWP::Object::Collision::OnHitFunction function)
+{
+	// 衝突時によって分岐
+	switch (collisionState)
+	{
+	case Utility::ComboEnum::ENTER: // トリガー
+		collider_.enterLambda = function;
+		break;
+	case Utility::ComboEnum::STAY: // 衝突中
+		collider_.stayLambda = function;
+		break;
+	case Utility::ComboEnum::EXIT: // 離れたとき
+		collider_.exitLambda = function;
+		break;
+	}
+}
+
 bool ComboTree::GetIsStiffness()
 {
 	assert(nowCombo_ != nullptr);
@@ -178,6 +207,11 @@ bool ComboTree::GetIsRecept()
 {
 	assert(nowCombo_ != nullptr);
 	return nowCombo_->GetIsRecept();
+}
+
+void ComboTree::CreateCollision()
+{
+
 }
 
 void ComboTree::FileMenu()

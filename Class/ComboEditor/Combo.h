@@ -46,7 +46,9 @@ public: // メンバ関数
 	/// </summary>
 	/// <param name="model">スキニングモデル</param>
 	/// <param name="anim">アニメーション</param>
-	void Update(LWP::Resource::SkinningModel* model, LWP::Resource::Animation* anim);
+	/// <param name="collider">コライダー</param>
+	/// <param name="shape">使用するコライダー形状</param>
+	void Update(LWP::Resource::SkinningModel* model, LWP::Resource::Animation* anim, LWP::Object::Collision* collider, LWP::Object::Collider::Capsule* shape);
 
 	/// <summary>
 	/// コンボ受付関数
@@ -199,7 +201,8 @@ private: // プライベートなメンバ関数
 	/// </summary>
 	/// <param name="model">モデル</param>
 	/// <param name="collider">コライダー</param>
-	void AttackActiveUpdate(LWP::Resource::SkinningModel* model);
+	/// <param name="shape">使用するコライダー形状</param>
+	void AttackActiveUpdate(LWP::Resource::SkinningModel* model, LWP::Object::Collision* collider, LWP::Object::Collider::Capsule* shape);
 
 	/// <summary>
 	/// 攻撃アシストの有効判定関係の更新
@@ -285,7 +288,7 @@ private: // メンバ変数
 	// 攻撃判定のオフセット
 	LWP::Math::Vector3 attackColliderLengthOffset_{};
 	// 攻撃判定半径
-	float attackColliderRadius_ = 0.0f;
+	float attackColliderRadius_ = 0.1f;
 
 	// 攻撃アシストの開始秒数
 	float attackAssistStartTime_ = 0.0f;

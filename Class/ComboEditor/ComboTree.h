@@ -4,6 +4,17 @@
 #include "Combo.h"
 
 /// <summary>
+/// 衝突時の処理追加用
+/// </summary>
+namespace LWP::Utility::ComboEnum {
+	enum CollisionState {
+		ENTER,
+		STAY,
+		EXIT
+	};
+}
+
+/// <summary>
 /// コンボツリークラス
 /// </summary>
 class ComboTree
@@ -13,7 +24,7 @@ public: // コンストラクタ等
 	/// <summary>
 	/// コンストラクタ
 	/// </summary>
-	ComboTree() : capsule_(collider_.SetBroadShape(LWP::Object::Collider::Capsule())) {}
+	ComboTree();
 	/// <summary>
 	/// デストラクタ
 	/// </summary>
@@ -45,6 +56,19 @@ public: // メンバ関数
 	void ResetCombo();
 
 public: // アクセッサ等
+
+	/// <summary>
+	/// コライダーマスクのセッター
+	/// </summary>
+	/// <param name="maskID">マスクするマスクID</param>
+	/// <param name="hitID">当たるマスクID</param>
+	void SetColliderMaskFrag(uint32_t maskID, uint32_t hitID);
+
+	/// <summary>
+	/// 衝突時の処理を追加
+	/// </summary>
+	/// <param name="function">追加する衝突時処理</param>
+	void AddCollisionLamda(int collisionState, LWP::Object::Collision::OnHitFunction function);
 
 	/// <summary>
 	/// 編集モード中かどうかのゲッター
@@ -89,6 +113,11 @@ public: // アクセッサ等
 	LWP::Math::Vector3 GetAttackAssistMoveAmount() { return nowCombo_->GetAttackAssistMoveAmount(); }
 
 private: // プライベートなメンバ関数
+
+	/// <summary>
+	/// コライダー生成関数
+	/// </summary>
+	void CreateCollision();
 
 	/// <summary>
 	/// 新規作成弥保存を行うメニュー
