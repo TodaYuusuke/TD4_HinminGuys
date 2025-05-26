@@ -44,7 +44,6 @@ void Throw::Update() {
 		inputHandler_->GetSheathCommand()->SetBanInput(inputHandler_->GetSheathCommand()->GetBanInput() | (BanParry));
 
 		(*eventOrders_)[(int)Sheath::SheathState::kThrow].Reset();
-
 		sheathSystem_->ChangeState(new Collect(sheathSystem_, player_, eventOrders_));
 		return;
 	}

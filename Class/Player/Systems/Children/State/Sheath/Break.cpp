@@ -51,6 +51,11 @@ void Break::Command() {
 		(*eventOrders_)[(int)Sheath::SheathState::kBreak].Start();
 		isActive_ = true;
 		sheathSystem_->SetIsActive(true);
+		// 攻撃判定を出す
+		sheathSystem_->SetIsCollision(true);
+		// 無敵開始
+		//sheathSystem_->StartInvinsible();
+		(*eventOrders_)[(int)Sheath::SheathState::kInvinsible].Start();
 		start_ = { 0,0,0 };
 		end_ = dashAttackMovement_ * Matrix4x4::CreateRotateXYZMatrix(player_->GetSystemManager()->GetRotate());
 		t_ = 0.0f;
@@ -72,16 +77,19 @@ void Break::Reset() {
 	start_ = { 0,0,0 };
 	end_ = { 0,0,0 };
 	isActive_ = false;
+	sheathSystem_->SetIsCollision(false);
 	t_ = 0.0f;
 }
 
 void Break::CheckBreakState() {
 	// 振りかぶり時間
 	if ((*eventOrders_)[(int)Sheath::SheathState::kBreak].GetCurrentTimeEvent().name == "SwingTime") {
-
+		sheathSystem_->SetIsCollision(false);
 	}
 	// ダッシュ攻撃時間
 	else if ((*eventOrders_)[(int)Sheath::SheathState::kBreak].GetCurrentTimeEvent().name == "DashAttackFinishTime") {
+		sheathSystem_->SetIsCollision(true);
+
 		// 回避の速度補間がなくなるまでイージングを行う
 		if (t_ < sheathSystem_->dashAttackFinishTime * 60.0f) {
 			t_++;
@@ -94,6 +102,8 @@ void Break::CheckBreakState() {
 	}
 	// 硬直時間
 	else if ((*eventOrders_)[(int)Sheath::SheathState::kBreak].GetCurrentTimeEvent().name == "RecoveryTime") {
+		sheathSystem_->SetIsCollision(false);
+
 		// 徐々に減速
 		velocity_ = LWP::Utility::Interpolation::Exponential(velocity_, Vector3{ 0,0,0 }, 0.1f);
 	}

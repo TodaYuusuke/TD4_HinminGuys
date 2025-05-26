@@ -2,14 +2,20 @@
 #include "State/Sheath/Throw.h"
 #include "State/Sheath/Break.h"
 #include "../../Player.h"
+#include "../../../GameMask.h"
 
-Sheath::Sheath(LWP::Object::Camera* camera, Player* player) {
+Sheath::Sheath(LWP::Object::Camera* camera, Player* player)
+	: aabb_(collider_.SetBroadShape(LWP::Object::Collider::AABB()))
+{
 	pCamera_ = camera;
 	player_ = player;
 
 	sheathModel_.LoadCube();
 	sheathModel_.worldTF.scale = { 0.25f, 1.0f, 0.25f };
 	sheathModel_.isActive = true;
+
+	// ダッシュ攻撃の判定を作成
+	CreateCollision();
 
 	nextState_ = InputALL;
 	currentState_ = InputSheath;
@@ -26,6 +32,7 @@ void Sheath::Initialize() {
 	CreateThrowEventOrder();
 	CreateCollectEventOrder();
 	CreateBreakEventOrder();
+	CreateInvinsibleEventOrder();
 
 	// 状態の生成
 	state_ = new Throw(this, player_, &eventOrders_);
@@ -40,12 +47,22 @@ void Sheath::Update() {
 	// 状態
 	state_->Update();
 
+	// 無敵時間
+	eventOrders_[(int)SheathState::kInvinsible].Update();
+
+	// 無敵終了条件
+	if (eventOrders_[(int)SheathState::kInvinsible].GetIsEnd()) {
+		eventOrders_[(int)SheathState::kInvinsible].Reset();
+	}
+
 	isPreActive_ = isActive_;
 }
 
 void Sheath::Reset() {
 	isActive_ = false;
 	isPreActive_ = false;
+	collider_.isActive = false;
+	aabb_.isShowWireFrame = false;
 	// 移動速度
 	velocity_ = { 0.0f,0.0f,0.0f };
 	// 向いている角度
@@ -75,6 +92,12 @@ void Sheath::DebugGUI() {
 				eventOrders_[(int)SheathState::kBreak].Initialize();
 				CreateBreakEventOrder();
 			}
+			// 無敵のアクションイベントを実行してないときのみ変更可能
+			if (eventOrders_[(int)SheathState::kInvinsible].GetIsEnd()) {
+				// アクションイベントを再登録
+				eventOrders_[(int)SheathState::kInvinsible].Initialize();
+				CreateInvinsibleEventOrder();
+			}
 
 			ImGui::TreePop();
 		}
@@ -89,6 +112,10 @@ void Sheath::DebugGUI() {
 		}
 		if (ImGui::TreeNode("DashAttack")) {
 			eventOrders_[(int)SheathState::kBreak].DebugGUI();
+			ImGui::TreePop();
+		}
+		if (ImGui::TreeNode("Invinsible")) {
+			eventOrders_[(int)SheathState::kInvinsible].DebugGUI();
 			ImGui::TreePop();
 		}
 
@@ -133,6 +160,15 @@ void Sheath::CreateJsonFIle() {
 		.EndGroup()
 		.EndGroup()
 
+		// 無敵の設定
+		.BeginGroup("Invinsible")
+		.BeginGroup("GraceTime")
+		.AddValue<float>("SwingTime", &invinsibleSwingTime)
+		.AddValue<float>("InvinsibleTime", &invinsibleFinishTime)
+		.AddValue<float>("RecoveryTime", &invinsibleRecoveryTime)
+		.EndGroup()
+		.EndGroup()
+
 		// 移動可能範囲
 		.AddValue<float>("MoveRange", &enableMoveRange)
 		// クールタイム
@@ -155,6 +191,18 @@ void Sheath::Command() {
 void Sheath::AnimCommand() {
 	// 状態によって変更
 	state_->AnimCommand();
+}
+
+void Sheath::CreateCollision() {
+	// 攻撃判定生成
+	aabb_.min = { -1.0f, -1.0f, -1.0f };
+	aabb_.max = { 1.0f, 1.0f, 1.0f };
+	aabb_.isShowWireFrame = false;
+	collider_.SetFollow(player_->GetWorldTF());
+	collider_.isActive = false;
+	collider_.worldTF.translation = { 0.0f, 1.0f, 0.0f };
+	collider_.mask.SetBelongFrag(GameMask::GetAttack());
+	collider_.mask.SetHitFrag(GameMask::GetEnemy());
 }
 
 void Sheath::CreateThrowEventOrder() {
@@ -185,6 +233,16 @@ void Sheath::CreateBreakEventOrder() {
 	eventOrders_[(int)SheathState::kBreak].CreateTimeEvent(TimeEvent{ dashAttackFinishTime * 60.0f, "DashAttackFinishTime" });
 	// ダッシュ攻撃硬直時間
 	eventOrders_[(int)SheathState::kBreak].CreateTimeEvent(TimeEvent{ dashAttackRecoveryTime * 60.0f, "RecoveryTime" });
+}
+
+void Sheath::CreateInvinsibleEventOrder() {
+	eventOrders_[(int)SheathState::kInvinsible].Initialize();
+	// 無敵発生までの時間
+	eventOrders_[(int)SheathState::kInvinsible].CreateTimeEvent(TimeEvent{ invinsibleSwingTime * 60.0f, "SwingTime" });
+	// 無敵時間
+	eventOrders_[(int)SheathState::kInvinsible].CreateTimeEvent(TimeEvent{ invinsibleFinishTime * 60.0f, "InvinsibleTime" });
+	// 無敵硬直
+	eventOrders_[(int)SheathState::kInvinsible].CreateTimeEvent(TimeEvent{ invinsibleRecoveryTime * 60.0f, "RecoveryTime" });
 }
 
 void Sheath::ChangeState(ISheathSystemState* pState) {

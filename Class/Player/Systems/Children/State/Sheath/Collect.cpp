@@ -46,6 +46,11 @@ void Collect::Command() {
 		player_->GetSystemManager()->SetInputState(InputState::kSheath);
 
 		isActive_ = true;
+		// 攻撃判定を出す
+		sheathSystem_->SetIsCollision(true);
+		// 無敵開始
+		//sheathSystem_->StartInvinsible();
+		(*eventOrders_)[(int)Sheath::SheathState::kInvinsible].Start();
 		// アクションイベント開始
 		(*eventOrders_)[(int)Sheath::SheathState::kCollect].Start();
 		// イージングの始点終点を設定
@@ -67,6 +72,8 @@ void Collect::AnimCommand() {
 void Collect::CollectMove() {
 	// 鞘回収するために自機が動いているときの処理
 	if ((*eventOrders_)[(int)Sheath::SheathState::kCollect].GetCurrentTimeEvent().name == "CollectFinishTime") {
+		sheathSystem_->SetIsCollision(true);
+
 		velocity_ = (LWP::Utility::Interpolation::Lerp(start_, end_, LWP::Utility::Easing::OutExpo((*eventOrders_)[(int)Sheath::SheathState::kCollect].GetCurrentFrame() / (sheathSystem_->collectTime * 60.0f))) - player_->GetWorldTF()->GetWorldPosition());
 
 		// 移動速度からラジアンを求める
@@ -74,6 +81,7 @@ void Collect::CollectMove() {
 		quat_ = LWP::Math::Quaternion::CreateFromAxisAngle(LWP::Math::Vector3{ 0, 1, 0 }, radian_.y);
 	}
 	else {
+		sheathSystem_->SetIsCollision(false);
 		velocity_ = { 0.0f, 0.0f, 0.0f };
 	}
 

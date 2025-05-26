@@ -107,14 +107,22 @@ void Player::InvinsibleUpdate() {
 	// 被弾時
 	if (systemManager_->GetHitSystem()->GetIsInvinsible()) {
 		collider_.isActive = false;
+		aabb_.isShowWireFrame = false;
 	}
 	// 回避時
 	else if (systemManager_->GetEvasionSystem()->GetIsInvinsible()) {
 		collider_.isActive = false;
+		aabb_.isShowWireFrame = false;
+	}
+	// 鞘のダッシュ攻撃時
+	else if (systemManager_->GetSheathSystem()->GetIsInvinsible()) {
+		collider_.isActive = false;
+		aabb_.isShowWireFrame = false;
 	}
 	// 全て当てはまらないなら当たり判定を戻す
 	else {
 		collider_.isActive = true;
+		aabb_.isShowWireFrame = true;
 	}
 }
 
