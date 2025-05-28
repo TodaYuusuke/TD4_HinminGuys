@@ -1,5 +1,7 @@
 #include "GameUI.h"
 
+using namespace LWP::Utility;
+
 std::array<const char*, int(LWP::Utility::Easing::Type::EasingCount)> GameUI::easingName = {
 	"Liner", "InQuint", "OutQuint", "InOutQuint", "InCirc", "OutCirc", "InOutCirc", 
 	"InCubic", "OutCubic", "InOutCubic", "InBack", "OutBack", "InOutBack",
@@ -72,6 +74,7 @@ void GameUI::DebugGUI() {
 			ImGui::TreePop();
 		}
 		
+		//非アクティブ状態のデバッグ
 		if (ImGui::TreeNode("IdleData")) {
 			
 			ImGui::DragFloat3("StartTranslation", &idleData.startTranslation.x);
@@ -82,12 +85,8 @@ void GameUI::DebugGUI() {
 			ImGui::DragFloat3("EndColor", &idleData.endColor.x, 1.0f, 0.0f, 255.0f);
 			ImGui::DragFloat("MoveTime", &idleData.moveTime, 0.1f);
 
-			//Comboに利用するため、一時的にintに変換
-			int currentType = static_cast<int>(idleData.easingType);
+			if (Easing::SelectTypeDebugGUI(&idleData.easingType)) {
 
-			if (ImGui::Combo("EasingType", &currentType, GameUI::easingName.data(), int(GameUI::easingName.size()))) {
-				//変更があった場合、切り替える
-				idleData.easingType = static_cast<LWP::Utility::Easing::Type>(currentType);
 			}
 
 			ImGui::Checkbox("IsLoop", &idleData.isLoop);
@@ -95,6 +94,7 @@ void GameUI::DebugGUI() {
 			ImGui::TreePop();
 		}
 
+		//アクティブ状態のデバッグ
 		if (ImGui::TreeNode("ActiveData")) {
 			
 			ImGui::DragFloat3("StartTranslation", &activeData.startTranslation.x);
@@ -105,12 +105,8 @@ void GameUI::DebugGUI() {
 			ImGui::DragFloat3("EndColor", &activeData.endColor.x, 1.0f, 0.0f, 255.0f);
 			ImGui::DragFloat("MoveTime", &activeData.moveTime, 0.1f);
 
-			//Comboに利用するため、一時的にintに変換
-			int currentType = static_cast<int>(activeData.easingType);
+			if (Easing::SelectTypeDebugGUI(&activeData.easingType)) {
 
-			if (ImGui::Combo("EasingType", &currentType, GameUI::easingName.data(), int(GameUI::easingName.size()))) {
-				//変更があった場合、切り替える
-				activeData.easingType = static_cast<LWP::Utility::Easing::Type>(currentType);
 			}
 
 			ImGui::Checkbox("IsLoop", &activeData.isLoop);
@@ -177,7 +173,7 @@ void GameUI::EasingUpdate(UIParameter& parameter)
 	//0除算を避ける
 	if (parameter.moveTime != 0.0f) {
 		//セットしているイージング関数で処理
-		t = Easing(parameter.easingType, parameter.currentTime / parameter.moveTime);
+		t = Easing::CallFunction(parameter.easingType, parameter.currentTime / parameter.moveTime);
 	}
 
 	//トランスフォーム更新

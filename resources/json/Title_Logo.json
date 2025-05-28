@@ -6,8 +6,8 @@
             0.0
         ],
         "Vector3 :EndScale": [
-            0.0,
-            0.0,
+            1.0,
+            1.0,
             0.0
         ],
         "Vector3 :EndTranslation": [
@@ -21,8 +21,8 @@
             0.0
         ],
         "Vector3 :StartScale": [
-            0.0,
-            0.0,
+            1.0,
+            1.0,
             0.0
         ],
         "Vector3 :StartTranslation": [
@@ -42,12 +42,12 @@
         ],
         "Vector3 :EndScale": [
             1.0,
-            1.100000023841858,
+            1.0,
             0.0
         ],
         "Vector3 :EndTranslation": [
             1080.0,
-            262.0,
+            261.0,
             0.0
         ],
         "Vector3 :StartColor": [
@@ -57,16 +57,16 @@
         ],
         "Vector3 :StartScale": [
             1.0,
-            1.100000023841858,
+            1.0,
             0.0
         ],
         "Vector3 :StartTranslation": [
             1080.0,
-            285.0,
+            241.0,
             0.0
         ],
         "bool :IsLoop": true,
         "float :MoveTime": 1.0,
-        "int32_t :EasingType": 16
+        "int32_t :EasingType": 22
     }
 }
