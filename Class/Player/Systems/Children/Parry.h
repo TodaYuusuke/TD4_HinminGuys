@@ -98,6 +98,11 @@ private:// jsonで保存する値
 	// パリィの硬直[秒]
 	float kRecoveryTime = 0.0f;
 
+	// ジャストパリィ時の鞘ゲージの減少量
+	float justParryDecrement = 50.0f;
+	// 甘パリィ時の鞘ゲージの減少量
+	float goodParryDecrement = 10.0f;
+
 private:
 	// パリィ判定
 	LWP::Object::Collision collider_;

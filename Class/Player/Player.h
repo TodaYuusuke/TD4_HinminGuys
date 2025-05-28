@@ -140,6 +140,11 @@ public:// Getter,Setter
 	/// </summary>
 	/// <returns></returns>
 	PlayerParameter GetParameter() { return parameter_; }
+	/// <summary>
+	/// 自機が生きているかを取得
+	/// </summary>
+	/// <returns></returns>
+	bool GetIsAlive() { return isAlive_; }
 #pragma endregion
 
 #pragma region Setter

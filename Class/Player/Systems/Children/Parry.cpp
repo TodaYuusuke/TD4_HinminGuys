@@ -101,6 +101,12 @@ void Parry::CreateJsonFIle() {
 		.AddValue<float>("GoodParry", &kGoodParryTime)
 		.AddValue<float>("RecoveryTime", &kRecoveryTime)
 		.EndGroup()
+		// 鞘ゲージの減少量
+		.BeginGroup("SheathDecrement")
+		.AddValue<float>("JustParry", &justParryDecrement)
+		.AddValue<float>("GoodParry", &goodParryDecrement)
+		.EndGroup()
+
 		.EndGroup()
 		.CheckJsonFile();
 }
@@ -148,7 +154,7 @@ void Parry::CreateCollision() {
 			player_->ResetAnimation();
 			player_->StartAnimation("WeakParry", 0.0f, 0.0f);
 			// 鞘のゲージを減少
-			player_->GetUIManager()->ChangeSheathGauge(100.0f);
+			player_->GetUIManager()->ChangeSheathGauge(justParryDecrement);
 			// 相手の座標を代入
 			parryTargetPos_ = hitTarget->GetWorldPosition();
 
@@ -163,7 +169,7 @@ void Parry::CreateCollision() {
 			player_->ResetAnimation();
 			player_->StartAnimation("WeakParry", 0.0f, 0.0f);
 			// 鞘のゲージを減少
-			player_->GetUIManager()->ChangeSheathGauge(10.0f);
+			player_->GetUIManager()->ChangeSheathGauge(goodParryDecrement);
 			// 相手の座標を代入
 			parryTargetPos_ = hitTarget->GetWorldPosition();
 
