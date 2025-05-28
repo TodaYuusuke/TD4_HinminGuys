@@ -4,6 +4,7 @@
 MoveCommand::MoveCommand() {
 	banInput_ = BanNone;
 	currentInput_ = ~BanMove;
+	isActive_ = false;
 }
 
 void MoveCommand::Exec(Player& player, int& banInput) {
@@ -23,15 +24,23 @@ void MoveCommand::Exec(Player& player, int& banInput) {
 	// 例外
 	// 鞘投げしているときはパリィのみできない
 	if (player.GetSystemManager()->GetSheathSystem()->GetIsActive()) {
-		banInput |= BanParry;
+		//banInput |= BanParry;
+		if (!IsBitSame(banInput, BanParry, GetSetBitPosition(BanParry))) {
+			banInput |= BanParry;
+		}
 	}
 	// 鞘投げのクールタイム中は投げれない
 	if (!player.GetSystemManager()->GetSheathSystem()->CheckCoolTime()) {
-		banInput |= BanSheath;
+		//banInput |= BanSheath;
+		if (!IsBitSame(banInput, BanSheath, GetSetBitPosition(BanSheath))) {
+			banInput |= BanSheath;
+		}
 	}
-	// 攻撃の変種モード中は攻撃できない
+	// 攻撃の編集モード中は攻撃できない
 	if (player.GetSystemManager()->GetAttackSystem()->GetIsEditingMode()) {
-		banInput |= BanAttack;
+		if (!IsBitSame(banInput, BanAttack, GetSetBitPosition(BanAttack))) {
+			banInput |= BanAttack;
+		}
 	}
 
 	isActive_ = true;
@@ -45,6 +54,7 @@ void MoveCommand::Reset(Player& player, int& banInput) {
 NormalAttackCommand::NormalAttackCommand() {
 	banInput_ = BanMove | BanParry | BanEvasion | BanSheath;
 	currentInput_ = ~BanAttack;
+	isActive_ = false;
 }
 
 void NormalAttackCommand::Exec(Player& player, int& banInput) {
@@ -68,6 +78,7 @@ void NormalAttackCommand::Reset(Player& player, int& banInput) {
 ParryCommand::ParryCommand() {
 	banInput_ = BanMove | BanParry | BanAttack | BanEvasion | BanSheath;
 	currentInput_ = ~BanParry;
+	isActive_ = false;
 }
 
 void ParryCommand::Exec(Player& player, int& banInput) {
@@ -99,6 +110,7 @@ void LockOnCommand::Reset(Player& player, int& banInput) {
 EvasionCommand::EvasionCommand() {
 	banInput_ = BanMove | BanParry | BanAttack | BanEvasion | BanSheath;
 	currentInput_ = ~BanEvasion;
+	isActive_ = false;
 }
 
 void EvasionCommand::Exec(Player& player, int& banInput) {
@@ -111,14 +123,18 @@ void EvasionCommand::Exec(Player& player, int& banInput) {
 
 void EvasionCommand::Reset(Player& player, int& banInput) {
 	if (!player.GetSystemManager()->GetEvasionSystem()->GetIsActive()) {
-		banInput = BanNone;
-		isActive_ = false;
+		// ダメージを食らっていないとき
+		if (!player.GetSystemManager()->GetTakeDamageSystem()->GetIsStun()) {
+			banInput = BanNone;
+			isActive_ = false;
+		}
 	}
 }
 
 SheathCommand::SheathCommand() {
 	banInput_ = BanMove | BanParry | BanAttack | BanEvasion | BanSheath;
 	currentInput_ = ~BanSheath;
+	isActive_ = false;
 }
 
 void SheathCommand::Exec(Player& player, int& banInput) {

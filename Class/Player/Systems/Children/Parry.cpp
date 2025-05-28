@@ -56,6 +56,7 @@ void Parry::Reset() {
 	isGoodParry_ = false;
 	collider_.isActive = false;
 	aabb_.isShowWireFrame = false;
+	eventOrder_.Reset();
 	// アニメーションを初期化
 	player_->ResetAnimation();
 }

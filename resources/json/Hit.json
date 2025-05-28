@@ -1,5 +1,9 @@
 {
     "Group :Inivinsible": {
         "float :Time": 1.0
+    },
+    "Group :Stun": {
+        "float :CancelTime": 0.20000000298023224,
+        "float :Time": 0.30000001192092896
     }
 }

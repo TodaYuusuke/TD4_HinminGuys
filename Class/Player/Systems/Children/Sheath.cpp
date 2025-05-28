@@ -63,6 +63,9 @@ void Sheath::Reset() {
 	isPreActive_ = false;
 	collider_.isActive = false;
 	aabb_.isShowWireFrame = false;
+	eventOrders_[(int)SheathState::kThrow].Reset();
+	eventOrders_[(int)SheathState::kCollect].Reset();
+	eventOrders_[(int)SheathState::kBreak].Reset();
 	// 移動速度
 	velocity_ = { 0.0f,0.0f,0.0f };
 	// 向いている角度

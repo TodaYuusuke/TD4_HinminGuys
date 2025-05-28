@@ -28,19 +28,15 @@ inline int GetSetBitPosition(int value) {
     return position;
 }
 inline bool IsBitSame(int banInput, int currentInput, int bitPosition) {
-    /*if (((banInput >> bitPosition) & 1) == ((currentInput >> bitPosition) & 1)) {
-        return true;
-    }
-    if (((banInput >> bitPosition) & 0) == ((currentInput >> bitPosition) & 1)) {
-        return false;
-    }
-    return true;*/
     return ((banInput >> bitPosition) & 1) == ((currentInput >> bitPosition) & 1);
 }
 
-//namespace BanInput {
-//	namespace Mask {
-//
-//	};
-//	namespace 
-//};
+/// <summary>
+/// 入力禁止を解除
+/// </summary>
+/// <param name="currentBanInput">現在の入力禁止状態</param>
+/// <param name="eraceBanInput">解除したい入力禁止</param>
+/// <returns></returns>
+inline int EraceBanInput(const int& currentBanInput, const int& eraceBanInput) {
+    return currentBanInput & ~(1 << GetSetBitPosition(eraceBanInput));
+}
