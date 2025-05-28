@@ -1,6 +1,7 @@
 #pragma once
 #include "scene/IScene.h"
 #include "SceneTransitioner.h"
+#include "../UI/GameUI.h"
 
 class Title final
 	: public IScene {
@@ -31,6 +32,10 @@ private: // ** これより先に必要な処理や変数を記述 ** //
 	LWP::Resource::RigidModel plane_;
 	// 天球(一時的に作っているので要修正)
 	LWP::Resource::RigidModel skydome_;
+	//ゲームUI
+	GameUI UIStart_;
+	GameUI UIExit_;
+	GameUI UITitleLogo_;
 
 	//シーン切り替え
 	SceneTransitioner sceneTransitioner_;
