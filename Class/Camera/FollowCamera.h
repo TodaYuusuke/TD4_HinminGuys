@@ -133,6 +133,8 @@ private:// jsonで保存する値
 
 	// 追従対象との距離を補間するレート
 	float targetDistRate = 0.1f;
+	// カメラの回転補間レート
+	float rotateRate = 0.1f;
 
 	// 回転角の始点
 	const float kOriginRotateX = 90.0f;
@@ -160,6 +162,11 @@ private:
 	LWP::Utility::JsonIO json_;
 
 	LWP::Math::Vector3 radian_;
-	LWP::Math::Quaternion quat_;
+	LWP::Math::Quaternion current;
+	LWP::Math::Quaternion target;
+	LWP::Math::Quaternion pitch;
+	LWP::Math::Quaternion yaw;
+
+	LWP::Math::Vector3 stickDir;
 };
 

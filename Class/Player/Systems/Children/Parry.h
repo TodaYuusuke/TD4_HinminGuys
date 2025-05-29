@@ -104,6 +104,9 @@ private:// jsonで保存する値
 	float goodParryDecrement = 10.0f;
 
 private:
+	// アクションイベント集(無敵に関するものだけ)
+	std::map<int, EventOrder> eventOrders_;
+
 	// パリィ判定
 	LWP::Object::Collision collider_;
 	LWP::Object::Collider::AABB& aabb_;

@@ -1,6 +1,7 @@
 {
     "Group :Rate": {
-        "float :InterTarget": 0.6,
+        "float :InterTarget": 0.6000000238418579,
+        "float :Rotate": 0.6000000238418579,
         "float :TargetDist": 0.10000000149011612
     },
     "Vector3 :GameStartAngle": [
@@ -11,9 +12,9 @@
     "Vector3 :TargetDistance": [
         0.0,
         0.0,
-        -18.360000610351563
+        -20.0
     ],
     "float :MaxRotateX": 70.0,
     "float :MinRotateX": 4.0,
-    "float :Sensitivity": 1.1
+    "float :Sensitivity": 1.659999966621399
 }
