@@ -6,6 +6,13 @@
 /// </summary>
 class Parry : public ISystem {
 public:
+	enum class ParryInvinsibleState{
+		kRunning = 0,	// パリィ中
+		kGood = 1,		// 弱パリィ成功
+		kJust = 2		// ジャストパリィ成功
+	};
+
+public:
 	// コンストラクタ
 	Parry(LWP::Object::Camera* camera, Player* player);
 	// デストラクタ
@@ -57,6 +64,19 @@ private:
 	void CreateEventOrder();
 
 	/// <summary>
+	/// 回収するときのアクションイベントを生成
+	/// </summary>
+	void CreateParryInvinsibleEventOrder();
+	/// <summary>
+	/// 鞘破壊されているときのアクションイベントを生成
+	/// </summary>
+	void CreateJustParryInvinsibleEventOrder();
+	/// <summary>
+	/// 無敵のアクションイベントを生成
+	/// </summary>
+	void CreateGoodParryInvinsibleEventOrder();
+
+	/// <summary>
 	/// パリィの状態を確認
 	/// </summary>
 	void CheckParryState();
@@ -73,6 +93,18 @@ public:// Getter, Setter
 	/// </summary>
 	/// <returns></returns>
 	LWP::Math::Vector3 GetMoveRadian() { return radian_; }
+	/// <summary>
+	/// 無敵時間中かを取得
+	/// </summary>
+	/// <returns></returns>
+	bool GetIsInvinsible() {
+		for (int i = 0; i < eventOrders_.size(); i++) {
+			if (eventOrders_[i].GetCurrentTimeEvent().name == "InvinsibleTime") {
+				return true;
+			}
+		}
+		return false;
+	}
 #pragma endregion
 
 #pragma region Setter
@@ -97,6 +129,11 @@ private:// jsonで保存する値
 	float kJustParryTime = 0.2f;
 	// パリィの硬直[秒]
 	float kRecoveryTime = 0.0f;
+
+	// ジャストパリィ成功時の無敵時間
+	float successJustParryInvinsible = 2.0f;
+	// 弱パリィ成功時の無敵時間
+	float successGoodParryInvinsible = 1.0f;
 
 	// ジャストパリィ時の鞘ゲージの減少量
 	float justParryDecrement = 50.0f;

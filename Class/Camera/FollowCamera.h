@@ -162,11 +162,8 @@ private:
 	LWP::Utility::JsonIO json_;
 
 	LWP::Math::Vector3 radian_;
-	LWP::Math::Quaternion current;
-	LWP::Math::Quaternion target;
-	LWP::Math::Quaternion pitch;
-	LWP::Math::Quaternion yaw;
 
+	// スティックの入力を受け取る
 	LWP::Math::Vector3 stickDir;
 };
 

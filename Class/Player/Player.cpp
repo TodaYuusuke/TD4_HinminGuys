@@ -120,6 +120,10 @@ void Player::InvinsibleUpdate() {
 		collider_.isActive = false;
 		aabb_.isShowWireFrame = false;
 	}
+	else if (systemManager_->GetParrySystem()->GetIsInvinsible()) {
+		collider_.isActive = false;
+		aabb_.isShowWireFrame = false;
+	}
 	// 全て当てはまらないなら当たり判定を戻す
 	else {
 		collider_.isActive = true;
