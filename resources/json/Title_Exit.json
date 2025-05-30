@@ -12,11 +12,11 @@
         ],
         "Vector3 :EndTranslation": [
             1620.0,
-            940.0,
+            930.0,
             0.0
         ],
         "Vector3 :StartColor": [
-            200.0,
+            160.0,
             0.0,
             0.0
         ],
@@ -27,12 +27,12 @@
         ],
         "Vector3 :StartTranslation": [
             1620.0,
-            940.0,
+            930.0,
             0.0
         ],
         "bool :IsLoop": true,
-        "float :MoveTime": 1.0,
-        "int32_t :EasingType": 6
+        "float :MoveTime": 0.800000011920929,
+        "int32_t :EasingType": 9
     },
     "Group :IdleData": {
         "Vector3 :EndColor": [
@@ -47,7 +47,7 @@
         ],
         "Vector3 :EndTranslation": [
             1620.0,
-            940.0,
+            930.0,
             0.0
         ],
         "Vector3 :StartColor": [
@@ -62,7 +62,7 @@
         ],
         "Vector3 :StartTranslation": [
             1620.0,
-            940.0,
+            930.0,
             0.0
         ],
         "bool :IsLoop": false,
