@@ -95,6 +95,12 @@ public: // アクセッサ等
 	float GetNockBackStrength() { return nowCombo_->GetNockBackStrength(); }
 
 	/// <summary>
+	/// 現在コンボの鞘の耐久値減少量ゲッター
+	/// </summary>
+	/// <returns>鞘の耐久値減少量</returns>
+	float GetSheathDurabityLoss() { return nowCombo_->GetSheathDurabityLoss(); }
+
+	/// <summary>
 	/// 攻撃アシストの有効状態ゲッター
 	/// </summary>
 	/// <returns>攻撃アシストの有効状態</returns>

@@ -118,6 +118,12 @@ public: // アクセッサ等
 	float GetNockBackStrength() { return nockbackStrength_; }
 
 	/// <summary>
+	/// 鞘の耐久値減少量ゲッター
+	/// </summary>
+	/// <returns>鞘の耐久値減少量</returns>
+	float GetSheathDurabityLoss() { return sheathDurabityLoss_; }
+
+	/// <summary>
 	/// 硬直状態ゲッター
 	/// </summary>
 	/// <returns>硬直状態か</returns>
@@ -306,6 +312,8 @@ private: // メンバ変数
 	float damage_ = 1.0f;
 	// ノックバック強さ
 	float nockbackStrength_ = 0.1f;
+	// 命中時の鞘の耐久値減少量
+	float sheathDurabityLoss_ = 10.0f;
 
 	// 攻撃アシストの開始秒数
 	float attackAssistStartTime_ = 0.0f;
