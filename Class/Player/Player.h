@@ -4,7 +4,7 @@
 #include "Systems/Children/Parry.h"
 #include "Systems/Children/Attack.h"
 #include "Systems/Children/LockOn.h"
-#include "Systems/Children/TakeDamage.h"
+#include "Systems/Children/DamageResponse.h"
 #include "Systems/SystemManager.h"
 #include "Gauge/HP/HP.h"
 #include "Gauge/Sheath/SheathGauge.h"
@@ -49,15 +49,15 @@ public:
 	/// <summary>
 	/// ダメージを与える
 	/// </summary>
-	void ChangeHPGauge(const float& damageValue, const float& multiply = 1.0f) {
+	void TakeDamage(const float& damageValue, const float& multiply = 1.0f) {
 		// 自機が無敵中ならダメージ判定をとらない
 		if (!collider_.isActive) { return; }
 		// HPゲージ変動
 		uiManager_->ChangeHPGauge(damageValue, multiply);
 		// 無敵開始
-		systemManager_->GetTakeDamageSystem()->StartInvinsible();
+		systemManager_->GetDamageResponseSystem()->StartInvinsible();
 		// 被弾演出開始
-		systemManager_->GetTakeDamageSystem()->StartEffect();
+		systemManager_->GetDamageResponseSystem()->StartEffect();
 		// 全ての機能をリセット
 		Reset();
 	}
@@ -188,9 +188,17 @@ public:// Getter,Setter
 		animation_.Play(animName, transitionTime, startTime, type);
 	}
 	/// <summary>
+	/// アニメーションのモーションブレンドの度合いを設定
+	/// </summary>
+	/// <param name="t"></param>
+	void SetBlendT(const float& t) { animation_.blendT = t; }
+	/// <summary>
 	/// アニメーションを初期化
 	/// </summary>
-	void ResetAnimation() { animation_.Loop(false); }
+	void ResetAnimation() { 
+		animation_.Loop(false, LWP::Resource::Animation::TrackType::Main);
+		animation_.Loop(false, LWP::Resource::Animation::TrackType::Blend);
+	}
 	/// <summary>
 	/// ブレンドされているアニメーションを停止
 	/// </summary>

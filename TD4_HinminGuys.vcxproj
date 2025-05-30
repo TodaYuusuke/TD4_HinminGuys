@@ -187,7 +187,7 @@
     <ClCompile Include="Class\Player\Systems\Children\State\Sheath\Collect.cpp" />
     <ClCompile Include="Class\Player\Animator\IAnimation.cpp" />
     <ClCompile Include="Class\Player\Systems\Children\State\Move\Dash.cpp" />
-    <ClCompile Include="Class\Player\Systems\Children\TakeDamage.cpp" />
+    <ClCompile Include="Class\Player\Systems\Children\DamageResponse.cpp" />
     <ClCompile Include="Class\Scene\VoidScene.cpp" />
     <ClCompile Include="Class\Camera\State\InputCamera.cpp" />
     <ClCompile Include="Class\Camera\State\LockOnCamera.cpp" />
@@ -282,7 +282,7 @@
     <ClInclude Include="Class\Player\Animator\IAnimation.h" />
     <ClInclude Include="Class\Player\Systems\Children\State\Move\Dash.h" />
     <ClInclude Include="Class\Player\Systems\Children\State\Move\None.h" />
-    <ClInclude Include="Class\Player\Systems\Children\TakeDamage.h" />
+    <ClInclude Include="Class\Player\Systems\Children\DamageResponse.h" />
     <ClInclude Include="Class\UI\UIManager.h" />
     <ClInclude Include="Class\Camera\State\IFollowCameraState.h" />
     <ClInclude Include="Class\Camera\State\InputCamera.h" />

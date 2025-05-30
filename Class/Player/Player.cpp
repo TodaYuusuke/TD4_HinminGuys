@@ -22,9 +22,6 @@ Player::Player(LWP::Object::Camera* camera, EnemyManager* enemyManager, FollowCa
 void Player::Initialize() {
 	inputHandler_ = InputHandler::GetInstance();
 
-	// 各種パラメータを作成
-	parameter_.Initialize();
-
 	// 当たり判定を作成
 	CreateCollision();
 
@@ -114,13 +111,13 @@ void Player::CreateCollision() {
 	collider_.mask.SetHitFrag(GetAttack());
 	collider_.enterLambda = [this](LWP::Object::Collision* hitTarget) {
 		hitTarget;
-		ChangeHPGauge(-10.0f);
+		TakeDamage(-10.0f);
 		};
 }
 
 void Player::InvinsibleUpdate() {
 	// 被弾時
-	if (systemManager_->GetTakeDamageSystem()->GetIsInvinsible()) {
+	if (systemManager_->GetDamageResponseSystem()->GetIsInvinsible()) {
 		collider_.isActive = false;
 		aabb_.isShowWireFrame = false;
 	}

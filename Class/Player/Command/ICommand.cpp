@@ -124,7 +124,7 @@ void EvasionCommand::Exec(Player& player, int& banInput) {
 void EvasionCommand::Reset(Player& player, int& banInput) {
 	if (!player.GetSystemManager()->GetEvasionSystem()->GetIsActive()) {
 		// ダメージを食らっていないとき
-		if (!player.GetSystemManager()->GetTakeDamageSystem()->GetIsStun()) {
+		if (!player.GetSystemManager()->GetDamageResponseSystem()->GetIsStun()) {
 			banInput = BanNone;
 			isActive_ = false;
 		}

@@ -6,7 +6,7 @@ public:
 	// コンストラクタ
 	Run(Move* moveSystem, Player* player, const float& moveMultiply);
 	// デストラクタ
-	~Run() override = default;
+	~Run() override;
 
 	/// <summary>
 	/// 初期化

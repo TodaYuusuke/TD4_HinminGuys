@@ -138,36 +138,23 @@ void Move::CheckMoveState() {
 		// もしも直前に攻撃をしていたら硬直フラグをfalseにしてAttackRecovery状態に移行しないようにする
 		player_->GetSystemManager()->GetAttackSystem()->SetIsAttackRecovery(false);
 
-		if (stickStrength_ > runThreshold) {
-			// 走り状態に移行
-			if (player_->GetSystemManager()->GetEvasionSystem()->GetIsDash()) {
-				// 走りモーション再生中なら状態遷移しない
-				if (GetTriggerChangeMoveState(MoveState::kDash)) {
-					moveState_ = MoveState::kDash;
-					player_->GetSystemManager()->GetAttackSystem()->ComboReset();
-					ChangeState(new Dash(this, player_, dashSpeedMultiply));
-				}
-			}
-			else {
-
-				if (GetTriggerChangeMoveState(MoveState::kRun)) {
-					moveState_ = MoveState::kRun;
-					player_->GetSystemManager()->GetAttackSystem()->ComboReset();
-					ChangeState(new Run(this, player_, runSpeedMultiply));
-					// ダッシュ状態解除
-					player_->GetSystemManager()->GetEvasionSystem()->SetIsDash(false);
-				}
+		// 走り状態に移行
+		if (player_->GetSystemManager()->GetEvasionSystem()->GetIsDash() && stickStrength_ >= runThreshold) {
+			// 走りモーション再生中なら状態遷移しない
+			if (GetTriggerChangeMoveState(MoveState::kDash)) {
+				moveState_ = MoveState::kDash;
+				player_->GetSystemManager()->GetAttackSystem()->ComboReset();
+				ChangeState(new Dash(this, player_, dashSpeedMultiply));
 			}
 		}
-		// 歩行状態に移行
+		// 通常移動状態に移行
 		else {
-
 			if (GetTriggerChangeMoveState(MoveState::kWalk)) {
 				moveState_ = MoveState::kWalk;
 				player_->GetSystemManager()->GetAttackSystem()->ComboReset();
 				// ダッシュ状態解除
 				player_->GetSystemManager()->GetEvasionSystem()->SetIsDash(false);
-				ChangeState(new Walk(this, player_, walkSpeedMultiply));
+				ChangeState(new Walk(this, player_, runSpeedMultiply));
 			}
 		}
 	}
