@@ -180,12 +180,18 @@ public:// Getter, Setter
 	void SetCoolTime() { currentCoolTime_ = coolTime * 60.0f; }
 
 	/// <summary>
+	/// ダッシュ攻撃のカプセル判定の終点を設定
+	/// </summary>
+	/// <param name="end"></param>
+	void SetCapsuleEndPos(const LWP::Math::Vector3& end) { capsule_.end = end; }
+	/// <summary>
 	/// 当たり判定をとるかを設定
 	/// </summary>
 	/// <param name="isCollision"></param>
 	void SetIsCollision(const bool& isCollision) {
 		collider_.isActive = isCollision;
-		aabb_.isShowWireFrame = isCollision;
+		//aabb_.isShowWireFrame = isCollision;
+		capsule_.isShowWireFrame = isCollision;
 	}
 	/// <summary>
 	/// 鞘破壊状態かを設定
@@ -227,7 +233,11 @@ public:// jsonに保存する値
 	float enableMoveRange = 50.0f;
 
 	// 鞘投げの範囲
-	LWP::Math::Vector3 throwMovement = { 0,0,50.0f };
+	LWP::Math::Vector3 throwMovement = { 0,0,10.0f };
+	// ダッシュ攻撃の移動量
+	LWP::Math::Vector3 dashAttackMovement = { 0,0,10.0f };
+	// ダッシュ攻撃の当たり判定の長さ
+	LWP::Math::Vector3 dashAttackLength = { 0,0,-10.0f };
 
 	// クールタイム
 	float coolTime = 0.0f;
@@ -244,7 +254,8 @@ private:// プライベートな変数
 
 	// ダッシュ攻撃判定
 	LWP::Object::Collision collider_;
-	LWP::Object::Collider::AABB& aabb_;
+	//LWP::Object::Collider::AABB& aabb_;
+	LWP::Object::Collider::Capsule& capsule_;
 
 	// 移動速度
 	LWP::Math::Vector3 velocity_;

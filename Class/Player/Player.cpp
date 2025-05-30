@@ -33,6 +33,14 @@ void Player::Initialize() {
 
 	// 大きさを一時的に調整
 	model_.worldTF.scale = { 0.5f, 0.5f, 0.5f };
+
+	json_.Init("Player.json");
+	// 当たり判定
+	json_.BeginGroup("Collider")
+		.AddValue<Vector3>("Min", &aabb_.min)
+		.AddValue<Vector3>("Max", &aabb_.max)
+		.EndGroup()
+		.CheckJsonFile();
 }
 
 void Player::Update() {
@@ -69,13 +77,19 @@ void Player::DebugGUI() {
 		systemManager_->DebugGUI();
 		ImGui::TreePop();
 	}
+	// WorldTransform
+	model_.worldTF.DebugGUI();
+	// 当たり判定
+	if (ImGui::TreeNode("Collider")) {
+		json_.DebugGUI();
+		ImGui::TreePop();
+	}
 	// アニメーション
 	if (ImGui::TreeNode("Animation")) {
 		animation_.DebugGUI();
 		ImGui::TreePop();
 	}
-	// WorldTransform
-	model_.worldTF.DebugGUI();
+
 #endif // DEBUG
 }
 

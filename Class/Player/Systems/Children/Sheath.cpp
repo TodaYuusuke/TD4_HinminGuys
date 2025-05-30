@@ -5,7 +5,8 @@
 #include "../../../GameMask.h"
 
 Sheath::Sheath(LWP::Object::Camera* camera, Player* player)
-	: aabb_(collider_.SetBroadShape(LWP::Object::Collider::AABB()))
+//: aabb_(collider_.SetBroadShape(LWP::Object::Collider::AABB()))
+	: capsule_(collider_.SetBroadShape(LWP::Object::Collider::Capsule()))
 {
 	pCamera_ = camera;
 	player_ = player;
@@ -47,6 +48,9 @@ void Sheath::Update() {
 	// 状態
 	state_->Update();
 
+	// カプセルの当たり判定を更新
+	capsule_.end = dashAttackLength;
+
 	// 無敵時間
 	eventOrders_[(int)SheathState::kInvinsible].Update();
 
@@ -62,7 +66,8 @@ void Sheath::Reset() {
 	isActive_ = false;
 	isPreActive_ = false;
 	collider_.isActive = false;
-	aabb_.isShowWireFrame = false;
+	//aabb_.isShowWireFrame = false;
+	capsule_.isShowWireFrame = false;
 	eventOrders_[(int)SheathState::kThrow].Reset();
 	eventOrders_[(int)SheathState::kCollect].Reset();
 	eventOrders_[(int)SheathState::kBreak].Reset();
@@ -161,6 +166,8 @@ void Sheath::CreateJsonFIle() {
 		.AddValue<float>("DashAttackFinishTime", &dashAttackFinishTime)
 		.AddValue<float>("RecoveryTime", &dashAttackRecoveryTime)
 		.EndGroup()
+		// 鞘投げの移動距離
+		.AddValue<Vector3>("Movement", &dashAttackMovement)
 		.EndGroup()
 
 		// 無敵の設定
@@ -170,6 +177,12 @@ void Sheath::CreateJsonFIle() {
 		.AddValue<float>("InvinsibleTime", &invinsibleFinishTime)
 		.AddValue<float>("RecoveryTime", &invinsibleRecoveryTime)
 		.EndGroup()
+		.EndGroup()
+
+		// 攻撃の判定
+		.BeginGroup("Collider")
+		.AddValue<float>("Radius", &capsule_.radius)
+		.AddValue<Vector3>("Length", &dashAttackLength)
 		.EndGroup()
 
 		// 移動可能範囲
@@ -198,9 +211,10 @@ void Sheath::AnimCommand() {
 
 void Sheath::CreateCollision() {
 	// 攻撃判定生成
-	aabb_.min = { -1.0f, -1.0f, -1.0f };
-	aabb_.max = { 1.0f, 1.0f, 1.0f };
-	aabb_.isShowWireFrame = false;
+	//aabb_.min = { -1.0f, -1.0f, -1.0f };
+	//aabb_.max = { 1.0f, 1.0f, 1.0f };
+	//aabb_.isShowWireFrame = false;
+	capsule_.isShowWireFrame = false;
 	collider_.SetFollow(player_->GetWorldTF());
 	collider_.isActive = false;
 	collider_.worldTF.translation = { 0.0f, 1.0f, 0.0f };

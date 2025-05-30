@@ -64,15 +64,15 @@ private:
 	void CreateEventOrder();
 
 	/// <summary>
-	/// 回収するときのアクションイベントを生成
+	/// パリィ中の無敵イベントを生成
 	/// </summary>
 	void CreateParryInvinsibleEventOrder();
 	/// <summary>
-	/// 鞘破壊されているときのアクションイベントを生成
+	/// ジャストパリィ成功時の無敵イベントを生成
 	/// </summary>
 	void CreateJustParryInvinsibleEventOrder();
 	/// <summary>
-	/// 無敵のアクションイベントを生成
+	/// 弱パリィ成功時の無敵イベントを生成
 	/// </summary>
 	void CreateGoodParryInvinsibleEventOrder();
 

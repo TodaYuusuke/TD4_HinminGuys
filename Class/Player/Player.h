@@ -139,7 +139,7 @@ public:// Getter,Setter
 	/// 各種パラメータの取得
 	/// </summary>
 	/// <returns></returns>
-	PlayerParameter GetParameter() { return parameter_; }
+	//PlayerParameter GetParameter() { return parameter_; }
 	/// <summary>
 	/// 自機が生きているかを取得
 	/// </summary>
@@ -160,21 +160,21 @@ public:// Getter,Setter
 	void SetEnemyManager(EnemyManager* enemyManager) { enemyManager_ = enemyManager; }
 
 #pragma region パラメータ
-	/// <summary>
-	/// 攻撃のパラメータを設定
-	/// </summary>
-	/// <returns></returns>
-	void SetAttackParameter(const float& strength, const float& multiply = 1.0f) { parameter_.SetAttackParameter(IParameter::ParameterData{ strength , multiply }); }
-	/// <summary>
-	/// 速度のパラメータを設定
-	/// </summary>
-	/// <returns></returns>
-	void SetSpeedParameter(const float& strength, const float& multiply = 1.0f) { parameter_.SetSpeedParameter(IParameter::ParameterData{ strength , multiply }); }
-	/// <summary>
-	/// 鞘のパラメータを設定
-	/// </summary>
-	/// <returns></returns>
-	void SetSheathParameter(const float& strength, const float& multiply = 1.0f) { parameter_.SetSheathParameter(IParameter::ParameterData{ strength , multiply }); }
+	///// <summary>
+	///// 攻撃のパラメータを設定
+	///// </summary>
+	///// <returns></returns>
+	//void SetAttackParameter(const float& strength, const float& multiply = 1.0f) { parameter_.SetAttackParameter(IParameter::ParameterData{ strength , multiply }); }
+	///// <summary>
+	///// 速度のパラメータを設定
+	///// </summary>
+	///// <returns></returns>
+	//void SetSpeedParameter(const float& strength, const float& multiply = 1.0f) { parameter_.SetSpeedParameter(IParameter::ParameterData{ strength , multiply }); }
+	///// <summary>
+	///// 鞘のパラメータを設定
+	///// </summary>
+	///// <returns></returns>
+	//void SetSheathParameter(const float& strength, const float& multiply = 1.0f) { parameter_.SetSheathParameter(IParameter::ParameterData{ strength , multiply }); }
 #pragma endregion 
 
 #pragma region アニメーション
@@ -219,8 +219,10 @@ private:// 外部からポインタをもらう変数
 	UIManager* uiManager_;
 
 private:
+	LWP::Utility::JsonIO json_;
+
 	// 攻撃力や鞘ゲージの減少量などのパラメータ
-	PlayerParameter parameter_;
+	//PlayerParameter parameter_;
 
 	// 体の判定
 	LWP::Object::Collision collider_;

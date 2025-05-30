@@ -144,6 +144,11 @@ void Parry::CreateJsonFIle() {
 		.EndGroup()
 
 		.EndGroup()
+		// 当たり判定
+		.BeginGroup("Collider")
+		.AddValue<Vector3>("Min", &aabb_.min)
+		.AddValue<Vector3>("Max", &aabb_.max)
+		.EndGroup()
 		// 鞘ゲージの減少量
 		.BeginGroup("SheathDecrement")
 		.AddValue<float>("JustParry", &justParryDecrement)
