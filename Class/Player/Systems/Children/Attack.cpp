@@ -19,13 +19,9 @@ float Attack::kNormalAttackTime;
 float Attack::kNormalRecoveryTime;
 
 Attack::Attack(LWP::Object::Camera* camera, Player* player)
-	: aabb_(collider_.SetBroadShape(LWP::Object::Collider::AABB()))
 {
 	pCamera_ = camera;
 	player_ = player;
-
-	// 攻撃の当たり判定作成
-	CreateCollision();
 
 	nextState_ = InputNone;
 	currentState_ = InputAttack;
@@ -36,6 +32,8 @@ Attack::Attack(LWP::Object::Camera* camera, Player* player)
 
 	// コンボツリーの初期化
 	comboTree_.Init("Combo.json", player_->GetModel(), player_->GetAnimation());
+	// コライダーのマスク設定
+	comboTree_.SetColliderMaskFrag(GetAttack(), GetEnemy());
 }
 
 Attack::~Attack() {
@@ -63,7 +61,7 @@ void Attack::Update() {
 	}
 
 	// コンボが無操作状態のコンボでない場合
-	if (!comboTree_.GetIsThisRoot()) {
+	if (comboTree_.GetIsStiffness()) {
 		// 攻撃しているものとみなし、攻撃状態に移行
 		if (!isActive_) {
 			player_->GetSystemManager()->SetInputState(InputState::kAttack);
@@ -76,6 +74,11 @@ void Attack::Update() {
 			Reset();
 			isAttackRecovery_ = true;
 		}
+	}
+
+	// 受付時間が終了していればコンボ中断
+	if (comboTree_.GetIsReceptEndTrigger()) {
+		isAttackRecovery_ = false;
 	}
 
 	// 攻撃アシストが有効になっている場合
@@ -120,8 +123,6 @@ void Attack::Update() {
 
 void Attack::Reset() {
 	isActive_ = false;
-	collider_.isActive = false;
-	aabb_.isShowWireFrame = false;
 	attackAssistVel_ = { 0.0f,0.0f,0.0f };
 	// アニメーションを初期化
 	player_->ResetAnimation();
@@ -143,14 +144,8 @@ void Attack::DebugGUI() {
 			}
 			ImGui::TreePop();
 		}
-
+		
 		eventOrder_.DebugGUI();
-
-		// 当たり判定
-		if (ImGui::TreeNode("Collider")) {
-			collider_.DebugGUI();
-			ImGui::TreePop();
-		}
 
 		ImGui::DragFloat3("Velocity", &attackAssistVel_.x, 0.1f, -10000, 10000);
 		ImGui::DragFloat3("Rotation", &attackAssistRadian_.x, 0.1f, -6.28f, 6.28f);
@@ -173,30 +168,13 @@ void Attack::CreateJsonFIle() {
 }
 
 void Attack::Command() {
+	//collider_.isActive = true;
 	//isEnableInput_ = true;
 }
 
 void Attack::ChangeState(IAttackSystemState* pState) {
 	delete state_;
 	state_ = pState;
-}
-
-void Attack::CreateCollision() {
-	// 攻撃判定生成
-	aabb_.isShowWireFrame = false;
-	collider_.SetFollow(player_->GetWorldTF());
-	collider_.worldTF.translation = { 0,1,2 };
-	collider_.isActive = false;
-	collider_.mask.SetBelongFrag(GetAttack());
-	collider_.mask.SetHitFrag(GetEnemy());
-	collider_.stayLambda = [this](LWP::Object::Collision* hitTarget) {
-		hitTarget;
-
-		// 攻撃判定が出ているとき
-		if (eventOrder_.GetCurrentTimeEvent().name == "NormalAttackTime") {
-			collider_.isActive = true;
-		}
-		};
 }
 
 void Attack::CreateEventOrder() {
@@ -210,23 +188,7 @@ void Attack::CreateEventOrder() {
 }
 
 void Attack::CheckAttackState() {
-	// 振りかぶりの時
-	if (eventOrder_.GetCurrentTimeEvent().name == "NormalAttackSwingTime") {
-		collider_.isActive = false;
-		// 攻撃が当たる位置に自機を移動させる
-		AttackAssistMovement();
-	}
-	else if (eventOrder_.GetCurrentTimeEvent().name == "NormalAttackTime") {
-		collider_.isActive = true;
-	}
-	// 硬直
-	else if (eventOrder_.GetCurrentTimeEvent().name == "NormalAttackRecoveryTime") {
-		collider_.isActive = false;
-	}
-	// 振りかぶり以外の時なら状態をリセット
-	else {
-		ChangeState(new NoneAttack(this));
-	}
+	
 }
 
 void Attack::AttackAssistMovement() {

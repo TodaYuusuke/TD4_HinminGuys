@@ -18,6 +18,9 @@ Throw::Throw(Sheath* sheathSystem, Player* player, std::map<int, EventOrder>* ev
 
 	// 状態の名前
 	stateName_ = "Throw";
+
+	// 鞘破壊状態でなくす
+	sheathSystem_->SetIsBreak(false);
 }
 
 void Throw::Initialize() {
@@ -41,7 +44,6 @@ void Throw::Update() {
 		inputHandler_->GetSheathCommand()->SetBanInput(inputHandler_->GetSheathCommand()->GetBanInput() | (BanParry));
 
 		(*eventOrders_)[(int)Sheath::SheathState::kThrow].Reset();
-
 		sheathSystem_->ChangeState(new Collect(sheathSystem_, player_, eventOrders_));
 		return;
 	}

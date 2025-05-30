@@ -46,7 +46,9 @@ public: // メンバ関数
 	/// </summary>
 	/// <param name="model">スキニングモデル</param>
 	/// <param name="anim">アニメーション</param>
-	void Update(LWP::Resource::SkinningModel* model, LWP::Resource::Animation* anim);
+	/// <param name="collider">コライダー</param>
+	/// <param name="shape">使用するコライダー形状</param>
+	void Update(LWP::Resource::SkinningModel* model, LWP::Resource::Animation* anim, LWP::Object::Collision* collider, LWP::Object::Collider::Capsule* shape);
 
 	/// <summary>
 	/// コンボ受付関数
@@ -104,6 +106,24 @@ public: // アクセッサ等
 	LWP::Math::Vector3 GetAttackAssistMoveAmount() { return attackAssistMoveAmount_; }
 
 	/// <summary>
+	/// ダメージ量ゲッター
+	/// </summary>
+	/// <returns>ダメージ量</returns>
+	float GetDamage() { return damage_; }
+
+	/// <summary>
+	/// ノックバック強さゲッター
+	/// </summary>
+	/// <returns>ノックバック強さ</returns>
+	float GetNockBackStrength() { return nockbackStrength_; }
+
+	/// <summary>
+	/// 鞘の耐久値減少量ゲッター
+	/// </summary>
+	/// <returns>鞘の耐久値減少量</returns>
+	float GetSheathDurabityLoss() { return sheathDurabityLoss_; }
+
+	/// <summary>
 	/// 硬直状態ゲッター
 	/// </summary>
 	/// <returns>硬直状態か</returns>
@@ -127,6 +147,11 @@ public: // アクセッサ等
 	/// <returns>名前</returns>
 	std::string GetName() { return name_; }
 
+	/// <summary>
+	/// アニメーション名ゲッター
+	/// </summary>
+	/// <returns>アニメーション名</returns>
+	std::string GetAnimName() { return animName_; }
 	/// <summary>
 	/// アニメーション名のセッター
 	/// </summary>
@@ -194,7 +219,8 @@ private: // プライベートなメンバ関数
 	/// </summary>
 	/// <param name="model">モデル</param>
 	/// <param name="collider">コライダー</param>
-	void AttackActiveUpdate(LWP::Resource::SkinningModel* model);
+	/// <param name="shape">使用するコライダー形状</param>
+	void AttackActiveUpdate(LWP::Resource::SkinningModel* model, LWP::Object::Collision* collider, LWP::Object::Collider::Capsule* shape);
 
 	/// <summary>
 	/// 攻撃アシストの有効判定関係の更新
@@ -280,7 +306,14 @@ private: // メンバ変数
 	// 攻撃判定のオフセット
 	LWP::Math::Vector3 attackColliderLengthOffset_{};
 	// 攻撃判定半径
-	float attackColliderRadius_ = 0.0f;
+	float attackColliderRadius_ = 0.1f;
+
+	// 攻撃のダメージ量
+	float damage_ = 1.0f;
+	// ノックバック強さ
+	float nockbackStrength_ = 0.1f;
+	// 命中時の鞘の耐久値減少量
+	float sheathDurabityLoss_ = 10.0f;
 
 	// 攻撃アシストの開始秒数
 	float attackAssistStartTime_ = 0.0f;

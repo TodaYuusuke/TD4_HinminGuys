@@ -21,6 +21,14 @@ public:
 	/// </summary>
 	void DebugGUI() override;
 
+	/// <summary>
+	/// ゲージ量を変える
+	/// </summary>
+	void Hit() override {
+		// ゲージ量 += 変化量 * 倍率
+		value_ += deltaValue_ * multiply_;
+	}
+
 public:// Getter, Setter
 #pragma region Getter
 	/// <summary>

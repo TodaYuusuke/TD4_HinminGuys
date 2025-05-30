@@ -53,8 +53,14 @@
     <ClCompile Include="Class\Player\Systems\Children\State\Move\None.cpp" />
     <ClCompile Include="Class\Player\Systems\ISystem.cpp" />
     <ClCompile Include="Class\Player\Systems\Children\State\Move\AttackRecovery.cpp" />
-    <ClCompile Include="Class\Player\Systems\Children\Hit.cpp" />
+    <ClCompile Include="Class\Player\Systems\Children\TakeDamage.cpp" />
     <ClCompile Include="Class\Scene\VoidScene.cpp" />
+    <ClCompile Include="Class\UI\UIManager.cpp" />
+    <ClCompile Include="Class\Camera\State\InputCamera.cpp" />
+    <ClCompile Include="Class\Camera\State\ParryCamera.cpp" />
+    <ClCompile Include="Class\Camera\State\LockOnCamera.cpp" />
+    <ClCompile Include="Class\Player\PlayerParameter.cpp" />
+    <ClCompile Include="Class\Player\Systems\Children\State\Sheath\Break.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Class\ComboEditor\ComboTree.h" />
@@ -78,7 +84,7 @@
     <ClInclude Include="Class\Enemy\Childs\Normal\State\NormalEnemyAttack.h" />
     <ClInclude Include="Class\Enemy\Childs\Normal\State\NormalEnemyIdle.h" />
     <ClInclude Include="Class\Enemy\Childs\Normal\State\NormalEnemyMove.h" />
-     <ClInclude Include="Class\Enemy\SpawnData.h" />
+    <ClInclude Include="Class\Enemy\SpawnData.h" />
     <ClInclude Include="Class\Enemy\States.h" />
     <ClInclude Include="Class\Enemy\WaveData.h" />
     <ClInclude Include="Class\Player\Command\InputConfig.h" />
@@ -126,8 +132,16 @@
     <ClInclude Include="Class\Player\Command\BanInput.h" />
     <ClInclude Include="Class\Player\Systems\Children\State\Move\None.h" />
     <ClInclude Include="Class\Player\Systems\Children\State\Move\AttackRecovery.h" />
-    <ClInclude Include="Class\Player\Systems\Children\Hit.h" />
+    <ClInclude Include="Class\Player\Systems\Children\TakeDamage.h" />
     <ClInclude Include="Class\Scene\VoidScene.h" />
+    <ClInclude Include="Class\UI\UIManager.h" />
+    <ClInclude Include="Class\Camera\State\IFollowCameraState.h" />
+    <ClInclude Include="Class\Camera\State\InputCamera.h" />
+    <ClInclude Include="Class\Camera\State\ParryCamera.h" />
+    <ClInclude Include="Class\Camera\State\LockOnCamera.h" />
+    <ClInclude Include="Class\Player\PlayerParameter.h" />
+    <ClInclude Include="Class\IParameter.h" />
+    <ClInclude Include="Class\Player\Systems\Children\State\Sheath\Break.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />

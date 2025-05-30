@@ -49,17 +49,17 @@ public:
 	/// </summary>
 	void Command();
 
+	/// <summary>
+	/// コンボのリセット
+	/// </summary>
+	void ComboReset() { comboTree_.ResetCombo(); }
+
 private:
 	/// <summary>
 	/// 状態の遷移
 	/// </summary>
 	/// <param name="pState">次の状態</param>
 	void ChangeState(IAttackSystemState* pState);
-
-	/// <summary>
-	/// 当たり判定を作成
-	/// </summary>
-	void CreateCollision();
 
 	/// <summary>
 	/// アクションイベントの生成
@@ -104,6 +104,16 @@ public:// Getter, Setter
 	/// <returns></returns>
 	bool GetIsThisRoot() { return comboTree_.GetIsThisRoot(); }
 	/// <summary>
+	/// 攻撃中に入力処理を受け付けていないかを取得
+	/// </summary>
+	/// <returns></returns>
+	bool GetIsStiffness() { return comboTree_.GetIsStiffness(); }
+	/// <summary>
+	/// コンボの受付状態を習得
+	/// </summary>
+	/// <returns>コンボの受付状態を取得</returns>
+	bool GetIsRecept() { return comboTree_.GetIsRecept(); }
+	/// <summary>
 	/// 攻撃が全て終わった後か
 	/// </summary>
 	/// <returns></returns>
@@ -147,6 +157,7 @@ private:// jsonで保存する値
 	static float kNormalRecoveryTime;
 
 private:// 外部からポインタをもらう変数
+
 	// ロックオン機能
 	LockOn* lockOnSystem_;
 
@@ -157,10 +168,6 @@ private:
 
 	// 状態遷移
 	IAttackSystemState* state_;
-
-	// 攻撃判定
-	LWP::Object::Collision collider_;
-	LWP::Object::Collider::AABB& aabb_;
 
 	// 攻撃時の位置アシスト用のベクトル
 	Vector3 attackAssistVel_;

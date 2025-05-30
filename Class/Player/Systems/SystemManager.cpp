@@ -21,6 +21,10 @@ void SystemManager::Initialize() {
 	lockOnSystem_->SetEnemyList(enemyManager_->GetEnemyListPtr());
 	lockOnSystem_->SetFollowCamera(followCamera_);
 	systems_.push_back(lockOnSystem_.get());
+	// 被弾機能
+	takeDamageSystem_ = std::make_unique<TakeDamage>(pCamera_, player_);
+	takeDamageSystem_->Initialize();
+	systems_.push_back(takeDamageSystem_.get());
 	// パリィ機能
 	parrySystem_ = std::make_unique<Parry>(pCamera_, player_);
 	parrySystem_->Initialize();
@@ -107,14 +111,18 @@ void SystemManager::EnableInputMoveState() {
 		// 速度を加算
 		velocity_ = LWP::Utility::Interpolation::Exponential(velocity_, Vector3{ 0.0f,0.0f,0.0f }, 0.9f);
 		// 角度を加算
-		radian_ = moveSystem_->GetMoveRadian();
+		radian_ = parrySystem_->GetMoveRadian();
 		// クォータニオンに変換
 		rotate_ = LWP::Math::Quaternion::CreateFromAxisAngle(LWP::Math::Vector3{ 0, 1, 0 }, radian_.y);
+
+		// MoveSystemクラス内の角度も変更
+		if (Vector3::Dot(velocity_, velocity_) != 0) {
+			moveSystem_->SetRotate(radian_);
+		}
 		break;
 	case InputState::kEvasion:
 		// 速度を加算
 		velocity_ = LWP::Utility::Interpolation::Exponential(velocity_, evasionSystem_->GetVelocity() + moveSystem_->GetMoveVel(), 1.0f);
-		//velocity_ = LWP::Utility::Interpolation::Exponential(velocity_, evasionSystem_->GetVelocity(), 1.0f);
 		// 角度を加算
 		radian_ = moveSystem_->GetMoveRadian();
 		// クォータニオンに変換

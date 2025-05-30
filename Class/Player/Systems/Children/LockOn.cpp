@@ -24,7 +24,13 @@ void LockOn::Initialize() {
 	lockOnUI_.sprite.LoadTexture("lockOnReticle.png");
 	lockOnUI_.sprite.anchorPoint = lockOnUI_.defaultAnchorPoint;
 	lockOnUI_.sprite.isActive = false;
+	lockOnUI_.sprite.Init();
+
+	lockOnUI_.enableLockOnObj.LoadTexture("lockOnReticle.png");
+	lockOnUI_.enableLockOnObj.anchorPoint = lockOnUI_.defaultAnchorPoint;
 	lockOnUI_.enableLockOnObj.isActive = false;
+	lockOnUI_.enableLockOnObj.isUI = true;
+	lockOnUI_.enableLockOnObj.Init();
 
 	// jsonで保存している値
 	CreateJsonFIle();
@@ -153,8 +159,11 @@ void LockOn::SearchLockOnEnemy() {
 		lockOnData.ui.sprite.LoadTexture("arrow.png");
 		lockOnData.ui.sprite.anchorPoint = { 0.5f,0.5f };
 		lockOnData.ui.enableLockOnObj.LoadTexture("arrow.png");
-		//lockOnData.ui.enableLockOnObj.anchorPoint = { 0.5f, 0.5f };
+		lockOnData.ui.enableLockOnObj.name = "billbard";
+		lockOnData.ui.enableLockOnObj.anchorPoint = { 0.5f, 0.5f };
 		lockOnData.ui.enableLockOnObj.isActive = false;
+		lockOnData.ui.enableLockOnObj.isUI = true;
+		lockOnData.ui.enableLockOnObj.Init();
 		lockOnEnableEnemies_.push_back(lockOnData);
 	}
 }
@@ -261,9 +270,13 @@ void LockOn::StartLockOn(IEnemy* enemy) {
 
 void LockOn::LockOnReticleUpdate() {
 	lockOnUI_.sprite.isActive = false;
+	lockOnUI_.enableLockOnObj.isActive = false;
 	// Z注目をしている敵がいるなら専用UIを表示
 	if (lockOnEnemy_) {
 		lockOnUI_.sprite.isActive = true;
+		/*lockOnUI_.enableLockOnObj.worldTF.Parent(lockOnEnemy_->GetWorldTF());
+		lockOnUI_.enableLockOnObj.worldTF.translation = Vector3{ 0.0f, 0.5f, 0.0f };
+		lockOnUI_.enableLockOnObj.isActive = true;*/
 		// 敵の座標をスクリーン座標に変換
 		Vector2 screenPos = ConvertWorld2Screen(lockOnEnemy_->GetPosition() + lockOnUI_.defaultPos);
 		// レティクルスプライトの座標を更新
@@ -294,7 +307,8 @@ void LockOn::LockOnReticleUpdate() {
 			0
 		};
 		lockOnEnemy.ui.sprite.isActive = false;
-		lockOnEnemy.ui.enableLockOnObj.worldTF.translation = lockOnEnemy.enemyData->GetPosition() + Vector3{0.0f, 1.5f, 0.0f};
+		lockOnEnemy.ui.enableLockOnObj.worldTF.Parent(lockOnEnemy.enemyData->GetWorldTF());
+		lockOnEnemy.ui.enableLockOnObj.worldTF.translation = Vector3{0.0f, 1.0f, 0.0f};
 		lockOnEnemy.ui.enableLockOnObj.isActive = true;
 	}
 }

@@ -4,6 +4,17 @@
 #include "Combo.h"
 
 /// <summary>
+/// 衝突時の処理追加用
+/// </summary>
+namespace LWP::Utility::ComboEnum {
+	enum CollisionState {
+		ENTER,
+		STAY,
+		EXIT
+	};
+}
+
+/// <summary>
 /// コンボツリークラス
 /// </summary>
 class ComboTree
@@ -13,7 +24,7 @@ public: // コンストラクタ等
 	/// <summary>
 	/// コンストラクタ
 	/// </summary>
-	ComboTree() : capsule_(collider_.SetBroadShape(LWP::Object::Collider::Capsule())) {}
+	ComboTree();
 	/// <summary>
 	/// デストラクタ
 	/// </summary>
@@ -39,7 +50,25 @@ public: // メンバ関数
 	/// </summary>
 	void DebugGUI();
 
+	/// <summary>
+	/// 無操作状態コンボに強制的に戻す関数
+	/// </summary>
+	void ResetCombo();
+
 public: // アクセッサ等
+
+	/// <summary>
+	/// コライダーマスクのセッター
+	/// </summary>
+	/// <param name="maskID">マスクするマスクID</param>
+	/// <param name="hitID">当たるマスクID</param>
+	void SetColliderMaskFrag(uint32_t maskID, uint32_t hitID);
+
+	/// <summary>
+	/// 衝突時の処理を追加
+	/// </summary>
+	/// <param name="function">追加する衝突時処理</param>
+	void AddCollisionLamda(int collisionState, LWP::Object::Collision::OnHitFunction function);
 
 	/// <summary>
 	/// 編集モード中かどうかのゲッター
@@ -54,22 +83,28 @@ public: // アクセッサ等
 	bool GetIsThisRoot() { return nowCombo_->GetIsRoot(); }
 
 	/// <summary>
+	/// 現在コンボのダメージ量ゲッター
+	/// </summary>
+	/// <returns>ダメージ量</returns>
+	float GetDamage() { return nowCombo_->GetDamage(); }
+
+	/// <summary>
+	/// 現在コンボのノックバック強さゲッター
+	/// </summary>
+	/// <returns>ノックバック強さ</returns>
+	float GetNockBackStrength() { return nowCombo_->GetNockBackStrength(); }
+
+	/// <summary>
+	/// 現在コンボの鞘の耐久値減少量ゲッター
+	/// </summary>
+	/// <returns>鞘の耐久値減少量</returns>
+	float GetSheathDurabityLoss() { return nowCombo_->GetSheathDurabityLoss(); }
+
+	/// <summary>
 	/// 攻撃アシストの有効状態ゲッター
 	/// </summary>
 	/// <returns>攻撃アシストの有効状態</returns>
 	bool GetIsEnableAttackAssist() { return nowCombo_->GetIsAttackAssistActive(); }
-
-	/// <summary>
-	/// 硬直の有効状態のげぅたー
-	/// </summary>
-	/// <returns>硬直の有効状態</returns>
-	bool GetIsStifness() { return nowCombo_->GetIsStifness(); }
-
-	/// <summary>
-	/// 攻撃アシストの移動量ゲッター
-	/// </summary>
-	/// <returns>攻撃アシストの移動量</returns>
-	LWP::Math::Vector3 GetAttackAssistMoveAmount() { return nowCombo_->GetAttackAssistMoveAmount(); }
 
 	/// <summary>
 	/// 現在コンボの硬直状態ゲッター
@@ -77,7 +112,30 @@ public: // アクセッサ等
 	/// <returns>硬直状態</returns>
 	bool GetIsStiffness();
 
+	/// <summary>
+	/// コンボの受付状態のゲッター
+	/// </summary>
+	/// <returns>コンボの受付状態</returns>
+	bool GetIsRecept();
+
+	/// <summary>
+	/// 受付時間終了遷移確認トリガーの状態ゲッター
+	/// </summary>
+	/// <returns>受付時間終了遷移確認</returns>
+	bool GetIsReceptEndTrigger() { return isReceptEndTrigger_; }
+	
+	/// <summary>
+	/// 攻撃アシストの移動量ゲッター
+	/// </summary>
+	/// <returns>攻撃アシストの移動量</returns>
+	LWP::Math::Vector3 GetAttackAssistMoveAmount() { return nowCombo_->GetAttackAssistMoveAmount(); }
+
 private: // プライベートなメンバ関数
+
+	/// <summary>
+	/// コライダー生成関数
+	/// </summary>
+	void CreateCollision();
 
 	/// <summary>
 	/// 新規作成弥保存を行うメニュー
@@ -147,6 +205,9 @@ private: // メンバ変数
 	Combo* nowCombo_ = nullptr;
 	// 次のコンボ
 	Combo* nextCombo_ = nullptr;
+
+	// 受付終了で遷移したかどうかのトリガー
+	bool isReceptEndTrigger_ = false;
 
 #pragma region エディタ用変数
 

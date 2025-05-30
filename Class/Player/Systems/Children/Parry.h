@@ -6,6 +6,13 @@
 /// </summary>
 class Parry : public ISystem {
 public:
+	enum class ParryInvinsibleState{
+		kRunning = 0,	// パリィ中
+		kGood = 1,		// 弱パリィ成功
+		kJust = 2		// ジャストパリィ成功
+	};
+
+public:
 	// コンストラクタ
 	Parry(LWP::Object::Camera* camera, Player* player);
 	// デストラクタ
@@ -57,13 +64,60 @@ private:
 	void CreateEventOrder();
 
 	/// <summary>
+	/// 回収するときのアクションイベントを生成
+	/// </summary>
+	void CreateParryInvinsibleEventOrder();
+	/// <summary>
+	/// 鞘破壊されているときのアクションイベントを生成
+	/// </summary>
+	void CreateJustParryInvinsibleEventOrder();
+	/// <summary>
+	/// 無敵のアクションイベントを生成
+	/// </summary>
+	void CreateGoodParryInvinsibleEventOrder();
+
+	/// <summary>
 	/// パリィの状態を確認
 	/// </summary>
 	void CheckParryState();
 
 public:// Getter, Setter
 #pragma region Getter
+	/// <summary>
+	/// 向いている方向を取得(クォータニオン)
+	/// </summary>
+	/// <returns></returns>
+	LWP::Math::Quaternion GetMoveQuat() { return quat_; }
+	/// <summary>
+	/// 向いている方向を取得(ラジアン)
+	/// </summary>
+	/// <returns></returns>
+	LWP::Math::Vector3 GetMoveRadian() { return radian_; }
+	/// <summary>
+	/// 無敵時間中かを取得
+	/// </summary>
+	/// <returns></returns>
+	bool GetIsInvinsible() {
+		for (int i = 0; i < eventOrders_.size(); i++) {
+			if (eventOrders_[i].GetCurrentTimeEvent().name == "InvinsibleTime") {
+				return true;
+			}
+		}
+		return false;
+	}
+#pragma endregion
 
+#pragma region Setter
+	/// <summary>
+	/// 向いている方向を設定
+	/// </summary>
+	/// <param name="radian">向かせる方向(ラジアン)</param>
+	void SetRotate(const LWP::Math::Vector3& radian) { radian_ = radian; }
+	/// <summary>
+	/// 向いている方向を設定
+	/// </summary>
+	/// <param name="quat">向かせる方向(クォータニオン)</param>
+	void SetRotate(const LWP::Math::Quaternion& quat) { quat_ = quat; }
 #pragma endregion
 
 private:// jsonで保存する値
@@ -76,11 +130,30 @@ private:// jsonで保存する値
 	// パリィの硬直[秒]
 	float kRecoveryTime = 0.0f;
 
+	// ジャストパリィ成功時の無敵時間
+	float successJustParryInvinsible = 2.0f;
+	// 弱パリィ成功時の無敵時間
+	float successGoodParryInvinsible = 1.0f;
+
+	// ジャストパリィ時の鞘ゲージの減少量
+	float justParryDecrement = 50.0f;
+	// 甘パリィ時の鞘ゲージの減少量
+	float goodParryDecrement = 10.0f;
 
 private:
+	// アクションイベント集(無敵に関するものだけ)
+	std::map<int, EventOrder> eventOrders_;
+
 	// パリィ判定
 	LWP::Object::Collision collider_;
 	LWP::Object::Collider::AABB& aabb_;
+
+	// パリィできた攻撃をしてきた相手の座標
+	LWP::Math::Vector3 parryTargetPos_;
+
+	// 向いている角度
+	LWP::Math::Quaternion quat_ = { 0.0f,0.0f,0.0f,1.0f };
+	LWP::Math::Vector3 radian_;
 
 	bool isJustParry_;
 	bool isGoodParry_;

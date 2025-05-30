@@ -7,12 +7,16 @@ FollowCamera::FollowCamera(LWP::Object::Camera* camera, LWP::Math::Vector3* targ
 
 void FollowCamera::Initialize() {
 	json_.Init("FollowCameraData.json");
-	json_.AddValue<LWP::Math::Vector3>("TargetDistance", &kTargetDist)
+	json_.AddValue<LWP::Math::Vector3>("TargetDistance", &defaultTargetDist_)
 		.AddValue<LWP::Math::Vector3>("GameStartAngle", &kStartAngle)
 		.AddValue<float>("MinRotateX", &kMinRotateX)
 		.AddValue<float>("MaxRotateX", &kMaxRotateX)
 		.AddValue<float>("Sensitivity", &sensitivity)
-		.AddValue<float>("Rate", &interTargetRate)
+		.BeginGroup("Rate")
+		.AddValue<float>("InterTarget", &interTargetRate)
+		.AddValue<float>("TargetDist", &targetDistRate)
+		.AddValue<float>("Rotate", &rotateRate)
+		.EndGroup()
 		.CheckJsonFile();
 
 	defaultTargetDist_ = kTargetDist;
@@ -86,23 +90,27 @@ void FollowCamera::InputUpdate() {
 	dir.x -= LWP::Input::Pad::GetRStick().y * sensitivity;
 	dir.y += LWP::Input::Pad::GetRStick().x * sensitivity;
 
+	// スティックの入力をイージング
+	LWP::Math::Vector3 goal = { dir.x, dir.y, 0 };
+	stickDir = LWP::Utility::Interpolation::Exponential(stickDir, goal, rotateRate);
+
 	// 角度制限
-	ClampAngle(dir.x, ((*targetPos_) - camera_->worldTF.translation).Normalize(), LWP::Utility::DegreeToRadian(kOriginRotateX + kMinRotateX), LWP::Utility::DegreeToRadian(kOriginRotateX + kMaxRotateX));
+	ClampAngle(stickDir.x, ((*targetPos_) - camera_->worldTF.translation).Normalize(), LWP::Utility::DegreeToRadian(kOriginRotateX + kMinRotateX), LWP::Utility::DegreeToRadian(kOriginRotateX + kMaxRotateX));
 
 	// x軸回転
-	camera_->worldTF.rotation = camera_->worldTF.rotation * LWP::Math::Quaternion::CreateFromAxisAngle(LWP::Math::Vector3{ 1, 0, 0 }, 0.03f * dir.x);
+	camera_->worldTF.rotation = camera_->worldTF.rotation * LWP::Math::Quaternion::CreateFromAxisAngle(LWP::Math::Vector3{ 1, 0, 0 }, 0.03f * stickDir.x);
 	// y軸は常に上を向くように固定
-	camera_->worldTF.rotation = LWP::Math::Quaternion::CreateFromAxisAngle(LWP::Math::Vector3{ 0, 1, 0 }, 0.03f * dir.y) * camera_->worldTF.rotation;
+	camera_->worldTF.rotation = LWP::Math::Quaternion::CreateFromAxisAngle(LWP::Math::Vector3{ 0, 1, 0 }, 0.03f * stickDir.y) * camera_->worldTF.rotation;
 }
 
 void FollowCamera::LockOnUpdate() {
 	// ロックオン対象がいないなら早期リターン
 	if (!lockOnData_.targetTransform) {
-		kTargetDist = LWP::Utility::Interpolation::Exponential(kTargetDist, defaultTargetDist_, 0.01f);
+		kTargetDist = LWP::Utility::Interpolation::Exponential(kTargetDist, defaultTargetDist_, targetDistRate);
 		return;
 	}
 	if (!lockOnData_.isLocked) {
-		kTargetDist = LWP::Utility::Interpolation::Exponential(kTargetDist, defaultTargetDist_, 0.01f);
+		kTargetDist = LWP::Utility::Interpolation::Exponential(kTargetDist, defaultTargetDist_, targetDistRate);
 		return;
 	}
 
@@ -114,7 +122,7 @@ void FollowCamera::LockOnUpdate() {
 	// ロックオン対象から遠いほどカメラが上に行く
 	lockOnOffset_.y = defaultTargetDist_.y + (2.0f * (lockOnTargetDist / maxLength));
 	lockOnOffset_.z = defaultTargetDist_.z - (3.0f * (lockOnTargetDist / maxLength));
-	kTargetDist = LWP::Utility::Interpolation::Exponential(kTargetDist, lockOnOffset_, 0.01f);
+	kTargetDist = LWP::Utility::Interpolation::Exponential(kTargetDist, lockOnOffset_, targetDistRate);
 
 	// ロックオン対象とカメラとの方向ベクトルを算出
 	LWP::Math::Vector3 cameraPos = camera_->worldTF.translation;
@@ -140,6 +148,10 @@ void FollowCamera::LockOnUpdate() {
 
 	// y軸は常に上を向くように固定
 	camera_->worldTF.rotation = LWP::Math::Quaternion::CreateFromAxisAngle(LWP::Math::Vector3{ 0, 1, 0 }, dir.y) * camera_->worldTF.rotation;
+}
+
+void FollowCamera::ParryLockOnUpdate() {
+
 }
 
 void FollowCamera::ClampAngle(float& target, LWP::Math::Vector3 distance, float minLimitAngle, float maxLimitAngle) {

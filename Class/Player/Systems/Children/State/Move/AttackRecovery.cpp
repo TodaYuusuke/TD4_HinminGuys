@@ -16,12 +16,8 @@ void AttackRecovery::Initialize() {
 }
 
 void AttackRecovery::Update() {
-	// アニメーションの再生が終わったらIdle状態に移行
-	if (!player_->GetAnimation()->GetPlaying()) {
-		player_->GetSystemManager()->GetAttackSystem()->SetIsAttackRecovery(false);
-	}
+	
 }
 
 void AttackRecovery::AnimCommand() {
-
 }

@@ -5,6 +5,7 @@
 #include "../Enemy/EnemyManager.h"
 #include "../Player/Command/InputHandler.h"
 #include "../TestCollider.h"
+#include "../UI/UIManager.h"
 #include <set>
 #include "SceneTransitioner.h"
 
@@ -39,6 +40,9 @@ private: // ** これより先に必要な処理や変数を記述 ** //
 
 	//敵マネージャー
 	EnemyManager enemyManager_;
+
+	// UIの管理クラス
+	UIManager uiManager_;
 
 	// 平面(一時的に作っているので要修正)
 	LWP::Resource::RigidModel plane;
