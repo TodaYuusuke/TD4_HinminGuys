@@ -90,6 +90,10 @@ void Player::DebugGUI() {
 #endif // DEBUG
 }
 
+void Player::ResetSystems() {
+
+}
+
 void Player::CreateSystems() {
 	// 各機能生成
 	systemManager_ = std::make_unique<SystemManager>(this, enemyManager_, followCamera_, pCamera_);
@@ -107,16 +111,13 @@ void Player::CreateCollision() {
 	collider_.mask.SetHitFrag(GetAttack());
 	collider_.enterLambda = [this](LWP::Object::Collision* hitTarget) {
 		hitTarget;
-		// HPを減少
-		uiManager_->ChangeHPGauge(-10.0f);
-		// 被弾演出開始
-		systemManager_->GetHitSystem()->StartEffect();
+		ChangeHPGauge(-10.0f);
 		};
 }
 
 void Player::InvinsibleUpdate() {
 	// 被弾時
-	if (systemManager_->GetHitSystem()->GetIsInvinsible()) {
+	if (systemManager_->GetTakeDamageSystem()->GetIsInvinsible()) {
 		collider_.isActive = false;
 		aabb_.isShowWireFrame = false;
 	}
@@ -127,6 +128,10 @@ void Player::InvinsibleUpdate() {
 	}
 	// 鞘のダッシュ攻撃時
 	else if (systemManager_->GetSheathSystem()->GetIsInvinsible()) {
+		collider_.isActive = false;
+		aabb_.isShowWireFrame = false;
+	}
+	else if (systemManager_->GetParrySystem()->GetIsInvinsible()) {
 		collider_.isActive = false;
 		aabb_.isShowWireFrame = false;
 	}

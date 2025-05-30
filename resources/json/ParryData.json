@@ -1,10 +1,22 @@
 {
-    "Group :EventOrder": {
+    "Group :Parry": {
         "Group :GraceTime": {
-            "float :GoodParry": 0.6,
-            "float :JustParry": 0.2,
+            "float :GoodParry": 0.6000000238418579,
+            "float :JustParry": 0.20000000298023224,
             "float :RecoveryTime": 0.0,
             "float :SwingTime": 0.0
+        },
+        "Group :Invinsible": {
+            "Group :Success GoodParry": {
+                "float :InvinsibleTime": 1.0
+            },
+            "Group :Success JustParry": {
+                "float :InvinsibleTime": 1.0
+            }
+        },
+        "Group :SheathDecrement": {
+            "float :GoodParry": 10.0,
+            "float :JustParry": 50.0
         }
     }
 }

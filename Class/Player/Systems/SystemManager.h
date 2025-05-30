@@ -6,7 +6,7 @@
 #include "Children/LockOn.h"
 #include "Children/Evasion.h"
 #include "Children/Sheath.h"
-#include "Children/Hit.h"
+#include "Children/TakeDamage.h"
 #include "../Animator/PlayerAnimator.h"
 #include "../Command/InputHandler.h"
 #include <memory>
@@ -97,7 +97,7 @@ public:// Getter, Setter
 	/// 被弾機能のアドレスを取得
 	/// </summary>
 	/// <returns></returns>
-	Hit* GetHitSystem() { return hitSystem_.get(); }
+	TakeDamage* GetTakeDamageSystem() { return takeDamageSystem_.get(); }
 	/// <summary>
 	/// 速度を取得
 	/// </summary>
@@ -158,7 +158,7 @@ private:
 	// 鞘機能
 	std::unique_ptr<Sheath> sheathSystem_;
 	// 被弾機能
-	std::unique_ptr<Hit> hitSystem_;
+	std::unique_ptr<TakeDamage> takeDamageSystem_;
 
 	// 機能クラスをまとめた変数
 	std::vector<ISystem*> systems_;

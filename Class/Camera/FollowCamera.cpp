@@ -15,6 +15,7 @@ void FollowCamera::Initialize() {
 		.BeginGroup("Rate")
 		.AddValue<float>("InterTarget", &interTargetRate)
 		.AddValue<float>("TargetDist", &targetDistRate)
+		.AddValue<float>("Rotate", &rotateRate)
 		.EndGroup()
 		.CheckJsonFile();
 
@@ -89,13 +90,17 @@ void FollowCamera::InputUpdate() {
 	dir.x -= LWP::Input::Pad::GetRStick().y * sensitivity;
 	dir.y += LWP::Input::Pad::GetRStick().x * sensitivity;
 
+	// スティックの入力をイージング
+	LWP::Math::Vector3 goal = { dir.x, dir.y, 0 };
+	stickDir = LWP::Utility::Interpolation::Exponential(stickDir, goal, rotateRate);
+
 	// 角度制限
-	ClampAngle(dir.x, ((*targetPos_) - camera_->worldTF.translation).Normalize(), LWP::Utility::DegreeToRadian(kOriginRotateX + kMinRotateX), LWP::Utility::DegreeToRadian(kOriginRotateX + kMaxRotateX));
+	ClampAngle(stickDir.x, ((*targetPos_) - camera_->worldTF.translation).Normalize(), LWP::Utility::DegreeToRadian(kOriginRotateX + kMinRotateX), LWP::Utility::DegreeToRadian(kOriginRotateX + kMaxRotateX));
 
 	// x軸回転
-	camera_->worldTF.rotation = camera_->worldTF.rotation * LWP::Math::Quaternion::CreateFromAxisAngle(LWP::Math::Vector3{ 1, 0, 0 }, 0.03f * dir.x);
+	camera_->worldTF.rotation = camera_->worldTF.rotation * LWP::Math::Quaternion::CreateFromAxisAngle(LWP::Math::Vector3{ 1, 0, 0 }, 0.03f * stickDir.x);
 	// y軸は常に上を向くように固定
-	camera_->worldTF.rotation = LWP::Math::Quaternion::CreateFromAxisAngle(LWP::Math::Vector3{ 0, 1, 0 }, 0.03f * dir.y) * camera_->worldTF.rotation;
+	camera_->worldTF.rotation = LWP::Math::Quaternion::CreateFromAxisAngle(LWP::Math::Vector3{ 0, 1, 0 }, 0.03f * stickDir.y) * camera_->worldTF.rotation;
 }
 
 void FollowCamera::LockOnUpdate() {

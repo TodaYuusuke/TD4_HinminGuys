@@ -54,7 +54,6 @@ void Break::Command() {
 		// 攻撃判定を出す
 		sheathSystem_->SetIsCollision(true);
 		// 無敵開始
-		//sheathSystem_->StartInvinsible();
 		(*eventOrders_)[(int)Sheath::SheathState::kInvinsible].Start();
 		start_ = { 0,0,0 };
 		end_ = dashAttackMovement_ * Matrix4x4::CreateRotateXYZMatrix(player_->GetSystemManager()->GetRotate());

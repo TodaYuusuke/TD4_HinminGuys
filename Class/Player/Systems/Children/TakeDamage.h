@@ -3,15 +3,16 @@
 #include "../../Gauge/HP/HP.h"
 #include "../EventOrder.h"
 
-class Hit : public ISystem {
+class TakeDamage : public ISystem {
 public:
 	enum class EventOrderState {
-		kInvinsible
+		kInvinsible,
+		kStun
 	};
 
 public:
-	Hit(LWP::Object::Camera* camera, Player* player);
-	~Hit() override = default;
+	TakeDamage(LWP::Object::Camera* camera, Player* player);
+	~TakeDamage() override = default;
 
 	/// <summary>
 	/// 初期化
@@ -37,6 +38,15 @@ public:
 	/// </summary>
 	void CreateJsonFIle() override;
 
+	/// <summary>
+	/// 無敵開始
+	/// </summary>
+	void StartInvinsible();
+	/// <summary>
+	/// 被弾演出開始
+	/// </summary>
+	void StartEffect() { isHit_ = true; }
+
 private:
 	/// <summary>
 	/// 被弾時の更新処理
@@ -47,24 +57,28 @@ private:
 	/// アクションイベントの作成
 	/// </summary>
 	void CreateEventOrders();
+	/// <summary>
+	/// アクションイベントの作成
+	/// </summary>
+	void CreateInvinsibleEventOrder();
+	/// <summary>
+	/// アクションイベントの作成
+	/// </summary>
+	void CreateStunEventOrder();
+
+	/// <summary>
+	/// スタンのアクションイベント
+	/// </summary>
+	void CheckSunEventOrder();
 
 public:
 #pragma region Setter
-	void StartDamage(const float& damageValue, const float& multiply = 1.0f) {
-		//hp_.SetDeltaValue(damageValue);
-		//hp_.SetMultiply(multiply);
-		//hp_.Hit();
-		eventOrders_[(int)EventOrderState::kInvinsible].Start();
-	}
-	/// <summary>
-	/// 被弾演出開始
-	/// </summary>
-	void StartEffect() { isHit_ = true; }
 	/// <summary>
 	/// HPの最大値を設定
 	/// </summary>
 	/// <param name="maxHP"></param>
 	void SetMaxHP(const float& maxHP) {
+		maxHP;
 		//hp_.SetMaxValue(maxHP);
 	}
 	/// <summary>
@@ -82,8 +96,28 @@ public:
 	/// 無敵時間中かを取得
 	/// </summary>
 	/// <returns></returns>
-	bool GetIsInvinsible() { 
+	bool GetIsInvinsible() {
 		if (eventOrders_[(int)EventOrderState::kInvinsible].GetCurrentTimeEvent().name == "InvinsibleTime") {
+			return true;
+		}
+		return false;
+	}
+	/// <summary>
+	/// スタン時間中かを取得
+	/// </summary>
+	/// <returns></returns>
+	bool GetIsStun() {
+		if (eventOrders_[(int)EventOrderState::kStun].GetCurrentTimeEvent().name == "StunTime") {
+			return true;
+		}
+		return false;
+	}
+	/// <summary>
+	/// スタンキャンセル時間中かを取得
+	/// </summary>
+	/// <returns></returns>
+	bool GetIsStunCancel() {
+		if (eventOrders_[(int)EventOrderState::kStun].GetCurrentTimeEvent().name == "CancelTime") {
 			return true;
 		}
 		return false;
@@ -97,10 +131,18 @@ public:
 
 private:// jsonで保存する値
 	// 無敵時間
-	float invinsibleTime = 1.0f;
+	float invinsibleTime = 2.2f;
+
+	// スタン時間
+	float stunTime = 1.8f;
+	// スタンキャンセル時間
+	float stunCancelTime = 1.0f;
 
 private:
 	std::map<int, EventOrder> eventOrders_;
+
+	// 前のアクションイベント
+	std::string preEventOrder_;
 
 	// 演出終了時間
 	float endFrame_;

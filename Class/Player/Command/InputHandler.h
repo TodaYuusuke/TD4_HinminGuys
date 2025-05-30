@@ -78,14 +78,7 @@ public:
 		}
 		return false;
 	}
-
 	int GetBanInput() { return banInput_; }
-
-	/// <summary>
-	/// 入力のあったコマンドを取得
-	/// </summary>
-	/// <returns></returns>
-	std::vector<ICommand*> InputCommands() { return commands_; }
 
 	ICommand* GetMoveCommand() { return pressMoveCommand_; }
 	ICommand* GetAttackCommand() { return pressNormalAttackCommand_; }
@@ -93,6 +86,12 @@ public:
 	ICommand* GetLockOnCommand() { return pressLockOnCommand_; }
 	ICommand* GetEvasionCommand() { return pressEvasionCommand_; }
 	ICommand* GetSheathCommand() { return pressSheathCommand_; }
+
+	/// <summary>
+	/// 現在の入力不可状態を設定
+	/// </summary>
+	/// <param name="banInput"></param>
+	void SetCurrentBanInput(const int& banInput) { banInput_ = banInput; }
 
 private:
 	// 実行用のコマンド

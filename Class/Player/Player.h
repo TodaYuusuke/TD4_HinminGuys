@@ -4,6 +4,7 @@
 #include "Systems/Children/Parry.h"
 #include "Systems/Children/Attack.h"
 #include "Systems/Children/LockOn.h"
+#include "Systems/Children/TakeDamage.h"
 #include "Systems/SystemManager.h"
 #include "Gauge/HP/HP.h"
 #include "Gauge/Sheath/SheathGauge.h"
@@ -40,11 +41,31 @@ public:
 	/// デバッグ用のタブを表示(Debug時のみ)
 	/// </summary>
 	void DebugGUI();
-
 	/// <summary>
 	/// ImGuiによるコンボのGUI表示
 	/// </summary>
 	void DebugComboGUI() { systemManager_->DebugComboGUI(); }
+
+	/// <summary>
+	/// ダメージを与える
+	/// </summary>
+	void ChangeHPGauge(const float& damageValue, const float& multiply = 1.0f) {
+		// 自機が無敵中ならダメージ判定をとらない
+		if (!collider_.isActive) { return; }
+		// HPゲージ変動
+		uiManager_->ChangeHPGauge(damageValue, multiply);
+		// 無敵開始
+		systemManager_->GetTakeDamageSystem()->StartInvinsible();
+		// 被弾演出開始
+		systemManager_->GetTakeDamageSystem()->StartEffect();
+		// 全ての機能をリセット
+		Reset();
+	}
+
+	/// <summary>
+	/// 移動機能以外をリセット
+	/// </summary>
+	void ResetSystems();
 
 private:
 	/// <summary>
@@ -119,6 +140,11 @@ public:// Getter,Setter
 	/// </summary>
 	/// <returns></returns>
 	PlayerParameter GetParameter() { return parameter_; }
+	/// <summary>
+	/// 自機が生きているかを取得
+	/// </summary>
+	/// <returns></returns>
+	bool GetIsAlive() { return isAlive_; }
 #pragma endregion
 
 #pragma region Setter
