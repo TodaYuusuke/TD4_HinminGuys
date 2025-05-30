@@ -63,10 +63,6 @@ public:
 	const Vector3& GetRepulsiveForce() const { return repulsiveForce_; }
 	//反発力を加算
 	void AddRepulsiveForce(const Vector3& force) { repulsiveForce_ += force; }
-	//本体当たり判定取得
-	LWP::Object::Collider::AABB* GetHitBox() { return &hitBox_; }
-	//攻撃当たり判定
-	LWP::Object::Collider::AABB* GetAttackHitBox() { return &attackHitBox_; }
 	//ロックオンセッター
 	void SetIsLocked(bool flag) { isLocked_ = flag; }
 	//ロックオンゲッター
@@ -109,9 +105,8 @@ protected:
 	//アニメーション
 	Animation animation_;
 	//本体当たり判定
-	LWP::Object::Collider::AABB hitBox_;
-	//攻撃当たり判定
-	LWP::Object::Collider::AABB attackHitBox_;
+	LWP::Object::Collision collider_;
+	LWP::Object::Collider::AABB& aabb_;
 	//状態
 	IEnemyState* state_;
 
