@@ -23,7 +23,7 @@ void Player::Initialize() {
 	inputHandler_ = InputHandler::GetInstance();
 
 	// 各種パラメータを作成
-	parameter_.Initialize();
+	//parameter_.Initialize();
 
 	// 当たり判定を作成
 	CreateCollision();
