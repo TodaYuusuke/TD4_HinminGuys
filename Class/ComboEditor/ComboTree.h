@@ -83,6 +83,18 @@ public: // アクセッサ等
 	bool GetIsThisRoot() { return nowCombo_->GetIsRoot(); }
 
 	/// <summary>
+	/// 現在コンボのダメージ量ゲッター
+	/// </summary>
+	/// <returns>ダメージ量</returns>
+	float GetDamage() { return nowCombo_->GetDamage(); }
+
+	/// <summary>
+	/// 現在コンボのノックバック強さゲッター
+	/// </summary>
+	/// <returns>ノックバック強さ</returns>
+	float GetNockBackStrength() { return nowCombo_->GetNockBackStrength(); }
+
+	/// <summary>
 	/// 攻撃アシストの有効状態ゲッター
 	/// </summary>
 	/// <returns>攻撃アシストの有効状態</returns>

@@ -106,6 +106,18 @@ public: // アクセッサ等
 	LWP::Math::Vector3 GetAttackAssistMoveAmount() { return attackAssistMoveAmount_; }
 
 	/// <summary>
+	/// ダメージ量ゲッター
+	/// </summary>
+	/// <returns>ダメージ量</returns>
+	float GetDamage() { return damage_; }
+
+	/// <summary>
+	/// ノックバック強さゲッター
+	/// </summary>
+	/// <returns>ノックバック強さ</returns>
+	float GetNockBackStrength() { return nockbackStrength_; }
+
+	/// <summary>
 	/// 硬直状態ゲッター
 	/// </summary>
 	/// <returns>硬直状態か</returns>
@@ -289,6 +301,11 @@ private: // メンバ変数
 	LWP::Math::Vector3 attackColliderLengthOffset_{};
 	// 攻撃判定半径
 	float attackColliderRadius_ = 0.1f;
+
+	// 攻撃のダメージ量
+	float damage_ = 1.0f;
+	// ノックバック強さ
+	float nockbackStrength_ = 0.1f;
 
 	// 攻撃アシストの開始秒数
 	float attackAssistStartTime_ = 0.0f;

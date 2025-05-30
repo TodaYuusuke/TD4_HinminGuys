@@ -251,6 +251,8 @@ void Combo::AddValue(LWP::Utility::JsonIO& json)
 		.AddValue("FollowJointName", &followJointName_)							// 追従するジョイント名
 		.AddValue("AttackColliderLengthOffset", &attackColliderLengthOffset_)	// 始点からのオフセット
 		.AddValue("AttackColliderRadius", &attackColliderRadius_)				// コライダーの半径
+		.AddValue("Damage", &damage_)											// 攻撃のダメージ量
+		.AddValue("NockbackStrength", &nockbackStrength_)						// ノックバック強さ
 		.AddValue("AttackAssistStartTime", &attackAssistStartTime_)				// 攻撃アシスト開始時間
 		.AddValue("AttackAssistEnableTime", &attackAssistEnableTime_)			// 攻撃アシスト有効時間
 		.AddValue("AttackAssistMoveAmount", &attackAssistMoveAmount_)			// 攻撃アシスト移動量
@@ -544,6 +546,10 @@ void Combo::AttackSettings()
 	// コライダーの半径調整
 	ImGui::DragFloat3("ColliderOffset", &attackColliderLengthOffset_.x, 0.01f, 0.0f);
 	ImGui::DragFloat("ColliderRadius", &attackColliderRadius_, 0.01f, 0.0f);
+
+	// ダメージ量の調整
+	ImGui::DragFloat("Damage Amount", &damage_, 0.01f, 0.0f);
+	ImGui::DragFloat("NockBack Strength", &nockbackStrength_, 0.01f, 0.0f);
 
 	ImGui::Unindent();
 	ImGui::NewLine();
