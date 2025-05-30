@@ -58,6 +58,8 @@ public:
 		systemManager_->GetTakeDamageSystem()->StartInvinsible();
 		// 被弾演出開始
 		systemManager_->GetTakeDamageSystem()->StartEffect();
+		// コンボ状態リセット
+		systemManager_->GetAttackSystem()->ComboReset();
 		// 全ての機能をリセット
 		Reset();
 	}
