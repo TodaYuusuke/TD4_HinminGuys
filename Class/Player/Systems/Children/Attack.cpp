@@ -23,9 +23,6 @@ Attack::Attack(LWP::Object::Camera* camera, Player* player)
 	pCamera_ = camera;
 	player_ = player;
 
-	nextState_ = InputNone;
-	currentState_ = InputAttack;
-
 	// 状態作成
 	state_ = new NoneAttack(this);
 	state_->Initialize();

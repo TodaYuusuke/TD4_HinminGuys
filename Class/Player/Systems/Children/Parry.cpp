@@ -14,9 +14,6 @@ Parry::Parry(LWP::Object::Camera* camera, Player* player)
 
 	// パリィ判定生成
 	CreateCollision();
-
-	nextState_ = InputNone;
-	currentState_ = InputParry;
 }
 
 void Parry::Initialize() {

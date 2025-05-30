@@ -254,7 +254,6 @@ private:// プライベートな変数
 
 	// ダッシュ攻撃判定
 	LWP::Object::Collision collider_;
-	//LWP::Object::Collider::AABB& aabb_;
 	LWP::Object::Collider::Capsule& capsule_;
 
 	// 移動速度

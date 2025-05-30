@@ -5,7 +5,6 @@
 #include "../../../GameMask.h"
 
 Sheath::Sheath(LWP::Object::Camera* camera, Player* player)
-//: aabb_(collider_.SetBroadShape(LWP::Object::Collider::AABB()))
 	: capsule_(collider_.SetBroadShape(LWP::Object::Collider::Capsule()))
 {
 	pCamera_ = camera;
@@ -17,9 +16,6 @@ Sheath::Sheath(LWP::Object::Camera* camera, Player* player)
 
 	// ダッシュ攻撃の判定を作成
 	CreateCollision();
-
-	nextState_ = InputALL;
-	currentState_ = InputSheath;
 }
 
 void Sheath::Initialize() {
@@ -211,9 +207,6 @@ void Sheath::AnimCommand() {
 
 void Sheath::CreateCollision() {
 	// 攻撃判定生成
-	//aabb_.min = { -1.0f, -1.0f, -1.0f };
-	//aabb_.max = { 1.0f, 1.0f, 1.0f };
-	//aabb_.isShowWireFrame = false;
 	capsule_.isShowWireFrame = false;
 	collider_.SetFollow(player_->GetWorldTF());
 	collider_.isActive = false;
