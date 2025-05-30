@@ -16,6 +16,22 @@ enum class EnemyType {
 	kMax
 };
 
+/// <summary>
+/// 敵の攻撃パラメータ
+/// </summary>
+struct EnemyAttackParameter {
+	float attackValue = 10.0f; //攻撃力
+	float knockbackValue = 0.5f; //ノックバック
+};
+
+/// <summary>
+/// 敵の全体パラメータ
+/// </summary>
+struct EnemyParameter {
+	float hp = 100.0f; //体力
+	EnemyAttackParameter attackParameter; //攻撃パラメータ
+};
+
 //前方宣言
 class IEnemyState;
 
@@ -98,6 +114,18 @@ public:
 
 	LWP::Object::TransformQuat* GetWorldTF() { return &model_.worldTF; }
 
+	//コライダー名取得
+	const std::string& GetColliderName() const { return collider_.name; }
+	//攻撃パラメータ取得
+	const EnemyAttackParameter& GetAttackParameter() const { return parameter_.attackParameter; }
+
+protected:
+
+	//ダメージを与える
+	void TakeDamage(const float& damageValue, const float& multiply = 1.0f) {
+		parameter_.hp -= damageValue * multiply;
+	}
+
 protected:
 
 	//モデル
@@ -112,6 +140,8 @@ protected:
 
 	//プレイヤー情報
 	Player* player_;
+	//敵個別のパラメータ
+	EnemyParameter parameter_;
 	//互いに距離を取るときの反発力
 	Vector3 repulsiveForce_{};
 	//種類
