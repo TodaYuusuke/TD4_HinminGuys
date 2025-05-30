@@ -58,6 +58,8 @@ public:
 		systemManager_->GetDamageResponseSystem()->StartInvinsible();
 		// 被弾演出開始
 		systemManager_->GetDamageResponseSystem()->StartEffect();
+		// コンボ状態リセット
+		systemManager_->GetAttackSystem()->ComboReset();
 		// 全ての機能をリセット
 		Reset();
 	}
@@ -207,7 +209,7 @@ public:// Getter,Setter
 	/// アニメーションの再生速度を設定
 	/// </summary>
 	/// <param name="playSpeed"></param>
-	void SetAnimationPlaySpeed(const float& playSpeed) { /*animation_.playbackSpeed = */playSpeed; }
+	void SetAnimationPlaySpeed(const float& playSpeed) { animation_.GetPlayBackSpeed() = playSpeed; }
 	/// <summary>
 	/// アニメーションをループするかを設定
 	/// </summary>
@@ -231,6 +233,10 @@ private:
 
 	// 攻撃力や鞘ゲージの減少量などのパラメータ
 	//PlayerParameter parameter_;
+
+
+	// 刀モデル
+	LWP::Resource::SkinningModel swordModel_;
 
 	// 体の判定
 	LWP::Object::Collision collider_;

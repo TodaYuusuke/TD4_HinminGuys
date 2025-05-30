@@ -17,6 +17,7 @@ Run::Run(Move* moveSystem, Player* player, const float& moveMultiply) {
 
 Run::~Run() {
 	player_->StopAnimation(LWP::Resource::Animation::TrackType::Blend);
+	player_->SetAnimationPlaySpeed(1.0f);
 }
 
 void Run::Initialize() {

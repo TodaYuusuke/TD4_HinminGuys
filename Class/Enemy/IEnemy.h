@@ -16,6 +16,22 @@ enum class EnemyType {
 	kMax
 };
 
+/// <summary>
+/// 敵の攻撃パラメータ
+/// </summary>
+struct EnemyAttackParameter {
+	float attackValue = 10.0f; //攻撃力
+	float knockbackValue = 0.5f; //ノックバック
+};
+
+/// <summary>
+/// 敵の全体パラメータ
+/// </summary>
+struct EnemyParameter {
+	float hp = 100.0f; //体力
+	EnemyAttackParameter attackParameter; //攻撃パラメータ
+};
+
 //前方宣言
 class IEnemyState;
 
@@ -63,10 +79,6 @@ public:
 	const Vector3& GetRepulsiveForce() const { return repulsiveForce_; }
 	//反発力を加算
 	void AddRepulsiveForce(const Vector3& force) { repulsiveForce_ += force; }
-	//本体当たり判定取得
-	LWP::Object::Collider::AABB* GetHitBox() { return &hitBox_; }
-	//攻撃当たり判定
-	LWP::Object::Collider::AABB* GetAttackHitBox() { return &attackHitBox_; }
 	//ロックオンセッター
 	void SetIsLocked(bool flag) { isLocked_ = flag; }
 	//ロックオンゲッター
@@ -102,6 +114,18 @@ public:
 
 	LWP::Object::TransformQuat* GetWorldTF() { return &model_.worldTF; }
 
+	//コライダー名取得
+	const std::string& GetColliderName() const { return collider_.name; }
+	//攻撃パラメータ取得
+	const EnemyAttackParameter& GetAttackParameter() const { return parameter_.attackParameter; }
+
+protected:
+
+	//ダメージを与える
+	void TakeDamage(const float& damageValue, const float& multiply = 1.0f) {
+		parameter_.hp -= damageValue * multiply;
+	}
+
 protected:
 
 	//モデル
@@ -109,14 +133,15 @@ protected:
 	//アニメーション
 	Animation animation_;
 	//本体当たり判定
-	LWP::Object::Collider::AABB hitBox_;
-	//攻撃当たり判定
-	LWP::Object::Collider::AABB attackHitBox_;
+	LWP::Object::Collision collider_;
+	LWP::Object::Collider::AABB& aabb_;
 	//状態
 	IEnemyState* state_;
 
 	//プレイヤー情報
 	Player* player_;
+	//敵個別のパラメータ
+	EnemyParameter parameter_;
 	//互いに距離を取るときの反発力
 	Vector3 repulsiveForce_{};
 	//種類

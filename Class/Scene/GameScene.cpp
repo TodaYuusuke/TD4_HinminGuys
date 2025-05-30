@@ -60,12 +60,12 @@ void GameScene::Initialize() {
 
 // 更新
 void GameScene::Update() {
-	// シーン遷移
-	if (Keyboard::GetTrigger(DIK_P)) {
-		//遷移先をタイトルにセット
-		sceneTransitioner_.SetNextScene(SceneName::kTitle);
-		sceneTransitioner_.SceneTransitionStart();
-	}
+	//// シーン遷移
+	//if (Keyboard::GetTrigger(DIK_P)) {
+	//	//遷移先をタイトルにセット
+	//	sceneTransitioner_.SetNextScene(SceneName::kTitle);
+	//	sceneTransitioner_.SceneTransitionStart();
+	//}
 
 	// 入力されたコマンドを確認
 	inputHandler_->Update(player_);

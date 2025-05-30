@@ -62,11 +62,6 @@ private:
 	void ChangeState(IAttackSystemState* pState);
 
 	/// <summary>
-	/// 当たり判定を作成
-	/// </summary>
-	void CreateCollision();
-
-	/// <summary>
 	/// アクションイベントの生成
 	/// </summary>
 	void CreateEventOrder();
@@ -123,6 +118,16 @@ public:// Getter, Setter
 	/// </summary>
 	/// <returns></returns>
 	bool GetIsAttackRecovery() { return isAttackRecovery_; }
+	/// <summary>
+	/// ダメージ取得
+	/// </summary>
+	/// <returns></returns>
+	float GetDamage() { return comboTree_.GetDamage(); }
+	/// <summary>
+	/// ノックバック量取得
+	/// </summary>
+	/// <returns></returns>
+	float GetKnockBackStrength() { return comboTree_.GetNockBackStrength(); }
 #pragma endregion
 
 #pragma region Setter
@@ -162,6 +167,7 @@ private:// jsonで保存する値
 	static float kNormalRecoveryTime;
 
 private:// 外部からポインタをもらう変数
+
 	// ロックオン機能
 	LockOn* lockOnSystem_;
 
@@ -172,10 +178,6 @@ private:
 
 	// 状態遷移
 	IAttackSystemState* state_;
-
-	// 攻撃判定
-	LWP::Object::Collision collider_;
-	LWP::Object::Collider::AABB& aabb_;
 
 	// 攻撃時の位置アシスト用のベクトル
 	Vector3 attackAssistVel_;

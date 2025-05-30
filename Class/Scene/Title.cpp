@@ -32,6 +32,10 @@ void Title::Initialize() {
 	//シーン切り替え機能生成
 	sceneTransitioner_.Initialize(this);
 
+	UIStart_.Initialize("Title/Start.png", "Title_Start");
+	UIExit_.Initialize("Title/Exit.png", "Title_Exit");
+	UITitleLogo_.Initialize("Title/Title_Logo.png", "Title_Logo");
+
 }
 
 void Title::Update() {
@@ -42,6 +46,15 @@ void Title::Update() {
 		sceneTransitioner_.SceneTransitionStart();
 	}
 
+	if (Keyboard::GetTrigger(DIK_SPACE)) {
+		UIStart_.isActive = not UIStart_.isActive;
+		UIExit_.isActive = not UIExit_.isActive;
+		UITitleLogo_.isActive = not UITitleLogo_.isActive;
+	}
+
+	UIStart_.Update();
+	UIExit_.Update();
+	UITitleLogo_.Update();
 
 	sceneTransitioner_.Update();
 
@@ -62,6 +75,16 @@ void Title::DebugGUI() {
 				ImGui::TreePop();
 
 			}
+
+			ImGui::EndTabItem();
+
+		}
+
+		if (ImGui::BeginTabItem("UI")) {
+
+			UIStart_.DebugGUI();
+			UIExit_.DebugGUI();
+			UITitleLogo_.DebugGUI();
 
 			ImGui::EndTabItem();
 

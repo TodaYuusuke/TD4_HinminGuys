@@ -3,7 +3,12 @@
 using namespace LWP::Utility::Condition;
 using namespace LWP;
 
-ComboTree::~ComboTree()
+ComboTree::ComboTree() : capsule_(collider_.SetBroadShape(LWP::Object::Collider::Capsule()))
+{
+
+}
+
+ComboTree::~ComboTree() 
 {
 	
 }
@@ -38,31 +43,35 @@ void ComboTree::Init(const std::string& fileName, LWP::Resource::SkinningModel* 
 
 void ComboTree::Update()
 {
+	// 受付終了遷移確認トリガーをリセット
+	isReceptEndTrigger_ = false;
+
 	// もし編集モードが有効であれば更新処理をスキップ
 	if (enableEditMode_) { return; }
 
 	// 現在コンボの更新
-	nowCombo_->Update(animModel_, anim_);
+	nowCombo_->Update(animModel_, anim_, &collider_, &capsule_);
 
-	// コンボの受付処理
-	nextCombo_ = nowCombo_->ReceptUpdate();
+	// 次のコンボが無い場合コンボの受付処理
+	if (nextCombo_ == nullptr) {
+		nextCombo_ = nowCombo_->ReceptUpdate();
+	}
 
 	// 次のコンボが存在する、かつ硬直時間終了時
 	if ((nextCombo_ != nullptr && !nowCombo_->GetIsStifness())) {
-		if (nextCombo_->GetAnimName() == "LightAttack2") {
-			int a = 10;
-			a;
-		}
-
 		// 現在のコンボを初期化して次のコンボへ
 		nowCombo_->Init();
-		nowCombo_ = std::move(nextCombo_);
+		nowCombo_ = nextCombo_;
+		nextCombo_ = nullptr;
 		nowCombo_->Start(animModel_, anim_, &collider_);
 		return;
 	}
 
 	// 次のコンボが存在しない、かつコンボ受付が終了している場合
-	if (nextCombo_ == nullptr && !nowCombo_->GetIsRecept()) {
+	if (nextCombo_ == nullptr && !nowCombo_->GetIsRecept() && !nowCombo_->GetIsStifness()) {
+		// 受付終了で遷移したことを伝える
+		if(!nowCombo_->GetIsRoot()){ isReceptEndTrigger_ = true; }
+		
 		nowCombo_->Init();
 		nowCombo_ = &rootCombo_;
 		nowCombo_->Start(animModel_, anim_, &collider_);
@@ -145,6 +154,24 @@ void ComboTree::DebugGUI()
 			enableEditMode_ = true;
 		}
 
+		// 現在のコンボ名の表示
+		std::string nowName = "NowComboName  : " + nowCombo_->GetName();
+		ImGui::Text(nowName.c_str());
+		if (nextCombo_ != nullptr) {
+			std::string nextName = "NextComboName : " + nextCombo_->GetName();
+			ImGui::Text(nextName.c_str());
+		}
+		else {
+			ImGui::Text("NextComboName : Neutral");
+		}
+		
+		bool isStiffness = nowCombo_->GetIsStifness();
+		ImGui::Checkbox("IsStiffness", &isStiffness);
+		nowCombo_->StifnesTimerGUI();
+		bool isRecept = nowCombo_->GetIsRecept();
+		ImGui::Checkbox("IsRecept", &isRecept);
+		nowCombo_->ReceptTimerGUI();
+
 		// フォントサイズのリセット
 		ImGui::SetWindowFontScale(1.0f);
 
@@ -168,6 +195,30 @@ void ComboTree::ResetCombo()
 	nowCombo_->Start(animModel_, anim_, &collider_);
 }
 
+void ComboTree::SetColliderMaskFrag(uint32_t maskID, uint32_t hitID)
+{
+	// マスクIDの設定
+	collider_.mask.SetBelongFrag(maskID);
+	collider_.mask.SetHitFrag(hitID);
+}
+
+void ComboTree::AddCollisionLamda(int collisionState, LWP::Object::Collision::OnHitFunction function)
+{
+	// 衝突時によって分岐
+	switch (collisionState)
+	{
+	case Utility::ComboEnum::ENTER: // トリガー
+		collider_.enterLambda = function;
+		break;
+	case Utility::ComboEnum::STAY: // 衝突中
+		collider_.stayLambda = function;
+		break;
+	case Utility::ComboEnum::EXIT: // 離れたとき
+		collider_.exitLambda = function;
+		break;
+	}
+}
+
 bool ComboTree::GetIsStiffness()
 {
 	assert(nowCombo_ != nullptr);
@@ -178,6 +229,11 @@ bool ComboTree::GetIsRecept()
 {
 	assert(nowCombo_ != nullptr);
 	return nowCombo_->GetIsRecept();
+}
+
+void ComboTree::CreateCollision()
+{
+
 }
 
 void ComboTree::FileMenu()

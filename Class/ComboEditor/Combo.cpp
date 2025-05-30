@@ -74,12 +74,12 @@ void Combo::Start(LWP::Resource::SkinningModel* model, LWP::Resource::Animation*
 	}
 }
 
-void Combo::Update(LWP::Resource::SkinningModel* model, LWP::Resource::Animation* anim)
+void Combo::Update(LWP::Resource::SkinningModel* model, LWP::Resource::Animation* anim, LWP::Object::Collision* collider, LWP::Object::Collider::Capsule* shape)
 {
 	// 攻撃判定用のタイマーが動作している場合のみ更新を行う
 	if (attackDecisionTimer_.GetIsActive()) {
 		// 攻撃判定に関する更新
-		AttackActiveUpdate(model);
+		AttackActiveUpdate(model, collider, shape);
 	}
 
 	// 攻撃アシスト判定用のタイマーが動作している場合のみ更新を行う
@@ -251,6 +251,9 @@ void Combo::AddValue(LWP::Utility::JsonIO& json)
 		.AddValue("FollowJointName", &followJointName_)							// 追従するジョイント名
 		.AddValue("AttackColliderLengthOffset", &attackColliderLengthOffset_)	// 始点からのオフセット
 		.AddValue("AttackColliderRadius", &attackColliderRadius_)				// コライダーの半径
+		.AddValue("Damage", &damage_)											// 攻撃のダメージ量
+		.AddValue("NockbackStrength", &nockbackStrength_)						// ノックバック強さ
+		.AddValue("SheathDurabityLoss", &sheathDurabityLoss_)					// 鞘の耐久値減少量
 		.AddValue("AttackAssistStartTime", &attackAssistStartTime_)				// 攻撃アシスト開始時間
 		.AddValue("AttackAssistEnableTime", &attackAssistEnableTime_)			// 攻撃アシスト有効時間
 		.AddValue("AttackAssistMoveAmount", &attackAssistMoveAmount_)			// 攻撃アシスト移動量
@@ -329,7 +332,7 @@ void Combo::AddCondition(LWP::Utility::ICondition* condition)
 	conditions_.push_back(std::move(condition));
 }
 
-void Combo::AttackActiveUpdate(LWP::Resource::SkinningModel* model)
+void Combo::AttackActiveUpdate(LWP::Resource::SkinningModel* model, LWP::Object::Collision* collider, LWP::Object::Collider::Capsule* shape)
 {
 	// タイマーの更新
 	attackDecisionTimer_.Update();
@@ -342,14 +345,29 @@ void Combo::AttackActiveUpdate(LWP::Resource::SkinningModel* model)
 			isAttackActive_ = true;
 			// 攻撃判定有効秒数でタイマー開始
 			attackDecisionTimer_.Start(attackEnableTime_);
+			// コライダーの有効判定設定
+			collider->isActive = true;
 		}
 		else {
 			// 攻撃判定無効
 			isAttackActive_ = false;
 			// 攻撃判定タイマーを非アクティブに
 			attackDecisionTimer_.SetIsActive(false);
+			// コライダーの有効判定設定
+			collider->isActive = false;
 		}
 	}
+	
+	// 追従するジョイント名が何も指定されていない場合
+	if (followJointName_ != "") {
+		// コライダーの追従設定
+		collider->SetFollow(model, followJointName_);
+	}
+
+	// コライダーのオフセット設定
+	shape->end = attackColliderLengthOffset_;
+	// コライダーの半径調整
+	shape->radius = attackColliderRadius_;
 }
 
 void Combo::AttackAssistUpdate()
@@ -520,11 +538,30 @@ void Combo::AttackSettings()
 
 	// 開始時間
 	ImGui::DragFloat("StartTime", &attackStartTime_, 0.01f, 0.0f);
-	// 終了時間
-	ImGui::DragFloat("EndTime", &attackEnableTime_, 0.01f, 0.0f);
+	// 有効時間
+	ImGui::DragFloat("EnableTime", &attackEnableTime_, 0.01f, 0.0f);
 
 	// コライダーの追従対象設定
 	Base::ImGuiManager::InputText("FollowJointName", followJointName_);
+
+	// コライダーの半径調整
+	ImGui::DragFloat3("ColliderOffset", &attackColliderLengthOffset_.x, 0.01f, 0.0f);
+	ImGui::DragFloat("ColliderRadius", &attackColliderRadius_, 0.01f, 0.0f);
+
+	ImGui::Unindent();
+	ImGui::NewLine();
+
+	// 量関連の設定
+	ImGui::SeparatorText("Amount Settings");
+
+	ImGui::Indent();
+
+	// ダメージ量の調整
+	ImGui::DragFloat("Damage Amount", &damage_, 0.01f, 0.0f);
+	// ノックバック強さの調整
+	ImGui::DragFloat("NockBack Strength", &nockbackStrength_, 0.01f, 0.0f);
+	// 鞘の耐久減少量の調整
+	ImGui::DragFloat("SheathDurabityLoss", &sheathDurabityLoss_, 0.1f, 0.0f);
 
 	ImGui::Unindent();
 	ImGui::NewLine();

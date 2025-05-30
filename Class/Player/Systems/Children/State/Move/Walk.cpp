@@ -17,6 +17,7 @@ Walk::Walk(Move* moveSystem, Player* player, const float& moveMultiply) {
 
 Walk::~Walk() {
 	player_->StopAnimation(LWP::Resource::Animation::TrackType::Blend);
+	player_->SetAnimationPlaySpeed(1.0f);
 }
 
 void Walk::Initialize() {

@@ -15,6 +15,10 @@ void Boss::Initialize(Player* player, const Vector3& position)
 	model_.worldTF.scale = { 0.8f, 0.8f, 0.8f };
 	state_ = new BossIdle();
 	state_->Initialize(this);
+
+	//名前設定
+	collider_.name = "Boss" + std::to_string(ID_);
+
 }
 
 void Boss::Update()

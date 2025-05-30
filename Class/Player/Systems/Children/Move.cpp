@@ -66,10 +66,9 @@ void Move::Reset() {
 	// 移動状態をなくす
 	if (GetTriggerChangeMoveState(MoveState::kNone)) {
 		moveState_ = MoveState::kNone;
-		state_ = new None(this, player_);
+		ChangeState(new None(this, player_));
 		preMoveState_ = moveState_;
 	}
-
 }
 
 void Move::DebugGUI() {
