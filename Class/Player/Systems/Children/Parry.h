@@ -94,6 +94,11 @@ public:// Getter, Setter
 	/// <returns></returns>
 	LWP::Math::Vector3 GetMoveRadian() { return radian_; }
 	/// <summary>
+	/// パリィされた相手の座標を取得
+	/// </summary>
+	/// <returns></returns>
+	LWP::Math::Vector3 GetParryTargetPos() { return parryTargetPos_; }
+	/// <summary>
 	/// 無敵時間中かを取得
 	/// </summary>
 	/// <returns></returns>
@@ -105,6 +110,16 @@ public:// Getter, Setter
 		}
 		return false;
 	}
+	/// <summary>
+	/// ジャストパリィが成功しているかを取得
+	/// </summary>
+	/// <returns></returns>
+	bool GetSuccessJustParry() { return isJustParry_; }
+	/// <summary>
+	/// 弱パリィが成功しているかを取得
+	/// </summary>
+	/// <returns></returns>
+	bool GetSuccessGoodParry() { return isGoodParry_; }
 #pragma endregion
 
 #pragma region Setter

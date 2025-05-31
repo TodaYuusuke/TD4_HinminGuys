@@ -2,7 +2,7 @@
 #include "IFollowCameraState.h"
 
 /// <summary>
-/// 鞘を投擲可能状態
+/// 入力によってカメラを動かせる状態
 /// </summary>
 class InputCamera : public IFollowCameraState {
 public:
@@ -19,13 +19,12 @@ public:
 	/// 更新処理
 	/// </summary>
 	void Update() override;
+	/// <summary>
+	/// 角度の更新
+	/// </summary>
+	void RotateUpdate() override;
 
 private:
-	// さや投げの移動量
-	LWP::Math::Vector3 throwMovement_ = { 0,0,10 };
-
-	LWP::Math::Vector3 velocity_;
-	LWP::Math::Vector3 start_;
-	LWP::Math::Vector3 end_;
-	float t_;
+	// スティックの入力を受け取る
+	LWP::Math::Vector3 stickDir_;
 };

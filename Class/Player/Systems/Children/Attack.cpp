@@ -87,7 +87,7 @@ void Attack::Update() {
 
 			// 自機とロックオン中の敵との距離
 			Vector3 attackTargetDist = (lockOnTarget_->GetWorldTF()->GetWorldPosition() - player_->GetWorldTF()->GetWorldPosition()) * 0.1f;
-			attackAssistVel_ = LWP::Utility::Interpolation::Slerp(comboTree_.GetAttackAssistMoveAmount(), attackTargetDist, 0.25f);
+			attackAssistVel_ = LWP::Utility::Interpolation::Lerp(comboTree_.GetAttackAssistMoveAmount(), attackTargetDist, 0.25f);
 
 			// 移動速度からラジアンを求める
 			attackAssistRadian_.y = LWP::Utility::GetRadian(LWP::Math::Vector3{ 0,0,1 }, attackAssistVel_.Normalize(), LWP::Math::Vector3{ 0,1,0 });

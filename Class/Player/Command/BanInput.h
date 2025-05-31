@@ -7,7 +7,7 @@
 #define BanEvasion 0b1 << 3	// 0000000000001000
 #define BanSheath 0b1 << 4	// 0000000000010000
 #define BanLockOn 0b1 << 5	// 0000000000100000
-#define BanALL (0b1 << 16) - 0b1	// 1111111111111111
+#define BanALL (0b1 << 4) - 0b1	// 0000000000011111(ロックオン以外)
 
 inline int GetSetBitPosition(int value) {
     int position = 0;
@@ -29,4 +29,13 @@ inline bool IsBitSame(int banInput, int currentInput, int bitPosition) {
 /// <returns></returns>
 inline int EraceBanInput(const int& currentBanInput, const int& eraceBanInput) {
     return currentBanInput & ~(1 << GetSetBitPosition(eraceBanInput));
+}
+/// <summary>
+/// 入力禁止を開始
+/// </summary>
+/// <param name="currentBanInput"></param>
+/// <param name="banInput"></param>
+/// <returns></returns>
+inline int StartBanInput(const int& currentBanInput, const int& banInput) {
+    return currentBanInput | banInput;
 }

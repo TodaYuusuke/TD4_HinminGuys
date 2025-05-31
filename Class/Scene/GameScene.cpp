@@ -10,7 +10,7 @@ using namespace LWP::Info;
 
 GameScene::GameScene()
 	: player_(&mainCamera, &enemyManager_, &followCamera_, &uiManager_),
-	followCamera_(&mainCamera, player_.GetModelPos()),
+	followCamera_(&player_, &mainCamera, player_.GetModelPos()),
 	uiManager_(&player_)
 {
 	enemyManager_.Initialize();

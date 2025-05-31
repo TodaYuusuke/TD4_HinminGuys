@@ -1,6 +1,11 @@
 #include "FollowCamera.h"
+#include "State/InputCamera.h"
+#include "State/ParryCamera.h"
+#include "State/LockOnCamera.h"
+#include "../Player/Player.h"
 
-FollowCamera::FollowCamera(LWP::Object::Camera* camera, LWP::Math::Vector3* targetPos) {
+FollowCamera::FollowCamera(Player* player, LWP::Object::Camera* camera, LWP::Math::Vector3* targetPos) {
+	player_ = player;
 	camera_ = camera;
 	targetPos_ = targetPos;
 }
@@ -19,6 +24,9 @@ void FollowCamera::Initialize() {
 		.EndGroup()
 		.CheckJsonFile();
 
+	// 状態
+	state_ = new InputCamera(this);
+
 	defaultTargetDist_ = kTargetDist;
 	lockOnOffset_ = kTargetDist;
 
@@ -29,17 +37,18 @@ void FollowCamera::Initialize() {
 }
 
 void FollowCamera::Update() {
-	// 入力処理
-	InputUpdate();
+	// 状態を確認
+	CheckState();
 
-	// ロックオン処理
-	LockOnUpdate();
+	// 状態
+	state_->Update();
 
-	// 座標の補間をしていない座標
+	// 座標の補間をしていない座標を算出
 	defaultPos_ = (*targetPos_) + kTargetDist * LWP::Math::Matrix4x4::CreateRotateXYZMatrix(camera_->worldTF.rotation);
-	// カメラの座標を決定
+	// カメラの後追い
 	interTarget_ = LWP::Utility::Interpolation::Exponential(interTarget_, (*targetPos_), interTargetRate);
-	camera_->worldTF.translation = interTarget_ + kTargetDist * LWP::Math::Matrix4x4::CreateRotateXYZMatrix(camera_->worldTF.rotation);
+	// カメラの座標を決定
+	camera_->worldTF.translation = shakeOffset_ + interTarget_ + kTargetDist * LWP::Math::Matrix4x4::CreateRotateXYZMatrix(camera_->worldTF.rotation);
 }
 
 void FollowCamera::DebugGUI() {
@@ -64,94 +73,27 @@ void FollowCamera::DebugGUI() {
 	ImGui::DragFloat3("Distance", &kTargetDist.x, 0.1f, -100, 100);
 }
 
-void FollowCamera::InputUpdate() {
-	// ロックオン対象がいないなら早期リターン
-	if (lockOnData_.targetTransform) { return; }
-	if (lockOnData_.isLocked) { return; }
-
-	// 回転する向き
-	LWP::Math::Vector2 dir = { 0.0f,0.0f };
-
-	// キーボードでの回転
-	if (LWP::Input::Keyboard::GetPress(DIK_UP)) {
-		dir.x -= sensitivity;
+void FollowCamera::CheckState() {
+	// パリィ成功状態
+	if (player_->GetSystemManager()->GetParrySystem()->GetSuccessJustParry()) {
+		if (state_->GetStateName() != "Parry") {
+			ChangeState(new ParryCamera(player_, this));
+		}
 	}
-	if (LWP::Input::Keyboard::GetPress(DIK_DOWN)) {
-		dir.x += sensitivity;
-	}
-	if (LWP::Input::Keyboard::GetPress(DIK_RIGHT)) {
-		dir.y += sensitivity;
-	}
-	if (LWP::Input::Keyboard::GetPress(DIK_LEFT)) {
-		dir.y -= sensitivity;
-	}
-
-	// コントローラーでの回転
-	dir.x -= LWP::Input::Pad::GetRStick().y * sensitivity;
-	dir.y += LWP::Input::Pad::GetRStick().x * sensitivity;
-
-	// スティックの入力をイージング
-	LWP::Math::Vector3 goal = { dir.x, dir.y, 0 };
-	stickDir = LWP::Utility::Interpolation::Exponential(stickDir, goal, rotateRate);
-
-	// 角度制限
-	ClampAngle(stickDir.x, ((*targetPos_) - camera_->worldTF.translation).Normalize(), LWP::Utility::DegreeToRadian(kOriginRotateX + kMinRotateX), LWP::Utility::DegreeToRadian(kOriginRotateX + kMaxRotateX));
-
-	// x軸回転
-	camera_->worldTF.rotation = camera_->worldTF.rotation * LWP::Math::Quaternion::CreateFromAxisAngle(LWP::Math::Vector3{ 1, 0, 0 }, 0.03f * stickDir.x);
-	// y軸は常に上を向くように固定
-	camera_->worldTF.rotation = LWP::Math::Quaternion::CreateFromAxisAngle(LWP::Math::Vector3{ 0, 1, 0 }, 0.03f * stickDir.y) * camera_->worldTF.rotation;
-}
-
-void FollowCamera::LockOnUpdate() {
-	// ロックオン対象がいないなら早期リターン
-	if (!lockOnData_.targetTransform) {
+	// 入力受付状態
+	else if (!lockOnData_.targetTransform && !lockOnData_.isLocked) {
+		// カメラと追従対象との距離を初期の値に徐々に戻す
 		kTargetDist = LWP::Utility::Interpolation::Exponential(kTargetDist, defaultTargetDist_, targetDistRate);
-		return;
+		if (state_->GetStateName() != "Input") {
+			ChangeState(new InputCamera(this));
+		}
 	}
-	if (!lockOnData_.isLocked) {
-		kTargetDist = LWP::Utility::Interpolation::Exponential(kTargetDist, defaultTargetDist_, targetDistRate);
-		return;
-	}
-
-	// ロックオン対象との距離
-	float lockOnTargetDist = (lockOnData_.targetTransform->translation - (*targetPos_)).Length();
-	lockOnTargetDist = std::clamp<float>(lockOnTargetDist, maxLength / 10.0f, maxLength);
-
-	// ロックオン対象との距離に応じてカメラのオフセットを変更
-	// ロックオン対象から遠いほどカメラが上に行く
-	lockOnOffset_.y = defaultTargetDist_.y + (2.0f * (lockOnTargetDist / maxLength));
-	lockOnOffset_.z = defaultTargetDist_.z - (3.0f * (lockOnTargetDist / maxLength));
-	kTargetDist = LWP::Utility::Interpolation::Exponential(kTargetDist, lockOnOffset_, targetDistRate);
-
-	// ロックオン対象とカメラとの方向ベクトルを算出
-	LWP::Math::Vector3 cameraPos = camera_->worldTF.translation;
-	lwp::Vector3 dist = (lockOnData_.targetTransform->GetWorldPosition() - cameraPos).Normalize();
-	LWP::Math::Vector2 dir;
-	dir.y = atan2(dist.x, dist.z);                        // Y軸（左右）
-	dir.x = atan2(-dist.y, sqrt(dist.x * dist.x + dist.z * dist.z)); // X軸（上下
-
-	// 数値が1なら角度制限を行わない
-	float isClampAngle = 1;
-	// 角度制限
-	ClampAngle(isClampAngle, ((lockOnData_.targetTransform->GetWorldPosition()) - camera_->worldTF.translation).Normalize(), LWP::Utility::DegreeToRadian(kOriginRotateX + 0.0f), LWP::Utility::DegreeToRadian(kOriginRotateX + 80.0f));
-
-	if (isClampAngle == 1) {
-		radian_ = { dir.x, dir.y, 0.0f };
-		// x軸回転
-		camera_->worldTF.rotation = LWP::Math::Quaternion::CreateFromAxisAngle(LWP::Math::Vector3{ 1, 0, 0 }, dir.x);
-	}
+	// 対象をロックオン状態
 	else {
-		// x軸回転
-		camera_->worldTF.rotation = LWP::Math::Quaternion::CreateFromAxisAngle(LWP::Math::Vector3{ 1, 0, 0 }, radian_.x);
+		if (state_->GetStateName() != "LockOn") {
+			ChangeState(new LockOnCamera(this));
+		}
 	}
-
-	// y軸は常に上を向くように固定
-	camera_->worldTF.rotation = LWP::Math::Quaternion::CreateFromAxisAngle(LWP::Math::Vector3{ 0, 1, 0 }, dir.y) * camera_->worldTF.rotation;
-}
-
-void FollowCamera::ParryLockOnUpdate() {
-
 }
 
 void FollowCamera::ClampAngle(float& target, LWP::Math::Vector3 distance, float minLimitAngle, float maxLimitAngle) {
@@ -165,4 +107,9 @@ void FollowCamera::ClampAngle(float& target, LWP::Math::Vector3 distance, float 
 	if (limitX > maxLimitAngle && target >= 0.0f) {
 		target = 0;
 	}
+}
+
+void FollowCamera::ChangeState(IFollowCameraState* pState) {
+	delete state_;
+	state_ = pState;
 }

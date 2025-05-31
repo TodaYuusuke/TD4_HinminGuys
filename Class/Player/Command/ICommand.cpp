@@ -96,15 +96,23 @@ void ParryCommand::Reset(Player& player, int& banInput) {
 	}
 }
 
+LockOnCommand::LockOnCommand() {
+	banInput_ = BanNone;
+	currentInput_ = ~BanLockOn;
+	isActive_ = false;
+}
+
 void LockOnCommand::Exec(Player& player, int& banInput) {
+	// 入力不可
+	if (IsBitSame(banInput, BanLockOn, GetSetBitPosition(BanLockOn))) { return; }
+
 	player.GetSystemManager()->GetLockOnSystem()->Command();
 }
 
 void LockOnCommand::Reset(Player& player, int& banInput) {
-	if (!player.GetSystemManager()->GetLockOnSystem()->GetIsActive()) {
-		banInput = BanNone;
-		isActive_ = false;
-	}
+	banInput = BanNone;
+	isActive_ = false;
+	player;
 }
 
 EvasionCommand::EvasionCommand() {

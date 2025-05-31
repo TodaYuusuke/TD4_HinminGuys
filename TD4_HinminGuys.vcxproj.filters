@@ -61,6 +61,8 @@
     <ClCompile Include="Class\Camera\State\LockOnCamera.cpp" />
     <ClCompile Include="Class\Player\PlayerParameter.cpp" />
     <ClCompile Include="Class\Player\Systems\Children\State\Sheath\Break.cpp" />
+    <ClCompile Include="Class\UI\GameUI.cpp" />
+    <ClCompile Include="Class\Shake\Shake.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Class\ComboEditor\ComboTree.h" />
@@ -142,6 +144,9 @@
     <ClInclude Include="Class\Player\PlayerParameter.h" />
     <ClInclude Include="Class\IParameter.h" />
     <ClInclude Include="Class\Player\Systems\Children\State\Sheath\Break.h" />
+    <ClInclude Include="Class\Player\Systems\Children\Hit.h" />
+    <ClInclude Include="Class\UI\GameUI.h" />
+    <ClInclude Include="Class\Shake\Shake.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />
