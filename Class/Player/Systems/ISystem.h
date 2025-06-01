@@ -47,14 +47,6 @@ private:
 
 public:// Getter, Setter
 #pragma region Getter
-
-
-	int GetCurrentState() { return currentState_; }
-	/// <summary>
-	/// 次に遷移できるシステムを取得
-	/// </summary>
-	/// <returns></returns>
-	int GetNextState() { return nextState_; }
 	/// <summary>
 	/// 機能が使える状態かを取得
 	/// </summary>
@@ -83,17 +75,12 @@ public:// Getter, Setter
 	/// <param name="player"></param>
 	void SetPlayer(Player* player) { player_ = player; }
 	/// <summary>
-	/// 次に遷移できるシステムを設定
-	/// </summary>
-	/// <param name="nextState"></param>
-	void SetNextState(const int& nextState) { nextState_ = nextState; }
-	/// <summary>
 	/// 機能が使える状態かを設定
 	/// </summary>
 	void SetIsActive(bool isActive) { isActive_ = isActive; }
 #pragma endregion
 
-protected:
+protected:// 外部から受け取る変数
 	// 自機のアドレス
 	Player* player_;
 
@@ -103,13 +90,9 @@ protected:
 	// シーンで使用しているカメラのポインタ
 	LWP::Object::Camera* pCamera_;
 
+protected:
 	// フレーム単位で発生するアクションイベントを管理するクラス
 	EventOrder eventOrder_;
-
-
-	int currentState_;
-	// 次に遷移できるシステム(ビットで管理)
-	int nextState_;
 
 	// 機能が使える状態か
 	bool isActive_ = false;

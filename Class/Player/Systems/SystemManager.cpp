@@ -22,9 +22,9 @@ void SystemManager::Initialize() {
 	lockOnSystem_->SetFollowCamera(followCamera_);
 	systems_.push_back(lockOnSystem_.get());
 	// 被弾機能
-	takeDamageSystem_ = std::make_unique<TakeDamage>(pCamera_, player_);
-	takeDamageSystem_->Initialize();
-	systems_.push_back(takeDamageSystem_.get());
+	damageResponseSystem_ = std::make_unique<DamageResponse>(pCamera_, player_);
+	damageResponseSystem_->Initialize();
+	systems_.push_back(damageResponseSystem_.get());
 	// パリィ機能
 	parrySystem_ = std::make_unique<Parry>(pCamera_, player_);
 	parrySystem_->Initialize();

@@ -68,6 +68,16 @@ public: // メンバ関数
 	/// </summary>
 	void DebugGUI();
 
+	/// <summary>
+	/// 硬直タイマーGUI
+	/// </summary>
+	void StifnesTimerGUI() { stifnessTimer_.DebugGUI("StiffnessTimer"); }
+
+	/// <summary>
+	/// 受付時間タイマーGUI
+	/// </summary>
+	void ReceptTimerGUI() { receptTimer_.DebugGUI("ReceptTimer_"); }
+
 public: // アクセッサ等
 	
 	/// <summary>

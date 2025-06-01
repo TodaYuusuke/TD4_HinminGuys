@@ -14,6 +14,11 @@ public:
 	/// </summary>
 	virtual void Update() = 0;
 
+	/// <summary>
+	/// 角度の更新
+	/// </summary>
+	virtual void RotateUpdate() = 0;
+
 public:// Getter, Setter
 #pragma region Getter
 	/// <summary>

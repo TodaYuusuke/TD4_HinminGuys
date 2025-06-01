@@ -118,6 +118,16 @@ public:// Getter, Setter
 	/// </summary>
 	/// <returns></returns>
 	bool GetIsAttackRecovery() { return isAttackRecovery_; }
+	/// <summary>
+	/// ダメージ取得
+	/// </summary>
+	/// <returns></returns>
+	float GetDamage() { return comboTree_.GetDamage(); }
+	/// <summary>
+	/// ノックバック量取得
+	/// </summary>
+	/// <returns></returns>
+	float GetKnockBackStrength() { return comboTree_.GetNockBackStrength(); }
 #pragma endregion
 
 #pragma region Setter

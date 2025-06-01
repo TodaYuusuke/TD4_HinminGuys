@@ -30,9 +30,6 @@ Player::Player(LWP::Object::Camera* camera, EnemyManager* enemyManager, FollowCa
 void Player::Initialize() {
 	inputHandler_ = InputHandler::GetInstance();
 
-	// 各種パラメータを作成
-	parameter_.Initialize();
-
 	// 当たり判定を作成
 	CreateCollision();
 
@@ -41,6 +38,14 @@ void Player::Initialize() {
 
 	// 大きさを一時的に調整
 	model_.worldTF.scale = { 0.5f, 0.5f, 0.5f };
+
+	json_.Init("Player.json");
+	// 当たり判定
+	json_.BeginGroup("Collider")
+		.AddValue<Vector3>("Min", &aabb_.min)
+		.AddValue<Vector3>("Max", &aabb_.max)
+		.EndGroup()
+		.CheckJsonFile();
 
 	// 刀モデルをプレイヤーの手に追従させる
 	swordModel_.GetJoint("Grip")->localTF.Parent(&model_, "WeaponAnchor");
@@ -80,13 +85,19 @@ void Player::DebugGUI() {
 		systemManager_->DebugGUI();
 		ImGui::TreePop();
 	}
+	// WorldTransform
+	model_.worldTF.DebugGUI();
+	// 当たり判定
+	if (ImGui::TreeNode("Collider")) {
+		json_.DebugGUI();
+		ImGui::TreePop();
+	}
 	// アニメーション
 	if (ImGui::TreeNode("Animation")) {
 		animation_.DebugGUI();
 		ImGui::TreePop();
 	}
-	// WorldTransform
-	model_.worldTF.DebugGUI();
+
 #endif // DEBUG
 }
 
@@ -111,13 +122,13 @@ void Player::CreateCollision() {
 	collider_.mask.SetHitFrag(GetAttack());
 	collider_.enterLambda = [this](LWP::Object::Collision* hitTarget) {
 		hitTarget;
-		ChangeHPGauge(-10.0f);
+		TakeDamage(10.0f);
 		};
 }
 
 void Player::InvinsibleUpdate() {
 	// 被弾時
-	if (systemManager_->GetTakeDamageSystem()->GetIsInvinsible()) {
+	if (systemManager_->GetDamageResponseSystem()->GetIsInvinsible()) {
 		collider_.isActive = false;
 		aabb_.isShowWireFrame = false;
 	}

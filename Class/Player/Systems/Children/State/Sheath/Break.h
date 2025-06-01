@@ -43,9 +43,6 @@ private:
 	void CheckBreakState();
 
 private:
-	// ダッシュ攻撃の移動量
-	LWP::Math::Vector3 dashAttackMovement_ = { 0,0,10 };
-
 	LWP::Math::Vector3 velocity_;
 	LWP::Math::Vector3 start_;
 	LWP::Math::Vector3 end_;

@@ -3,7 +3,7 @@
 #include "../../Gauge/HP/HP.h"
 #include "../EventOrder.h"
 
-class TakeDamage : public ISystem {
+class DamageResponse : public ISystem {
 public:
 	enum class EventOrderState {
 		kInvinsible,
@@ -11,8 +11,8 @@ public:
 	};
 
 public:
-	TakeDamage(LWP::Object::Camera* camera, Player* player);
-	~TakeDamage() override = default;
+	DamageResponse(LWP::Object::Camera* camera, Player* player);
+	~DamageResponse() override = default;
 
 	/// <summary>
 	/// 初期化

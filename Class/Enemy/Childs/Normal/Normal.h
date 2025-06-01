@@ -17,6 +17,8 @@ public:
 
 private:
 	
+	//設定用パラメータ
+	static EnemyParameter configParameter_;
 
 };
 

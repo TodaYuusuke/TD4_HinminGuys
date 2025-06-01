@@ -6,11 +6,38 @@
             "float :SwingTime": 0.0
         }
     },
+    "Group :Collider": {
+        "Vector3 :Length": [
+            0.0,
+            0.0,
+            -10.0
+        ],
+        "float :Radius": 1.0
+    },
+    "Group :DashAttack": {
+        "Group :GraceTime": {
+            "float :DashAttackFinishTime": 0.20000000298023224,
+            "float :RecoveryTime": 0.0,
+            "float :SwingTime": 0.0
+        },
+        "Vector3 :Movement": [
+            0.0,
+            0.0,
+            10.0
+        ]
+    },
+    "Group :Invinsible": {
+        "Group :GraceTime": {
+            "float :InvinsibleTime": 0.20000000298023224,
+            "float :RecoveryTime": 0.0,
+            "float :SwingTime": 0.0
+        }
+    },
     "Group :Throw": {
         "Group :GraceTime": {
             "float :RecoveryTime": 0.0,
             "float :SwingTime": 0.0,
-            "float :ThrowFinishTime": 1.00000000298023224
+            "float :ThrowFinishTime": 1.0
         },
         "Vector3 :Movement": [
             0.0,

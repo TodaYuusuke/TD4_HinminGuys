@@ -56,7 +56,7 @@ void Break::Command() {
 		// 無敵開始
 		(*eventOrders_)[(int)Sheath::SheathState::kInvinsible].Start();
 		start_ = { 0,0,0 };
-		end_ = dashAttackMovement_ * Matrix4x4::CreateRotateXYZMatrix(player_->GetSystemManager()->GetRotate());
+		end_ = sheathSystem_->dashAttackMovement * Matrix4x4::CreateRotateXYZMatrix(player_->GetSystemManager()->GetRotate());
 		t_ = 0.0f;
 		// ロックオン以外何もできないようにする
 		inputHandler_->GetSheathCommand()->SetBanInput(inputHandler_->GetSheathCommand()->GetBanInput() | (BanMove));
@@ -87,6 +87,7 @@ void Break::CheckBreakState() {
 	}
 	// ダッシュ攻撃時間
 	else if ((*eventOrders_)[(int)Sheath::SheathState::kBreak].GetCurrentTimeEvent().name == "DashAttackFinishTime") {
+		// 当たり判定を出す
 		sheathSystem_->SetIsCollision(true);
 
 		// 回避の速度補間がなくなるまでイージングを行う

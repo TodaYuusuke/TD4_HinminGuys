@@ -2,10 +2,13 @@
 #include "../../../Player/Player.h"
 #include "../State/NormalIdle.h"
 #include "../../DirectXGame/Engine/primitive/model/Material.h"
+#include "../../../GameMask.h"
 
 using namespace LWP::Primitive;
+using namespace GameMask;
 
 void Normal::Initialize(Player* player, const Vector3& position)
+
 {
 	model_.LoadShortPath("player/Player_Simple.gltf");
 	type_ = EnemyType::kNormal;
@@ -18,9 +21,10 @@ void Normal::Initialize(Player* player, const Vector3& position)
 	model_.worldTF.scale = { 0.5f, 0.5f, 0.5f };
 	state_ = new NormalIdle();
 	state_->Initialize(this);
-	attackHitBox_.isActive = false;
-	attackHitBox_.isShowWireFrame = false;
-	hitBox_.SetFollowPtr(&model_.worldTF);
+
+	//名前設定
+	collider_.name = "Normal" + std::to_string(ID_);
+
 }
 
 void Normal::Update()

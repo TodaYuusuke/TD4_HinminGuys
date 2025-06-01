@@ -1,5 +1,17 @@
 {
     "Group :Parry": {
+        "Group :Collision": {
+            "Vector3 :Max": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "Vector3 :Min": [
+                -1.0,
+                -1.0,
+                -1.0
+            ]
+        },
         "Group :GraceTime": {
             "float :GoodParry": 0.6000000238418579,
             "float :JustParry": 0.20000000298023224,

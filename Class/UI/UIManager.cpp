@@ -1,9 +1,12 @@
 #include "UIManager.h"
+#include "../Player/Player.h"
 
 using namespace LWP;
 using namespace LWP::Math;
 
-UIManager::UIManager() {
+UIManager::UIManager(Player* player) {
+	player_ = player;
+
 	// HP
 	hp_.Initialize();
 	// 鞘ゲージ
@@ -59,6 +62,9 @@ UIManager::UIManager() {
 
 		.EndGroup()
 		.CheckJsonFile();
+
+	// 座標適用
+	guideOperation_[2].worldTF = guideOperation_[1].worldTF;
 }
 
 void UIManager::Initialize() {
@@ -66,7 +72,19 @@ void UIManager::Initialize() {
 }
 
 void UIManager::Update() {
+	// 回避中はダッシュUIに変更
+	if (player_->GetSystemManager()->GetEvasionSystem()->GetIsActive()) {
+		guideOperation_[1].isActive = false;
+		guideOperation_[2].isActive = true;
+	}
+	else {
+		guideOperation_[2].isActive = false;
+		guideOperation_[1].isActive = true;
+	}
+
+	// HP
 	hp_.Update();
+	// 鞘ゲージ
 	sheathGauge_.Update();
 }
 
