@@ -71,6 +71,8 @@ void Combo::Start(LWP::Resource::SkinningModel* model, LWP::Resource::Animation*
 
 		// アニメーションの再生を行う
 		anim->Play(animName_, transitionTime_);
+		// 再生速度指定
+		anim->GetPlayBackSpeed() = animSpeed_;
 	}
 }
 
@@ -244,6 +246,7 @@ void Combo::AddValue(LWP::Utility::JsonIO& json)
 	json.BeginGroup(name_)
 		.AddValue("derivationPriority", &derivationProiority_)					// 派生優先度
 		.AddValue("AnimName", &animName_)										// アニメーション名
+		.AddValue("AnimPlaySpeed", &animSpeed_)									// アニメーション名
 		.AddValue("TransitionTime", &transitionTime_)							// 遷移時間
 		.AddValue("IsLoop", &isLoop_)											// ループ状態
 		.AddValue("AttackStartTime", &attackStartTime_)							// 判定開始時間
@@ -522,6 +525,8 @@ void Combo::AnimSettings()
 
 	// 遷移秒数の設定
 	ImGui::DragFloat("TransitionTime", &transitionTime_, 0.01f, 0.0f);
+	// 再生速度の設定
+	ImGui::DragFloat("PlaySpeed", &animSpeed_, 0.01f, 0.0f);
 	// ループ状態の設定
 	ImGui::Checkbox("IsLoop", &isLoop_);
 
