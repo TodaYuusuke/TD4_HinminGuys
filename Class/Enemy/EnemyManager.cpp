@@ -32,6 +32,7 @@ void EnemyManager::Update()
 	enemies_.remove_if([](IEnemy* enemy) {
 
 		if (enemy->GetIsDead()) {
+			delete enemy;
 			return true;
 		}
 

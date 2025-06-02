@@ -21,7 +21,6 @@ void NormalAttack::Initialize(IEnemy* enemy)
 	// 体の判定生成
 	collider_.SetFollow(&enemy_->GetSwordModel().worldTF);
 	collider_.isActive = true;
-	collider_.worldTF.translation = { 0.0f, 0.0f, 0.0f };
 	// 自機の所属しているマスクを設定
 	collider_.mask.SetBelongFrag(GetAttack());
 	// 当たり判定をとる対象のマスクを設定

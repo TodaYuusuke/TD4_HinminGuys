@@ -28,7 +28,7 @@ struct EnemyAttackParameter {
 /// 敵の全体パラメータ
 /// </summary>
 struct EnemyParameter {
-	float hp = 1.0f; //体力
+	float hp = 10.0f; //体力
 	EnemyAttackParameter attackParameter; //攻撃パラメータ
 };
 
