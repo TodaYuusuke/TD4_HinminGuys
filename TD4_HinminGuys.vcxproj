@@ -191,6 +191,7 @@
     <ClCompile Include="Class\Scene\VoidScene.cpp" />
     <ClCompile Include="Class\Camera\State\InputCamera.cpp" />
     <ClCompile Include="Class\Camera\State\LockOnCamera.cpp" />
+    <ClCompile Include="Class\UI\GameUI.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Class\Player\Player.cpp" />
     <ClCompile Include="Class\Player\Systems\Children\Move.cpp" />
@@ -289,6 +290,8 @@
     <ClInclude Include="Class\Camera\State\ParryCamera.h" />
     <ClInclude Include="Class\Camera\State\LockOnCamera.h" />
     <ClInclude Include="Class\Player\PlayerParameter.h" />
+    <ClInclude Include="Class\Player\Systems\Children\Hit.h" />
+    <ClInclude Include="Class\UI\GameUI.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />

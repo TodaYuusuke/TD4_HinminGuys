@@ -1,0 +1,72 @@
+{
+    "Group :ActiveData": {
+        "Vector3 :EndColor": [
+            255.0,
+            0.0,
+            0.0
+        ],
+        "Vector3 :EndScale": [
+            1.2999999523162842,
+            1.2999999523162842,
+            0.0
+        ],
+        "Vector3 :EndTranslation": [
+            1620.0,
+            930.0,
+            0.0
+        ],
+        "Vector3 :StartColor": [
+            160.0,
+            0.0,
+            0.0
+        ],
+        "Vector3 :StartScale": [
+            1.0,
+            1.0,
+            0.0
+        ],
+        "Vector3 :StartTranslation": [
+            1620.0,
+            930.0,
+            0.0
+        ],
+        "bool :IsLoop": true,
+        "float :MoveTime": 0.800000011920929,
+        "int32_t :EasingType": 9
+    },
+    "Group :IdleData": {
+        "Vector3 :EndColor": [
+            255.0,
+            255.0,
+            255.0
+        ],
+        "Vector3 :EndScale": [
+            1.0,
+            1.0,
+            0.0
+        ],
+        "Vector3 :EndTranslation": [
+            1620.0,
+            930.0,
+            0.0
+        ],
+        "Vector3 :StartColor": [
+            255.0,
+            255.0,
+            255.0
+        ],
+        "Vector3 :StartScale": [
+            1.0,
+            1.0,
+            0.0
+        ],
+        "Vector3 :StartTranslation": [
+            1620.0,
+            930.0,
+            0.0
+        ],
+        "bool :IsLoop": false,
+        "float :MoveTime": 1.0,
+        "int32_t :EasingType": 0
+    }
+}

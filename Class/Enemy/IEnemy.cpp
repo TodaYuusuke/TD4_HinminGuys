@@ -12,6 +12,7 @@ std::array<const char*, int(EnemyType::kMax)> IEnemy::enemyTypeName =
 { "Normal", "Boss" };
 
 IEnemy::IEnemy()
+	: aabb_(collider_.SetBroadShape(LWP::Object::Collider::AABB()))
 {
 	//IDをセット
 	ID_ = currentEnemyID_;
