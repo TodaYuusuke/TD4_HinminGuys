@@ -16,6 +16,11 @@ Break::Break(Sheath* sheathSystem, Player* player, std::map<int, EventOrder>* ev
 	stateName_ = "Break";
 
 	isActive_ = true;
+
+	// 鞘モデルを非表示
+	sheathSystem_->SetIsSheathModelActive(false);
+	// 本体のモデルも非表示
+	player_->SetIsSheathModelActive(false);
 }
 
 void Break::Initialize() {

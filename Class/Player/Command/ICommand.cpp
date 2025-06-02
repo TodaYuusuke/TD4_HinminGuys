@@ -68,10 +68,8 @@ void NormalAttackCommand::Exec(Player& player, int& banInput) {
 
 void NormalAttackCommand::Reset(Player& player, int& banInput) {
 	if (!player.GetSystemManager()->GetAttackSystem()->GetIsStiffness()) {
-		if (player.GetSystemManager()->GetAttackSystem()->GetIsAttackRecovery()) {
-			banInput = BanNone;
-			isActive_ = false;
-		}
+		banInput = BanNone;
+		isActive_ = false;
 	}
 }
 
@@ -96,15 +94,23 @@ void ParryCommand::Reset(Player& player, int& banInput) {
 	}
 }
 
+LockOnCommand::LockOnCommand() {
+	banInput_ = BanNone;
+	currentInput_ = ~BanLockOn;
+	isActive_ = false;
+}
+
 void LockOnCommand::Exec(Player& player, int& banInput) {
+	// 入力不可
+	if (IsBitSame(banInput, BanLockOn, GetSetBitPosition(BanLockOn))) { return; }
+
 	player.GetSystemManager()->GetLockOnSystem()->Command();
 }
 
 void LockOnCommand::Reset(Player& player, int& banInput) {
-	if (!player.GetSystemManager()->GetLockOnSystem()->GetIsActive()) {
-		banInput = BanNone;
-		isActive_ = false;
-	}
+	banInput = BanNone;
+	isActive_ = false;
+	player;
 }
 
 EvasionCommand::EvasionCommand() {
@@ -124,7 +130,7 @@ void EvasionCommand::Exec(Player& player, int& banInput) {
 void EvasionCommand::Reset(Player& player, int& banInput) {
 	if (!player.GetSystemManager()->GetEvasionSystem()->GetIsActive()) {
 		// ダメージを食らっていないとき
-		if (!player.GetSystemManager()->GetTakeDamageSystem()->GetIsStun()) {
+		if (!player.GetSystemManager()->GetDamageResponseSystem()->GetIsStun()) {
 			banInput = BanNone;
 			isActive_ = false;
 		}

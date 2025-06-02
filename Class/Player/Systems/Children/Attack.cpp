@@ -11,24 +11,10 @@ using namespace LWP::Object;
 using namespace LWP::Object::Collider;
 using namespace GameMask;
 
-// 通常攻撃発動までにかかる時間[秒]
-float Attack::kNormalSwingTime;
-// 通常攻撃の猶予時間[秒]
-float Attack::kNormalAttackTime;
-// 通常攻撃の硬直[秒]
-float Attack::kNormalRecoveryTime;
-
 Attack::Attack(LWP::Object::Camera* camera, Player* player)
-	: aabb_(collider_.SetBroadShape(LWP::Object::Collider::AABB()))
 {
 	pCamera_ = camera;
 	player_ = player;
-
-	// 攻撃の当たり判定作成
-	CreateCollision();
-
-	nextState_ = InputNone;
-	currentState_ = InputAttack;
 
 	// 状態作成
 	state_ = new NoneAttack(this);
@@ -36,6 +22,8 @@ Attack::Attack(LWP::Object::Camera* camera, Player* player)
 
 	// コンボツリーの初期化
 	comboTree_.Init("Combo.json", player_->GetModel(), player_->GetAnimation());
+	// コライダーのマスク設定
+	comboTree_.SetColliderMaskFrag(GetAttack(), GetEnemy());
 }
 
 Attack::~Attack() {
@@ -56,11 +44,16 @@ void Attack::Initialize() {
 }
 
 void Attack::Update() {
-	// パリィ中、回避中は攻撃できない
+	// 攻撃入力可能状態
 	if (!IsBitSame(inputHandler_->GetBanInput(), BanAttack, GetSetBitPosition(BanAttack))) {
-		// コンボツリー自体は毎フレーム更新する
-		comboTree_.Update();
+		comboTree_.SetIsRecept(true);
 	}
+	else {
+		comboTree_.SetIsRecept(false);
+	}
+	
+	// コンボツリー自体は毎フレーム更新する
+	comboTree_.Update();
 
 	// コンボが無操作状態のコンボでない場合
 	if (comboTree_.GetIsStiffness()) {
@@ -78,6 +71,11 @@ void Attack::Update() {
 		}
 	}
 
+	// 受付時間が終了していればコンボ中断
+	if (comboTree_.GetIsReceptEndTrigger() && !comboTree_.GetIsStiffness()) {
+		isAttackRecovery_ = false;
+	}
+
 	// 攻撃アシストが有効になっている場合
 	if (comboTree_.GetIsEnableAttackAssist() && !comboTree_.GetIsThisRoot()) {
 		// ロックオン中なら対象に近づいて攻撃
@@ -87,7 +85,7 @@ void Attack::Update() {
 
 			// 自機とロックオン中の敵との距離
 			Vector3 attackTargetDist = (lockOnTarget_->GetWorldTF()->GetWorldPosition() - player_->GetWorldTF()->GetWorldPosition()) * 0.1f;
-			attackAssistVel_ = LWP::Utility::Interpolation::Slerp(comboTree_.GetAttackAssistMoveAmount(), attackTargetDist, 0.25f);
+			attackAssistVel_ = LWP::Utility::Interpolation::Lerp(comboTree_.GetAttackAssistMoveAmount(), attackTargetDist, 0.25f);
 
 			// 移動速度からラジアンを求める
 			attackAssistRadian_.y = LWP::Utility::GetRadian(LWP::Math::Vector3{ 0,0,1 }, attackAssistVel_.Normalize(), LWP::Math::Vector3{ 0,1,0 });
@@ -120,8 +118,7 @@ void Attack::Update() {
 
 void Attack::Reset() {
 	isActive_ = false;
-	collider_.isActive = false;
-	aabb_.isShowWireFrame = true;
+	isAttackRecovery_ = false;
 	attackAssistVel_ = { 0.0f,0.0f,0.0f };
 	// アニメーションを初期化
 	player_->ResetAnimation();
@@ -143,14 +140,8 @@ void Attack::DebugGUI() {
 			}
 			ImGui::TreePop();
 		}
-
+		
 		eventOrder_.DebugGUI();
-
-		// 当たり判定
-		if (ImGui::TreeNode("Collider")) {
-			collider_.DebugGUI();
-			ImGui::TreePop();
-		}
 
 		ImGui::DragFloat3("Velocity", &attackAssistVel_.x, 0.1f, -10000, 10000);
 		ImGui::DragFloat3("Rotation", &attackAssistRadian_.x, 0.1f, -6.28f, 6.28f);
@@ -161,19 +152,10 @@ void Attack::DebugGUI() {
 }
 
 void Attack::CreateJsonFIle() {
-	json_.Init("AttackData.json");
-	json_.BeginGroup("EventOrder")
-		.BeginGroup("GraceTime")
-		.AddValue<float>("SwingTime", &kNormalSwingTime)
-		.AddValue<float>("AttackTime", &kNormalAttackTime)
-		.AddValue<float>("AttackRecoveryTime", &kNormalRecoveryTime)
-		.EndGroup()
-		.EndGroup()
-		.CheckJsonFile();
 }
 
 void Attack::Command() {
-	collider_.isActive = true;
+	//collider_.isActive = true;
 	//isEnableInput_ = true;
 }
 
@@ -182,49 +164,12 @@ void Attack::ChangeState(IAttackSystemState* pState) {
 	state_ = pState;
 }
 
-void Attack::CreateCollision() {
-	// 攻撃判定生成
-	//aabb_.isShowWireFrame = false;
-	collider_.SetFollow(player_->GetWorldTF());
-	collider_.worldTF.translation = { 0,1,2 };
-	collider_.isActive = false;
-	collider_.mask.SetBelongFrag(GetAttack());
-	collider_.mask.SetHitFrag(GetEnemy());
-	collider_.enterLambda = [this](LWP::Object::Collision* hitTarget) {
-		hitTarget;
-		// 鞘のゲージを減少
-		player_->GetUIManager()->ChangeSheathGauge(10.0f);
-		};
-}
-
 void Attack::CreateEventOrder() {
 	eventOrder_.Initialize();
-	// 通常攻撃発生までの時間
-	eventOrder_.CreateTimeEvent(TimeEvent{ kNormalSwingTime * 60.0f, "NormalAttackSwingTime" });
-	// 通常攻撃の猶予時間
-	eventOrder_.CreateTimeEvent(TimeEvent{ kNormalAttackTime * 60.0f, "NormalAttackTime" });
-	// 通常攻撃の硬直時間
-	eventOrder_.CreateTimeEvent(TimeEvent{ kNormalRecoveryTime * 60.0f, "NormalAttackRecoveryTime" });
 }
 
 void Attack::CheckAttackState() {
-	// 振りかぶりの時
-	if (eventOrder_.GetCurrentTimeEvent().name == "NormalAttackSwingTime") {
-		collider_.isActive = false;
-		// 攻撃が当たる位置に自機を移動させる
-		AttackAssistMovement();
-	}
-	else if (eventOrder_.GetCurrentTimeEvent().name == "NormalAttackTime") {
-		collider_.isActive = true;
-	}
-	// 硬直
-	else if (eventOrder_.GetCurrentTimeEvent().name == "NormalAttackRecoveryTime") {
-		collider_.isActive = false;
-	}
-	// 振りかぶり以外の時なら状態をリセット
-	else {
-		ChangeState(new NoneAttack(this));
-	}
+	
 }
 
 void Attack::AttackAssistMovement() {

@@ -1,7 +1,9 @@
 #pragma once
 #include "../Adapter/Adapter.h"
+#include "State/IFollowCameraState.h"
 #include <numbers>
 
+class Player;
 /// <summary>
 /// 自機に追従するカメラ
 /// </summary>
@@ -22,7 +24,7 @@ public:
 
 public:
 	// コンストラクタ
-	FollowCamera(LWP::Object::Camera* camera, LWP::Math::Vector3* targetPos);
+	FollowCamera(Player* player, LWP::Object::Camera* camera, LWP::Math::Vector3* targetPos);
 	// デストラクタ
 	~FollowCamera() = default;
 
@@ -40,22 +42,12 @@ public:
 	/// </summary>
 	void DebugGUI();
 
-private:
 	/// <summary>
-	/// 入力処理
+	/// カメラの状態を確認
 	/// </summary>
-	void InputUpdate();
+	void CheckState();
 
-	/// <summary>
-	/// ロックオンの更新処理
-	/// </summary>
-	void LockOnUpdate();
-
-	/// <summary>
-	/// パリィ時のロックオン
-	/// </summary>
-	void ParryLockOnUpdate();
-
+public:
 	/// <summary>
 	/// 角度制限の処理
 	/// </summary>
@@ -65,6 +57,12 @@ private:
 	/// <param name="maxLimitAngle">角度の上限値(単位:ラジアン)</param>
 	void ClampAngle(float& target, LWP::Math::Vector3 distance, float minLimitAngle, float maxLimitAngle);
 
+	/// <summary>
+	/// 状態の変更
+	/// </summary>
+	/// <param name="pState"></param>
+	void ChangeState(IFollowCameraState* pState);
+
 public:// Getter,Setter
 #pragma region Getter
 	/// <summary>
@@ -73,10 +71,20 @@ public:// Getter,Setter
 	/// <returns></returns>
 	LWP::Object::Camera* GetCamera() { return camera_; }
 	/// <summary>
+	/// ロックオン中の情報を取得
+	/// </summary>
+	/// <returns></returns>
+	LockOnData GetLockOnData() { return lockOnData_; }
+	/// <summary>
 	/// 線形補間をしていない純粋なカメラ座標を取得
 	/// </summary>
 	/// <returns></returns>
 	LWP::Math::Vector3 GetDefaultPos() { return defaultPos_; }
+	/// <summary>
+	/// 追従対象の座標を取得
+	/// </summary>
+	/// <returns></returns>
+	LWP::Math::Vector3 GetTargetPos() { return *targetPos_; }
 	/// <summary>
 	/// ロックオン中かを取得
 	/// </summary>
@@ -86,16 +94,26 @@ public:// Getter,Setter
 
 #pragma region Setter
 	/// <summary>
-	/// 追従対象の座標を設定
-	/// </summary>
-	/// <param name="targetPos">追従対象の座標のアドレス</param>
-	void SetTargetPos(LWP::Math::Vector3* targetPos) { targetPos_ = targetPos; }
-
-	/// <summary>
 	/// Sceneで使用されているmainCameraのアドレスを設定
 	/// </summary>
 	/// <param name="camera"></param>
 	void SetCamera(LWP::Object::Camera* camera) { camera_ = camera; }
+	/// <summary>
+	/// 追従対象の座標を設定
+	/// </summary>
+	/// <param name="targetPos">追従対象の座標のアドレス</param>
+	void SetTargetPos(LWP::Math::Vector3* targetPos) { targetPos_ = targetPos; }
+	/// <summary>
+	/// カメラの揺れを設定
+	/// </summary>
+	/// <param name="shakeOffset"></param>
+	void SetShakeOffset(LWP::Math::Vector3 shakeOffset) { shakeOffset_ = shakeOffset; }
+	/// <summary>
+	/// カメラの角度を設定
+	/// </summary>
+	/// <returns></returns>
+	void SetCameraRotate(LWP::Math::Quaternion quat) { camera_->worldTF.rotation = quat; }
+#pragma endregion
 
 	/// <summary>
 	/// ロックオン開始
@@ -113,9 +131,7 @@ public:// Getter,Setter
 		lockOnData_.isLocked = false;
 	}
 
-#pragma endregion
-
-private:// jsonで保存する値
+public:// jsonで保存する値
 	// 追従対象との距離
 	LWP::Math::Vector3 kTargetDist = { 0.0f,0.0f,-20.0f };
 	// 初期角度 
@@ -139,31 +155,35 @@ private:// jsonで保存する値
 	// 回転角の始点
 	const float kOriginRotateX = 90.0f;
 
+	// 追従対象との初期距離
+	LWP::Math::Vector3 defaultTargetDist_;
+
 private:// 外部からポインタをもらう変数
 	// カメラ
 	LWP::Object::Camera* camera_;
 
+	Player* player_;
+
 private:
+	// カメラの状態
+	IFollowCameraState* state_;
+
+	// カメラの揺れ
+	LWP::Math::Vector3 shakeOffset_;
+
 	// 追従対象の座標
 	const LWP::Math::Vector3* targetPos_;
 
 	//　ロックオン時のカメラの位置調整
 	LWP::Math::Vector3 lockOnOffset_;
 	LWP::Math::Vector3 interTarget_;
+	// カメラの補間なし時の座標(自機の移動処理に使うために作成)
 	LWP::Math::Vector3 defaultPos_;
-
-	// 追従対象との初期距離
-	LWP::Math::Vector3 defaultTargetDist_;
 
 	// ロックオン時に使う情報
 	LockOnData lockOnData_;
 
 	// パラメーターの保存
 	LWP::Utility::JsonIO json_;
-
-	LWP::Math::Vector3 radian_;
-
-	// スティックの入力を受け取る
-	LWP::Math::Vector3 stickDir;
 };
 

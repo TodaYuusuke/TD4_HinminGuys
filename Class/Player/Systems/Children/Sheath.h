@@ -198,11 +198,16 @@ public:// Getter, Setter
 	/// </summary>
 	/// <param name="isBreak"></param>
 	void SetIsBreak(const bool& isBreak) { isBreak_ = isBreak; }
+	/// <summary>
+	/// 鞘モデルの表示の設定
+	/// </summary>
+	/// <param name="isActive"></param>
+	void SetIsSheathModelActive(const bool& isActive);
 #pragma endregion
 
 public:// jsonに保存する値
 	// 鞘投げ発動までにかかる時間[秒]
-	float throwSwingTime = 0.0f;
+	float throwSwingTime = 0.5f;
 	// 鞘を投げて到達するまでの時間[秒]
 	float throwTime = 0.2f;
 	// 鞘投げの硬直[秒]
@@ -254,7 +259,6 @@ private:// プライベートな変数
 
 	// ダッシュ攻撃判定
 	LWP::Object::Collision collider_;
-	//LWP::Object::Collider::AABB& aabb_;
 	LWP::Object::Collider::Capsule& capsule_;
 
 	// 移動速度

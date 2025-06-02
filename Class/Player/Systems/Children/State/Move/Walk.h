@@ -6,7 +6,7 @@ public:
 	// コンストラクタ
 	Walk(Move* moveSystem, Player* player, const float& moveMultiply);
 	// デストラクタ
-	~Walk() override = default;
+	~Walk() override;
 
 	/// <summary>
 	/// 初期化

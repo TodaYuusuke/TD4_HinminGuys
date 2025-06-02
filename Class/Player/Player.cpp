@@ -17,16 +17,17 @@ Player::Player(LWP::Object::Camera* camera, EnemyManager* enemyManager, FollowCa
 	model_.LoadShortPath("player/Player_Simple.gltf");
 	animation_.LoadFullPath("resources/model/player/Player_Simple.gltf", &model_);
 	animation_.Play("Idle");
+	// 刀
+	swordModel_.LoadShortPath("player/SimpleWeapon.gltf");
+	// 鞘
+	sheathModel_.LoadShortPath("player/Sheath.gltf");
+
+	// 当たり判定を作成
+	CreateCollision();
 }
 
 void Player::Initialize() {
 	inputHandler_ = InputHandler::GetInstance();
-
-	// 各種パラメータを作成
-	//parameter_.Initialize();
-
-	// 当たり判定を作成
-	CreateCollision();
 
 	// 自機機能を生成
 	CreateSystems();
@@ -41,6 +42,11 @@ void Player::Initialize() {
 		.AddValue<Vector3>("Max", &aabb_.max)
 		.EndGroup()
 		.CheckJsonFile();
+
+	// 刀モデルをプレイヤーの手に追従させる
+	swordModel_.GetJoint("Grip")->localTF.Parent(&model_, "WeaponAnchor");
+	// 鞘モデルを刀モデルに追従
+	sheathModel_.GetJoint("Sheath")->localTF.Parent(&swordModel_, "Sheath");
 }
 
 void Player::Update() {
@@ -55,7 +61,7 @@ void Player::Update() {
 
 	// 速度を加算
 	model_.worldTF.translation += systemManager_->GetVelocity();
-	// 角度を代入
+	// 角度を代入S
 	model_.worldTF.rotation = systemManager_->GetRotate();
 
 	// 移動制限
@@ -114,13 +120,13 @@ void Player::CreateCollision() {
 	collider_.mask.SetHitFrag(GetAttack());
 	collider_.enterLambda = [this](LWP::Object::Collision* hitTarget) {
 		hitTarget;
-		ChangeHPGauge(-10.0f);
+		TakeDamage(10.0f);
 		};
 }
 
 void Player::InvinsibleUpdate() {
 	// 被弾時
-	if (systemManager_->GetTakeDamageSystem()->GetIsInvinsible()) {
+	if (systemManager_->GetDamageResponseSystem()->GetIsInvinsible()) {
 		collider_.isActive = false;
 		aabb_.isShowWireFrame = false;
 	}

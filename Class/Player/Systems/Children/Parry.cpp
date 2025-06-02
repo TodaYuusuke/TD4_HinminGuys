@@ -14,9 +14,6 @@ Parry::Parry(LWP::Object::Camera* camera, Player* player)
 
 	// パリィ判定生成
 	CreateCollision();
-
-	nextState_ = InputNone;
-	currentState_ = InputParry;
 }
 
 void Parry::Initialize() {
@@ -44,6 +41,13 @@ void Parry::Update() {
 	// 弱パリィ成功時の無敵時間
 	eventOrders_[(int)ParryInvinsibleState::kGood].Update();
 
+	if (eventOrders_[(int)ParryInvinsibleState::kJust].GetIsEnd()) {
+		isJustParry_ = false;
+	}
+	if (eventOrders_[(int)ParryInvinsibleState::kGood].GetIsEnd()) {
+		isGoodParry_ = false;
+	}
+
 	// パリィ機能を使えないなら早期リターン
 	if (!isActive_) { return; }
 
@@ -65,8 +69,12 @@ void Parry::Update() {
 
 void Parry::Reset() {
 	isActive_ = false;
-	isJustParry_ = false;
-	isGoodParry_ = false;
+	if (eventOrders_[(int)ParryInvinsibleState::kJust].GetIsEnd()) {
+		isJustParry_ = false;
+	}
+	if (eventOrders_[(int)ParryInvinsibleState::kGood].GetIsEnd()) {
+		isGoodParry_ = false;
+	}
 	collider_.isActive = false;
 	aabb_.isShowWireFrame = false;
 	eventOrder_.Reset();

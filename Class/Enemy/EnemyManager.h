@@ -37,6 +37,12 @@ public:
 	std::list<IEnemy*>* GetEnemyListPtr() { return &enemies_; }
 	//リストを距離順にソート(昇順。後半になるにつれて距離が長くなる)
 	void SortAscendingDistanceList();
+	/// <summary>
+	/// 敵の攻撃パラメータを取得する関数
+	/// </summary>
+	/// <param name="name">コライダー名</param>
+	/// <returns></returns>
+	const EnemyAttackParameter& GetEnemyAttackParameter(const std::string& name) const;
 
 private:
 

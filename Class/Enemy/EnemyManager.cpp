@@ -202,6 +202,24 @@ void EnemyManager::SortAscendingDistanceList()
 
 }
 
+const EnemyAttackParameter& EnemyManager::GetEnemyAttackParameter(const std::string& name) const
+{
+	
+	for (auto enemy = enemies_.begin(); enemy != enemies_.end(); enemy++) {
+		//同一の名前があったらそれを返す
+		if ((*enemy)->GetColliderName() == name) {
+			return (*enemy)->GetAttackParameter();
+		}
+
+	}
+
+	//存在しない場合はありえないのでassert
+	assert(false);
+
+	return EnemyAttackParameter();
+
+}
+
 void EnemyManager::DebugState(States states)
 {
 

@@ -1,12 +1,12 @@
-#include "TakeDamage.h"
+#include "DamageResponse.h"
 #include "../../../Player/Player.h"
 
-TakeDamage::TakeDamage(LWP::Object::Camera* camera, Player* player) {
+DamageResponse::DamageResponse(LWP::Object::Camera* camera, Player* player) {
 	pCamera_ = camera;
 	player_ = player;
 }
 
-void TakeDamage::Initialize() {
+void DamageResponse::Initialize() {
 	inputHandler_ = InputHandler::GetInstance();
 
 	// jsonに保存している値を呼び出す
@@ -16,7 +16,7 @@ void TakeDamage::Initialize() {
 	CreateEventOrders();
 }
 
-void TakeDamage::Update() {
+void DamageResponse::Update() {
 	// 無敵時間の更新
 	eventOrders_[(int)EventOrderState::kInvinsible].Update();
 
@@ -43,11 +43,11 @@ void TakeDamage::Update() {
 	}
 }
 
-void TakeDamage::Reset() {
+void DamageResponse::Reset() {
 
 }
 
-void TakeDamage::DebugGUI() {
+void DamageResponse::DebugGUI() {
 	if (ImGui::TreeNode("Hit")) {
 		// アクションイベントを保存
 		if (ImGui::TreeNode("Json")) {
@@ -80,7 +80,7 @@ void TakeDamage::DebugGUI() {
 	}
 }
 
-void TakeDamage::CreateJsonFIle() {
+void DamageResponse::CreateJsonFIle() {
 	json_.Init("Hit.json");
 	// 無敵
 	json_.BeginGroup("Inivinsible")
@@ -94,7 +94,7 @@ void TakeDamage::CreateJsonFIle() {
 		.CheckJsonFile();
 }
 
-void TakeDamage::StartInvinsible() {
+void DamageResponse::StartInvinsible() {
 	eventOrders_[(int)EventOrderState::kInvinsible].Start();
 	eventOrders_[(int)EventOrderState::kInvinsible].Update();
 	eventOrders_[(int)EventOrderState::kStun].Start();
@@ -104,31 +104,32 @@ void TakeDamage::StartInvinsible() {
 	inputHandler_->SetCurrentBanInput(inputHandler_->GetBanInput() | BanALL);
 	// ガードアニメーション開始
 	player_->ResetAnimation();
+	player_->StopAnimation(LWP::Resource::Animation::TrackType::Blend);
 	player_->StartAnimation("Damage", 0.0f, 0.0f);
 }
 
-void TakeDamage::HitUpdate() {
+void DamageResponse::HitUpdate() {
 	if (currentFrame_ <= 0) {
 		currentFrame_ = endFrame_;
 		isHit_ = false;
 	}
 }
 
-void TakeDamage::CreateEventOrders() {
+void DamageResponse::CreateEventOrders() {
 	// 無敵
 	CreateInvinsibleEventOrder();
 	// スタン
 	CreateStunEventOrder();
 }
 
-void TakeDamage::CreateInvinsibleEventOrder() {
+void DamageResponse::CreateInvinsibleEventOrder() {
 	// 無敵
 	eventOrders_[(int)EventOrderState::kInvinsible].Initialize();
 	// 被弾時の無敵時間
 	eventOrders_[(int)EventOrderState::kInvinsible].CreateTimeEvent(TimeEvent{ invinsibleTime * 60.0f, "InvinsibleTime" });
 }
 
-void TakeDamage::CreateStunEventOrder() {
+void DamageResponse::CreateStunEventOrder() {
 	// スタン
 	eventOrders_[(int)EventOrderState::kStun].Initialize();
 	// 被弾時のスタン時間
@@ -137,7 +138,7 @@ void TakeDamage::CreateStunEventOrder() {
 	eventOrders_[(int)EventOrderState::kStun].CreateTimeEvent(TimeEvent{ stunCancelTime * 60.0f, "CancelTime" });
 }
 
-void TakeDamage::CheckSunEventOrder() {
+void DamageResponse::CheckSunEventOrder() {
 	if (eventOrders_[(int)EventOrderState::kStun].GetCurrentTimeEvent().name == "StunTime") {
 
 	}

@@ -52,7 +52,10 @@ public:
 	/// <summary>
 	/// コンボのリセット
 	/// </summary>
-	void ComboReset() { comboTree_.ResetCombo(); }
+	void ComboReset() { 
+		comboTree_.ResetCombo();
+		isAttackRecovery_ = true;
+	}
 
 private:
 	/// <summary>
@@ -60,11 +63,6 @@ private:
 	/// </summary>
 	/// <param name="pState">次の状態</param>
 	void ChangeState(IAttackSystemState* pState);
-
-	/// <summary>
-	/// 当たり判定を作成
-	/// </summary>
-	void CreateCollision();
 
 	/// <summary>
 	/// アクションイベントの生成
@@ -123,6 +121,16 @@ public:// Getter, Setter
 	/// </summary>
 	/// <returns></returns>
 	bool GetIsAttackRecovery() { return isAttackRecovery_; }
+	/// <summary>
+	/// ダメージ取得
+	/// </summary>
+	/// <returns></returns>
+	float GetDamage() { return comboTree_.GetDamage(); }
+	/// <summary>
+	/// ノックバック量取得
+	/// </summary>
+	/// <returns></returns>
+	float GetKnockBackStrength() { return comboTree_.GetNockBackStrength(); }
 #pragma endregion
 
 #pragma region Setter
@@ -154,14 +162,9 @@ public:// Getter, Setter
 #pragma endregion
 
 private:// jsonで保存する値
-	// 通常攻撃発動までにかかる時間[秒]
-	static float kNormalSwingTime;
-	// 通常攻撃の猶予時間[秒]
-	static float kNormalAttackTime;
-	// 通常攻撃の硬直[秒]
-	static float kNormalRecoveryTime;
 
 private:// 外部からポインタをもらう変数
+
 	// ロックオン機能
 	LockOn* lockOnSystem_;
 
@@ -172,10 +175,6 @@ private:
 
 	// 状態遷移
 	IAttackSystemState* state_;
-
-	// 攻撃判定
-	LWP::Object::Collision collider_;
-	LWP::Object::Collider::AABB& aabb_;
 
 	// 攻撃時の位置アシスト用のベクトル
 	Vector3 attackAssistVel_;

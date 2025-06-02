@@ -3,10 +3,11 @@
 #include "../Player/Gauge/HP/HP.h"
 #include "../Player/Gauge/Sheath/SheathGauge.h"
 
+class Player;
 class UIManager {
 public:
 	// コンストラクタ
-	UIManager();
+	UIManager(Player* player);
 	// デストラクタ
 	~UIManager() = default;
 
@@ -73,6 +74,9 @@ public:
 		hp_.SetMaxValue(maxHP);
 	}
 #pragma endregion
+
+private:// 外部から受け取る変数
+	Player* player_;
 
 private:
 	LWP::Utility::JsonIO json_;

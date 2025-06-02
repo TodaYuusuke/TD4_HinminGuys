@@ -5,21 +5,18 @@
 #include "../../../GameMask.h"
 
 Sheath::Sheath(LWP::Object::Camera* camera, Player* player)
-//: aabb_(collider_.SetBroadShape(LWP::Object::Collider::AABB()))
 	: capsule_(collider_.SetBroadShape(LWP::Object::Collider::Capsule()))
 {
 	pCamera_ = camera;
 	player_ = player;
 
-	sheathModel_.LoadCube();
-	sheathModel_.worldTF.scale = { 0.25f, 1.0f, 0.25f };
-	sheathModel_.isActive = true;
+	// 鞘
+	sheathModel_.LoadShortPath("player/Sheath.gltf");
+	sheathModel_.worldTF.scale = { 2.0f, 2.0f, 2.0f };
+	sheathModel_.isActive = false;
 
 	// ダッシュ攻撃の判定を作成
 	CreateCollision();
-
-	nextState_ = InputALL;
-	currentState_ = InputSheath;
 }
 
 void Sheath::Initialize() {
@@ -65,8 +62,10 @@ void Sheath::Update() {
 void Sheath::Reset() {
 	isActive_ = false;
 	isPreActive_ = false;
+	sheathModel_.isActive = false;
+	// 本体のモデルも非表示
+	player_->SetIsSheathModelActive(true);
 	collider_.isActive = false;
-	//aabb_.isShowWireFrame = false;
 	capsule_.isShowWireFrame = false;
 	eventOrders_[(int)SheathState::kThrow].Reset();
 	eventOrders_[(int)SheathState::kCollect].Reset();
@@ -211,9 +210,6 @@ void Sheath::AnimCommand() {
 
 void Sheath::CreateCollision() {
 	// 攻撃判定生成
-	//aabb_.min = { -1.0f, -1.0f, -1.0f };
-	//aabb_.max = { 1.0f, 1.0f, 1.0f };
-	//aabb_.isShowWireFrame = false;
 	capsule_.isShowWireFrame = false;
 	collider_.SetFollow(player_->GetWorldTF());
 	collider_.isActive = false;
@@ -286,4 +282,8 @@ LWP::Math::Vector3 Sheath::ClampToCircle(LWP::Math::Vector3& position) {
 	}
 
 	return position;
+}
+
+void Sheath::SetIsSheathModelActive(const bool& isActive) {
+	sheathModel_.isActive = isActive;
 }

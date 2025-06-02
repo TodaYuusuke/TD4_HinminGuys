@@ -50,6 +50,7 @@ public:
 /// </summary>
 class LockOnCommand : public ICommand {
 public:
+	LockOnCommand();
 	void Exec(Player& player,  int& banInput)override;
 	void Reset(Player& player, int& banInput) override;
 };

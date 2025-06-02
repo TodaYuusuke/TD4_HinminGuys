@@ -1,7 +1,11 @@
 #include "IEnemy.h"
 #include "../Player/Player.h"
 #include "IEnemyState.h"
+#include "../GameMask.h"
+
 #define UNIT16_MAX 65535
+
+using namespace GameMask;
 
 //実体宣言
 uint16_t IEnemy::currentEnemyID_ = 0;
@@ -25,6 +29,24 @@ IEnemy::IEnemy()
 	else {
 		currentEnemyID_++;
 	}
+
+	// 体の判定生成
+	collider_.SetFollow(&model_.worldTF);
+	collider_.isActive = true;
+	collider_.worldTF.translation = { 0.0f, 1.0f, 0.0f };
+	// 自機の所属しているマスクを設定
+	collider_.mask.SetBelongFrag(GetEnemy());
+	// 当たり判定をとる対象のマスクを設定
+	collider_.mask.SetHitFrag(GetAttack());
+	collider_.stayLambda = [this](LWP::Object::Collision* hitTarget) {
+		hitTarget;
+
+		//ダメージ量
+		float damage = player_->GetSystemManager()->GetAttackSystem()->GetDamage();
+		//ダメージを受ける
+		TakeDamage(damage);
+
+		};
 
 }
 
