@@ -16,7 +16,8 @@ std::array<const char*, int(EnemyType::kMax)> IEnemy::enemyTypeName =
 { "Normal", "Boss" };
 
 IEnemy::IEnemy()
-	: aabb_(collider_.SetBroadShape(LWP::Object::Collider::AABB()))
+	: aabb_(collider_.SetBroadShape(LWP::Object::Collider::AABB())),
+	capsule_(swordCollider_.SetBroadShape(LWP::Object::Collider::Capsule()))
 {
 	//IDをセット
 	ID_ = currentEnemyID_;
@@ -95,7 +96,7 @@ void IEnemy::SetAnimation(const std::string& animName, bool isLoop, float speed)
 {
     animation_.Play(animName);
 	animation_.Loop(isLoop);
-	//animation_.playbackSpeed = speed;
+	animation_.GetPlayBackSpeed() = speed;
 }
 
 void IEnemy::SetState(IEnemyState* state)
@@ -175,5 +176,22 @@ void IEnemy::RotateTowardsPlayer()
 		}
 
 	}
+
+}
+
+void IEnemy::CreateSwordCollider()
+{
+
+	// 刀の判定生成
+	swordCollider_.SetFollow(&model_, "WeaponAnchor");
+	swordCollider_.isActive = false;
+	// 自機の所属しているマスクを設定
+	swordCollider_.mask.SetBelongFrag(GetAttack());
+	// 当たり判定をとる対象のマスクを設定
+	swordCollider_.mask.SetHitFrag(GetPlayer());
+	swordCollider_.stayLambda = [this](LWP::Object::Collision* hitTarget) {
+		hitTarget;
+		player_->ChangeHPGauge(parameter_.attackParameter.attackValue);
+		};
 
 }

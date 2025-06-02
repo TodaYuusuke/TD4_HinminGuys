@@ -20,10 +20,14 @@ public:
 
 	//ウェーブカウント加算
 	void AddWaveCount() { currentWaveCount_++; }
+	//ウェーブカウントリセット
+	void ResetWaveCount() { currentWaveCount_ = startWaveCount_; }
 	//現在のウェーブのデータ取得
 	WaveData& GetCurrentWaveData();
 	//ウェーブが全て終わったかどうか
 	bool IsEndAllWave() { return currentWaveCount_ > waveData_.size(); }
+	//敵のモデルを表示させるかどうか
+	void SetIsShowModel(bool flag);
 
 private:
 

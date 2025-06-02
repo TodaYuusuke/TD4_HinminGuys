@@ -26,6 +26,8 @@ void Normal::Initialize(Player* player, const Vector3& position)
 	swordModel_.GetJoint("Grip")->localTF.Parent(&model_, "WeaponAnchor");
 	//名前設定
 	collider_.name = "Normal" + std::to_string(ID_);
+	//刀のコライダー生成
+	CreateSwordCollider();
 
 }
 

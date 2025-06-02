@@ -43,6 +43,10 @@ public:
 	/// <param name="name">コライダー名</param>
 	/// <returns></returns>
 	const EnemyAttackParameter& GetEnemyAttackParameter(const std::string& name) const;
+	//全ての敵が倒されたフラグ
+	bool GetIsDefeatedAllEnemy() const { return isDefeatedAllEnemy_; }
+	//ウェーブ開始させる
+	void StartWave();
 
 private:
 
@@ -50,6 +54,10 @@ private:
 	void DebugState(States states);
 	//ウェーブデータから敵をスポーンさせる
 	void SpawnFromWaveData(WaveData& waveData);
+	//スポーンするかどうかをチェック
+	void CheckIsSpawn();
+	//全ウェーブ終了時の処理
+	void EndGame();
 
 private:
 
@@ -73,6 +81,12 @@ private:
 	float attackEnemyDist_ = 1.5f;
 	//敵の出現上限
 	const uint16_t kMaxEnemyCount_ = 20;
+	//スポーンデータの敵を表示するフラグ
+	bool isShowSpawnDataModel_ = true;
+	//ウェーブを開始するかどうか
+	bool isStartWave_ = false;
+	//全ての敵が倒されたフラグ
+	bool isDefeatedAllEnemy_ = false;
 
 };
 

@@ -16,7 +16,7 @@
                 0.0
             ],
             "float :delayTime": 0.0,
-            "string :type": "Boss"
+            "string :type": "Normal"
         },
         "Group :Enemy|3": {
             "Vector3 :position": [

@@ -64,7 +64,7 @@ public:
 	//回転セット
 	void SetRotation(const Quaternion& rotation) { model_.worldTF.rotation = rotation; }
 	//プレイヤー取得
-	Player* GetPlayer() { return player_; }
+	Player* GetPlayerPtr() { return player_; }
 	//プレイヤーの座標取得
 	Vector3 GetPlayerPosition();
 	//アニメーション切り替え
@@ -119,7 +119,11 @@ public:
 	//攻撃パラメータ取得
 	const EnemyAttackParameter& GetAttackParameter() const { return parameter_.attackParameter; }
 	//刀モデル取得
+	SkinningModel& GetModel() { return model_; }
+	//刀モデル取得
 	SkinningModel& GetSwordModel() { return swordModel_; }
+	//刀当たり判定取得
+	LWP::Object::Collision& GetSwordCollider() { return swordCollider_; }
 
 protected:
 
@@ -127,6 +131,9 @@ protected:
 	void TakeDamage(const float& damageValue, const float& multiply = 1.0f) {
 		parameter_.hp -= damageValue * multiply;
 	}
+
+	//刀のコライダー生成
+	void CreateSwordCollider();
 
 protected:
 
@@ -139,6 +146,9 @@ protected:
 	//本体当たり判定
 	LWP::Object::Collision collider_;
 	LWP::Object::Collider::AABB& aabb_;
+	// 刀コライダー
+	LWP::Object::Collision swordCollider_;
+	LWP::Object::Collider::Capsule& capsule_;
 	//状態
 	IEnemyState* state_;
 

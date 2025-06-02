@@ -21,10 +21,9 @@ public:
 private:
 
 	LWP::Object::TransformQuat attackTF{};
-
-	// コライダー
-	LWP::Object::Collision collider_;
-	LWP::Object::Collider::Capsule& capsule_;
+	//攻撃コライダー半径
+	float attackRadius_ = 0.1f;
+	//
 
 };
 

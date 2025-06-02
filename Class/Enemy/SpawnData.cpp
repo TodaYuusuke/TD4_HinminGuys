@@ -103,12 +103,23 @@ WaveData& SpawnData::GetCurrentWaveData()
 			return waveData;
 		}
 
+		i++;
+
 	}
 
 	//データが範囲外なのでassert出す
 	assert(false);
 	//仮の返り値
 	return waveData_.back();
+
+}
+
+void SpawnData::SetIsShowModel(bool flag)
+{
+
+	for (WaveData& waveData : waveData_) {
+		waveData.SetIsShowModel(flag);
+	}
 
 }
 
@@ -181,6 +192,11 @@ void SpawnData::Load()
 	}
 
 	json_.Load();
+
+	//ロードしてから実際のタイプをセット
+	for (WaveData& waveData : waveData_) {
+		waveData.SetType();
+	}
 
 	//現在のウェーブカウントリセット
 	currentWaveCount_ = startWaveCount_;
