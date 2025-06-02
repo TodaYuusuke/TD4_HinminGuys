@@ -77,6 +77,12 @@ public: // アクセッサ等
 	bool GetIsEditingMode() { return enableEditMode_; }
 
 	/// <summary>
+	/// 次のコンボ受付可能フラグの状態セッター
+	/// </summary>
+	/// <param name="isRecept">受付可能フラグ状態</param>
+	void SetIsRecept(const bool isRecept) { isRecept_ = isRecept; }
+
+	/// <summary>
 	/// 現在のコンボが大元のコンボであるかどうかのゲッター
 	/// </summary>
 	/// <returns></returns>
@@ -205,6 +211,9 @@ private: // メンバ変数
 	Combo* nowCombo_ = nullptr;
 	// 次のコンボ
 	Combo* nextCombo_ = nullptr;
+
+	// 次のコンボの受付可能フラグ
+	bool isRecept_ = true;
 
 	// 受付終了で遷移したかどうかのトリガー
 	bool isReceptEndTrigger_ = false;

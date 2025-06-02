@@ -53,8 +53,11 @@ void ComboTree::Update()
 	nowCombo_->Update(animModel_, anim_, &collider_, &capsule_);
 
 	// 次のコンボが無い場合コンボの受付処理
-	if (nowCombo_->ReceptUpdate() != nullptr) {
+	if (nowCombo_->ReceptUpdate() != nullptr && isRecept_) {
 		nextCombo_ = nowCombo_->ReceptUpdate();
+	}
+	else if (!isRecept_) {
+		nextCombo_ = nullptr;
 	}
 
 	// 次のコンボが存在する、かつ硬直時間終了時
