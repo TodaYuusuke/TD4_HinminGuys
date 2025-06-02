@@ -54,7 +54,7 @@ public:
 	/// </summary>
 	void ComboReset() { 
 		comboTree_.ResetCombo();
-		isAttackRecovery_ = false;
+		isAttackRecovery_ = true;
 	}
 
 private:

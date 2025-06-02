@@ -38,8 +38,16 @@ private:
 	void CheckThrowState();
 
 private:
+	// 鞘投げ開始
+	float startSheathThrowTime = 0.5f * 60.0f;
+
+private:
 	LWP::Math::Vector3 velocity_;
 	LWP::Math::Vector3 start_;
 	LWP::Math::Vector3 end_;
+
+	// 経過時間
+	float currentFrame_;
+
 	float t_;
 };

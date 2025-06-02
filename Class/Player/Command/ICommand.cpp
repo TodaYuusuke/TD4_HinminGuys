@@ -68,10 +68,8 @@ void NormalAttackCommand::Exec(Player& player, int& banInput) {
 
 void NormalAttackCommand::Reset(Player& player, int& banInput) {
 	if (!player.GetSystemManager()->GetAttackSystem()->GetIsStiffness()) {
-		if (player.GetSystemManager()->GetAttackSystem()->GetIsAttackRecovery()) {
-			banInput = BanNone;
-			isActive_ = false;
-		}
+		banInput = BanNone;
+		isActive_ = false;
 	}
 }
 

@@ -51,17 +51,18 @@ void Throw::Update() {
 
 void Throw::Command() {
 	if ((*eventOrders_)[(int)Sheath::SheathState::kThrow].GetIsEnd()) {
+		// 鞘アニメーション開始
+		player_->ResetAnimation();
+		player_->StartAnimation("SheathThrow", 0.0f, 0.0f);
 		// 鞘クラスの速度を自機に適用
 		player_->GetSystemManager()->SetInputState(InputState::kSheath);
-
 		isActive_ = true;
+
 		sheathSystem_->SetIsActive(true);
-		sheathSystem_->SetIsSheathModelActive(true);
-		// 本体のモデルも非表示
-		player_->SetIsSheathModelActive(false);
+
 		// アクションイベント開始
 		(*eventOrders_)[(int)Sheath::SheathState::kThrow].Start();
-		
+
 		// イージングの始点終点を設定
 		start_ = player_->GetWorldTF()->GetWorldPosition();
 		end_ = player_->GetWorldTF()->GetWorldPosition() + sheathSystem_->throwMovement * Matrix4x4::CreateRotateXYZMatrix(player_->GetSystemManager()->GetMoveSystem()->GetMoveRadian());
@@ -77,14 +78,23 @@ void Throw::AnimCommand() {
 }
 
 void Throw::CheckThrowState() {
+	if ((*eventOrders_)[(int)Sheath::SheathState::kThrow].GetCurrentTimeEvent().name == "SwingTime") {
+		sheathSystem_->SetIsSheathModelActive(false);
+		// 本体のモデルも非表示
+		player_->SetIsSheathModelActive(true);
+	}
 	// 鞘回収するために自機が動いているときの処理
-	if ((*eventOrders_)[(int)Sheath::SheathState::kThrow].GetCurrentTimeEvent().name == "ThrowFinishTime") {
+	else if ((*eventOrders_)[(int)Sheath::SheathState::kThrow].GetCurrentTimeEvent().name == "ThrowFinishTime") {
+		sheathSystem_->SetIsSheathModelActive(true);
+		// 本体のモデルも非表示
+		player_->SetIsSheathModelActive(false);
+
 		velocity_ = (LWP::Utility::Interpolation::Lerp(start_, end_, LWP::Utility::Easing::OutExpo((*eventOrders_)[(int)Sheath::SheathState::kThrow].GetCurrentFrame() / (sheathSystem_->collectTime * 60.0f)))/* - player_->GetWorldTF()->GetWorldPosition()*/);
 
 		// 移動速度からラジアンを求める
 		radian_.y = LWP::Utility::GetRadian(LWP::Math::Vector3{ 0,0,1 }, velocity_.Normalize(), LWP::Math::Vector3{ 0,1,0 });
 		quat_ = LWP::Math::Quaternion::CreateFromAxisAngle(LWP::Math::Vector3{ 0, 1, 0 }, radian_.y);
-	}
 
-	sheathSystem_->SetSheathPos(velocity_);
+		sheathSystem_->SetSheathPos(velocity_);
+	}
 }

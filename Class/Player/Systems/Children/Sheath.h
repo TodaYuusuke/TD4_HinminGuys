@@ -207,7 +207,7 @@ public:// Getter, Setter
 
 public:// jsonに保存する値
 	// 鞘投げ発動までにかかる時間[秒]
-	float throwSwingTime = 0.0f;
+	float throwSwingTime = 0.5f;
 	// 鞘を投げて到達するまでの時間[秒]
 	float throwTime = 0.2f;
 	// 鞘投げの硬直[秒]

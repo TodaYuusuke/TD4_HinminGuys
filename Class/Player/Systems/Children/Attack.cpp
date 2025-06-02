@@ -44,11 +44,16 @@ void Attack::Initialize() {
 }
 
 void Attack::Update() {
-	// パリィ中、回避中は攻撃できない
+	// 攻撃入力可能状態
 	if (!IsBitSame(inputHandler_->GetBanInput(), BanAttack, GetSetBitPosition(BanAttack))) {
-		// コンボツリー自体は毎フレーム更新する
-		comboTree_.Update();
+		comboTree_.SetIsRecept(true);
 	}
+	else {
+		comboTree_.SetIsRecept(false);
+	}
+	
+	// コンボツリー自体は毎フレーム更新する
+	comboTree_.Update();
 
 	// コンボが無操作状態のコンボでない場合
 	if (comboTree_.GetIsStiffness()) {
