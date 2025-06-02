@@ -52,7 +52,10 @@ public:
 	/// <summary>
 	/// コンボのリセット
 	/// </summary>
-	void ComboReset() { comboTree_.ResetCombo(); }
+	void ComboReset() { 
+		comboTree_.ResetCombo();
+		isAttackRecovery_ = false;
+	}
 
 private:
 	/// <summary>
@@ -159,12 +162,6 @@ public:// Getter, Setter
 #pragma endregion
 
 private:// jsonで保存する値
-	// 通常攻撃発動までにかかる時間[秒]
-	static float kNormalSwingTime;
-	// 通常攻撃の猶予時間[秒]
-	static float kNormalAttackTime;
-	// 通常攻撃の硬直[秒]
-	static float kNormalRecoveryTime;
 
 private:// 外部からポインタをもらう変数
 

@@ -56,6 +56,9 @@ void Throw::Command() {
 
 		isActive_ = true;
 		sheathSystem_->SetIsActive(true);
+		sheathSystem_->SetIsSheathModelActive(true);
+		// 本体のモデルも非表示
+		player_->SetIsSheathModelActive(false);
 		// アクションイベント開始
 		(*eventOrders_)[(int)Sheath::SheathState::kThrow].Start();
 		

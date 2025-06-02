@@ -198,6 +198,11 @@ public:// Getter, Setter
 	/// </summary>
 	/// <param name="isBreak"></param>
 	void SetIsBreak(const bool& isBreak) { isBreak_ = isBreak; }
+	/// <summary>
+	/// 鞘モデルの表示の設定
+	/// </summary>
+	/// <param name="isActive"></param>
+	void SetIsSheathModelActive(const bool& isActive);
 #pragma endregion
 
 public:// jsonに保存する値

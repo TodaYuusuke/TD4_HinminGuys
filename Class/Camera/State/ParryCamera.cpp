@@ -2,6 +2,7 @@
 #include "../FollowCamera.h"
 #include "../../Player/Command/InputHandler.h"
 #include "../../Player/Player.h"
+#include "InputCamera.h"
 
 using namespace LWP;
 using namespace LWP::Math;
@@ -45,6 +46,12 @@ void ParryCamera::Update() {
 
 	// カメラの角度を算出
 	RotateUpdate();
+
+	// カメラの演出が終わったら状態変更(この処理以降何も書かないこと。Stateが解放されるのでアクセスエラーになりますよ)
+	if (currentFrame_ >= finishTime) {
+		followCamera_->ChangeState(new InputCamera(followCamera_));
+		return;
+	}
 }
 
 void ParryCamera::RotateUpdate() {
@@ -61,16 +68,27 @@ void ParryCamera::RotateUpdate() {
 	// 角度制限
 	followCamera_->ClampAngle(isClampAngle, (player_->GetSystemManager()->GetParrySystem()->GetParryTargetPos() - followCamera_->GetCamera()->worldTF.translation).Normalize(), LWP::Utility::DegreeToRadian(followCamera_->kOriginRotateX + 0.0f), LWP::Utility::DegreeToRadian(followCamera_->kOriginRotateX + 80.0f));
 
+	if (currentFrame_ <= finishTime - 80.0f) {
+		damping_ = LWP::Utility::Interpolation::Exponential(damping_, Vector3{ 0.0f, 0.0f, 0.1f }, 0.5f);
+	}
+	else {
+		damping_ = LWP::Utility::Interpolation::Exponential(damping_, Vector3{ 0.0f, 0.0f, 0.0f }, 0.5f);
+	}
+	// y軸は常に上を向くように固定
+	LWP::Math::Quaternion roll = LWP::Math::Quaternion::CreateFromAxisAngle(LWP::Math::Vector3{ 0, 0, 1 }, damping_.z);
+	// z軸回転
+	followCamera_->SetCameraRotate(roll * LWP::Math::Quaternion::CreateFromAxisAngle(LWP::Math::Vector3{ 1, 0, 0 }, radian.x));
+
 	// 角度制限がない場合
 	if (isClampAngle == 1) {
 		radian_ = { radian.x, radian.y, 0.0f };
 		// x軸回転
-		followCamera_->SetCameraRotate(LWP::Math::Quaternion::CreateFromAxisAngle(LWP::Math::Vector3{ 1, 0, 0 }, radian.x));
+		followCamera_->SetCameraRotate(roll * LWP::Math::Quaternion::CreateFromAxisAngle(LWP::Math::Vector3{ 1, 0, 0 }, radian.x));
 	}
 	// 角度制限がある場合
 	else {
 		// x軸回転
-		followCamera_->SetCameraRotate(LWP::Math::Quaternion::CreateFromAxisAngle(LWP::Math::Vector3{ 1, 0, 0 }, radian_.x));
+		followCamera_->SetCameraRotate(roll * LWP::Math::Quaternion::CreateFromAxisAngle(LWP::Math::Vector3{ 1, 0, 0 }, radian_.x));
 	}
 
 	// y軸は常に上を向くように固定
@@ -79,11 +97,11 @@ void ParryCamera::RotateUpdate() {
 
 void ParryCamera::TargetDistUpdate() {
 	currentFrame_++;
-	if (currentFrame_ <= 10) {
+	if (currentFrame_ <= finishTime - 80.0f) {
 		lockOnOffset_ = {
 			0.14f,
-			0.4f,
-			-4.0f
+			0.25f,
+			-2.0f
 		};
 
 		rate_ = 0.5f;

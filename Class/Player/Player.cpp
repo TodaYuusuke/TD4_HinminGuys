@@ -17,21 +17,17 @@ Player::Player(LWP::Object::Camera* camera, EnemyManager* enemyManager, FollowCa
 	model_.LoadShortPath("player/Player_Simple.gltf");
 	animation_.LoadFullPath("resources/model/player/Player_Simple.gltf", &model_);
 	animation_.Play("Idle");
+	// 刀
 	swordModel_.LoadShortPath("player/SimpleWeapon.gltf");
+	// 鞘
+	sheathModel_.LoadShortPath("player/Sheath.gltf");
 
 	// 当たり判定を作成
 	CreateCollision();
-
-	// HPを作成
-	/*hp_.Initialize();
-	sheathGauge_.Initialize();*/
 }
 
 void Player::Initialize() {
 	inputHandler_ = InputHandler::GetInstance();
-
-	// 当たり判定を作成
-	CreateCollision();
 
 	// 自機機能を生成
 	CreateSystems();
@@ -49,6 +45,8 @@ void Player::Initialize() {
 
 	// 刀モデルをプレイヤーの手に追従させる
 	swordModel_.GetJoint("Grip")->localTF.Parent(&model_, "WeaponAnchor");
+	// 鞘モデルを刀モデルに追従
+	sheathModel_.GetJoint("Sheath")->localTF.Parent(&swordModel_, "Sheath");
 }
 
 void Player::Update() {

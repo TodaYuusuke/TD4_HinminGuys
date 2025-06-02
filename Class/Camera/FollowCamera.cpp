@@ -74,14 +74,17 @@ void FollowCamera::DebugGUI() {
 }
 
 void FollowCamera::CheckState() {
-	// パリィ成功状態
-	if (player_->GetSystemManager()->GetParrySystem()->GetSuccessJustParry()) {
-		if (state_->GetStateName() != "Parry") {
-			ChangeState(new ParryCamera(player_, this));
-		}
-	}
+	//// パリィカメラ中は状態を変えさせない
+	//if (state_->GetStateName() == "Parry") { return; }
+
+	//// パリィ成功状態
+	//if (player_->GetSystemManager()->GetParrySystem()->GetSuccessJustParry()) {
+	//	if (state_->GetStateName() != "Parry") {
+	//		ChangeState(new ParryCamera(player_, this));
+	//	}
+	//}
 	// 入力受付状態
-	else if (!lockOnData_.targetTransform && !lockOnData_.isLocked) {
+	if (!lockOnData_.targetTransform && !lockOnData_.isLocked) {
 		// カメラと追従対象との距離を初期の値に徐々に戻す
 		kTargetDist = LWP::Utility::Interpolation::Exponential(kTargetDist, defaultTargetDist_, targetDistRate);
 		if (state_->GetStateName() != "Input") {

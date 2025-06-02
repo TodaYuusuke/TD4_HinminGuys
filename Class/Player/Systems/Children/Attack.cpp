@@ -11,13 +11,6 @@ using namespace LWP::Object;
 using namespace LWP::Object::Collider;
 using namespace GameMask;
 
-// 通常攻撃発動までにかかる時間[秒]
-float Attack::kNormalSwingTime;
-// 通常攻撃の猶予時間[秒]
-float Attack::kNormalAttackTime;
-// 通常攻撃の硬直[秒]
-float Attack::kNormalRecoveryTime;
-
 Attack::Attack(LWP::Object::Camera* camera, Player* player)
 {
 	pCamera_ = camera;
@@ -120,6 +113,7 @@ void Attack::Update() {
 
 void Attack::Reset() {
 	isActive_ = false;
+	isAttackRecovery_ = false;
 	attackAssistVel_ = { 0.0f,0.0f,0.0f };
 	// アニメーションを初期化
 	player_->ResetAnimation();
@@ -153,15 +147,6 @@ void Attack::DebugGUI() {
 }
 
 void Attack::CreateJsonFIle() {
-	json_.Init("AttackData.json");
-	json_.BeginGroup("EventOrder")
-		.BeginGroup("GraceTime")
-		.AddValue<float>("SwingTime", &kNormalSwingTime)
-		.AddValue<float>("AttackTime", &kNormalAttackTime)
-		.AddValue<float>("AttackRecoveryTime", &kNormalRecoveryTime)
-		.EndGroup()
-		.EndGroup()
-		.CheckJsonFile();
 }
 
 void Attack::Command() {
@@ -176,12 +161,6 @@ void Attack::ChangeState(IAttackSystemState* pState) {
 
 void Attack::CreateEventOrder() {
 	eventOrder_.Initialize();
-	// 通常攻撃発生までの時間
-	eventOrder_.CreateTimeEvent(TimeEvent{ kNormalSwingTime * 60.0f, "NormalAttackSwingTime" });
-	// 通常攻撃の猶予時間
-	eventOrder_.CreateTimeEvent(TimeEvent{ kNormalAttackTime * 60.0f, "NormalAttackTime" });
-	// 通常攻撃の硬直時間
-	eventOrder_.CreateTimeEvent(TimeEvent{ kNormalRecoveryTime * 60.0f, "NormalAttackRecoveryTime" });
 }
 
 void Attack::CheckAttackState() {

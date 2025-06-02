@@ -31,6 +31,9 @@ public:
 	/// </summary>
 	void TargetDistUpdate();
 
+private:
+	float finishTime = 1.5f * 60.0f;
+
 private:// 外部から受け取る変数
 	Player* player_;
 
@@ -43,8 +46,12 @@ private:
 
 	// ロックオン対象とカメラの距離
 	LWP::Math::Vector3 lockOnOffset_;
+
 	// 
 	LWP::Math::Vector3 radian_;
+	LWP::Math::Quaternion pitch_; // X: 上下
+	LWP::Math::Quaternion yaw_; // Y: 左右
+	LWP::Math::Vector3 damping_;
 
 	float rate_;
 	float currentFrame_;

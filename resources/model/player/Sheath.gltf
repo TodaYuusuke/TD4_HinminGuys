@@ -8,7 +8,7 @@
 		{
 			"name":"Scene",
 			"nodes":[
-				3
+				2
 			]
 		}
 	],
@@ -17,32 +17,26 @@
 			"name":"Sheath",
 			"translation":[
 				0,
-				0.17414657771587372,
+				0.17415793240070343,
 				0
 			]
 		},
 		{
-			"children":[
-				0
-			],
-			"name":"Grip"
-		},
-		{
 			"mesh":0,
-			"name":"M_Katana",
+			"name":"M_Sheath",
 			"skin":0
 		},
 		{
 			"children":[
-				2,
-				1
+				1,
+				0
 			],
-			"name":"Katana"
+			"name":"Sheath"
 		}
 	],
 	"meshes":[
 		{
-			"name":"\u7acb\u65b9\u4f53.001",
+			"name":"\u7acb\u65b9\u4f53",
 			"primitives":[
 				{
 					"attributes":{
@@ -61,113 +55,112 @@
 		{
 			"inverseBindMatrices":6,
 			"joints":[
-				1,
 				0
 			],
-			"name":"Katana"
+			"name":"Sheath"
 		}
 	],
 	"accessors":[
 		{
 			"bufferView":0,
 			"componentType":5126,
-			"count":72,
+			"count":48,
 			"max":[
-				0.024607054889202118,
-				0.7779051065444946,
-				0.01721629872918129
+				0.02460700087249279,
+				0.800000011920929,
+				0.018000001087784767
 			],
 			"min":[
-				-0.024607054889202118,
-				-0.16859227418899536,
-				-0.01721629872918129
+				-0.02460700087249279,
+				0.0820000171661377,
+				-0.017215998843312263
 			],
 			"type":"VEC3"
 		},
 		{
 			"bufferView":1,
 			"componentType":5126,
-			"count":72,
+			"count":48,
 			"type":"VEC3"
 		},
 		{
 			"bufferView":2,
 			"componentType":5126,
-			"count":72,
+			"count":48,
 			"type":"VEC2"
 		},
 		{
 			"bufferView":3,
 			"componentType":5121,
-			"count":72,
+			"count":48,
 			"type":"VEC4"
 		},
 		{
 			"bufferView":4,
 			"componentType":5126,
-			"count":72,
+			"count":48,
 			"type":"VEC4"
 		},
 		{
 			"bufferView":5,
 			"componentType":5123,
-			"count":120,
+			"count":84,
 			"type":"SCALAR"
 		},
 		{
 			"bufferView":6,
 			"componentType":5126,
-			"count":2,
+			"count":1,
 			"type":"MAT4"
 		}
 	],
 	"bufferViews":[
 		{
 			"buffer":0,
-			"byteLength":864,
+			"byteLength":576,
 			"byteOffset":0,
 			"target":34962
 		},
 		{
 			"buffer":0,
-			"byteLength":864,
-			"byteOffset":864,
+			"byteLength":576,
+			"byteOffset":576,
 			"target":34962
 		},
 		{
 			"buffer":0,
-			"byteLength":576,
+			"byteLength":384,
+			"byteOffset":1152,
+			"target":34962
+		},
+		{
+			"buffer":0,
+			"byteLength":192,
+			"byteOffset":1536,
+			"target":34962
+		},
+		{
+			"buffer":0,
+			"byteLength":768,
 			"byteOffset":1728,
 			"target":34962
 		},
 		{
 			"buffer":0,
-			"byteLength":288,
-			"byteOffset":2304,
-			"target":34962
-		},
-		{
-			"buffer":0,
-			"byteLength":1152,
-			"byteOffset":2592,
-			"target":34962
-		},
-		{
-			"buffer":0,
-			"byteLength":240,
-			"byteOffset":3744,
+			"byteLength":168,
+			"byteOffset":2496,
 			"target":34963
 		},
 		{
 			"buffer":0,
-			"byteLength":128,
-			"byteOffset":3984
+			"byteLength":64,
+			"byteOffset":2664
 		}
 	],
 	"buffers":[
 		{
-			"byteLength":4112,
-			"uri":"SimpleWeapon.bin"
+			"byteLength":2728,
+			"uri":"Sheath.bin"
 		}
 	]
 }
