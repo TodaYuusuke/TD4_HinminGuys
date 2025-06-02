@@ -22,7 +22,7 @@ void NormalMove::Update()
 {
 
 	//プレイヤーが存在する場合
-	if (enemy_->GetPlayer()) {
+	if (enemy_->GetPlayerPtr()) {
 
 		//カウントダウン
 		if (countRunTime_ > 0) {

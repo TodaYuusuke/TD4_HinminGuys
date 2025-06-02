@@ -118,7 +118,7 @@ void WaveData::Load(LWP::Utility::JsonIO& json, LWP::Utility::NestedList& nested
 		// 名前を' | 'で分割する
 		std::vector<std::string> splitName = LWP::Utility::Split(itr->name, '|');
 
-		// 最初にWaveと書かれている場合
+		// 最初にEnemyと書かれている場合
 		if (splitName[0] == "Enemy") {
 
 			EnemyData enemyData;
@@ -137,14 +137,6 @@ void WaveData::Load(LWP::Utility::JsonIO& json, LWP::Utility::NestedList& nested
 			enemyData_.back().model.worldTF.scale = { 0.5f,0.5f,0.5f };
 			enemyData_.back().isDelete = false;
 
-			//タイプに応じて変更
-			if (enemyData_.back().typeStr == IEnemy::enemyTypeName[int(EnemyType::kNormal)]) {
-				enemyData_.back().type = EnemyType::kNormal;
-			}
-			else if (enemyData_.back().typeStr == IEnemy::enemyTypeName[int(EnemyType::kBoss)]) {
-				enemyData_.back().type = EnemyType::kBoss;
-			}
-
 			// 次のループへ
 			continue;
 		}
@@ -153,3 +145,28 @@ void WaveData::Load(LWP::Utility::JsonIO& json, LWP::Utility::NestedList& nested
 
 }
 
+void WaveData::SetType()
+{
+
+	for (EnemyData& enemyData : enemyData_) {
+		
+		//タイプに応じて変更
+		if (enemyData.typeStr == IEnemy::enemyTypeName[int(EnemyType::kNormal)]) {
+			enemyData.type = EnemyType::kNormal;
+		}
+		else if (enemyData.typeStr == IEnemy::enemyTypeName[int(EnemyType::kBoss)]) {
+			enemyData.type = EnemyType::kBoss;
+		}
+
+	}
+
+}
+
+void WaveData::SetIsShowModel(bool flag)
+{
+
+	for (EnemyData& enemyData : enemyData_) {
+		enemyData.model.isActive = flag;
+	}
+
+}

@@ -24,7 +24,7 @@ void Following::Update()
 {
 
 	//プレイヤーが存在する場合
-	if (enemy_->GetPlayer()) {
+	if (enemy_->GetPlayerPtr()) {
 
 		//待機状態に移行する距離になるまでプレイヤーに向かう
 		if (enemy_->GetDistFromPlayer() < idleDist_) {

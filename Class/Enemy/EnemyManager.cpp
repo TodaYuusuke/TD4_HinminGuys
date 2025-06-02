@@ -13,6 +13,8 @@ void EnemyManager::Initialize()
 	ClearList();
 	spawnPoint_ = { 0.0f,0.0f,0.0f };
 	IEnemy::ResetAttack();
+	isDefeatedAllEnemy_ = false;
+	isStartWave_ = false;
 }
 
 void EnemyManager::Finalize()
@@ -27,6 +29,20 @@ void EnemyManager::Update()
 	spawnData_.Update();
 
 	uint16_t closenessCounter = 0;
+
+	CheckIsSpawn();
+
+	//死亡した敵を削除
+	enemies_.remove_if([](IEnemy* enemy) {
+
+		if (enemy->GetIsDead()) {
+			delete enemy;
+			return true;
+		}
+
+		return false;
+
+		});
 
 	//全ての敵の更新
 	for (auto enemyA = enemies_.begin(); enemyA != enemies_.end(); enemyA++) {
@@ -119,6 +135,11 @@ void EnemyManager::DebugGUI()
 	//スポーンポイント設定
 	ImGui::DragFloat3("spawn point", &spawnPoint_.x, 0.1f);
 
+	//ウェーブ開始ボタン
+	if (ImGui::Button("Start Wave")) {
+		StartWave();
+	}
+
 	//敵の数が最大数になるまで召喚可能
 	if (enemies_.size() < kMaxEnemyCount_) {
 
@@ -184,6 +205,8 @@ void EnemyManager::DebugGUI()
 
 			spawnData_.DebugGUI();
 
+			ImGui::Checkbox("ShowModel", &isShowSpawnDataModel_);
+
 			ImGui::EndTabItem();
 
 		}
@@ -246,6 +269,64 @@ void EnemyManager::DebugState(States states)
 	default:
 		break;
 	}
+
+}
+
+void EnemyManager::SpawnFromWaveData(WaveData& waveData)
+{
+
+	for (EnemyData& enemyData : waveData.GetEnemyData()) {
+
+		CreateEnemy(enemyData.position, enemyData.type);
+
+	}
+
+}
+
+void EnemyManager::CheckIsSpawn()
+{
+
+	//ウェーブ開始状態で敵リストが空だったら次のウェーブに移行
+	if (isStartWave_ and enemies_.empty()) {
+		//ウェーブカウント増加
+		spawnData_.AddWaveCount();
+
+		//全ウェーブ終了していない場合
+		if (not spawnData_.IsEndAllWave()) {
+			//現在のウェーブの敵データからスポーンさせる
+			SpawnFromWaveData(spawnData_.GetCurrentWaveData());
+		}
+		//全ウェーブ終了していたら
+		else {
+			EndGame();
+		}
+
+	}
+
+}
+
+void EnemyManager::StartWave()
+{
+	//敵リストクリア
+	ClearList();
+	//ウェーブカウントリセット
+	spawnData_.ResetWaveCount();
+	isShowSpawnDataModel_ = false;
+	//スポーンデータのモデルを非表示
+	spawnData_.SetIsShowModel(isShowSpawnDataModel_);
+	//ウェーブ開始
+	isStartWave_ = true;
+	//現在のウェーブの敵データからスポーンさせる
+	SpawnFromWaveData(spawnData_.GetCurrentWaveData());
+
+}
+
+void EnemyManager::EndGame()
+{
+	//ウェーブ開始フラグを降ろす
+	isStartWave_ = false;
+	//全ての敵が倒されたフラグを立てる
+	isDefeatedAllEnemy_ = true;
 
 }
 

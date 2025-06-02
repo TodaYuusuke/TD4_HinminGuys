@@ -8,6 +8,8 @@ class NormalAttack : public IEnemyState
 {
 public:
 
+	NormalAttack();
+
 	~NormalAttack() override = default;
 
 	void Initialize(IEnemy* enemy) override;
@@ -19,6 +21,9 @@ public:
 private:
 
 	LWP::Object::TransformQuat attackTF{};
+	//攻撃コライダー半径
+	float attackRadius_ = 0.1f;
+	//
 
 };
 

@@ -14,6 +14,7 @@ void Normal::Initialize(Player* player, const Vector3& position)
 	type_ = EnemyType::kNormal;
 	//アニメーションロード
 	animation_.LoadFullPath("resources/model/player/Player_Simple.gltf", &model_);
+	swordModel_.LoadShortPath("player/SimpleWeapon.gltf");
 	model_.materials["Material"].color = { 1.0f,0.0f,0.0f,1.0f };
 	SetPlayer(player);
 	model_.worldTF.translation = position;
@@ -21,9 +22,12 @@ void Normal::Initialize(Player* player, const Vector3& position)
 	model_.worldTF.scale = { 0.5f, 0.5f, 0.5f };
 	state_ = new NormalIdle();
 	state_->Initialize(this);
-
+	// 刀モデルをプレイヤーの手に追従させる
+	swordModel_.GetJoint("Grip")->localTF.Parent(&model_, "WeaponAnchor");
 	//名前設定
 	collider_.name = "Normal" + std::to_string(ID_);
+	//刀のコライダー生成
+	CreateSwordCollider();
 
 }
 

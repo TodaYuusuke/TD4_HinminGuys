@@ -41,6 +41,12 @@ public:
 	int32_t GetEnemyCount() { return int32_t(enemyData_.size()); }
 	//ロード
 	void Load(LWP::Utility::JsonIO& json, LWP::Utility::NestedList& list);
+	//タイプセット
+	void SetType();
+	//敵のモデルを表示させるかどうか
+	void SetIsShowModel(bool flag);
+
+	std::list<EnemyData>& GetEnemyData() { return enemyData_; }
 
 private:
 

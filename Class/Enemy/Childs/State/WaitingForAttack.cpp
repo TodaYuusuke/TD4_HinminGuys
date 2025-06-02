@@ -49,7 +49,7 @@ void WaitingForAttack::Update()
 	}
 
 	//プレイヤーが存在する場合
-	if (enemy_->GetPlayer()) {
+	if (enemy_->GetPlayerPtr()) {
 
 		//移動
 		Vector3 dist = enemy_->GetPlayerPosition() - enemy_->GetPosition();
