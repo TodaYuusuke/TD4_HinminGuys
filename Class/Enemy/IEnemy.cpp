@@ -38,7 +38,7 @@ IEnemy::IEnemy()
 	collider_.mask.SetBelongFrag(GetEnemy());
 	// 当たり判定をとる対象のマスクを設定
 	collider_.mask.SetHitFrag(GetAttack());
-	collider_.stayLambda = [this](LWP::Object::Collision* hitTarget) {
+	collider_.enterLambda = [this](LWP::Object::Collision* hitTarget) {
 		hitTarget;
 
 		//ダメージ量
@@ -62,6 +62,12 @@ IEnemy::~IEnemy()
 
 void IEnemy::Update()
 {
+
+	//死亡時、更新しない(別途ステートを作成する予定)
+	if (parameter_.hp <= 0.0f) {
+		isDead_ = true;
+		return;
+	}
 
 	//デルタタイムが0.0f以下の時、更新しない
 	if (LWP::Info::GetDeltaTime() <= 0.0f) {

@@ -3,7 +3,7 @@
 
 SpawnData::SpawnData()
 {
-	currentWaveCount_ = 0;
+	currentWaveCount_ = startWaveCount_;
 	waveData_.clear();
 	Load();
 }
@@ -57,7 +57,7 @@ void SpawnData::DebugGUI()
 	}
 
 	//全ウェーブデータのデバッグ表示
-	for (int32_t i = 1; WaveData& waveData : waveData_) {
+	for (int32_t i = startWaveCount_; WaveData& waveData : waveData_) {
 
 		//各ウェーブを区別するため数字をふる
 		std::string treeName = "Wave" + std::to_string(i);
@@ -93,6 +93,25 @@ void SpawnData::DebugGUI()
 
 }
 
+WaveData& SpawnData::GetCurrentWaveData()
+{
+	
+	for (int32_t i = startWaveCount_; WaveData& waveData : waveData_) {
+
+		//現在のウェーブカウントとループ数が一致していたらそのデータを返す
+		if (i == currentWaveCount_) {
+			return waveData;
+		}
+
+	}
+
+	//データが範囲外なのでassert出す
+	assert(false);
+	//仮の返り値
+	return waveData_.back();
+
+}
+
 
 void SpawnData::Save()
 {
@@ -100,7 +119,7 @@ void SpawnData::Save()
 	json_.Init("EnemySpawn.json");
 
 	//全ウェーブの保存
-	for (int32_t i = 1; WaveData& waveData : waveData_) {
+	for (int32_t i = startWaveCount_; WaveData& waveData : waveData_) {
 
 		//ウェーブ+ウェーブ番号+ウェーブ内の敵数の順に文字列を作る
 		std::string groupName = "Wave|" + std::to_string(i);
@@ -162,5 +181,8 @@ void SpawnData::Load()
 	}
 
 	json_.Load();
+
+	//現在のウェーブカウントリセット
+	currentWaveCount_ = startWaveCount_;
 
 }

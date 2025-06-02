@@ -111,7 +111,6 @@ void Player::CreateCollision() {
 	collider_.mask.SetHitFrag(GetAttack());
 	collider_.enterLambda = [this](LWP::Object::Collision* hitTarget) {
 		hitTarget;
-		ChangeHPGauge(10.0f);
 		};
 }
 

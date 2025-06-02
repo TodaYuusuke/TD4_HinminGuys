@@ -48,6 +48,8 @@ private:
 
 	//特定のステートのデバッグGUIを開く
 	void DebugState(States states);
+	//ウェーブデータから敵をスポーンさせる
+	void SpawnFromWaveData(WaveData& waveData);
 
 private:
 

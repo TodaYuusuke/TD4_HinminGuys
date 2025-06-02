@@ -28,6 +28,17 @@ void EnemyManager::Update()
 
 	uint16_t closenessCounter = 0;
 
+	//死亡した敵を削除
+	enemies_.remove_if([](IEnemy* enemy) {
+
+		if (enemy->GetIsDead()) {
+			return true;
+		}
+
+		return false;
+
+		});
+
 	//全ての敵の更新
 	for (auto enemyA = enemies_.begin(); enemyA != enemies_.end(); enemyA++) {
 		//互いの情報を共有するためのループ
@@ -245,6 +256,17 @@ void EnemyManager::DebugState(States states)
 		break;
 	default:
 		break;
+	}
+
+}
+
+void EnemyManager::SpawnFromWaveData(WaveData& waveData)
+{
+
+	for (EnemyData& enemyData : waveData.GetEnemyData()) {
+
+		CreateEnemy(enemyData.position, enemyData.type);
+
 	}
 
 }

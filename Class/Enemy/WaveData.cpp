@@ -118,7 +118,7 @@ void WaveData::Load(LWP::Utility::JsonIO& json, LWP::Utility::NestedList& nested
 		// 名前を' | 'で分割する
 		std::vector<std::string> splitName = LWP::Utility::Split(itr->name, '|');
 
-		// 最初にWaveと書かれている場合
+		// 最初にEnemyと書かれている場合
 		if (splitName[0] == "Enemy") {
 
 			EnemyData enemyData;

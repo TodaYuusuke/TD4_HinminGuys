@@ -18,6 +18,13 @@ public:
 	//デバッグ用のGUI表示
 	void DebugGUI();
 
+	//ウェーブカウント加算
+	void AddWaveCount() { currentWaveCount_++; }
+	//現在のウェーブのデータ取得
+	WaveData& GetCurrentWaveData();
+	//ウェーブが全て終わったかどうか
+	bool IsEndAllWave() { return currentWaveCount_ > waveData_.size(); }
+
 private:
 
 	//保存
@@ -36,6 +43,8 @@ private:
 	LWP::Math::Vector3 spawnPoint_;
 	//現在のウェーブ数
 	int32_t currentWaveCount_;
+	//最初のウェーブに割り当てる数字
+	const int32_t startWaveCount_ = 1;
 
 };
 

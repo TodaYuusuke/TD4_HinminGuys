@@ -28,7 +28,7 @@ struct EnemyAttackParameter {
 /// 敵の全体パラメータ
 /// </summary>
 struct EnemyParameter {
-	float hp = 100.0f; //体力
+	float hp = 1.0f; //体力
 	EnemyAttackParameter attackParameter; //攻撃パラメータ
 };
 
@@ -118,6 +118,8 @@ public:
 	const std::string& GetColliderName() const { return collider_.name; }
 	//攻撃パラメータ取得
 	const EnemyAttackParameter& GetAttackParameter() const { return parameter_.attackParameter; }
+	//刀モデル取得
+	SkinningModel& GetSwordModel() { return swordModel_; }
 
 protected:
 
@@ -130,6 +132,8 @@ protected:
 
 	//モデル
 	SkinningModel model_;
+	// 刀モデル
+	SkinningModel swordModel_;
 	//アニメーション
 	Animation animation_;
 	//本体当たり判定

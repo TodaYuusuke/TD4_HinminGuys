@@ -8,6 +8,8 @@ class NormalAttack : public IEnemyState
 {
 public:
 
+	NormalAttack();
+
 	~NormalAttack() override = default;
 
 	void Initialize(IEnemy* enemy) override;
@@ -19,6 +21,10 @@ public:
 private:
 
 	LWP::Object::TransformQuat attackTF{};
+
+	// コライダー
+	LWP::Object::Collision collider_;
+	LWP::Object::Collider::Capsule& capsule_;
 
 };
 

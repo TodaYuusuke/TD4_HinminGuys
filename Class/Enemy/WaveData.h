@@ -42,6 +42,8 @@ public:
 	//ロード
 	void Load(LWP::Utility::JsonIO& json, LWP::Utility::NestedList& list);
 
+	std::list<EnemyData>& GetEnemyData() { return enemyData_; }
+
 private:
 
 	//敵のスポーン地点
