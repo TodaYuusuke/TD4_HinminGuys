@@ -193,5 +193,6 @@ void IEnemy::CreateSwordCollider()
 		hitTarget;
 		player_->ChangeHPGauge(parameter_.attackParameter.attackValue);
 		};
+	capsule_.radius = 0.1f;
 
 }

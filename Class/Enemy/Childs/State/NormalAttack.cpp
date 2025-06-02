@@ -15,6 +15,7 @@ void NormalAttack::Initialize(IEnemy* enemy)
 	enemy_ = enemy;
 	enemy_->SetAnimation("LightAttack2", false, 0.25f);
 	//攻撃判定オン
+	enemy_->GetSwordCollider().isActive = true;
 	enemy_->BeginAttack();
 
 }
@@ -26,7 +27,7 @@ void NormalAttack::Update()
 	if (not enemy_->GetAnimation()->GetPlaying()) {
 
 		//攻撃判定オフ
-
+		enemy_->GetSwordCollider().isActive = false;
 		//待機状態に移行
 		enemy_->EndAttack();
 		enemy_->SubAttackCount();
