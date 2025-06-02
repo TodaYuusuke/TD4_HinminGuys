@@ -48,7 +48,7 @@ public:
 	static std::array<const char*, int(EnemyType::kMax)> enemyTypeName;
 
 	//初期化
-	virtual void Initialize(Player* player, const Vector3& position) = 0;
+	virtual void Initialize(Player* player, const Vector3& position, LWP::Object::Camera* camera) = 0;
 	//更新
 	virtual void Update();
 	//プレイヤーをセットする関数
@@ -124,6 +124,10 @@ public:
 	SkinningModel& GetSwordModel() { return swordModel_; }
 	//刀当たり判定取得
 	LWP::Object::Collision& GetSwordCollider() { return swordCollider_; }
+	//パリィエフェクト開始
+	void StartParryEffect();
+	//パリィエフェクト中かどうか
+	bool GetIsStartParryEffect() { return isStartParryEffect_; }
 
 protected:
 
@@ -134,9 +138,17 @@ protected:
 
 	//刀のコライダー生成
 	void CreateSwordCollider();
+	//パリィエフェクト更新
+	void UpdateParryEffect();
+	//座標変換
+	LWP::Math::Vector3 CoordTransform(const LWP::Math::Vector3& vector, const LWP::Math::Matrix4x4& matrix);
 
 protected:
 
+	//パリィエフェクトの画像数
+	static const int32_t kMaxParryEffect_ = 2;
+	//カメラのポインタ
+	LWP::Object::Camera* camera_ = nullptr;
 	//モデル
 	SkinningModel model_;
 	// 刀モデル
@@ -149,6 +161,8 @@ protected:
 	// 刀コライダー
 	LWP::Object::Collision swordCollider_;
 	LWP::Object::Collider::Capsule& capsule_;
+	//パリィエフェクト画像
+	std::array<LWP::Primitive::Sprite, kMaxParryEffect_> parryEffectSprite_;
 	//状態
 	IEnemyState* state_;
 
@@ -162,6 +176,10 @@ protected:
 	EnemyType type_;
 	//プレイヤーからの距離
 	float distFromPlayer_ = 0.0f;
+	//パリィエフェクトの現在の時間
+	float parryEffectTime_ = 0.0f;
+	//パリィエフェクトの最大時間
+	float maxParryEffectTime_ = 0.5f;
 	//全体のID管理
 	static uint16_t currentEnemyID_;
 	//攻撃態勢最大人数
@@ -178,5 +196,7 @@ protected:
 	bool isLocked_ = false;
 	//攻撃中かどうか
 	static bool isAttack_;
+	//パリィエフェクト中かどうか
+	bool isStartParryEffect_ = false;
 
 };

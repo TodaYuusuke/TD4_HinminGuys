@@ -2,7 +2,7 @@
 #include "../../../Player/Player.h"
 #include "../State/BossIdle.h"
 
-void Boss::Initialize(Player* player, const Vector3& position)
+void Boss::Initialize(Player* player, const Vector3& position, LWP::Object::Camera* camera)
 {
 	type_ = EnemyType::kBoss;
 	model_.LoadShortPath("player/Player_Simple.gltf");
@@ -10,6 +10,7 @@ void Boss::Initialize(Player* player, const Vector3& position)
 	animation_.LoadFullPath("resources/model/player/Player_Simple.gltf", &model_);
 	animation_.Play("Idle", 0.1f);
 	SetPlayer(player);
+	camera_ = camera;
 	model_.worldTF.translation = position;
 	// 大きさを一時的に調整
 	model_.worldTF.scale = { 0.8f, 0.8f, 0.8f };

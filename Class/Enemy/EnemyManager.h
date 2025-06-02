@@ -27,6 +27,8 @@ public:
 	void Update();
 	//プレイヤーをセット
 	void SetPlayer(Player* player) { player_ = player; }
+	//カメラセット
+	void SetCamera(LWP::Object::Camera* camera) { camera_ = camera; }
 	//敵追加、配置
 	void CreateEnemy(const Vector3& position, EnemyType type);
 	//リストのクリア
@@ -62,6 +64,8 @@ private:
 private:
 
 	Player* player_;
+
+	LWP::Object::Camera* camera_ = nullptr;
 
 	//全ての敵を管理するリスト
 	std::list<IEnemy*> enemies_;

@@ -32,6 +32,7 @@ void GameScene::Initialize() {
 	// 敵管理クラス
 	enemyManager_.Initialize();
 	enemyManager_.SetPlayer(&player_);
+	enemyManager_.SetCamera(followCamera_.GetCamera());
 
 	// 追従カメラの動作確認のため生成
 	followCamera_.Initialize();

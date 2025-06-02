@@ -49,6 +49,19 @@ IEnemy::IEnemy()
 
 		};
 
+	//画像リセット
+	for (int32_t i = 0; i < kMaxParryEffect_; i++) {
+		parryEffectSprite_[i].LoadTexture("Effect/ParryFlash.png");
+		parryEffectSprite_[i].anchorPoint = { 0.5f,0.5f };
+		parryEffectSprite_[i].isActive = false;
+
+		if (i == 1) {
+			parryEffectSprite_[i].worldTF.rotation = LWP::Math::Quaternion::ConvertEuler({ 0.0f,0.0f,1.57f });
+		}
+
+		parryEffectSprite_[i].Init();
+	}
+
 }
 
 IEnemy::~IEnemy()
@@ -73,6 +86,11 @@ void IEnemy::Update()
 	//デルタタイムが0.0f以下の時、更新しない
 	if (LWP::Info::GetDeltaTime() <= 0.0f) {
 		return;
+	}
+
+	//パリィエフェクト開始状態ならエフェクトを更新
+	if (isStartParryEffect_) {
+		UpdateParryEffect();
 	}
 
 	//現在の状態を更新
@@ -179,6 +197,24 @@ void IEnemy::RotateTowardsPlayer()
 
 }
 
+void IEnemy::StartParryEffect()
+{
+	//パリィエフェクトのフラグ開始
+	isStartParryEffect_ = true;
+	//ワールド座標からスクリーン座標に変換
+	LWP::Math::Matrix4x4 viewProjectionViewport =
+		camera_->GetViewProjection() *
+		LWP::Math::Matrix4x4::CreateViewportMatrix(0, 0, LWP::Info::GetWindowWidthF(), LWP::Info::GetWindowHeightF(), 0.0f, 1.0f);
+	//画像を表示させる
+	for (int32_t i = 0; i < kMaxParryEffect_; i++) {
+		parryEffectSprite_[i].isActive = true;
+		parryEffectSprite_[i].worldTF.translation = CoordTransform(swordModel_.GetJointWorldPosition("Grip"), viewProjectionViewport);
+	}
+
+	parryEffectTime_ = 0.0f;
+
+}
+
 void IEnemy::CreateSwordCollider()
 {
 
@@ -194,5 +230,63 @@ void IEnemy::CreateSwordCollider()
 		player_->TakeDamage(parameter_.attackParameter.attackValue);
 		};
 	capsule_.radius = 0.1f;
+
+}
+
+void IEnemy::UpdateParryEffect()
+{
+
+	if (parryEffectTime_ < maxParryEffectTime_) {
+		//時間加算
+		parryEffectTime_ += 1.0f * LWP::Info::GetDeltaTimeF();
+
+		//時間を超過したらエフェクト終了
+		if (parryEffectTime_ >= maxParryEffectTime_) {
+			parryEffectTime_ = maxParryEffectTime_;
+			isStartParryEffect_ = false;
+			for (int32_t i = 0; i < kMaxParryEffect_; i++) {
+				parryEffectSprite_[i].isActive = false;
+			}
+			return;
+		}
+
+		//ワールド座標からスクリーン座標に変換
+		LWP::Math::Matrix4x4 viewProjectionViewport =
+			camera_->GetViewProjection() *
+			LWP::Math::Matrix4x4::CreateViewportMatrix(0, 0, LWP::Info::GetWindowWidthF(), LWP::Info::GetWindowHeightF(), 0.0f, 1.0f);
+		
+		float t = LWP::Utility::Easing::CallFunction(LWP::Utility::Easing::Type::Liner, parryEffectTime_ / maxParryEffectTime_);
+		
+		//画像更新
+		for (int32_t i = 0; i < kMaxParryEffect_; i++) {
+			parryEffectSprite_[i].worldTF.scale = LWP::Utility::Interpolation::Lerp({0.0f,1.0f,0.0f}, {100.0f,0.0f,0.0f}, t);
+			parryEffectSprite_[i].worldTF.translation =  CoordTransform(swordModel_.GetJointWorldPosition("Grip"), viewProjectionViewport);
+		}
+
+	}
+
+}
+
+LWP::Math::Vector3 IEnemy::CoordTransform(const LWP::Math::Vector3& vector, const LWP::Math::Matrix4x4& matrix) {
+
+	LWP::Math::Vector3 result = {};
+	result.x = vector.x * matrix.m[0][0] + vector.y * matrix.m[1][0] +
+		vector.z * matrix.m[2][0] + 1.0f * matrix.m[3][0];
+	result.y = vector.x * matrix.m[0][1] + vector.y * matrix.m[1][1] +
+		vector.z * matrix.m[2][1] + 1.0f * matrix.m[3][1];
+	result.z = vector.x * matrix.m[0][2] + vector.y * matrix.m[1][2] +
+		vector.z * matrix.m[2][2] + 1.0f * matrix.m[3][2];
+	float w = vector.x * matrix.m[0][3] + vector.y * matrix.m[1][3] +
+		vector.z * matrix.m[2][3] + 1.0f * matrix.m[3][3];
+
+	if (w == 0.0f) {
+		return LWP::Math::Vector3(0.0f, 0.0f, 0.0f);
+	}
+
+	assert(w != 0.0f);
+	result.x /= w;
+	result.y /= w;
+	result.z /= w;
+	return result;
 
 }
