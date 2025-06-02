@@ -291,6 +291,8 @@ private: // メンバ変数
 	std::string animName_ = "";
 	// 遷移秒数
 	float transitionTime_ = 0.0f;
+	// アニメーションの再生速度
+	float animSpeed_ = 1.0f;
 	// ループフラグ
 	bool isLoop_ = false;
 
