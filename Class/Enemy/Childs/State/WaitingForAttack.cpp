@@ -1,6 +1,7 @@
 #include "WaitingForAttack.h"
 #include "NormalAttack.h"
 #include "../../IEnemy.h"
+#include "../../EnemyManager.h"
 
 uint16_t WaitingForAttack::attackCount_ = 0;
 uint16_t WaitingForAttack::nextAttackCount_ = 0;
@@ -42,7 +43,7 @@ void WaitingForAttack::Update()
 	//
 
 	//誰も攻撃しておらず、順番が回ってきたら攻撃に移行
-	if (not enemy_->GetIsAttack() and attackID_ == nextAttackCount_) {
+	if (not enemy_->GetManagerPtr()->IsAnyAttack() and attackID_ == nextAttackCount_) {
 		//攻撃状態に移行
 		enemy_->SetState(new NormalAttack());
 		return;
