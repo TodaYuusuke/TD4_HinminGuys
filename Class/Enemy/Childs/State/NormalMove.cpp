@@ -4,6 +4,7 @@
 #include "WaitingForAttack.h"
 #include "../../../Player/Player.h"
 #include "../../IEnemy.h"
+#include "../../EnemyManager.h"
 
 float NormalMove::attackDist_ = 0.5f;
 int32_t NormalMove::runTime_ = 120;
@@ -33,7 +34,7 @@ void NormalMove::Update()
 		if (Vector3::Distance(enemy_->GetPlayerPosition(), enemy_->GetPosition()) < attackDist_) {
 
 			//誰も攻撃していない状態で、攻撃待機中の敵もいない場合、攻撃にそのまま移行
-			if (not enemy_->GetIsAttack() and
+			if (not enemy_->GetManagerPtr()->IsAnyAttack() and
 				WaitingForAttack::GetAttackCount() == WaitingForAttack::GetNextAttackCount()) {
 				//攻撃状態に移行
 				enemy_->SetState(new NormalAttack());
