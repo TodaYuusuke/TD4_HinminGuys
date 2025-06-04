@@ -15,12 +15,13 @@ SystemManager::SystemManager(Player* player, EnemyManager* enemyManager, FollowC
 void SystemManager::Initialize() {
 	// コマンドの登録
 	inputHandler_ = InputHandler::GetInstance();
+
 	// ロックオン機能
 	lockOnSystem_ = std::make_unique<LockOn>(pCamera_, player_);
 	lockOnSystem_->Initialize();
 	lockOnSystem_->SetEnemyList(enemyManager_->GetEnemyListPtr());
 	lockOnSystem_->SetFollowCamera(followCamera_);
-	systems_.push_back(lockOnSystem_.get());
+	
 	// 被弾機能
 	damageResponseSystem_ = std::make_unique<DamageResponse>(pCamera_, player_);
 	damageResponseSystem_->Initialize();
@@ -58,6 +59,9 @@ void SystemManager::Update() {
 	// アニメーションを振り分ける
 	//animator_.Update(*player_);
 
+	// ロックオン機能(これだけはリストに含めない)
+	lockOnSystem_->Update();
+
 	// 各機能
 	for (ISystem* system : systems_) {
 		system->Update();
@@ -76,6 +80,9 @@ void SystemManager::Reset() {
 
 void SystemManager::DebugGUI() {
 #ifdef _DEBUG
+	// ロックオン
+	lockOnSystem_->DebugGUI();
+
 	// 各機能
 	for (ISystem* system : systems_) {
 		system->DebugGUI();

@@ -19,7 +19,7 @@ void LockOn::Initialize() {
 	isChangeLocked_ = false;
 
 	// ロックオン中のレティクル
-	lockOnUI_.defaultPos = { 0,1,0 };
+	lockOnUI_.defaultPos = { 0,0.5f,0 };
 	lockOnUI_.defaultAnchorPoint = { 0.5f, 0.5f };
 	lockOnUI_.sprite.LoadTexture("lockOnReticle.png");
 	lockOnUI_.sprite.anchorPoint = lockOnUI_.defaultAnchorPoint;
