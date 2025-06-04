@@ -124,6 +124,10 @@ void Sheath::DebugGUI() {
 			eventOrders_[(int)SheathState::kInvinsible].DebugGUI();
 			ImGui::TreePop();
 		}
+		if (ImGui::TreeNode("Collider")) {
+			collider_.DebugGUI();
+			ImGui::TreePop();
+		}
 
 		ImGui::DragFloat3("Velocity", &velocity_.x);
 		ImGui::DragFloat3("Radian", &radian_.x);

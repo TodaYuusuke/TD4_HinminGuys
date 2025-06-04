@@ -176,7 +176,7 @@ void IEnemy::CreateSwordCollider()
 		hitTarget;
 		player_->TakeDamage(parameter_.attackParameter.attackValue);
 		//判定をオフにする
-		swordCollider_.isActive = false;
+		//swordCollider_.isActive = false;
 		};
 	capsule_.radius = 0.1f;
 }

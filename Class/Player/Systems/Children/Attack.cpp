@@ -66,6 +66,7 @@ void Attack::Update() {
 			// 一番近い敵に向かって攻撃できるようにする
 			// 有効距離は3M
 			if (!enemyManager_->GetEnemyListPtr()->empty()) {
+				attackAssistTarget_ = nullptr;
 				if ((enemyManager_->GetEnemyListPtr()->front()->GetWorldTF()->GetWorldPosition() - player_->GetWorldTF()->GetWorldPosition()).Length() <= std::powf(attackAsisstRange, 2.0f)) {
 					// 自機の方向ベクトル
 					Vector3 playerDir = { 0.0f,0.0f,1.0f };
@@ -87,7 +88,6 @@ void Attack::Update() {
 		if (isActive_) {
 			Reset();
 			isAttackRecovery_ = true;
-			//attackAssistTarget_ = nullptr;
 		}
 	}
 	// 受付時間が終了していればコンボ中断
@@ -199,15 +199,6 @@ void Attack::AttackAssistMovement() {
 
 void Attack::LockOnAssist(IEnemy* lockOnTarget) {
 	if (!lockOnTarget) { return; }
-	//// 自機の方向ベクトル
-	//Vector3 playerDir = { 0.0f,0.0f,1.0f };
-	//// 回転行列を求める
-	//Matrix4x4 rotMatrix = LWP::Math::Matrix4x4::CreateRotateXYZMatrix(player_->GetQuat());
-	//// 方向ベクトルを求める
-	//playerDir = playerDir * rotMatrix;
-	//playerDir.y = 0;
-	//// 自機の背後にいるなら攻撃位置アシストをしない
-	//if (IsObjectInOppositeDirection(lockOnTarget->GetWorldTF()->GetWorldPosition(), player_->GetWorldTF()->GetWorldPosition(), playerDir)) { return; }
 
 	// 自機とロックオン中の敵との距離
 	Vector3 attackTargetDist = (lockOnTarget->GetWorldTF()->GetWorldPosition() - player_->GetWorldTF()->GetWorldPosition());
