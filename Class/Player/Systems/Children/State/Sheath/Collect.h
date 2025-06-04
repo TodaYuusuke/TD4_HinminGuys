@@ -30,6 +30,11 @@ public:
 	/// </summary>
 	void AnimCommand() override;
 
+	/// <summary>
+	/// リセット
+	/// </summary>
+	void Reset() override;
+
 private:
 	/// <summary>
 	/// 鞘を回収するときの挙動

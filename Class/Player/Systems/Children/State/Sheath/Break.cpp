@@ -51,6 +51,13 @@ void Break::Update() {
 void Break::Command() {
 	// 現在アクションイベントが進行していないならコマンド成立
 	if ((*eventOrders_)[(int)Sheath::SheathState::kBreak].GetIsEnd()) {
+		// 鞘アニメーション開始
+		player_->StopAnimation(LWP::Resource::Animation::TrackType::Blend);
+		player_->SetAnimationPlaySpeed(1.0f);
+		player_->SetBlendT(0.0f);
+		player_->ResetAnimation();
+		player_->StartAnimation("SheathDash", 0.0f, 0.0f);
+
 		// 鞘クラスの速度を自機に適用
 		player_->GetSystemManager()->SetInputState(InputState::kSheath);
 		(*eventOrders_)[(int)Sheath::SheathState::kBreak].Start();

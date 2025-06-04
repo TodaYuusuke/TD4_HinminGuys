@@ -1,7 +1,7 @@
 {
     "Group :Rate": {
         "float :InterTarget": 0.6000000238418579,
-        "float :Rotate": 0.6000000238418579,
+        "float :Rotate": 0.23000000417232513,
         "float :TargetDist": 0.10000000149011612
     },
     "Vector3 :GameStartAngle": [
@@ -11,7 +11,7 @@
     ],
     "Vector3 :TargetDistance": [
         0.0,
-        0.0,
+        0.4399999976158142,
         -5.0
     ],
     "float :MaxRotateX": 70.0,

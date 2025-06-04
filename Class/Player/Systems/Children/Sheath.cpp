@@ -62,19 +62,18 @@ void Sheath::Update() {
 void Sheath::Reset() {
 	isActive_ = false;
 	isPreActive_ = false;
-	sheathModel_.isActive = false;
-	// 本体のモデルも非表示
-	player_->SetIsSheathModelActive(true);
-	collider_.isActive = false;
-	capsule_.isShowWireFrame = false;
 	eventOrders_[(int)SheathState::kThrow].Reset();
 	eventOrders_[(int)SheathState::kCollect].Reset();
 	eventOrders_[(int)SheathState::kBreak].Reset();
+	eventOrders_[(int)SheathState::kInvinsible].Reset();
+	state_->Reset();
 	// 移動速度
 	velocity_ = { 0.0f,0.0f,0.0f };
 	// 向いている角度
 	quat_ = { 0.0f,0.0f,0.0f,1.0f };
 	radian_ = { 0.0f,0.0f,0.0f };
+
+	currentCoolTime_ = 0.0f;
 }
 
 void Sheath::DebugGUI() {
@@ -198,9 +197,11 @@ void Sheath::Command() {
 		isBreak_ = true;
 		ChangeState(new Break(this, player_, &eventOrders_));
 	}
-
+	isActive_ = true;
 	// 状態によって変更
 	state_->Command();
+	// 状態によって変更
+	state_->AnimCommand();
 }
 
 void Sheath::AnimCommand() {
@@ -282,8 +283,4 @@ LWP::Math::Vector3 Sheath::ClampToCircle(LWP::Math::Vector3& position) {
 	}
 
 	return position;
-}
-
-void Sheath::SetIsSheathModelActive(const bool& isActive) {
-	sheathModel_.isActive = isActive;
 }

@@ -25,6 +25,10 @@ void SystemManager::Initialize() {
 	damageResponseSystem_ = std::make_unique<DamageResponse>(pCamera_, player_);
 	damageResponseSystem_->Initialize();
 	systems_.push_back(damageResponseSystem_.get());
+	// 移動機能
+	moveSystem_ = std::make_unique<Move>(pCamera_, player_);
+	moveSystem_->Initialize();
+	systems_.push_back(moveSystem_.get());
 	// パリィ機能
 	parrySystem_ = std::make_unique<Parry>(pCamera_, player_);
 	parrySystem_->Initialize();
@@ -33,19 +37,15 @@ void SystemManager::Initialize() {
 	evasionSystem_ = std::make_unique<Evasion>(pCamera_, player_);
 	evasionSystem_->Initialize();
 	systems_.push_back(evasionSystem_.get());
-	// 移動機能
-	moveSystem_ = std::make_unique<Move>(pCamera_, player_);
-	moveSystem_->Initialize();
-	systems_.push_back(moveSystem_.get());
-	// 攻撃機能
-	attackSystem_ = std::make_unique<Attack>(pCamera_, player_);
-	attackSystem_->Initialize();
-	attackSystem_->SetLockOnSystem(lockOnSystem_.get());
-	systems_.push_back(attackSystem_.get());
 	// 鞘機能
 	sheathSystem_ = std::make_unique<Sheath>(pCamera_, player_);
 	sheathSystem_->Initialize();
 	systems_.push_back(sheathSystem_.get());
+	// 攻撃機能
+	attackSystem_ = std::make_unique<Attack>(pCamera_, player_, enemyManager_);
+	attackSystem_->Initialize();
+	attackSystem_->SetLockOnSystem(lockOnSystem_.get());
+	systems_.push_back(attackSystem_.get());
 
 	// 自機のアニメーションを管理
 	animator_.Initialize(player_->GetAnimation());
@@ -56,7 +56,7 @@ void SystemManager::Initialize() {
 
 void SystemManager::Update() {
 	// アニメーションを振り分ける
-	animator_.Update(*player_);
+	//animator_.Update(*player_);
 
 	// 各機能
 	for (ISystem* system : systems_) {
@@ -129,6 +129,11 @@ void SystemManager::EnableInputMoveState() {
 		rotate_ = LWP::Math::Quaternion::CreateFromAxisAngle(LWP::Math::Vector3{ 0, 1, 0 }, radian_.y);
 		break;
 	case InputState::kSheath:
+		// MoveSystemクラス内の角度も変更
+		if (Vector3::Dot(velocity_, velocity_) != 0) {
+			moveSystem_->SetRotate(radian_);
+		}
+
 		// 速度を加算
 		velocity_ = LWP::Utility::Interpolation::Exponential(velocity_, sheathSystem_->GetVelocity(), 0.9f);
 		// 角度を加算
@@ -136,10 +141,7 @@ void SystemManager::EnableInputMoveState() {
 		// クォータニオンに変換
 		rotate_ = LWP::Math::Quaternion::CreateFromAxisAngle(LWP::Math::Vector3{ 0, 1, 0 }, radian_.y);
 
-		// MoveSystemクラス内の角度も変更
-		if (Vector3::Dot(velocity_, velocity_) != 0) {
-			moveSystem_->SetRotate(radian_);
-		}
+
 		break;
 	}
 }

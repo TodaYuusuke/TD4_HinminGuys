@@ -52,6 +52,8 @@ public:
 	void TakeDamage(const float& damageValue, const float& multiply = 1.0f) {
 		// 自機が無敵中ならダメージ判定をとらない
 		if (!collider_.isActive) { return; }
+		// 全ての機能をリセット
+		Reset();
 		// HPゲージ変動
 		uiManager_->ChangeHPGauge(damageValue, multiply);
 		// 無敵開始
@@ -60,8 +62,6 @@ public:
 		systemManager_->GetDamageResponseSystem()->StartEffect();
 		// コンボ状態リセット
 		systemManager_->GetAttackSystem()->ComboReset();
-		// 全ての機能をリセット
-		Reset();
 	}
 
 	/// <summary>
@@ -182,6 +182,8 @@ public:// Getter,Setter
 	void ResetAnimation() {
 		animation_.Loop(false, LWP::Resource::Animation::TrackType::Main);
 		animation_.Loop(false, LWP::Resource::Animation::TrackType::Blend);
+		//animation_.Stop(LWP::Resource::Animation::TrackType::Main);
+		//animation_.Stop(LWP::Resource::Animation::TrackType::Blend);
 	}
 	/// <summary>
 	/// ブレンドされているアニメーションを停止

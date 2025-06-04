@@ -9,8 +9,7 @@ None::None(Move* moveSystem, Player* player) {
 	player_->GetSystemManager()->GetEvasionSystem()->SetIsDash(false);
 }
 
-void None::Initialize()
-{
+void None::Initialize() {
 }
 
 void None::Update()

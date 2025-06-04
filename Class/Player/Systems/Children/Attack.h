@@ -5,13 +5,14 @@
 #include "../../../ComboEditor/ComboTree.h"
 
 class IEnemy;
+class EnemyManager;
 /// <summary>
 /// 自機の攻撃機能をまとめたクラス
 /// </summary>
 class Attack : public ISystem {
 public:
 	// コンストラクタ
-	Attack(LWP::Object::Camera* camera, Player* player);
+	Attack(LWP::Object::Camera* camera, Player* player, EnemyManager* enemyManager);
 	// デストラクタ
 	~Attack() override;
 
@@ -54,7 +55,6 @@ public:
 	/// </summary>
 	void ComboReset() { 
 		comboTree_.ResetCombo();
-		isAttackRecovery_ = true;
 	}
 
 private:
@@ -78,6 +78,11 @@ private:
 	/// 攻撃時の位置アシスト
 	/// </summary>
 	void AttackAssistMovement();
+
+	/// <summary>
+	/// ロックオン時の位置アシスト
+	/// </summary>
+	void LockOnAssist();
 
 public:// Getter, Setter
 #pragma region Getter
@@ -164,7 +169,8 @@ public:// Getter, Setter
 private:// jsonで保存する値
 
 private:// 外部からポインタをもらう変数
-
+	// 敵の管理クラス
+	EnemyManager* enemyManager_;
 	// ロックオン機能
 	LockOn* lockOnSystem_;
 

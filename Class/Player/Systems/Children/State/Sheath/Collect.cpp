@@ -32,8 +32,16 @@ void Collect::Update() {
 	if ((*eventOrders_)[(int)Sheath::SheathState::kCollect].GetIsEnd()) {
 		sheathSystem_->Reset();
 		(*eventOrders_)[(int)Sheath::SheathState::kCollect].Reset();
+
+		// 投げる用の鞘モデルを非表示
+		sheathSystem_->SetIsSheathModelActive(false);
+		// 本体のモデルも非表示
+		player_->SetIsSheathModelActive(true);
+		sheathSystem_->SetIsCollision(false);
+
 		// クールタイム開始
 		sheathSystem_->SetCoolTime();
+
 		// 投げ可能状態に変更
 		sheathSystem_->ChangeState(new Throw(sheathSystem_, player_, eventOrders_));
 		return;
@@ -45,17 +53,32 @@ void Collect::Command() {
 		// 鞘クラスの速度を自機に適用
 		player_->GetSystemManager()->SetInputState(InputState::kSheath);
 
+		// 鞘アニメーション開始
+		player_->StopAnimation(LWP::Resource::Animation::TrackType::Main);
+		player_->StopAnimation(LWP::Resource::Animation::TrackType::Blend);
+		player_->SetAnimationPlaySpeed(1.0f);
+		player_->SetBlendT(0.0f);
+		player_->ResetAnimation();
+		player_->StartAnimation("SheathDash", 0.0f, 0.0f);
+
+		// 鞘回収機能を開始
 		isActive_ = true;
 		// 攻撃判定を出す
 		sheathSystem_->SetIsCollision(true);
+
 		// 無敵開始
-		//sheathSystem_->StartInvinsible();
 		(*eventOrders_)[(int)Sheath::SheathState::kInvinsible].Start();
 		// アクションイベント開始
 		(*eventOrders_)[(int)Sheath::SheathState::kCollect].Start();
+
 		// イージングの始点終点を設定
 		start_ = player_->GetWorldTF()->GetWorldPosition();
 		end_ = sheathSystem_->GetSheathWorldTF().GetWorldPosition();
+
+		// イージングの始点終点から角度を求める
+		radian_.y = LWP::Utility::GetRadian(LWP::Math::Vector3{ 0,0,1 }, (end_ - start_).Normalize(), LWP::Math::Vector3{ 0,1,0 });
+		quat_ = LWP::Math::Quaternion::CreateFromAxisAngle(LWP::Math::Vector3{ 0, 1, 0 }, radian_.y);
+
 		// ロックオン以外何もできないようにする
 		inputHandler_->GetSheathCommand()->SetBanInput(inputHandler_->GetSheathCommand()->GetBanInput() | (BanMove));
 		inputHandler_->GetSheathCommand()->SetBanInput(inputHandler_->GetSheathCommand()->GetBanInput() | (BanAttack));
@@ -69,25 +92,42 @@ void Collect::AnimCommand() {
 
 }
 
+void Collect::Reset() {
+	// 投げる用の鞘モデルを非表示
+	sheathSystem_->SetIsSheathModelActive(true);
+	// 本体のモデルも非表示
+	player_->SetIsSheathModelActive(false);
+	sheathSystem_->SetIsCollision(false);
+
+	velocity_ = { 0,0,0 };
+	start_ = { 0,0,0 };
+	end_ = { 0,0,0 };
+
+	t_ = 0.0f;
+}
+
 void Collect::CollectMove() {
 	// 鞘回収するために自機が動いているときの処理
 	if ((*eventOrders_)[(int)Sheath::SheathState::kCollect].GetCurrentTimeEvent().name == "CollectFinishTime") {
+		// 攻撃判定を出す
 		sheathSystem_->SetIsCollision(true);
 
+		// 速度を算出
 		velocity_ = (LWP::Utility::Interpolation::Lerp(start_, end_, LWP::Utility::Easing::OutExpo((*eventOrders_)[(int)Sheath::SheathState::kCollect].GetCurrentFrame() / (sheathSystem_->collectTime * 60.0f))) - player_->GetWorldTF()->GetWorldPosition());
 
 		// 移動速度からラジアンを求める
 		radian_.y = LWP::Utility::GetRadian(LWP::Math::Vector3{ 0,0,1 }, velocity_.Normalize(), LWP::Math::Vector3{ 0,1,0 });
 		quat_ = LWP::Math::Quaternion::CreateFromAxisAngle(LWP::Math::Vector3{ 0, 1, 0 }, radian_.y);
+
+		sheathSystem_->SetVelocity(velocity_);
+		sheathSystem_->SetRotate(radian_);
+		sheathSystem_->SetRotate(quat_);
 	}
 	else {
+		// 当たり判定を消す
 		sheathSystem_->SetIsCollision(false);
-		velocity_ = { 0.0f, 0.0f, 0.0f };
 	}
 
-	sheathSystem_->SetVelocity(velocity_);
-	sheathSystem_->SetRotate(radian_);
-	sheathSystem_->SetRotate(quat_);
 }
 
 float Collect::SmoothDampF(float current, float target, float& currentVelocity, float smoothTime, float maxSpeed, float deltaTime) {

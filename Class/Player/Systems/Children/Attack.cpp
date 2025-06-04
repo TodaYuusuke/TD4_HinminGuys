@@ -4,6 +4,7 @@
 #include "State/Attack/LockOnAttack.h"
 #include "State/Attack/NoneAttack.h"
 #include "../../../GameMask.h"
+#include "../../../Enemy/EnemyManager.h"
 
 using namespace LWP;
 using namespace LWP::Math;
@@ -11,10 +12,11 @@ using namespace LWP::Object;
 using namespace LWP::Object::Collider;
 using namespace GameMask;
 
-Attack::Attack(LWP::Object::Camera* camera, Player* player)
+Attack::Attack(LWP::Object::Camera* camera, Player* player, EnemyManager* enemyManager)
 {
 	pCamera_ = camera;
 	player_ = player;
+	enemyManager_ = enemyManager;
 
 	// 状態作成
 	state_ = new NoneAttack(this);
@@ -51,7 +53,7 @@ void Attack::Update() {
 	else {
 		comboTree_.SetIsRecept(false);
 	}
-	
+
 	// コンボツリー自体は毎フレーム更新する
 	comboTree_.Update();
 
@@ -80,16 +82,7 @@ void Attack::Update() {
 	if (comboTree_.GetIsEnableAttackAssist() && !comboTree_.GetIsThisRoot()) {
 		// ロックオン中なら対象に近づいて攻撃
 		if (lockOnSystem_->GetCurrentLockOnTarget() != NULL) {
-			// 現状のロックオン対象を取得
-			lockOnTarget_ = lockOnSystem_->GetCurrentLockOnTarget();
-
-			// 自機とロックオン中の敵との距離
-			Vector3 attackTargetDist = (lockOnTarget_->GetWorldTF()->GetWorldPosition() - player_->GetWorldTF()->GetWorldPosition()) * 0.1f;
-			attackAssistVel_ = LWP::Utility::Interpolation::Lerp(comboTree_.GetAttackAssistMoveAmount(), attackTargetDist, 0.25f);
-
-			// 移動速度からラジアンを求める
-			attackAssistRadian_.y = LWP::Utility::GetRadian(LWP::Math::Vector3{ 0,0,1 }, attackAssistVel_.Normalize(), LWP::Math::Vector3{ 0,1,0 });
-			attackAssistQuat_ = LWP::Math::Quaternion::CreateFromAxisAngle(LWP::Math::Vector3{ 0, 1, 0 }, attackAssistVel_.y);
+			LockOnAssist();
 		}
 		else {
 			// 攻撃の移動量の取得
@@ -140,7 +133,7 @@ void Attack::DebugGUI() {
 			}
 			ImGui::TreePop();
 		}
-		
+
 		eventOrder_.DebugGUI();
 
 		ImGui::DragFloat3("Velocity", &attackAssistVel_.x, 0.1f, -10000, 10000);
@@ -169,7 +162,7 @@ void Attack::CreateEventOrder() {
 }
 
 void Attack::CheckAttackState() {
-	
+
 }
 
 void Attack::AttackAssistMovement() {
@@ -182,4 +175,21 @@ void Attack::AttackAssistMovement() {
 	else {
 		ChangeState(new DefaultAttack(this, player_));
 	}
+}
+
+void Attack::LockOnAssist() {
+	// 現状のロックオン対象を取得
+	lockOnTarget_ = lockOnSystem_->GetCurrentLockOnTarget();
+
+	// 自機とロックオン中の敵との距離
+	Vector3 attackTargetDist = (lockOnTarget_->GetWorldTF()->GetWorldPosition() - player_->GetWorldTF()->GetWorldPosition());
+	Vector3 aa = lockOnTarget_->GetWorldTF()->GetWorldPosition() + (-0.01f * attackTargetDist.Normalize()) - player_->GetWorldTF()->GetWorldPosition();
+
+	//attackAssistVel_ = LWP::Utility::Interpolation::Lerp(comboTree_.GetAttackAssistMoveAmount(), attackTargetDist, 0.25f);
+	attackAssistVel_ = LWP::Utility::Interpolation::Lerp(Vector3{ 0,0,0 }, aa, 0.25f);
+	//attackAssistVel_ = LWP::Utility::Interpolation::Exponential(attackAssistVel_, aa, 0.1f);
+
+	// 移動速度からラジアンを求める
+	attackAssistRadian_.y = LWP::Utility::GetRadian(LWP::Math::Vector3{ 0,0,1 }, attackAssistVel_.Normalize(), LWP::Math::Vector3{ 0,1,0 });
+	attackAssistQuat_ = LWP::Math::Quaternion::CreateFromAxisAngle(LWP::Math::Vector3{ 0, 1, 0 }, attackAssistVel_.y);
 }

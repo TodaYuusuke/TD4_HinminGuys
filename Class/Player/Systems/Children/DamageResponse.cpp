@@ -104,7 +104,6 @@ void DamageResponse::StartInvinsible() {
 	inputHandler_->SetCurrentBanInput(inputHandler_->GetBanInput() | BanALL);
 	// ガードアニメーション開始
 	player_->ResetAnimation();
-	player_->StopAnimation(LWP::Resource::Animation::TrackType::Blend);
 	player_->StartAnimation("Damage", 0.0f, 0.0f);
 }
 

@@ -80,7 +80,7 @@ void Parry::Reset() {
 	eventOrder_.Reset();
 	eventOrders_[(int)ParryInvinsibleState::kRunning].Reset();
 	// アニメーションを初期化
-	player_->ResetAnimation();
+	//player_->ResetAnimation();
 }
 
 void Parry::DebugGUI() {
@@ -177,12 +177,19 @@ void Parry::Command() {
 		aabb_.isShowWireFrame = true;
 		radian_ = player_->GetSystemManager()->GetMoveSystem()->GetMoveRadian();
 		quat_ = player_->GetSystemManager()->GetMoveSystem()->GetMoveQuat();
+
+		// アニメーション再生
+		AnimCommand();
 	}
 	eventOrder_.Start();
 }
 
 void Parry::AnimCommand() {
 	// ガードアニメーション開始
+	player_->StopAnimation(LWP::Resource::Animation::TrackType::Main);
+	player_->StopAnimation(LWP::Resource::Animation::TrackType::Blend);
+	player_->SetAnimationPlaySpeed(1.0f);
+	player_->SetBlendT(0.0f);
 	player_->ResetAnimation();
 	player_->StartAnimation("Gaurd", 0.0f, 0.0f);
 }
@@ -195,8 +202,8 @@ void Parry::CreateCollision() {
 	collider_.SetFollow(player_->GetWorldTF());
 	collider_.isActive = false;
 	collider_.worldTF.translation = { 0.0f, 1.0f, 0.0f };
-	collider_.mask.SetBelongFrag(GetPlayer());
-	collider_.mask.SetHitFrag(GetEnemy() | GetAttack());
+	collider_.mask.SetBelongFrag(GetParry());
+	collider_.mask.SetHitFrag(GetAttack());
 	collider_.stayLambda = [this](LWP::Object::Collision* hitTarget) {
 		// すでにジャスパor甘パリィなら処理しない
 		if (isGoodParry_ || isJustParry_) { return; }

@@ -31,6 +31,11 @@ public:
 	/// </summary>
 	void AnimCommand() override;
 
+	/// <summary>
+	/// リセット
+	/// </summary>
+	void Reset() override;
+
 private:
 	/// <summary>
 	/// アクションイベント応じて処理を変える

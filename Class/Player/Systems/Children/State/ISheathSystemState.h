@@ -27,6 +27,11 @@ public:
 	/// </summary>
 	virtual void AnimCommand() = 0;
 
+	/// <summary>
+	/// リセット
+	/// </summary>
+	virtual void Reset() = 0;
+
 public:// Getter, Setter
 #pragma region Getter
 	/// <summary>
