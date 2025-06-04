@@ -52,9 +52,6 @@ private: // ** これより先に必要な処理や変数を記述 ** //
 	//ライト
 	LWP::Object::DirectionLight light_;
 
-	// 当たり判定テスト用のオブジェクト
-	TestCollider testCollider_;
-
 	//シーン切り替え
 	SceneTransitioner sceneTransitioner_;
 

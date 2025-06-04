@@ -76,7 +76,6 @@ void Parry::Reset() {
 		isGoodParry_ = false;
 	}
 	collider_.isActive = false;
-	aabb_.isShowWireFrame = false;
 	eventOrder_.Reset();
 	eventOrders_[(int)ParryInvinsibleState::kRunning].Reset();
 	// アニメーションを初期化
@@ -174,7 +173,6 @@ void Parry::Command() {
 		eventOrders_[(int)ParryInvinsibleState::kRunning].Start();
 		isActive_ = true;
 		collider_.isActive = true;
-		aabb_.isShowWireFrame = true;
 		radian_ = player_->GetSystemManager()->GetMoveSystem()->GetMoveRadian();
 		quat_ = player_->GetSystemManager()->GetMoveSystem()->GetMoveQuat();
 
@@ -198,7 +196,6 @@ void Parry::CreateCollision() {
 	// 攻撃判定生成
 	aabb_.min = { -1.0f, -1.0f, -1.0f };
 	aabb_.max = { 1.0f, 1.0f, 1.0f };
-	aabb_.isShowWireFrame = false;
 	collider_.SetFollow(player_->GetWorldTF());
 	collider_.isActive = false;
 	collider_.worldTF.translation = { 0.0f, 1.0f, 0.0f };

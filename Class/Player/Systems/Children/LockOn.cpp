@@ -170,6 +170,16 @@ void LockOn::SearchLockOnEnemy() {
 
 void LockOn::ClearLockOn() {
 	for (IEnemy* enemy : *enemies_) {
+		// 死んでいたら消す
+		if (enemy->GetIsDead()) {
+			enemy->SetIsLocked(false);
+			auto it = std::find(lockOnEnableEnemies_.begin(), lockOnEnableEnemies_.end(), enemy);
+			if (it != lockOnEnableEnemies_.end()) {
+				lockOnEnableEnemies_.erase(std::remove(lockOnEnableEnemies_.begin(), lockOnEnableEnemies_.end(), enemy), lockOnEnableEnemies_.end());
+			}
+			continue;
+		}
+
 		// ロックオン可能状態の敵じゃないならスキップ
 		if (!enemy->GetIsLocked()) { continue; }
 
