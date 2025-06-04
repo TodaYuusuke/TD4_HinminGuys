@@ -217,7 +217,7 @@ void Parry::CreateCollision() {
 			eventOrders_[(int)ParryInvinsibleState::kJust].Start();
 			// ガードアニメーション開始
 			player_->ResetAnimation();
-			player_->StartAnimation("WeakParry", 0.0f, 0.0f);
+			player_->StartAnimation("StrongParry", 0.0f, 0.0f);
 			// 鞘のゲージを減少
 			player_->GetUIManager()->ChangeSheathGauge(justParryDecrement);
 			// 相手の座標を代入

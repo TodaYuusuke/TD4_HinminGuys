@@ -82,7 +82,26 @@ private:
 	/// <summary>
 	/// ロックオン時の位置アシスト
 	/// </summary>
-	void LockOnAssist();
+	void LockOnAssist(IEnemy* lockOnTarget);
+
+	/// <summary>
+	/// 攻撃時の位置アシスト(非ロックオン時)
+	/// </summary>
+	void AttackAssist();
+
+private:
+	bool IsObjectInOppositeDirection(const Vector3& objectPosition, const Vector3& cameraPosition, const Vector3& cameraDirection) {
+		Vector3 cameraToEnemyDirection = (cameraPosition - objectPosition).Normalize();
+		float dot = Vector3::Dot((cameraDirection).Normalize(), cameraToEnemyDirection);
+
+		// カメラの正面方向にいる
+		if (dot < 0.0f) {
+			return false;
+		}
+
+		// カメラの背後にいる
+		return true;
+	}
 
 public:// Getter, Setter
 #pragma region Getter
@@ -167,6 +186,10 @@ public:// Getter, Setter
 #pragma endregion
 
 private:// jsonで保存する値
+	// ロックオン時の攻撃位置アシストを行う範囲
+	float lockOnAsisstRange = 5.0f;
+	// 非ロックオン時の攻撃位置アシストを行う範囲
+	float attackAsisstRange = 3.0f;
 
 private:// 外部からポインタをもらう変数
 	// 敵の管理クラス
@@ -187,6 +210,8 @@ private:
 	Vector3 attackAssistRadian_;
 	Quaternion attackAssistQuat_;
 	IEnemy* lockOnTarget_;
+	// 非ロックオン時のアシスト攻撃対象
+	IEnemy* attackAssistTarget_;
 
 	// 攻撃が全て終わった後か
 	bool isAttackRecovery_;
