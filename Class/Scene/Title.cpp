@@ -35,21 +35,51 @@ void Title::Initialize() {
 	UIStart_.Initialize("Title/Start.png", "Title_Start");
 	UIExit_.Initialize("Title/Exit.png", "Title_Exit");
 	UITitleLogo_.Initialize("Title/Title_Logo.png", "Title_Logo");
+	UITitleLogo_.isActive = false;
+
+	selectUI_ = SelectUI::kStart;
 
 }
 
 void Title::Update() {
-	// シーン遷移
-	if (Keyboard::GetTrigger(DIK_P)) {
-		//遷移先をタイトルにセット
-		sceneTransitioner_.SetNextScene(SceneName::kGameScene);
-		sceneTransitioner_.SceneTransitionStart();
-	}
+	
+	///
+	/// 突貫工事なので後で処理をまとめる
+	///
 
-	if (Keyboard::GetTrigger(DIK_SPACE)) {
-		UIStart_.isActive = not UIStart_.isActive;
-		UIExit_.isActive = not UIExit_.isActive;
-		UITitleLogo_.isActive = not UITitleLogo_.isActive;
+	if (not sceneTransitioner_.GetIsSceneChange()) {
+
+		if (selectUI_ == SelectUI::kStart) {
+
+			//下キーでEndに移動
+			if (Controller::GetTrigger(XBOX_DPAD_DOWN)) {
+				selectUI_ = SelectUI::kEnd;
+			}
+			//Aボタンでゲームスタート
+			if (Controller::GetTrigger(XBOX_A)) {
+				sceneTransitioner_.SetNextScene(SceneName::kGameScene);
+				sceneTransitioner_.SceneTransitionStart();
+			}
+
+			UIStart_.isActive = true;
+			UIExit_.isActive = false;
+
+		}
+		else if (selectUI_ == SelectUI::kEnd) {
+
+			//上キーでStartに移動
+			if (Controller::GetTrigger(XBOX_DPAD_UP)) {
+				selectUI_ = SelectUI::kStart;
+			}
+			if (Controller::GetTrigger(XBOX_A)) {
+				LWP::System::ShutDown();
+			}
+
+			UIStart_.isActive = false;
+			UIExit_.isActive = true;
+
+		}
+
 	}
 
 	UIStart_.Update();
