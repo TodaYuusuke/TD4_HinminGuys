@@ -129,6 +129,11 @@ void SystemManager::EnableInputMoveState() {
 		rotate_ = LWP::Math::Quaternion::CreateFromAxisAngle(LWP::Math::Vector3{ 0, 1, 0 }, radian_.y);
 		break;
 	case InputState::kSheath:
+		// MoveSystemクラス内の角度も変更
+		if (Vector3::Dot(velocity_, velocity_) != 0) {
+			moveSystem_->SetRotate(radian_);
+		}
+
 		// 速度を加算
 		velocity_ = LWP::Utility::Interpolation::Exponential(velocity_, sheathSystem_->GetVelocity(), 0.9f);
 		// 角度を加算
@@ -136,10 +141,7 @@ void SystemManager::EnableInputMoveState() {
 		// クォータニオンに変換
 		rotate_ = LWP::Math::Quaternion::CreateFromAxisAngle(LWP::Math::Vector3{ 0, 1, 0 }, radian_.y);
 
-		// MoveSystemクラス内の角度も変更
-		if (Vector3::Dot(velocity_, velocity_) != 0) {
-			moveSystem_->SetRotate(radian_);
-		}
+
 		break;
 	}
 }
