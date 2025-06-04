@@ -10,10 +10,6 @@ using namespace LWP::Info;
 
 void Title::Initialize() {
 
-	//刀モデル読み込み
-	sword_.LoadShortPath("player/SimpleWeapon.gltf");
-	sword_.worldTF.rotation = LWP::Math::Quaternion::ConvertEuler(LWP::Math::Vector3(0.0f, 0.0f, 3.14f));
-
 	// 平行光源を配置(これも一時的に配置)
 	light_.worldTF.translation = { 0,10,0 };
 
