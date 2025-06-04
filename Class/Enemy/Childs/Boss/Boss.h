@@ -11,7 +11,8 @@ public:
 	Boss() = default;
 	~Boss() override = default;
 
-	void Initialize(Player* player, const Vector3& position, LWP::Object::Camera* camera) override;
+	void Initialize(Player* player, const Vector3& position, LWP::Object::Camera* camera,
+		EnemyManager* manager) override;
 
 	void Update() override;
 

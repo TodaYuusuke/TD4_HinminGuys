@@ -10,8 +10,6 @@ using namespace GameMask;
 //実体宣言
 uint16_t IEnemy::currentEnemyID_ = 0;
 uint16_t IEnemy::maxAttackCount_ = 3;
-uint16_t IEnemy::currentAttackCount_ = 0;
-bool IEnemy::isAttack_ = false;
 std::array<const char*, int(EnemyType::kMax)> IEnemy::enemyTypeName =
 { "Normal", "Boss" };
 

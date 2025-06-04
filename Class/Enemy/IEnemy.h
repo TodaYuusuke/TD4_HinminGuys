@@ -5,6 +5,7 @@ using namespace LWP::Math;
 using namespace LWP::Resource;
 
 class Player;
+class EnemyManager;
 
 /// <summary>
 /// 敵の種類
@@ -48,7 +49,8 @@ public:
 	static std::array<const char*, int(EnemyType::kMax)> enemyTypeName;
 
 	//初期化
-	virtual void Initialize(Player* player, const Vector3& position, LWP::Object::Camera* camera) = 0;
+	virtual void Initialize(Player* player, const Vector3& position, LWP::Object::Camera* camera, 
+		EnemyManager* manager) = 0;
 	//更新
 	virtual void Update();
 	//プレイヤーをセットする関数
@@ -65,6 +67,8 @@ public:
 	void SetRotation(const Quaternion& rotation) { model_.worldTF.rotation = rotation; }
 	//プレイヤー取得
 	Player* GetPlayerPtr() { return player_; }
+	//マネージャー取得
+	EnemyManager* GetManagerPtr() { return enemyManager_; }
 	//プレイヤーの座標取得
 	Vector3 GetPlayerPosition();
 	//アニメーション切り替え
@@ -98,13 +102,11 @@ public:
 	//攻撃中フラグ取得
 	bool GetIsAttack() const { return isAttack_; }
 	//攻撃フラグを強制終了(外部からの呼び出し用)
-	static void ResetAttack() { isAttack_ = false; }
-	//攻撃態勢カウント増加
-	void AddAttackCount() { currentAttackCount_++; }
-	//攻撃態勢カウント減少
-	void SubAttackCount() { currentAttackCount_--; }
-	//現在の攻撃態勢人数取得
-	static uint16_t GetCurrentAttackCount() { return currentAttackCount_; }
+	void ResetAttack() { isAttack_ = false; }
+	//攻撃態勢状態取得
+	bool GetIsAttackPhase() const { return isAttackPhase_; }
+	//攻撃態勢状態セット
+	void SetIsAttackPhase(bool flag) { isAttackPhase_ = flag; }
 	//最大攻撃態勢人数取得
 	static uint16_t GetMaxAttackCount() { return maxAttackCount_; }
 	//近接カウントセット
@@ -168,6 +170,8 @@ protected:
 
 	//プレイヤー情報
 	Player* player_;
+	//敵全体から情報を取るためのポインタ
+	EnemyManager* enemyManager_;
 	//敵個別のパラメータ
 	EnemyParameter parameter_;
 	//互いに距離を取るときの反発力
@@ -184,8 +188,6 @@ protected:
 	static uint16_t currentEnemyID_;
 	//攻撃態勢最大人数
 	static uint16_t maxAttackCount_;
-	//現在攻撃態勢に入っている人数
-	static uint16_t currentAttackCount_;
 	//個々のID
 	uint16_t ID_;
 	//距離の近さを示す変数。小さいほど近い
@@ -194,8 +196,10 @@ protected:
 	bool isDead_ = false;
 	//ロックオンされているか
 	bool isLocked_ = false;
+	//攻撃態勢に入ったかどうか
+	bool isAttackPhase_ = false;
 	//攻撃中かどうか
-	static bool isAttack_;
+	bool isAttack_ = false;
 	//パリィエフェクト中かどうか
 	bool isStartParryEffect_ = false;
 

@@ -12,7 +12,6 @@ void EnemyManager::Initialize()
 	//リストをクリア
 	ClearList();
 	spawnPoint_ = { 0.0f,0.0f,0.0f };
-	IEnemy::ResetAttack();
 	isDefeatedAllEnemy_ = false;
 	isStartWave_ = false;
 }
@@ -109,7 +108,7 @@ void EnemyManager::CreateEnemy(const Vector3& position, EnemyType type)
 	}
 
 	//初期化してリストに追加
-	enemies_.back()->Initialize(player_, position, camera_);
+	enemies_.back()->Initialize(player_, position, camera_, this);
 	
 }
 
@@ -318,6 +317,39 @@ void EnemyManager::StartWave()
 	isStartWave_ = true;
 	//現在のウェーブの敵データからスポーンさせる
 	SpawnFromWaveData(spawnData_.GetCurrentWaveData());
+
+}
+
+bool EnemyManager::IsAnyAttack()
+{
+
+	//誰かが攻撃していたらtrueを返す
+	for (auto enemy = enemies_.begin(); enemy != enemies_.end(); enemy++) {
+
+		if ((*enemy)->GetIsAttack()) {
+			return true;
+		}
+
+	}
+
+	return false;
+}
+
+uint16_t EnemyManager::GetAttackPhaseCount()
+{
+	
+	uint16_t count = 0;
+
+	//攻撃態勢に入っている人数をカウント
+	for (auto enemy = enemies_.begin(); enemy != enemies_.end(); enemy++) {
+
+		if ((*enemy)->GetIsAttackPhase()) {
+			count++;
+		}
+
+	}
+
+	return count;
 
 }
 

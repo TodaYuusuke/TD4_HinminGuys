@@ -42,7 +42,7 @@ void NormalAttack::Update()
 		enemy_->GetSwordCollider().isActive = false;
 		//待機状態に移行
 		enemy_->EndAttack();
-		enemy_->SubAttackCount();
+		enemy_->SetIsAttackPhase(false);
 		enemy_->SetState(new NormalIdle());
 		return;
 

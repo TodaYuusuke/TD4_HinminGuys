@@ -49,6 +49,10 @@ public:
 	bool GetIsDefeatedAllEnemy() const { return isDefeatedAllEnemy_; }
 	//ウェーブ開始させる
 	void StartWave();
+	//誰か一人でも攻撃しているかどうか
+	bool IsAnyAttack();
+	//攻撃態勢人数取得
+	uint16_t GetAttackPhaseCount();
 
 private:
 
