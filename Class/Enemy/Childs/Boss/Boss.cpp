@@ -1,6 +1,5 @@
 #include "Boss.h"
 #include "../../../Player/Player.h"
-#include "../State/BossIdle.h"
 
 void Boss::Initialize(Player* player, const Vector3& position, LWP::Object::Camera* camera,
 	EnemyManager* manager)
@@ -16,8 +15,6 @@ void Boss::Initialize(Player* player, const Vector3& position, LWP::Object::Came
 	model_.worldTF.translation = position;
 	// 大きさを一時的に調整
 	model_.worldTF.scale = { 0.8f, 0.8f, 0.8f };
-	state_ = new BossIdle();
-	state_->Initialize(this);
 	// 刀モデルをプレイヤーの手に追従させる
 	swordModel_.GetJoint("Grip")->localTF.Parent(&model_, "WeaponAnchor");
 	//名前設定

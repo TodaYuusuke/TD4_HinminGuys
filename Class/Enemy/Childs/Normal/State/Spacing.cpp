@@ -1,29 +1,31 @@
 #include "Spacing.h"
 #include "NormalMove.h"
 #include "NormalIdle.h"
-#include "../../IEnemy.h"
-#include "../../EnemyManager.h"
+#include "../Normal.h"
+#include "../../../EnemyManager.h"
 
 int32_t Spacing::spacingTime_ = 120;
 float Spacing::spaceDist_ = 3.0f;
 
-Spacing::Spacing()
+Spacing::Spacing(Normal* enemy)
 {
+	enemy_ = enemy;
+	enemy_->SetAnimation("Run", true, 0.3f);
+	stateType_ = States::kSpacing;
 }
 
 Spacing::~Spacing()
 {
 }
 
-void Spacing::Initialize(IEnemy* enemy)
+void Spacing::Initialize()
 {
-	enemy_ = enemy;
-	enemy_->SetAnimation("Run", true, 0.3f);
+	
 	//時間セット
-	countSpacingTime_ = spacingTime_;
+	enemy_->GetStateParameter().spacingParameter.countSpacingTime = spacingTime_;
 	//ランダムな数字を利用して右回りかどうかを決める
 	if (LWP::Utility::GenerateRandamNum(0, 1) == 0) {
-		isClockwise_ = true;
+		enemy_->GetStateParameter().spacingParameter.isClockwise = true;
 	}
 
 }
@@ -32,25 +34,25 @@ void Spacing::Update()
 {
 
 	//カウントダウン
-	if (countSpacingTime_ > 0) {
-		countSpacingTime_--;
+	if (enemy_->GetStateParameter().spacingParameter.countSpacingTime > 0) {
+		enemy_->GetStateParameter().spacingParameter.countSpacingTime--;
 	}
 
 	//0になったら行動変化
-	if (countSpacingTime_ <= 0) {
+	if (enemy_->GetStateParameter().spacingParameter.countSpacingTime <= 0) {
 
 		//攻撃人数が3人未満且つ敵の中で距離の近さが3位以内の時
 		if (enemy_->GetManagerPtr()->GetAttackPhaseCount() < IEnemy::GetMaxAttackCount() and
 			enemy_->GetClosenessCount() < IEnemy::GetMaxAttackCount()) {
 			//接近状態に移行
 			enemy_->SetIsAttackPhase(true);
-			enemy_->SetState(new NormalMove());
+			enemy_->SetState(States::kNormalMove);
 			return;
 		}
 		//そうでない場合
 		else {
 			//待機状態に戻る
-			enemy_->SetState(new NormalIdle());
+			enemy_->SetState(States::kNormalIdle);
 			return;
 		}
 
@@ -86,7 +88,7 @@ void Spacing::Update()
 		result.z = cosf(theta);
 
 		//右回りならベクトルを逆にする
-		if (isClockwise_) {
+		if (enemy_->GetStateParameter().spacingParameter.isClockwise) {
 			result *= -1.0f;
 		}
 

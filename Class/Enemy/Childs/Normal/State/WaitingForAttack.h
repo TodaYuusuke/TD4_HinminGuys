@@ -1,18 +1,18 @@
 #pragma once
-#include "../../IEnemyState.h"
+#include "../INormalEnemyState.h"
 
 using namespace LWP::Math;
 
 /// <summary>
 /// 他の敵が攻撃している間、待機するクラス
 /// </summary>
-class WaitingForAttack : public IEnemyState
+class WaitingForAttack : public INormalEnemyState
 {
 public:
-	WaitingForAttack();
+	WaitingForAttack(Normal* enemy);
 	~WaitingForAttack() override;
 
-	void Initialize(IEnemy* enemy) override;
+	void Initialize() override;
 
 	void Update() override;
 
@@ -27,9 +27,5 @@ private:
 	static uint16_t attackCount_;
 	//次攻撃するのは何番かを決める変数
 	static uint16_t nextAttackCount_;
-	//自身の攻撃する順番
-	uint16_t attackID_;
-	//右回りかどうか
-	bool isClockwise_ = false;
 
 };

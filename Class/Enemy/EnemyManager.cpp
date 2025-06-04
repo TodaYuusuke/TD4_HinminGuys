@@ -1,6 +1,6 @@
 #include "EnemyManager.h"
 #include "../Player/Player.h"
-#include "States.h"
+#include "Childs/Normal/State/States.h"
 
 EnemyManager::~EnemyManager()
 {

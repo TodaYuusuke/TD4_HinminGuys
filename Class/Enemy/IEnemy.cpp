@@ -1,6 +1,5 @@
 #include "IEnemy.h"
 #include "../Player/Player.h"
-#include "IEnemyState.h"
 #include "../GameMask.h"
 
 #define UNIT16_MAX 65535
@@ -29,24 +28,6 @@ IEnemy::IEnemy()
 		currentEnemyID_++;
 	}
 
-	// 体の判定生成
-	collider_.SetFollow(&model_.worldTF);
-	collider_.isActive = true;
-	collider_.worldTF.translation = { 0.0f, 1.0f, 0.0f };
-	// 自機の所属しているマスクを設定
-	collider_.mask.SetBelongFrag(GetEnemy());
-	// 当たり判定をとる対象のマスクを設定
-	collider_.mask.SetHitFrag(GetAttack());
-	collider_.enterLambda = [this](LWP::Object::Collision* hitTarget) {
-		hitTarget;
-
-		//ダメージ量
-		float damage = player_->GetSystemManager()->GetAttackSystem()->GetDamage();
-		//ダメージを受ける
-		TakeDamage(damage);
-
-		};
-
 	//画像リセット
 	for (int32_t i = 0; i < kMaxParryEffect_; i++) {
 		parryEffectSprite_[i].LoadTexture("Effect/ParryFlash.png");
@@ -65,41 +46,12 @@ IEnemy::IEnemy()
 IEnemy::~IEnemy()
 {
 	
-	//ステートが存在していたら削除
-	if (state_) {
-		delete state_;
-	}
+	
 
 }
 
 void IEnemy::Update()
 {
-
-	//死亡時、更新しない(別途ステートを作成する予定)
-	if (parameter_.hp <= 0.0f) {
-		isDead_ = true;
-		return;
-	}
-
-	//デルタタイムが0.0f以下の時、更新しない
-	if (LWP::Info::GetDeltaTime() <= 0.0f) {
-		return;
-	}
-
-	//パリィエフェクト開始状態ならエフェクトを更新
-	if (isStartParryEffect_) {
-		UpdateParryEffect();
-	}
-
-	//現在の状態を更新
-	state_->Update();
-
-	//反発力リセット
-	repulsiveForce_ = { 0.0f,0.0f,0.0f };
-
-	//プレイヤーとの距離を計算
-	Vector3 diff = GetPlayerPosition() - GetPosition();
-	distFromPlayer_ = diff.Length();
 
 }
 
@@ -113,18 +65,6 @@ void IEnemy::SetAnimation(const std::string& animName, bool isLoop, float speed)
     animation_.Play(animName);
 	animation_.Loop(isLoop);
 	animation_.GetPlayBackSpeed() = speed;
-}
-
-void IEnemy::SetState(IEnemyState* state)
-{
-	//前回の状態を開放、新しい状態に置き換える
-	if (state_) {
-		delete state_;
-	}
-	state_ = state;
-	//初期化
-	state_->Initialize(this);
-
 }
 
 void IEnemy::DebugGUI()
@@ -213,6 +153,16 @@ void IEnemy::StartParryEffect()
 
 }
 
+void IEnemy::SetKnockBackValue(const float& knockBackValue)
+{
+
+	//プレイヤーから自身へのベクトルを作る
+	knockBackVelocity_ = GetPosition() - GetPlayerPosition();
+	//正規化
+	knockBackVelocity_ = knockBackVelocity_.Normalize() * knockBackValue;
+
+}
+
 void IEnemy::CreateSwordCollider()
 {
 
@@ -226,6 +176,8 @@ void IEnemy::CreateSwordCollider()
 	swordCollider_.stayLambda = [this](LWP::Object::Collision* hitTarget) {
 		hitTarget;
 		player_->TakeDamage(parameter_.attackParameter.attackValue);
+		//判定をオフにする
+		swordCollider_.isActive = false;
 		};
 	capsule_.radius = 0.1f;
 

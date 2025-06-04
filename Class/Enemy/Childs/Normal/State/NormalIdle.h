@@ -1,16 +1,18 @@
 #pragma once
-#include "../../IEnemyState.h"
+#include "../INormalEnemyState.h"
 
 /// <summary>
 /// 雑魚敵停止状態クラス
 /// </summary>
-class NormalIdle : public IEnemyState
+class NormalIdle : public INormalEnemyState
 {
 public:
 	
+	NormalIdle(Normal* enemy);
+
 	~NormalIdle() override = default;
 
-	void Initialize(IEnemy* enemy) override;
+	void Initialize() override;
 
 	void Update() override;
 
@@ -20,8 +22,6 @@ private:
 
 	//待機時間
 	static int32_t standTime_;
-	//カウント
-	int32_t countStandTime_;
 	//追従モーションに移行する距離
 	static float followingDist_;
 

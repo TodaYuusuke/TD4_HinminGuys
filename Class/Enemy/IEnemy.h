@@ -33,9 +33,6 @@ struct EnemyParameter {
 	EnemyAttackParameter attackParameter; //攻撃パラメータ
 };
 
-//前方宣言
-class IEnemyState;
-
 /// <summary>
 /// 敵の基底クラス
 /// </summary>
@@ -75,8 +72,6 @@ public:
 	void SetAnimation(const std::string& animName, bool isLoop, float speed = 1.0f);
 	//アニメーション取得
 	Animation* GetAnimation() { return &animation_; }
-	//状態切り替え
-	void SetState(IEnemyState* state);
 	//ID取得
 	uint32_t GetID() const { return ID_; }
 	//反発力取得
@@ -129,7 +124,13 @@ public:
 	//パリィエフェクト開始
 	void StartParryEffect();
 	//パリィエフェクト中かどうか
-	bool GetIsStartParryEffect() { return isStartParryEffect_; }
+	bool GetIsStartParryEffect() const { return isStartParryEffect_; }
+	//ノックバック取得
+	Vector3& GetKnockBackVelocity() { return knockBackVelocity_; }
+	//ノックバックセット
+	void SetKnockBackVelocity(const Vector3& velocity) { knockBackVelocity_ = velocity; }
+	//パリィエフェクトが終わった瞬間だけ取得
+	bool IsExitParryEffect() { return not isStartParryEffect_ and preIsStartParryEffect_; }
 
 protected:
 
@@ -137,6 +138,9 @@ protected:
 	void TakeDamage(const float& damageValue, const float& multiply = 1.0f) {
 		parameter_.hp -= damageValue * multiply;
 	}
+
+	//ノックバックの力をセットする
+	void SetKnockBackValue(const float& knockBackValue);
 
 	//刀のコライダー生成
 	void CreateSwordCollider();
@@ -165,9 +169,7 @@ protected:
 	LWP::Object::Collider::Capsule& capsule_;
 	//パリィエフェクト画像
 	std::array<LWP::Primitive::Sprite, kMaxParryEffect_> parryEffectSprite_;
-	//状態
-	IEnemyState* state_;
-
+	
 	//プレイヤー情報
 	Player* player_;
 	//敵全体から情報を取るためのポインタ
@@ -176,6 +178,8 @@ protected:
 	EnemyParameter parameter_;
 	//互いに距離を取るときの反発力
 	Vector3 repulsiveForce_{};
+	//ノックバック力
+	Vector3 knockBackVelocity_{};
 	//種類
 	EnemyType type_;
 	//プレイヤーからの距離
@@ -202,5 +206,7 @@ protected:
 	bool isAttack_ = false;
 	//パリィエフェクト中かどうか
 	bool isStartParryEffect_ = false;
+	//前フレームのパリィエフェクトフラグ
+	bool preIsStartParryEffect_ = false;
 
 };

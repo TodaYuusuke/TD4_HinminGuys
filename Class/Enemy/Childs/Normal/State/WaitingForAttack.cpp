@@ -1,17 +1,17 @@
 #include "WaitingForAttack.h"
 #include "NormalAttack.h"
-#include "../../IEnemy.h"
-#include "../../EnemyManager.h"
+#include "../Normal.h"
+#include "../../../EnemyManager.h"
 
 uint16_t WaitingForAttack::attackCount_ = 0;
 uint16_t WaitingForAttack::nextAttackCount_ = 0;
 
-WaitingForAttack::WaitingForAttack()
+WaitingForAttack::WaitingForAttack(Normal* enemy)
 {
-	//現在の攻撃カウントから順番を決める
-	attackID_ = attackCount_;
-	//攻撃の順番を決める数字を上昇させる
-	attackCount_++;
+	
+	enemy_ = enemy;
+	enemy_->SetAnimation("Idle", true);
+	stateType_ = States::kWaitingForAttack;
 
 }
 
@@ -23,14 +23,17 @@ WaitingForAttack::~WaitingForAttack()
 
 }
 
-void WaitingForAttack::Initialize(IEnemy* enemy)
+void WaitingForAttack::Initialize()
 {
-	enemy_ = enemy;
-	enemy_->SetAnimation("Idle", true);
+
+	//現在の攻撃カウントから順番を決める
+	enemy_->GetStateParameter().waitingForAttackParameter.attackID = attackCount_;
+	//攻撃の順番を決める数字を上昇させる
+	attackCount_++;
 
 	//ランダムな数字を利用して右回りかどうかを決める
 	if (LWP::Utility::GenerateRandamNum(0, 1) == 0) {
-		isClockwise_ = true;
+		enemy_->GetStateParameter().waitingForAttackParameter.isClockwise = true;
 	}
 
 }
@@ -43,9 +46,10 @@ void WaitingForAttack::Update()
 	//
 
 	//誰も攻撃しておらず、順番が回ってきたら攻撃に移行
-	if (not enemy_->GetManagerPtr()->IsAnyAttack() and attackID_ == nextAttackCount_) {
+	if (not enemy_->GetManagerPtr()->IsAnyAttack() and 
+		enemy_->GetStateParameter().waitingForAttackParameter.attackID == nextAttackCount_) {
 		//攻撃状態に移行
-		enemy_->SetState(new NormalAttack());
+		enemy_->SetState(States::kNormalAttack);
 		return;
 	}
 
@@ -79,7 +83,7 @@ void WaitingForAttack::Update()
 		result.z = cosf(theta);
 
 		//右回りならベクトルを逆にする
-		if (isClockwise_) {
+		if (enemy_->GetStateParameter().waitingForAttackParameter.isClockwise) {
 			result *= -1.0f;
 		}
 
