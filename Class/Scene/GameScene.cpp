@@ -61,12 +61,19 @@ void GameScene::Initialize() {
 
 // 更新
 void GameScene::Update() {
-	//// シーン遷移
-	//if (Keyboard::GetTrigger(DIK_P)) {
-	//	//遷移先をタイトルにセット
-	//	sceneTransitioner_.SetNextScene(SceneName::kTitle);
-	//	sceneTransitioner_.SceneTransitionStart();
-	//}
+	
+	//シーン遷移が終わった時点でウェーブを開始していない場合、ウェーブを開始
+	if (not sceneTransitioner_.GetIsSceneChange() and not enemyManager_.GetIsDefeatedAllEnemy() and
+		not enemyManager_.GetIsStartWave()) {
+		enemyManager_.StartWave();
+	}
+
+	//全ての敵が倒されたらシーン遷移する
+	if (enemyManager_.GetIsDefeatedAllEnemy()) {
+		//遷移先をタイトルにセット
+		sceneTransitioner_.SetNextScene(SceneName::kTitle);
+		sceneTransitioner_.SceneTransitionStart();
+	}
 
 	// 入力されたコマンドを確認
 	inputHandler_->Update(player_);

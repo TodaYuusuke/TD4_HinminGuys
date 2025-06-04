@@ -52,6 +52,8 @@ public:
 	bool IsAnyAttack();
 	//攻撃態勢人数取得
 	uint16_t GetAttackPhaseCount();
+	//ウェーブ開始フラグ取得
+	bool GetIsStartWave() const { return isStartWave_; }
 
 private:
 
