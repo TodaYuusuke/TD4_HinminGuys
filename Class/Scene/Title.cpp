@@ -72,7 +72,7 @@ void Title::Update() {
 				selectUI_ = SelectUI::kStart;
 			}
 			if (Controller::GetTrigger(XBOX_A)) {
-				
+				LWP::System::ShutDown();
 			}
 
 			UIStart_.isActive = false;
