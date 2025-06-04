@@ -335,6 +335,24 @@ bool EnemyManager::IsAnyAttack()
 	return false;
 }
 
+uint16_t EnemyManager::GetAttackPhaseCount()
+{
+	
+	uint16_t count = 0;
+
+	//攻撃態勢に入っている人数をカウント
+	for (auto enemy = enemies_.begin(); enemy != enemies_.end(); enemy++) {
+
+		if ((*enemy)->GetIsAttackPhase()) {
+			count++;
+		}
+
+	}
+
+	return count;
+
+}
+
 void EnemyManager::EndGame()
 {
 	//ウェーブ開始フラグを降ろす

@@ -103,12 +103,10 @@ public:
 	bool GetIsAttack() const { return isAttack_; }
 	//攻撃フラグを強制終了(外部からの呼び出し用)
 	void ResetAttack() { isAttack_ = false; }
-	//攻撃態勢カウント増加
-	void AddAttackCount() { currentAttackCount_++; }
-	//攻撃態勢カウント減少
-	void SubAttackCount() { currentAttackCount_--; }
-	//現在の攻撃態勢人数取得
-	static uint16_t GetCurrentAttackCount() { return currentAttackCount_; }
+	//攻撃態勢状態取得
+	bool GetIsAttackPhase() const { return isAttackPhase_; }
+	//攻撃態勢状態セット
+	void SetIsAttackPhase(bool flag) { isAttackPhase_ = flag; }
 	//最大攻撃態勢人数取得
 	static uint16_t GetMaxAttackCount() { return maxAttackCount_; }
 	//近接カウントセット
@@ -190,8 +188,6 @@ protected:
 	static uint16_t currentEnemyID_;
 	//攻撃態勢最大人数
 	static uint16_t maxAttackCount_;
-	//現在攻撃態勢に入っている人数
-	static uint16_t currentAttackCount_;
 	//個々のID
 	uint16_t ID_;
 	//距離の近さを示す変数。小さいほど近い
@@ -200,6 +196,8 @@ protected:
 	bool isDead_ = false;
 	//ロックオンされているか
 	bool isLocked_ = false;
+	//攻撃態勢に入ったかどうか
+	bool isAttackPhase_ = false;
 	//攻撃中かどうか
 	bool isAttack_ = false;
 	//パリィエフェクト中かどうか

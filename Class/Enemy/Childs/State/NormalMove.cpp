@@ -51,7 +51,7 @@ void NormalMove::Update()
 		if (countRunTime_ <= 0) {
 
 			//待機状態に移行
-			enemy_->SubAttackCount();
+			enemy_->SetIsAttackPhase(false);
 			enemy_->SetState(new NormalIdle());
 			return;
 

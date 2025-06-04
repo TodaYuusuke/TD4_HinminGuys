@@ -2,6 +2,7 @@
 #include "NormalMove.h"
 #include "NormalIdle.h"
 #include "../../IEnemy.h"
+#include "../../EnemyManager.h"
 
 int32_t Spacing::spacingTime_ = 120;
 float Spacing::spaceDist_ = 3.0f;
@@ -39,10 +40,10 @@ void Spacing::Update()
 	if (countSpacingTime_ <= 0) {
 
 		//攻撃人数が3人未満且つ敵の中で距離の近さが3位以内の時
-		if (IEnemy::GetCurrentAttackCount() < IEnemy::GetMaxAttackCount() and
+		if (enemy_->GetManagerPtr()->GetAttackPhaseCount() < IEnemy::GetMaxAttackCount() and
 			enemy_->GetClosenessCount() < IEnemy::GetMaxAttackCount()) {
 			//接近状態に移行
-			enemy_->AddAttackCount();
+			enemy_->SetIsAttackPhase(true);
 			enemy_->SetState(new NormalMove());
 			return;
 		}

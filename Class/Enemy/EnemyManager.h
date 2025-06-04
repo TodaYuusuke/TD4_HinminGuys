@@ -51,6 +51,8 @@ public:
 	void StartWave();
 	//誰か一人でも攻撃しているかどうか
 	bool IsAnyAttack();
+	//攻撃態勢人数取得
+	uint16_t GetAttackPhaseCount();
 
 private:
 
