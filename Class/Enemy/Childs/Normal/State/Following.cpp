@@ -1,22 +1,27 @@
 #include "Following.h"
 #include "NormalIdle.h"
-#include "../../IEnemy.h"
+#include "../Normal.h"
+#include "../../../EnemyManager.h"
 
 float Following::idleDist_ = 4.0f;
 
-Following::Following()
+Following::Following(Normal* enemy)
 {
+
+	enemy_ = enemy;
+	enemy_->SetAnimation("Run", true);
+	stateType_ = States::kFollowing;
+
 }
 
 Following::~Following()
 {
 }
 
-void Following::Initialize(IEnemy* enemy)
+void Following::Initialize()
 {
 	
-	enemy_ = enemy;
-	enemy_->SetAnimation("Run", true);
+	
 
 }
 
@@ -28,7 +33,7 @@ void Following::Update()
 
 		//待機状態に移行する距離になるまでプレイヤーに向かう
 		if (enemy_->GetDistFromPlayer() < idleDist_) {
-			enemy_->SetState(new NormalIdle());
+			enemy_->SetState(States::kNormalIdle);
 			return;
 		}
 

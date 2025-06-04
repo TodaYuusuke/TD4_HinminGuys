@@ -1,8 +1,6 @@
 #pragma once
 #include "../Adapter/Adapter.h"
 
-class IEnemy;
-
 /// <summary>
 /// 状態一覧
 /// </summary>
@@ -13,24 +11,32 @@ enum class States {
 	kSpacing,
 	kFollowing,
 	kWaitingForAttack,
+	kHitReaction,
 	kMax,
 };
+
+class Normal;
 
 /// <summary>
 /// 敵の行動パターン基底クラス
 /// </summary>
-class IEnemyState
+class INormalEnemyState
 {
 public:
-	virtual ~IEnemyState() = default;
+
+	virtual ~INormalEnemyState() = default;
 	//初期化
-	virtual void Initialize(IEnemy* enemy) = 0;
+	virtual void Initialize() = 0;
 	//更新
 	virtual void Update() = 0;
+
+	States& GetState() { return stateType_; }
 
 protected:
 
 	//敵の情報
-	IEnemy* enemy_;
+	Normal* enemy_;
+	//ステートの保持しているタイプ
+	States stateType_;
 
 };

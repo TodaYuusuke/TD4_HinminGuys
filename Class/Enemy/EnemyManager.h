@@ -1,7 +1,6 @@
 #pragma once
 #include "../Adapter/Adapter.h"
 #include "IEnemy.h"
-#include "IEnemyState.h"
 #include "Childs/Normal/Normal.h"
 #include "Childs/Boss/Boss.h"
 #include <list>

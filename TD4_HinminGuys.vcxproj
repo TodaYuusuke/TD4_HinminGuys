@@ -148,6 +148,7 @@
     </Manifest>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Class\Enemy\Childs\Normal\State\HitReaction.cpp" />
     <ClCompile Include="Class\Player\Systems\Children\State\Sheath\Break.cpp" />
     <ClCompile Include="Class\Player\Systems\Children\State\Move\AttackRecovery.cpp" />
     <ClCompile Include="Class\ComboEditor\ComboTree.cpp" />
@@ -158,18 +159,15 @@
     <ClCompile Include="Class\Scene\GameScene.cpp" />
     <ClCompile Include="Class\ComboEditor\Combo.cpp" />
     <ClCompile Include="Class\Enemy\Childs\Boss\Boss.cpp" />
-    <ClCompile Include="Class\Enemy\Childs\State\BossAttack.cpp" />
-    <ClCompile Include="Class\Enemy\Childs\State\BossIdle.cpp" />
-    <ClCompile Include="Class\Enemy\Childs\State\BossMove.cpp" />
-    <ClCompile Include="Class\Enemy\Childs\State\Following.cpp" />
-    <ClCompile Include="Class\Enemy\Childs\State\Spacing.cpp" />
-    <ClCompile Include="Class\Enemy\Childs\State\WaitingForAttack.cpp" />
+    <ClCompile Include="Class\Enemy\Childs\Normal\State\Following.cpp" />
+    <ClCompile Include="Class\Enemy\Childs\Normal\State\Spacing.cpp" />
+    <ClCompile Include="Class\Enemy\Childs\Normal\State\WaitingForAttack.cpp" />
     <ClCompile Include="Class\Enemy\EnemyManager.cpp" />
     <ClCompile Include="Class\Enemy\IEnemy.cpp" />
     <ClCompile Include="Class\Enemy\Childs\Normal\Normal.cpp" />
-    <ClCompile Include="Class\Enemy\Childs\State\NormalAttack.cpp" />
-    <ClCompile Include="Class\Enemy\Childs\State\NormalIdle.cpp" />
-    <ClCompile Include="Class\Enemy\Childs\State\NormalMove.cpp" />
+    <ClCompile Include="Class\Enemy\Childs\Normal\State\NormalAttack.cpp" />
+    <ClCompile Include="Class\Enemy\Childs\Normal\State\NormalIdle.cpp" />
+    <ClCompile Include="Class\Enemy\Childs\Normal\State\NormalMove.cpp" />
     <ClCompile Include="Class\Enemy\WaveData.cpp" />
     <ClCompile Include="Class\Player\Systems\Children\Attack.cpp" />
     <ClCompile Include="Class\Player\Systems\Children\LockOn.cpp" />
@@ -212,6 +210,9 @@
     <ClCompile Include="Class\Shake\Shake.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Class\Enemy\Childs\Normal\INormalEnemyState.h" />
+    <ClInclude Include="Class\Enemy\Childs\Normal\State\HitReaction.h" />
+    <ClInclude Include="Class\Enemy\Childs\Normal\NormalStateParameter.h" />
     <ClInclude Include="Class\Player\Systems\Children\State\Sheath\Break.h" />
     <ClInclude Include="Class\IParameter.h" />
     <ClInclude Include="Class\Player\Systems\Children\State\Move\AttackRecovery.h" />
@@ -223,29 +224,25 @@
     <ClInclude Include="Class\ComboEditor\Combo.h" />
     <ClInclude Include="Class\Condition\ICondition.h" />
     <ClInclude Include="Class\Enemy\Childs\Boss\Boss.h" />
-    <ClInclude Include="Class\Enemy\Childs\State\BossAttack.h" />
-    <ClInclude Include="Class\Enemy\Childs\State\BossIdle.h" />
-    <ClInclude Include="Class\Enemy\Childs\State\BossMove.h" />
-    <ClInclude Include="Class\Enemy\Childs\State\Following.h" />
-    <ClInclude Include="Class\Enemy\Childs\State\Spacing.h" />
-    <ClInclude Include="Class\Enemy\Childs\State\WaitingForAttack.h" />
+    <ClInclude Include="Class\Enemy\Childs\Normal\State\Following.h" />
+    <ClInclude Include="Class\Enemy\Childs\Normal\State\Spacing.h" />
+    <ClInclude Include="Class\Enemy\Childs\Normal\State\WaitingForAttack.h" />
     <ClInclude Include="Class\Enemy\EnemyManager.h" />
     <ClInclude Include="Class\Enemy\IEnemy.h" />
-    <ClInclude Include="Class\Enemy\IEnemyState.h" />
     <ClInclude Include="Class\Enemy\Childs\Normal\NormalEnemy.h" />
     <ClInclude Include="Class\Enemy\Childs\Normal\State\NormalEnemyAttack.h" />
     <ClInclude Include="Class\Enemy\Childs\Normal\State\NormalEnemyIdle.h" />
     <ClInclude Include="Class\Enemy\Childs\Normal\State\NormalEnemyMove.h" />
     <ClInclude Include="Class\Enemy\SpawnData.h" />
-    <ClInclude Include="Class\Enemy\States.h" />
+    <ClInclude Include="Class\Enemy\Childs\Normal\State\States.h" />
     <ClInclude Include="Class\Enemy\WaveData.h" />
     <ClInclude Include="Class\Player\Animator\AnimConfig.h" />
     <ClInclude Include="Class\Player\Command\BanInput.h" />
     <ClInclude Include="Class\Player\Command\InputConfig.h" />
     <ClInclude Include="Class\Enemy\Childs\Normal\Normal.h" />
-    <ClInclude Include="Class\Enemy\Childs\State\NormalAttack.h" />
-    <ClInclude Include="Class\Enemy\Childs\State\NormalIdle.h" />
-    <ClInclude Include="Class\Enemy\Childs\State\NormalMove.h" />
+    <ClInclude Include="Class\Enemy\Childs\Normal\State\NormalAttack.h" />
+    <ClInclude Include="Class\Enemy\Childs\Normal\State\NormalIdle.h" />
+    <ClInclude Include="Class\Enemy\Childs\Normal\State\NormalMove.h" />
     <ClInclude Include="Class\Player\ICharacter.h" />
     <ClInclude Include="Class\Player\Systems\Children\Attack.h" />
     <ClInclude Include="Class\Player\Systems\Children\State\IMoveSystemState.h" />

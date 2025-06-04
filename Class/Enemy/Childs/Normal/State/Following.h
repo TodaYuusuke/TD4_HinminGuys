@@ -1,15 +1,15 @@
 #pragma once
-#include "../../IEnemyState.h"
+#include "../INormalEnemyState.h"
 
 using namespace LWP::Math;
 
-class Following : public IEnemyState
+class Following : public INormalEnemyState
 {
 public:
-	Following();
+	Following(Normal* enemy);
 	~Following() override;
 
-	void Initialize(IEnemy* enemy) override;
+	void Initialize() override;
 
 	void Update() override;
 
