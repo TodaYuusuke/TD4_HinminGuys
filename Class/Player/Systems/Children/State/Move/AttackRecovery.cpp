@@ -1,4 +1,5 @@
 #include "AttackRecovery.h"
+#include "Idle.h"
 #include "../../../../Player.h"
 
 AttackRecovery::AttackRecovery(Move* moveSystem, Player* player) {
@@ -16,7 +17,10 @@ void AttackRecovery::Initialize() {
 }
 
 void AttackRecovery::Update() {
-	
+	if (!player_->GetAnimation()->GetPlaying()) {
+		moveSystem_->ChangeState(new Idle(moveSystem_, player_));
+		return;
+	}
 }
 
 void AttackRecovery::AnimCommand() {

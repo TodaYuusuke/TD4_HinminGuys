@@ -62,17 +62,17 @@ public:
 	/// </summary>
 	void CheckMoveState();
 
-private:
-	/// <summary>
-	/// 入力処理
-	/// </summary>
-	void InputUpdate();
-
 	/// <summary>
 	/// 状態の遷移
 	/// </summary>
 	/// <param name="pState">次の状態</param>
 	void ChangeState(IMoveSystemState* pState);
+
+private:
+	/// <summary>
+	/// 入力処理
+	/// </summary>
+	void InputUpdate();
 
 	/// <summary>
 	/// クォータニオンのy軸のみ取り出す

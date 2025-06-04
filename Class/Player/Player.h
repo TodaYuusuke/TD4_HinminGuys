@@ -182,8 +182,8 @@ public:// Getter,Setter
 	void ResetAnimation() {
 		animation_.Loop(false, LWP::Resource::Animation::TrackType::Main);
 		animation_.Loop(false, LWP::Resource::Animation::TrackType::Blend);
-		animation_.Stop(LWP::Resource::Animation::TrackType::Main);
-		animation_.Stop(LWP::Resource::Animation::TrackType::Blend);
+		//animation_.Stop(LWP::Resource::Animation::TrackType::Main);
+		//animation_.Stop(LWP::Resource::Animation::TrackType::Blend);
 	}
 	/// <summary>
 	/// ブレンドされているアニメーションを停止

@@ -190,7 +190,6 @@ public:// Getter, Setter
 	/// <param name="isCollision"></param>
 	void SetIsCollision(const bool& isCollision) {
 		collider_.isActive = isCollision;
-		//aabb_.isShowWireFrame = isCollision;
 		capsule_.isShowWireFrame = isCollision;
 	}
 	/// <summary>
@@ -202,7 +201,7 @@ public:// Getter, Setter
 	/// 鞘モデルの表示の設定
 	/// </summary>
 	/// <param name="isActive"></param>
-	void SetIsSheathModelActive(const bool& isActive);
+	void SetIsSheathModelActive(const bool& isActive) { sheathModel_.isActive = isActive; }
 #pragma endregion
 
 public:// jsonに保存する値

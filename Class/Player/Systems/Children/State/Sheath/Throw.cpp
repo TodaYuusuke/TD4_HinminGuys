@@ -52,6 +52,10 @@ void Throw::Update() {
 void Throw::Command() {
 	if ((*eventOrders_)[(int)Sheath::SheathState::kThrow].GetIsEnd()) {
 		// 鞘アニメーション開始
+		player_->StopAnimation(LWP::Resource::Animation::TrackType::Main);
+		player_->StopAnimation(LWP::Resource::Animation::TrackType::Blend);
+		player_->SetAnimationPlaySpeed(1.0f);
+		player_->SetBlendT(0.0f);
 		player_->ResetAnimation();
 		player_->StartAnimation("SheathThrow", 0.0f, 0.0f);
 		// 鞘クラスの速度を自機に適用
@@ -75,6 +79,23 @@ void Throw::Command() {
 
 void Throw::AnimCommand() {
 
+}
+
+void Throw::Reset() {
+	// 投げる用の鞘モデルを非表示
+	sheathSystem_->SetIsSheathModelActive(false);
+	// 本体のモデルも非表示
+	player_->SetIsSheathModelActive(true);
+	sheathSystem_->SetIsCollision(false);
+
+	velocity_ = { 0,0,0 };
+	start_ = { 0,0,0 };
+	end_ = { 0,0,0 };
+
+	// 経過時間
+	currentFrame_ = 0.0f;
+
+	t_ = 0.0f;
 }
 
 void Throw::CheckThrowState() {

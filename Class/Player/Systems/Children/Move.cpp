@@ -37,14 +37,13 @@ void Move::Initialize() {
 
 	// 移動状態
 	moveState_ = MoveState::kIdle;
-	//preMoveState_ = moveState_;
 
 	enableInput_ = true;
 }
 
 void Move::Update() {
 	// 機能を使えないなら早期リターン
-	if (!isActive_) {
+	if (!isActive_ && IsBitSame(InputHandler::GetInstance()->GetBanInput(), BanMove, GetSetBitPosition(BanMove))) {
 		Reset();
 		return;
 	}

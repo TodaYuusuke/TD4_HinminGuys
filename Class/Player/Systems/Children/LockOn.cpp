@@ -272,24 +272,29 @@ void LockOn::LockOnReticleUpdate() {
 	lockOnUI_.sprite.isActive = false;
 	lockOnUI_.enableLockOnObj.isActive = false;
 	// Z注目をしている敵がいるなら専用UIを表示
-	if (lockOnEnemy_) {
-		lockOnUI_.sprite.isActive = true;
-		/*lockOnUI_.enableLockOnObj.worldTF.Parent(lockOnEnemy_->GetWorldTF());
-		lockOnUI_.enableLockOnObj.worldTF.translation = Vector3{ 0.0f, 0.5f, 0.0f };
-		lockOnUI_.enableLockOnObj.isActive = true;*/
-		// 敵の座標をスクリーン座標に変換
-		Vector2 screenPos = ConvertWorld2Screen(lockOnEnemy_->GetPosition() + lockOnUI_.defaultPos);
-		// レティクルスプライトの座標を更新
-		lockOnUI_.sprite.worldTF.translation = {
-			screenPos.x,
-			screenPos.y,
-			0
-		};
 
-		// Z注目中の敵を"ロックオン可能状態"リストから除外
-		auto it = std::find(lockOnEnableEnemies_.begin(), lockOnEnableEnemies_.end(), lockOnEnemy_);
-		if (it != lockOnEnableEnemies_.end()) {
-			lockOnEnableEnemies_.erase(std::remove(lockOnEnableEnemies_.begin(), lockOnEnableEnemies_.end(), lockOnEnemy_), lockOnEnableEnemies_.end());
+	// ロックオン中に対象がいなくなった場合
+	if (lockOnEnemy_) {
+		if (isActive_ && lockOnEnemy_->GetIsDead()) {
+			Reset();
+		}
+		else {
+			lockOnUI_.sprite.isActive = true;
+
+			// 敵の座標をスクリーン座標に変換
+			Vector2 screenPos = ConvertWorld2Screen(lockOnEnemy_->GetPosition() + lockOnUI_.defaultPos);
+			// レティクルスプライトの座標を更新
+			lockOnUI_.sprite.worldTF.translation = {
+				screenPos.x,
+				screenPos.y,
+				0
+			};
+
+			// Z注目中の敵を"ロックオン可能状態"リストから除外
+			auto it = std::find(lockOnEnableEnemies_.begin(), lockOnEnableEnemies_.end(), lockOnEnemy_);
+			if (it != lockOnEnableEnemies_.end()) {
+				lockOnEnableEnemies_.erase(std::remove(lockOnEnableEnemies_.begin(), lockOnEnableEnemies_.end(), lockOnEnemy_), lockOnEnableEnemies_.end());
+			}
 		}
 	}
 
@@ -297,6 +302,7 @@ void LockOn::LockOnReticleUpdate() {
 	for (LockOnData& lockOnEnemy : lockOnEnableEnemies_) {
 		// 敵がロックオン可能状態でないならスキップ
 		if (!lockOnEnemy.enemyData->GetIsLocked()) { continue; }
+
 
 		// 敵の座標をスクリーン座標に変換
 		Vector2 screenPos = ConvertWorld2Screen(lockOnEnemy.enemyData->GetPosition() + Vector3{ 0, 1, 0 });

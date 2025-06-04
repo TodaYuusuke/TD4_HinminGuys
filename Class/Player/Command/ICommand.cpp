@@ -64,6 +64,9 @@ void NormalAttackCommand::Exec(Player& player, int& banInput) {
 	player.GetSystemManager()->GetAttackSystem()->Command();
 	banInput = banInput_;
 	isActive_ = true;
+
+	player.GetSystemManager()->GetMoveSystem()->SetEnableInput(false);
+	player.GetSystemManager()->GetMoveSystem()->SetIsActive(false);
 }
 
 void NormalAttackCommand::Reset(Player& player, int& banInput) {
@@ -85,6 +88,9 @@ void ParryCommand::Exec(Player& player, int& banInput) {
 	player.GetSystemManager()->GetParrySystem()->Command();
 	banInput = banInput_;
 	isActive_ = true;
+
+	player.GetSystemManager()->GetMoveSystem()->SetEnableInput(false);
+	player.GetSystemManager()->GetMoveSystem()->SetIsActive(false);
 }
 
 void ParryCommand::Reset(Player& player, int& banInput) {
@@ -125,6 +131,9 @@ void EvasionCommand::Exec(Player& player, int& banInput) {
 	player.GetSystemManager()->GetEvasionSystem()->Command();
 	banInput = banInput_;
 	isActive_ = true;
+
+	player.GetSystemManager()->GetMoveSystem()->SetEnableInput(false);
+	player.GetSystemManager()->GetMoveSystem()->SetIsActive(false);
 }
 
 void EvasionCommand::Reset(Player& player, int& banInput) {
@@ -149,6 +158,9 @@ void SheathCommand::Exec(Player& player, int& banInput) {
 	player.GetSystemManager()->GetSheathSystem()->Command();
 	banInput = banInput_;
 	isActive_ = true;
+
+	player.GetSystemManager()->GetMoveSystem()->SetEnableInput(false);
+	player.GetSystemManager()->GetMoveSystem()->SetIsActive(false);
 }
 
 void SheathCommand::Reset(Player& player, int& banInput) {

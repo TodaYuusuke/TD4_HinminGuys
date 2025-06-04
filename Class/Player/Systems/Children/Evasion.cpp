@@ -90,8 +90,6 @@ void Evasion::Reset() {
 	velocity_ = { 0.0f, 0.0f, 0.0f };
 	// 回避時の角度(ラジアン)
 	radian_ = { 0.0f, 0.0f, 0.0f };
-	// アニメーションを初期化
-	player_->ResetAnimation();
 	animPlaySpeed_ = { 1.0f, 0.0f, 0.0f };
 	player_->SetAnimationPlaySpeed(animPlaySpeed_.x);
 }
@@ -166,12 +164,19 @@ void Evasion::Command() {
 		eventOrders_[(int)EventOrderState::kAcceleration].Start();
 		pressTime_ = 0.0f;
 		isActive_ = true;
+
+		// アニメーション再生
+		AnimCommand();
 	}
 	eventOrder_.Start();
 }
 
 void Evasion::AnimCommand() {
 	animationPlaySpeed_.Start();
+	player_->StopAnimation(LWP::Resource::Animation::TrackType::Main);
+	player_->StopAnimation(LWP::Resource::Animation::TrackType::Blend);
+	player_->SetAnimationPlaySpeed(1.0f);
+	player_->SetBlendT(0.0f);
 	player_->ResetAnimation();
 	player_->StartAnimation("Dash", 0.1f, 0.0f);
 	player_->SetIsLoopAnimation(true);

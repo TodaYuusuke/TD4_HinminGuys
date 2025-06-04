@@ -32,8 +32,16 @@ void Collect::Update() {
 	if ((*eventOrders_)[(int)Sheath::SheathState::kCollect].GetIsEnd()) {
 		sheathSystem_->Reset();
 		(*eventOrders_)[(int)Sheath::SheathState::kCollect].Reset();
+
+		// 投げる用の鞘モデルを非表示
+		sheathSystem_->SetIsSheathModelActive(false);
+		// 本体のモデルも非表示
+		player_->SetIsSheathModelActive(true);
+		sheathSystem_->SetIsCollision(false);
+
 		// クールタイム開始
 		sheathSystem_->SetCoolTime();
+
 		// 投げ可能状態に変更
 		sheathSystem_->ChangeState(new Throw(sheathSystem_, player_, eventOrders_));
 		return;
@@ -44,7 +52,12 @@ void Collect::Command() {
 	if ((*eventOrders_)[(int)Sheath::SheathState::kCollect].GetIsEnd()) {
 		// 鞘クラスの速度を自機に適用
 		player_->GetSystemManager()->SetInputState(InputState::kSheath);
+
 		// 鞘アニメーション開始
+		player_->StopAnimation(LWP::Resource::Animation::TrackType::Main);
+		player_->StopAnimation(LWP::Resource::Animation::TrackType::Blend);
+		player_->SetAnimationPlaySpeed(1.0f);
+		player_->SetBlendT(0.0f);
 		player_->ResetAnimation();
 		player_->StartAnimation("SheathDash", 0.0f, 0.0f);
 
@@ -77,6 +90,20 @@ void Collect::Command() {
 
 void Collect::AnimCommand() {
 
+}
+
+void Collect::Reset() {
+	// 投げる用の鞘モデルを非表示
+	sheathSystem_->SetIsSheathModelActive(true);
+	// 本体のモデルも非表示
+	player_->SetIsSheathModelActive(false);
+	sheathSystem_->SetIsCollision(false);
+
+	velocity_ = { 0,0,0 };
+	start_ = { 0,0,0 };
+	end_ = { 0,0,0 };
+
+	t_ = 0.0f;
 }
 
 void Collect::CollectMove() {
