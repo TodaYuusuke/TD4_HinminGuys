@@ -51,7 +51,7 @@ void Attack::Update() {
 	else {
 		comboTree_.SetIsRecept(false);
 	}
-	
+
 	// コンボツリー自体は毎フレーム更新する
 	comboTree_.Update();
 
@@ -78,37 +78,37 @@ void Attack::Update() {
 
 	// 攻撃アシストが有効になっている場合
 	if (comboTree_.GetIsEnableAttackAssist() && !comboTree_.GetIsThisRoot()) {
-		// ロックオン中なら対象に近づいて攻撃
-		if (lockOnSystem_->GetCurrentLockOnTarget() != NULL) {
-			// 現状のロックオン対象を取得
-			lockOnTarget_ = lockOnSystem_->GetCurrentLockOnTarget();
+		//// ロックオン中なら対象に近づいて攻撃
+		//if (lockOnSystem_->GetCurrentLockOnTarget() != NULL) {
+		//	// 現状のロックオン対象を取得
+		//	lockOnTarget_ = lockOnSystem_->GetCurrentLockOnTarget();
 
-			// 自機とロックオン中の敵との距離
-			Vector3 attackTargetDist = (lockOnTarget_->GetWorldTF()->GetWorldPosition() - player_->GetWorldTF()->GetWorldPosition()) * 0.1f;
-			attackAssistVel_ = LWP::Utility::Interpolation::Lerp(comboTree_.GetAttackAssistMoveAmount(), attackTargetDist, 0.25f);
+		//	// 自機とロックオン中の敵との距離
+		//	Vector3 attackTargetDist = (lockOnTarget_->GetWorldTF()->GetWorldPosition() - player_->GetWorldTF()->GetWorldPosition()) * 0.1f;
+		//	attackAssistVel_ = LWP::Utility::Interpolation::Lerp(comboTree_.GetAttackAssistMoveAmount(), attackTargetDist, 0.25f);
 
-			// 移動速度からラジアンを求める
-			attackAssistRadian_.y = LWP::Utility::GetRadian(LWP::Math::Vector3{ 0,0,1 }, attackAssistVel_.Normalize(), LWP::Math::Vector3{ 0,1,0 });
-			attackAssistQuat_ = LWP::Math::Quaternion::CreateFromAxisAngle(LWP::Math::Vector3{ 0, 1, 0 }, attackAssistVel_.y);
-		}
-		else {
+		//	// 移動速度からラジアンを求める
+		//	attackAssistRadian_.y = LWP::Utility::GetRadian(LWP::Math::Vector3{ 0,0,1 }, attackAssistVel_.Normalize(), LWP::Math::Vector3{ 0,1,0 });
+		//	attackAssistQuat_ = LWP::Math::Quaternion::CreateFromAxisAngle(LWP::Math::Vector3{ 0, 1, 0 }, attackAssistVel_.y);
+		//}
+		//else {
 			// 攻撃の移動量の取得
-			attackAssistVel_ = comboTree_.GetAttackAssistMoveAmount();
+		attackAssistVel_ = comboTree_.GetAttackAssistMoveAmount();
 
-			// 自機の方向ベクトル
-			Vector3 playerDir = { 0.0f,0.0f,1.0f };
-			// 回転行列を求める
-			Matrix4x4 rotMatrix = LWP::Math::Matrix4x4::CreateRotateXYZMatrix(player_->GetSystemManager()->GetMoveSystem()->GetMoveQuat());
-			// 方向ベクトルを求める
-			playerDir = playerDir * rotMatrix;
-			playerDir.y = 0;
+		// 自機の方向ベクトル
+		Vector3 playerDir = { 0.0f,0.0f,1.0f };
+		// 回転行列を求める
+		Matrix4x4 rotMatrix = LWP::Math::Matrix4x4::CreateRotateXYZMatrix(player_->GetSystemManager()->GetMoveSystem()->GetMoveQuat());
+		// 方向ベクトルを求める
+		playerDir = playerDir * rotMatrix;
+		playerDir.y = 0;
 
-			attackAssistVel_ = attackAssistVel_ * rotMatrix;
+		attackAssistVel_ = attackAssistVel_ * rotMatrix;
 
-			// 移動速度からラジアンを求める
-			attackAssistRadian_.y = LWP::Utility::GetRadian(LWP::Math::Vector3{ 0,0,1 }, playerDir.Normalize(), LWP::Math::Vector3{ 0,1,0 });
-			attackAssistQuat_ = LWP::Math::Quaternion::CreateFromAxisAngle(LWP::Math::Vector3{ 0, 1, 0 }, attackAssistRadian_.y);
-		}
+		// 移動速度からラジアンを求める
+		attackAssistRadian_.y = LWP::Utility::GetRadian(LWP::Math::Vector3{ 0,0,1 }, playerDir.Normalize(), LWP::Math::Vector3{ 0,1,0 });
+		attackAssistQuat_ = LWP::Math::Quaternion::CreateFromAxisAngle(LWP::Math::Vector3{ 0, 1, 0 }, attackAssistRadian_.y);
+		//}
 	}
 	else {
 		// アシストの移動ベクトルリセット
@@ -140,7 +140,7 @@ void Attack::DebugGUI() {
 			}
 			ImGui::TreePop();
 		}
-		
+
 		eventOrder_.DebugGUI();
 
 		ImGui::DragFloat3("Velocity", &attackAssistVel_.x, 0.1f, -10000, 10000);
@@ -169,7 +169,7 @@ void Attack::CreateEventOrder() {
 }
 
 void Attack::CheckAttackState() {
-	
+
 }
 
 void Attack::AttackAssistMovement() {

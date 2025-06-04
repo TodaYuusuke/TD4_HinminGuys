@@ -71,7 +71,6 @@ void Evasion::Update() {
 	CheckEvasionState();
 
 	animationPlaySpeed_.Update();
-	player_->SetAnimationPlaySpeed(animPlaySpeed_.x);
 
 	// 全てのアクションイベントが終了しているなら機能停止
 	if (eventOrder_.GetIsEnd()) {

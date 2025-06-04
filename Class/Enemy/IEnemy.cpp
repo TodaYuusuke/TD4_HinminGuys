@@ -38,7 +38,7 @@ IEnemy::IEnemy()
 	// 自機の所属しているマスクを設定
 	collider_.mask.SetBelongFrag(GetEnemy());
 	// 当たり判定をとる対象のマスクを設定
-	collider_.mask.SetHitFrag(GetAttack());
+	collider_.mask.SetHitFrag(GetAttack() | GetPlayer());
 	collider_.enterLambda = [this](LWP::Object::Collision* hitTarget) {
 		hitTarget;
 
@@ -217,20 +217,18 @@ void IEnemy::StartParryEffect()
 
 void IEnemy::CreateSwordCollider()
 {
-
 	// 刀の判定生成
 	swordCollider_.SetFollow(&model_, "WeaponAnchor");
 	swordCollider_.isActive = false;
 	// 自機の所属しているマスクを設定
 	swordCollider_.mask.SetBelongFrag(GetAttack());
 	// 当たり判定をとる対象のマスクを設定
-	swordCollider_.mask.SetHitFrag(GetPlayer());
-	swordCollider_.stayLambda = [this](LWP::Object::Collision* hitTarget) {
+	swordCollider_.mask.SetHitFrag(GetPlayer() | GetParry());
+	swordCollider_.enterLambda = [this](LWP::Object::Collision* hitTarget) {
 		hitTarget;
 		player_->TakeDamage(parameter_.attackParameter.attackValue);
 		};
 	capsule_.radius = 0.1f;
-
 }
 
 void IEnemy::UpdateParryEffect()

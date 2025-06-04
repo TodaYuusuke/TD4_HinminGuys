@@ -27,7 +27,7 @@ void FollowCamera::Initialize() {
 	// 状態
 	state_ = new InputCamera(this);
 
-	defaultTargetDist_ = kTargetDist;
+	kTargetDist = defaultTargetDist_;
 	lockOnOffset_ = kTargetDist;
 
 	// x軸回転

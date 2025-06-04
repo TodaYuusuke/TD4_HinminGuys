@@ -195,8 +195,8 @@ void Parry::CreateCollision() {
 	collider_.SetFollow(player_->GetWorldTF());
 	collider_.isActive = false;
 	collider_.worldTF.translation = { 0.0f, 1.0f, 0.0f };
-	collider_.mask.SetBelongFrag(GetPlayer());
-	collider_.mask.SetHitFrag(GetEnemy() | GetAttack());
+	collider_.mask.SetBelongFrag(GetParry());
+	collider_.mask.SetHitFrag(GetAttack());
 	collider_.stayLambda = [this](LWP::Object::Collision* hitTarget) {
 		// すでにジャスパor甘パリィなら処理しない
 		if (isGoodParry_ || isJustParry_) { return; }

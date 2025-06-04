@@ -9,4 +9,6 @@ namespace GameMask {
 	inline int GetEnemy() { return ColMask1; }
 	// 攻撃
 	inline int GetAttack() { return ColMask2; }
+	// パリィ
+	inline int GetParry() { return ColMask3; }
 };
