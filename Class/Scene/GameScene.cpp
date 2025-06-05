@@ -50,7 +50,7 @@ void GameScene::Initialize() {
 	// 一時的に天球を生成
 	skydome.LoadShortPath("field/skydome/SkyDome.gltf");
 	skydome.worldTF.scale = { 1000.0f,1000.0f ,1000.0f };
-	skydome.materials["SkyDomeMaterial"].uvTransform.scale = { 15.0f,10.0f ,1.0f };
+	skydome.materials["SkyDomeMaterial"].uvTransform.scale = { 20.0f,10.0f ,1.0f };
 	skydome.SetAllMaterialLighting(false);
 #pragma endregion
 
