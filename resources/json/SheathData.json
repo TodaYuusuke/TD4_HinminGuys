@@ -1,9 +1,9 @@
 {
     "Group :Collect": {
         "Group :GraceTime": {
-            "float :CollectFinishTime": 0.4000000059604645,
+            "float :CollectFinishTime": 0.5,
             "float :RecoveryTime": 0.10000000149011612,
-            "float :SwingTime": 0.30000001192092896
+            "float :SwingTime": 0.20000000298023224
         }
     },
     "Group :Collider": {
@@ -37,14 +37,14 @@
         "Group :GraceTime": {
             "float :RecoveryTime": 0.0,
             "float :SwingTime": 0.41100001335144043,
-            "float :ThrowFinishTime": 0.5
+            "float :ThrowFinishTime": 0.4000000059604645
         },
         "Vector3 :Movement": [
             0.0,
             0.0,
-            8.0
+            6.0
         ]
     },
     "float :CoolTime": 1.0,
-    "float :MoveRange": 12.0
+    "float :MoveRange": 10.0
 }
