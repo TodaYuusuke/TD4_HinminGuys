@@ -86,7 +86,24 @@ private:
 	/// </summary>
 	void KnockBackUpdate();
 
+	/// <summary>
+	/// クールタイムの更新
+	/// </summary>
+	void CoolTimeUpdate();
+
 public:// Getter, Setter
+	/// <summary>
+	/// クールタイムが終了しているかを確認
+	/// </summary>
+	/// <returns>true = 既定の時間を越している</returns>
+	bool CheckCoolTime() {
+		// 既定の時間を越している
+		if (currentCoolTime_ <= 0.0f) {
+			return true;
+		}
+		return false;
+	}
+
 #pragma region Getter
 	/// <summary>
 	/// 回避速度を取得
@@ -143,6 +160,11 @@ public:// Getter, Setter
 	/// </summary>
 	/// <param name="quat">向かせる方向(クォータニオン)</param>
 	void SetRotate(const LWP::Math::Quaternion& quat) { quat_ = quat; }
+	/// <summary>
+	/// クールタイムを設定
+	/// </summary>
+	/// <param name="time"></param>
+	void SetCoolTime() { currentCoolTime_ = coolTime * 60.0f; }
 #pragma endregion
 
 private:// jsonで保存する値
@@ -170,6 +192,9 @@ private:// jsonで保存する値
 	// ジャストパリィ時のノックバック終了時間
 	float justParryKnockBackFinishTime = 60.0f;
 
+	// クールタイム
+	float coolTime = 1.0f;
+
 private:
 	// アクションイベント集(無敵に関するものだけ)
 	std::map<int, EventOrder> eventOrders_;
@@ -193,6 +218,9 @@ private:
 	LWP::Math::Vector3 end_;
 
 	float t_;
+
+	// クールタイムの経過時間
+	float currentCoolTime_;
 
 	bool isJustParry_;
 	bool isGoodParry_;

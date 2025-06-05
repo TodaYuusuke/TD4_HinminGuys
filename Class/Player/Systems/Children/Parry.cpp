@@ -54,6 +54,8 @@ void Parry::Update() {
 	if (eventOrders_[(int)ParryInvinsibleState::kGood].GetIsEnd()) {
 		isGoodParry_ = false;
 	}
+	// クールタイムの時間更新
+	CoolTimeUpdate();
 
 	// パリィ機能を使えないなら早期リターン
 	if (!isActive_) { return; }
@@ -85,6 +87,8 @@ void Parry::Reset() {
 	collider_.isActive = false;
 	eventOrder_.Reset();
 	eventOrders_[(int)ParryInvinsibleState::kRunning].Reset();
+	// クールタイム開始
+	SetCoolTime();
 }
 
 void Parry::DebugGUI() {
@@ -217,9 +221,8 @@ void Parry::CreateCollision() {
 			isJustParry_ = true;
 			isGoodParry_ = false;
 			eventOrders_[(int)ParryInvinsibleState::kJust].Start();
-			//// ガードアニメーション開始
-			//player_->ResetAnimation();
-			//player_->StartAnimation("StrongParry", 0.0f, 0.0f);
+			// クールタイムなし
+			currentCoolTime_ = 0.0f;
 			// 鞘のゲージを減少
 			player_->GetUIManager()->ChangeSheathGauge(justParryDecrement);
 			// 相手の座標を代入
@@ -240,6 +243,8 @@ void Parry::CreateCollision() {
 			// ガードアニメーション開始
 			player_->ResetAnimation();
 			player_->StartAnimation("WeakParry", 0.0f, 0.0f);
+			// クールタイムなし
+			currentCoolTime_ = 0.0f;
 			// 鞘のゲージを減少
 			player_->GetUIManager()->ChangeSheathGauge(goodParryDecrement);
 			// 相手の座標を代入
@@ -321,4 +326,13 @@ void Parry::KnockBackUpdate() {
 		player_->ResetAnimation();
 		player_->StartAnimation("StrongParry", 0.0f, 0.0f);
 	}
+}
+
+void Parry::CoolTimeUpdate() {
+	// 既定の時間を越していなかったらパリィを使えない
+	if (CheckCoolTime()) {
+		return;
+	}
+
+	currentCoolTime_--;
 }

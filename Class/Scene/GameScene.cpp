@@ -46,12 +46,12 @@ void GameScene::Initialize() {
 	plane.LoadShortPath("field/ground/SimpleStage.gltf");
 	plane.worldTF.scale = { 1000.0f,1000.0f ,1000.0f };
 	plane.worldTF.translation = { 0,0,0 };
-	plane.materials["Material"].uvTransform.scale = { 1000.0f,1000.0f ,0.0f };
+	plane.materials["Material"].uvTransform.scale = { 10000.0f,10000.0f ,0.0f };
 	// 一時的に天球を生成
 	skydome.LoadShortPath("field/skydome/SkyDome.gltf");
 	skydome.worldTF.scale = { 1000.0f,1000.0f ,1000.0f };
-	skydome.materials["Material"].uvTransform.rotation = { 0.0f,0.0f ,2.0f };
-	skydome.materials["Material"].uvTransform.scale = { 15.0f,10.0f ,1.0f };
+	skydome.materials["マテリアル"].uvTransform.rotation = { 0.0f,0.0f ,2.0f };
+	skydome.materials["マテリアル"].uvTransform.scale = { 15.0f,10.0f ,1.0f };
 	skydome.SetAllMaterialLighting(false);
 #pragma endregion
 

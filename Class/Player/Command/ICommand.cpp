@@ -36,6 +36,13 @@ void MoveCommand::Exec(Player& player, int& banInput) {
 			banInput |= BanSheath;
 		}
 	}
+	// パリィのクールタイム中はできない
+	if (!player.GetSystemManager()->GetParrySystem()->CheckCoolTime()) {
+		//banInput |= BanSheath;
+		if (!IsBitSame(banInput, BanParry, GetSetBitPosition(BanParry))) {
+			banInput |= BanParry;
+		}
+	}
 	// 攻撃の編集モード中は攻撃できない
 	if (player.GetSystemManager()->GetAttackSystem()->GetIsEditingMode()) {
 		if (!IsBitSame(banInput, BanAttack, GetSetBitPosition(BanAttack))) {
