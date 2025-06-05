@@ -116,14 +116,14 @@ void SystemManager::EnableInputMoveState() {
 		break;
 	case InputState::kParry:
 		// 速度を加算
-		velocity_ = LWP::Utility::Interpolation::Exponential(velocity_, Vector3{ 0.0f,0.0f,0.0f }, 0.9f);
+		velocity_ = parrySystem_->GetVelocity();
 		// 角度を加算
 		radian_ = parrySystem_->GetMoveRadian();
 		// クォータニオンに変換
 		rotate_ = LWP::Math::Quaternion::CreateFromAxisAngle(LWP::Math::Vector3{ 0, 1, 0 }, radian_.y);
 
 		// MoveSystemクラス内の角度も変更
-		if (Vector3::Dot(velocity_, velocity_) != 0) {
+		if (Vector3::Dot(velocity_, velocity_) != 0 && !parrySystem_->GetSuccessJustParry()) {
 			moveSystem_->SetRotate(radian_);
 		}
 		break;

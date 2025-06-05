@@ -81,8 +81,18 @@ private:
 	/// </summary>
 	void CheckParryState();
 
+	/// <summary>
+	/// ノックバックの計算
+	/// </summary>
+	void KnockBackUpdate();
+
 public:// Getter, Setter
 #pragma region Getter
+	/// <summary>
+	/// 回避速度を取得
+	/// </summary>
+	/// <returns></returns>
+	LWP::Math::Vector3 GetVelocity() { return velocity_; }
 	/// <summary>
 	/// 向いている方向を取得(クォータニオン)
 	/// </summary>
@@ -155,6 +165,11 @@ private:// jsonで保存する値
 	// 甘パリィ時の鞘ゲージの減少量
 	float goodParryDecrement = 10.0f;
 
+	// ジャストパリィ時のノックバック量
+	float justParryKnockBackMovement = 6.0f;
+	// ジャストパリィ時のノックバック終了時間
+	float justParryKnockBackFinishTime = 60.0f;
+
 private:
 	// アクションイベント集(無敵に関するものだけ)
 	std::map<int, EventOrder> eventOrders_;
@@ -166,9 +181,18 @@ private:
 	// パリィできた攻撃をしてきた相手の座標
 	LWP::Math::Vector3 parryTargetPos_;
 
+	// ジャストパリィ時のノックバック
+	LWP::Math::Vector3 justParryKnockBack_;
+
 	// 向いている角度
 	LWP::Math::Quaternion quat_ = { 0.0f,0.0f,0.0f,1.0f };
 	LWP::Math::Vector3 radian_;
+	LWP::Math::Vector3 velocity_;
+
+	LWP::Math::Vector3 start_;
+	LWP::Math::Vector3 end_;
+
+	float t_;
 
 	bool isJustParry_;
 	bool isGoodParry_;
