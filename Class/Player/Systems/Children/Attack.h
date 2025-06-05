@@ -198,9 +198,11 @@ private:// 外部からポインタをもらう変数
 	LockOn* lockOnSystem_;
 
 private:
-
 	// コンボ攻撃用クラス
 	ComboTree comboTree_;
+
+	// 当たり判定の内容
+	LWP::Object::Collision::OnHitFunction onCollision_;
 
 	// 状態遷移
 	IAttackSystemState* state_;

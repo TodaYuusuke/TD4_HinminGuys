@@ -64,6 +64,11 @@ public:
 		systemManager_->GetAttackSystem()->ComboReset();
 	}
 
+	void TakeSheathDamage(const float& damageValue, const float& multiply = 1.0f) {
+		// 鞘ゲージ変動
+		uiManager_->ChangeSheathGauge(damageValue, multiply);
+	}
+
 	/// <summary>
 	/// 移動機能以外をリセット
 	/// </summary>

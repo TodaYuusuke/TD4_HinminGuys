@@ -26,6 +26,16 @@ Attack::Attack(LWP::Object::Camera* camera, Player* player, EnemyManager* enemyM
 	comboTree_.Init("Combo.json", player_->GetModel(), player_->GetAnimation());
 	// コライダーのマスク設定
 	comboTree_.SetColliderMaskFrag(GetAttack(), GetEnemy());
+
+	// 攻撃の判定
+	onCollision_ = [this](LWP::Object::Collision* hitTarget) {
+		hitTarget;
+		// 鞘が外れている状態だと減らさない
+		if (player_->GetSystemManager()->GetSheathSystem()->GetSheathState()->GetStateName() != "Throw") { return; }
+
+		player_->TakeSheathDamage(comboTree_.GetSheathDurabityLoss());
+		};
+	comboTree_.AddCollisionLamda(LWP::Utility::ComboEnum::ENTER, onCollision_);
 }
 
 Attack::~Attack() {
