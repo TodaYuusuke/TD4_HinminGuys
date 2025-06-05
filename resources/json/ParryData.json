@@ -1,15 +1,15 @@
 {
     "Group :Parry": {
-        "Group :Collision": {
+        "Group :Collider": {
             "Vector3 :Max": [
-                1.0,
-                1.0,
-                1.0
+                2.0,
+                2.0,
+                2.0
             ],
             "Vector3 :Min": [
-                -1.0,
-                -1.0,
-                -1.0
+                -2.0,
+                -2.0,
+                -2.0
             ]
         },
         "Group :GraceTime": {

@@ -211,7 +211,6 @@ void Sheath::AnimCommand() {
 
 void Sheath::CreateCollision() {
 	// 攻撃判定生成
-	capsule_.isShowWireFrame = false;
 	collider_.SetFollow(player_->GetWorldTF());
 	collider_.isActive = false;
 	collider_.worldTF.translation = { 0.0f, 1.0f, 0.0f };

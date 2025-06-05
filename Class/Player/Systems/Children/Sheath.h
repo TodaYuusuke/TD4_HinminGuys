@@ -190,7 +190,6 @@ public:// Getter, Setter
 	/// <param name="isCollision"></param>
 	void SetIsCollision(const bool& isCollision) {
 		collider_.isActive = isCollision;
-		capsule_.isShowWireFrame = isCollision;
 	}
 	/// <summary>
 	/// 鞘破壊状態かを設定
