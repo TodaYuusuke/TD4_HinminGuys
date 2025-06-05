@@ -69,6 +69,8 @@ void SpawnData::DebugGUI()
 			if (ImGui::Button("Add Enemy")) {
 				waveData.AddEnemyData(spawnPoint_);
 			}
+			//モデル表示フラグ
+			ImGui::Checkbox("Show Model", &waveData.isActive);
 
 			//ウェーブ削除用ツリー
 			if (ImGui::TreeNode("Delete Wave")) {
@@ -118,7 +120,7 @@ void SpawnData::SetIsShowModel(bool flag)
 {
 
 	for (WaveData& waveData : waveData_) {
-		waveData.SetIsShowModel(flag);
+		waveData.isActive = flag;
 	}
 
 }

@@ -97,8 +97,6 @@ void Normal::Update()
 	Vector3 diff = GetPlayerPosition() - GetPosition();
 	distFromPlayer_ = diff.Length();
 
-	model_.DebugGUI();
-
 }
 
 void Normal::SetState(States state, bool isInit)

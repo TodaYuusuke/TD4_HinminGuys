@@ -33,6 +33,7 @@ void GameScene::Initialize() {
 	enemyManager_.Initialize();
 	enemyManager_.SetPlayer(&player_);
 	enemyManager_.SetCamera(followCamera_.GetCamera());
+	enemyManager_.SetIsShowSpawnDataModel(false);
 
 	// 追従カメラの動作確認のため生成
 	followCamera_.Initialize();
@@ -65,7 +66,13 @@ void GameScene::Update() {
 	//シーン遷移が終わった時点でウェーブを開始していない場合、ウェーブを開始
 	if (not sceneTransitioner_.GetIsSceneChange() and not enemyManager_.GetIsDefeatedAllEnemy() and
 		not enemyManager_.GetIsStartWave()) {
+
+#ifdef _DEBUG
+
+#else
 		enemyManager_.StartWave();
+#endif // _DEBUG
+
 	}
 
 	//全ての敵が倒されたらシーン遷移する

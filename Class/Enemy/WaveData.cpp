@@ -25,6 +25,9 @@ void WaveData::Update()
 		});
 
 	for (EnemyData& enemyData : enemyData_) {
+
+		enemyData.model.isActive = isActive;
+
 		enemyData.model.worldTF.translation = enemyData.position;
 	}
 
