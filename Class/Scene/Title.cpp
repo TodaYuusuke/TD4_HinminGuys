@@ -9,6 +9,7 @@ using namespace LWP::Object;
 using namespace LWP::Info;
 
 void Title::Initialize() {
+	LWP::Window::ChangeFullScreenMode();
 
 	// 平行光源を配置(これも一時的に配置)
 	light_.worldTF.translation = { 0,10,0 };
@@ -34,7 +35,6 @@ void Title::Initialize() {
 	UITitleLogo_.isActive = false;
 
 	selectUI_ = SelectUI::kStart;
-
 }
 
 void Title::Update() {
