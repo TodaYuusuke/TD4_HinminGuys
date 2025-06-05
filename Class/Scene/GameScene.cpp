@@ -74,6 +74,12 @@ void GameScene::Update() {
 		sceneTransitioner_.SetNextScene(SceneName::kTitle);
 		sceneTransitioner_.SceneTransitionStart();
 	}
+	//全員倒す前にプレイヤーが死んだ場合、ゲームオーバーに逝こう！
+	else if (not enemyManager_.GetIsDefeatedAllEnemy() and not player_.GetIsAlive()) {
+		//遷移先をゲームオーバーにセット
+		sceneTransitioner_.SetNextScene(SceneName::kGameOver);
+		sceneTransitioner_.SceneTransitionStart();
+	}
 
 	// 入力されたコマンドを確認
 	inputHandler_->Update(player_);

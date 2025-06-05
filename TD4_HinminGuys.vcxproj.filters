@@ -61,6 +61,7 @@
     <ClCompile Include="Class\UI\GameUI.cpp" />
     <ClCompile Include="Class\Shake\Shake.cpp" />
     <ClCompile Include="Class\Enemy\Childs\Normal\State\HitReaction.cpp" />
+    <ClCompile Include="Class\Scene\GameOver.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Class\ComboEditor\ComboTree.h" />
@@ -144,6 +145,7 @@
     <ClInclude Include="Class\Enemy\Childs\Normal\State\HitReaction.h" />
     <ClInclude Include="Class\Enemy\Childs\Normal\NormalStateParameter.h" />
     <ClInclude Include="Class\Enemy\Childs\Normal\INormalEnemyState.h" />
+    <ClInclude Include="Class\Scene\GameOver.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />
