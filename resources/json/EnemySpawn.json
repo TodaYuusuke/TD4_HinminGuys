@@ -4,6 +4,28 @@
             "Vector3 :position": [
                 0.0,
                 0.0,
+                10.0
+            ],
+            "float :delayTime": 0.0,
+            "string :type": "Normal"
+        }
+    },
+    "Group :Wave|2": {
+        "Group :Enemy|1": {
+            "Vector3 :position": [
+                1.7000000476837158,
+                0.0,
+                -2.0
+            ],
+            "float :delayTime": 0.0,
+            "string :type": "Normal"
+        }
+    },
+    "Group :Wave|3": {
+        "Group :Enemy|1": {
+            "Vector3 :position": [
+                8.0,
+                0.0,
                 0.0
             ],
             "float :delayTime": 0.0,
@@ -11,7 +33,47 @@
         },
         "Group :Enemy|2": {
             "Vector3 :position": [
-                1.7000000476837158,
+                -8.0,
+                0.0,
+                0.0
+            ],
+            "float :delayTime": 0.0,
+            "string :type": "Normal"
+        }
+    },
+    "Group :Wave|4": {
+        "Group :Enemy|1": {
+            "Vector3 :position": [
+                3.0,
+                0.0,
+                10.0
+            ],
+            "float :delayTime": 0.0,
+            "string :type": "Normal"
+        },
+        "Group :Enemy|2": {
+            "Vector3 :position": [
+                -3.0,
+                0.0,
+                10.0
+            ],
+            "float :delayTime": 0.0,
+            "string :type": "Normal"
+        }
+    },
+    "Group :Wave|5": {
+        "Group :Enemy|1": {
+            "Vector3 :position": [
+                8.0,
+                0.0,
+                -1.0
+            ],
+            "float :delayTime": 0.0,
+            "string :type": "Normal"
+        },
+        "Group :Enemy|2": {
+            "Vector3 :position": [
+                9.0,
                 0.0,
                 0.0
             ],
@@ -20,18 +82,54 @@
         },
         "Group :Enemy|3": {
             "Vector3 :position": [
-                4.900000095367432,
+                8.0,
                 0.0,
-                0.0
+                1.0
             ],
-            "float :delayTime": 24.200000762939453,
+            "float :delayTime": 0.0,
             "string :type": "Normal"
         }
     },
-    "Group :Wave|2": {
+    "Group :Wave|6": {
         "Group :Enemy|1": {
             "Vector3 :position": [
-                1.7000000476837158,
+                0.0,
+                0.0,
+                -10.0
+            ],
+            "float :delayTime": 0.0,
+            "string :type": "Normal"
+        },
+        "Group :Enemy|2": {
+            "Vector3 :position": [
+                -10.0,
+                0.0,
+                0.0
+            ],
+            "float :delayTime": 0.0,
+            "string :type": "Normal"
+        },
+        "Group :Enemy|3": {
+            "Vector3 :position": [
+                -1.0,
+                0.0,
+                10.0
+            ],
+            "float :delayTime": 0.0,
+            "string :type": "Normal"
+        },
+        "Group :Enemy|4": {
+            "Vector3 :position": [
+                1.0,
+                0.0,
+                10.0
+            ],
+            "float :delayTime": 0.0,
+            "string :type": "Normal"
+        },
+        "Group :Enemy|5": {
+            "Vector3 :position": [
+                0.0,
                 0.0,
                 0.0
             ],
