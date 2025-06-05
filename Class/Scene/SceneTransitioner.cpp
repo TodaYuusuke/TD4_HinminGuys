@@ -1,5 +1,6 @@
 #include "SceneTransitioner.h"
 #include "GameScene.h"
+#include "GameOver.h"
 #include "Title.h"
 #include "VoidScene.h"
 
@@ -113,6 +114,9 @@ void SceneTransitioner::SceneTransition()
 			break;
 		case SceneName::kGameScene:
 			scene_->nextSceneFunction = []() { return new GameScene(); };
+			break;
+		case  SceneName::kGameOver:
+			scene_->nextSceneFunction = []() { return new GameOver(); };
 			break;
 		default:
 			break;

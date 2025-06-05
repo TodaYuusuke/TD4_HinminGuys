@@ -10,8 +10,13 @@ WaitingForAttack::WaitingForAttack(Normal* enemy)
 {
 	
 	enemy_ = enemy;
-	enemy_->SetAnimation("Idle", true);
+	enemy_->SetAnimation("Run", true);
 	stateType_ = States::kWaitingForAttack;
+
+	//現在の攻撃カウントから順番を決める
+	enemy_->GetStateParameter().waitingForAttackParameter.attackID = attackCount_;
+	//攻撃の順番を決める数字を上昇させる
+	attackCount_++;
 
 }
 
@@ -25,11 +30,6 @@ WaitingForAttack::~WaitingForAttack()
 
 void WaitingForAttack::Initialize()
 {
-
-	//現在の攻撃カウントから順番を決める
-	enemy_->GetStateParameter().waitingForAttackParameter.attackID = attackCount_;
-	//攻撃の順番を決める数字を上昇させる
-	attackCount_++;
 
 	//ランダムな数字を利用して右回りかどうかを決める
 	if (LWP::Utility::GenerateRandamNum(0, 1) == 0) {

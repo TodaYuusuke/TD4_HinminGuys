@@ -1,4 +1,4 @@
-#include "Title.h"
+#include "GameOver.h"
 
 using namespace LWP;
 using namespace LWP::Input;
@@ -8,7 +8,7 @@ using namespace LWP::Utility;
 using namespace LWP::Object;
 using namespace LWP::Info;
 
-void Title::Initialize() {
+void GameOver::Initialize() {
 
 	// 平行光源を配置(これも一時的に配置)
 	light_.worldTF.translation = { 0,10,0 };
@@ -28,59 +28,23 @@ void Title::Initialize() {
 	//シーン切り替え機能生成
 	sceneTransitioner_.Initialize(this);
 
-	UIStart_.Initialize("Title/Start.png", "Title_Start");
-	UIExit_.Initialize("Title/Exit.png", "Title_Exit");
-	UITitleLogo_.Initialize("Title/Title_Logo.png", "Title_Logo");
-	UITitleLogo_.isActive = false;
-
-	selectUI_ = SelectUI::kStart;
-
 }
 
-void Title::Update() {
-	
+void GameOver::Update() {
+
 	///
 	/// 突貫工事なので後で処理をまとめる
 	///
 
 	if (not sceneTransitioner_.GetIsSceneChange()) {
 
-		if (selectUI_ == SelectUI::kStart) {
-
-			//下キーでEndに移動
-			if (Controller::GetTrigger(XBOX_DPAD_DOWN)) {
-				selectUI_ = SelectUI::kEnd;
-			}
-			//Aボタンでゲームスタート
-			if (Controller::GetTrigger(XBOX_A)) {
-				sceneTransitioner_.SetNextScene(SceneName::kGameScene);
-				sceneTransitioner_.SceneTransitionStart();
-			}
-
-			UIStart_.isActive = true;
-			UIExit_.isActive = false;
-
-		}
-		else if (selectUI_ == SelectUI::kEnd) {
-
-			//上キーでStartに移動
-			if (Controller::GetTrigger(XBOX_DPAD_UP)) {
-				selectUI_ = SelectUI::kStart;
-			}
-			if (Controller::GetTrigger(XBOX_A)) {
-				LWP::System::ShutDown();
-			}
-
-			UIStart_.isActive = false;
-			UIExit_.isActive = true;
-
+		//Aボタンでタイトルへ
+		if (Controller::GetTrigger(XBOX_A)) {
+			sceneTransitioner_.SetNextScene(SceneName::kTitle);
+			sceneTransitioner_.SceneTransitionStart();
 		}
 
 	}
-
-	UIStart_.Update();
-	UIExit_.Update();
-	UITitleLogo_.Update();
 
 	sceneTransitioner_.Update();
 
@@ -89,28 +53,18 @@ void Title::Update() {
 
 }
 
-void Title::DebugGUI() {
+void GameOver::DebugGUI() {
 #ifdef _DEBUG
 	ImGui::Begin("DebugWindow");
 	if (ImGui::BeginTabBar("GameObject")) {
-		
-		if (ImGui::BeginTabItem("Title")) {
+
+		if (ImGui::BeginTabItem("GameOver")) {
 
 			if (ImGui::TreeNode("Camera")) {
 				mainCamera.DebugGUI();
 				ImGui::TreePop();
 
 			}
-
-			ImGui::EndTabItem();
-
-		}
-
-		if (ImGui::BeginTabItem("UI")) {
-
-			UIStart_.DebugGUI();
-			UIExit_.DebugGUI();
-			UITitleLogo_.DebugGUI();
 
 			ImGui::EndTabItem();
 

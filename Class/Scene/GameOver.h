@@ -3,17 +3,11 @@
 #include "SceneTransitioner.h"
 #include "../UI/GameUI.h"
 
-enum class SelectUI {
-	kStart,
-	kEnd,
-	kMax
-};
-
-class Title final
+class GameOver final
 	: public IScene {
 public:
-	Title() = default;
-	~Title() = default;
+	GameOver() = default;
+	~GameOver() = default;
 
 	// ** 純粋仮想関数の実体宣言 ** //
 
@@ -36,14 +30,8 @@ private: // ** これより先に必要な処理や変数を記述 ** //
 	LWP::Resource::RigidModel plane_;
 	// 天球(一時的に作っているので要修正)
 	LWP::Resource::RigidModel skydome_;
-	//ゲームUI
-	GameUI UIStart_;
-	GameUI UIExit_;
-	GameUI UITitleLogo_;
 
 	//シーン切り替え
 	SceneTransitioner sceneTransitioner_;
-
-	SelectUI selectUI_;
 
 };

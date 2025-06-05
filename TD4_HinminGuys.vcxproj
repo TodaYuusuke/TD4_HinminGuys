@@ -156,6 +156,7 @@
     <ClCompile Include="Class\DeltaTimer\DeltaTimer.cpp" />
     <ClCompile Include="Class\Player\Systems\ISystem.cpp" />
     <ClCompile Include="Class\Enemy\SpawnData.cpp" />
+    <ClCompile Include="Class\Scene\GameOver.cpp" />
     <ClCompile Include="Class\Scene\GameScene.cpp" />
     <ClCompile Include="Class\ComboEditor\Combo.cpp" />
     <ClCompile Include="Class\Enemy\Childs\Boss\Boss.cpp" />
@@ -249,6 +250,7 @@
     <ClInclude Include="Class\Player\Systems\Children\State\ISheathSystemState.h" />
     <ClInclude Include="Class\Player\Systems\ISystem.h" />
     <ClInclude Include="Class\Player\Systems\Children\LockOn.h" />
+    <ClInclude Include="Class\Scene\GameOver.h" />
     <ClInclude Include="Class\Scene\GameScene.h" />
     <ClInclude Include="Class\Scene\SceneTransitioner.h" />
     <ClInclude Include="Class\Scene\Title.h" />
