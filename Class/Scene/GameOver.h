@@ -31,6 +31,10 @@ private: // ** これより先に必要な処理や変数を記述 ** //
 	// 天球(一時的に作っているので要修正)
 	LWP::Resource::RigidModel skydome_;
 
+	//ゲームUI
+	GameUI UIGameOver_;
+	GameUI UI_Button_A_;
+
 	//シーン切り替え
 	SceneTransitioner sceneTransitioner_;
 
