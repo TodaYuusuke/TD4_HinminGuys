@@ -48,13 +48,14 @@ public:
 
 	std::list<EnemyData>& GetEnemyData() { return enemyData_; }
 
+	//アクティブフラグ
+	bool isActive = true;
+
 private:
 
 	//敵のスポーン地点
 	std::list<EnemyData> enemyData_;
 	//削除フラグ
 	bool isDelete_ = false;
-	//アクティブフラグ
-	bool isActive_ = true;
 
 };

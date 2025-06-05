@@ -33,6 +33,7 @@ void GameScene::Initialize() {
 	enemyManager_.Initialize();
 	enemyManager_.SetPlayer(&player_);
 	enemyManager_.SetCamera(followCamera_.GetCamera());
+	enemyManager_.SetIsShowSpawnDataModel(false);
 
 	// 追従カメラの動作確認のため生成
 	followCamera_.Initialize();
@@ -49,6 +50,8 @@ void GameScene::Initialize() {
 	// 一時的に天球を生成
 	skydome.LoadShortPath("field/skydome/SkyDome.gltf");
 	skydome.worldTF.scale = { 1000.0f,1000.0f ,1000.0f };
+	skydome.materials["Material"].uvTransform.rotation = { 0.0f,0.0f ,2.0f };
+	skydome.materials["Material"].uvTransform.scale = { 15.0f,10.0f ,1.0f };
 	skydome.SetAllMaterialLighting(false);
 #pragma endregion
 
@@ -65,7 +68,13 @@ void GameScene::Update() {
 	//シーン遷移が終わった時点でウェーブを開始していない場合、ウェーブを開始
 	if (not sceneTransitioner_.GetIsSceneChange() and not enemyManager_.GetIsDefeatedAllEnemy() and
 		not enemyManager_.GetIsStartWave()) {
+
+#ifdef _DEBUG
+
+#else
 		enemyManager_.StartWave();
+#endif // _DEBUG
+
 	}
 
 	//全ての敵が倒されたらシーン遷移する

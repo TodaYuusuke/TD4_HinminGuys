@@ -15,12 +15,13 @@ SystemManager::SystemManager(Player* player, EnemyManager* enemyManager, FollowC
 void SystemManager::Initialize() {
 	// コマンドの登録
 	inputHandler_ = InputHandler::GetInstance();
+
 	// ロックオン機能
 	lockOnSystem_ = std::make_unique<LockOn>(pCamera_, player_);
 	lockOnSystem_->Initialize();
 	lockOnSystem_->SetEnemyList(enemyManager_->GetEnemyListPtr());
 	lockOnSystem_->SetFollowCamera(followCamera_);
-	systems_.push_back(lockOnSystem_.get());
+	
 	// 被弾機能
 	damageResponseSystem_ = std::make_unique<DamageResponse>(pCamera_, player_);
 	damageResponseSystem_->Initialize();
@@ -58,6 +59,9 @@ void SystemManager::Update() {
 	// アニメーションを振り分ける
 	//animator_.Update(*player_);
 
+	// ロックオン機能(これだけはリストに含めない)
+	lockOnSystem_->Update();
+
 	// 各機能
 	for (ISystem* system : systems_) {
 		system->Update();
@@ -76,6 +80,9 @@ void SystemManager::Reset() {
 
 void SystemManager::DebugGUI() {
 #ifdef _DEBUG
+	// ロックオン
+	lockOnSystem_->DebugGUI();
+
 	// 各機能
 	for (ISystem* system : systems_) {
 		system->DebugGUI();
@@ -109,14 +116,14 @@ void SystemManager::EnableInputMoveState() {
 		break;
 	case InputState::kParry:
 		// 速度を加算
-		velocity_ = LWP::Utility::Interpolation::Exponential(velocity_, Vector3{ 0.0f,0.0f,0.0f }, 0.9f);
+		velocity_ = parrySystem_->GetVelocity();
 		// 角度を加算
 		radian_ = parrySystem_->GetMoveRadian();
 		// クォータニオンに変換
 		rotate_ = LWP::Math::Quaternion::CreateFromAxisAngle(LWP::Math::Vector3{ 0, 1, 0 }, radian_.y);
 
 		// MoveSystemクラス内の角度も変更
-		if (Vector3::Dot(velocity_, velocity_) != 0) {
+		if (Vector3::Dot(velocity_, velocity_) != 0 && !parrySystem_->GetSuccessJustParry()) {
 			moveSystem_->SetRotate(radian_);
 		}
 		break;

@@ -1,6 +1,6 @@
 {
     "Group :Parry": {
-        "Group :Collision": {
+        "Group :Collider": {
             "Vector3 :Max": [
                 1.0,
                 1.0,

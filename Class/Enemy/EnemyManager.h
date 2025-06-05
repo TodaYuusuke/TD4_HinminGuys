@@ -54,6 +54,8 @@ public:
 	uint16_t GetAttackPhaseCount();
 	//ウェーブ開始フラグ取得
 	bool GetIsStartWave() const { return isStartWave_; }
+	//スポーンデータ表示非表示切り替え
+	void SetIsShowSpawnDataModel(bool flag){ spawnData_.SetIsShowModel(flag); }
 
 private:
 

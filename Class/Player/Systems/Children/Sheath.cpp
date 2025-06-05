@@ -124,6 +124,10 @@ void Sheath::DebugGUI() {
 			eventOrders_[(int)SheathState::kInvinsible].DebugGUI();
 			ImGui::TreePop();
 		}
+		if (ImGui::TreeNode("Collider")) {
+			collider_.DebugGUI();
+			ImGui::TreePop();
+		}
 
 		ImGui::DragFloat3("Velocity", &velocity_.x);
 		ImGui::DragFloat3("Radian", &radian_.x);
@@ -211,7 +215,6 @@ void Sheath::AnimCommand() {
 
 void Sheath::CreateCollision() {
 	// 攻撃判定生成
-	capsule_.isShowWireFrame = false;
 	collider_.SetFollow(player_->GetWorldTF());
 	collider_.isActive = false;
 	collider_.worldTF.translation = { 0.0f, 1.0f, 0.0f };

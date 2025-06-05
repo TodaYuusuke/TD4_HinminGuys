@@ -3,8 +3,9 @@
 #include "../Engine/object/core/collision/Collision.h"
 #include "../../../GameMask.h"
 
-using namespace LWP::Utility;
 using namespace GameMask;
+using namespace LWP::Utility;
+using namespace LWP::Utility::Interpolation;
 
 Parry::Parry(LWP::Object::Camera* camera, Player* player)
 	: aabb_(collider_.SetBroadShape(LWP::Object::Collider::AABB()))
@@ -36,13 +37,19 @@ void Parry::Initialize() {
 }
 
 void Parry::Update() {
+	// ノックバック
+	KnockBackUpdate();
+
 	// ジャストパリィ成功時の無敵時間
 	eventOrders_[(int)ParryInvinsibleState::kJust].Update();
 	// 弱パリィ成功時の無敵時間
 	eventOrders_[(int)ParryInvinsibleState::kGood].Update();
 
+	// ジャストパリィ成功時の無敵時間が終了
 	if (eventOrders_[(int)ParryInvinsibleState::kJust].GetIsEnd()) {
 		isJustParry_ = false;
+		velocity_ = { 0,0,0 };
+		t_ = 0.0f;
 	}
 	if (eventOrders_[(int)ParryInvinsibleState::kGood].GetIsEnd()) {
 		isGoodParry_ = false;
@@ -76,11 +83,8 @@ void Parry::Reset() {
 		isGoodParry_ = false;
 	}
 	collider_.isActive = false;
-	aabb_.isShowWireFrame = false;
 	eventOrder_.Reset();
 	eventOrders_[(int)ParryInvinsibleState::kRunning].Reset();
-	// アニメーションを初期化
-	//player_->ResetAnimation();
 }
 
 void Parry::DebugGUI() {
@@ -174,7 +178,6 @@ void Parry::Command() {
 		eventOrders_[(int)ParryInvinsibleState::kRunning].Start();
 		isActive_ = true;
 		collider_.isActive = true;
-		aabb_.isShowWireFrame = true;
 		radian_ = player_->GetSystemManager()->GetMoveSystem()->GetMoveRadian();
 		quat_ = player_->GetSystemManager()->GetMoveSystem()->GetMoveQuat();
 
@@ -198,7 +201,6 @@ void Parry::CreateCollision() {
 	// 攻撃判定生成
 	aabb_.min = { -1.0f, -1.0f, -1.0f };
 	aabb_.max = { 1.0f, 1.0f, 1.0f };
-	aabb_.isShowWireFrame = false;
 	collider_.SetFollow(player_->GetWorldTF());
 	collider_.isActive = false;
 	collider_.worldTF.translation = { 0.0f, 1.0f, 0.0f };
@@ -215,13 +217,17 @@ void Parry::CreateCollision() {
 			isJustParry_ = true;
 			isGoodParry_ = false;
 			eventOrders_[(int)ParryInvinsibleState::kJust].Start();
-			// ガードアニメーション開始
-			player_->ResetAnimation();
-			player_->StartAnimation("WeakParry", 0.0f, 0.0f);
+			//// ガードアニメーション開始
+			//player_->ResetAnimation();
+			//player_->StartAnimation("StrongParry", 0.0f, 0.0f);
 			// 鞘のゲージを減少
 			player_->GetUIManager()->ChangeSheathGauge(justParryDecrement);
 			// 相手の座標を代入
 			parryTargetPos_ = hitTarget->GetWorldPosition();
+			// ノックバック量を決定
+			justParryKnockBack_ = (parryTargetPos_ - player_->GetWorldTF()->GetWorldPosition()).Normalize() * -justParryKnockBackMovement;
+			start_ = player_->GetWorldTF()->GetWorldPosition();
+			end_ = player_->GetWorldTF()->GetWorldPosition() + justParryKnockBack_;
 
 			radian_.y = LWP::Utility::GetRadian(LWP::Math::Vector3{ 0,0,1 }, p2t, LWP::Math::Vector3{ 0,1,0 });
 			quat_ = LWP::Math::Quaternion::CreateFromAxisAngle(LWP::Math::Vector3{ 0, 1, 0 }, radian_.y);
@@ -299,5 +305,20 @@ void Parry::CheckParryState() {
 		collider_.isActive = false;
 		isJustParry_ = false;
 		isGoodParry_ = false;
+	}
+}
+
+void Parry::KnockBackUpdate() {
+	// ジャストパリィ時のみ
+	if (!isJustParry_) { return; }
+	t_++;
+
+	velocity_ = Lerp(start_, end_, Easing::OutExpo(t_ / justParryKnockBackFinishTime)) - player_->GetWorldTF()->GetWorldPosition();
+	velocity_.y = 0.0f;
+
+	if (t_ == 1.0f) {
+		// ガードアニメーション開始
+		player_->ResetAnimation();
+		player_->StartAnimation("StrongParry", 0.0f, 0.0f);
 	}
 }

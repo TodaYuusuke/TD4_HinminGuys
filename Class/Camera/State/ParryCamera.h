@@ -1,6 +1,7 @@
 #pragma once
 #include "IFollowCameraState.h"
 #include "../../Shake/Shake.h"
+#include "../../Player/Systems/EventOrder.h"
 
 class Player;
 /// <summary>
@@ -31,13 +32,23 @@ public:
 	/// </summary>
 	void TargetDistUpdate();
 
+	/// <summary>
+	/// 追従対象との距離をイージングするためのイベント生成
+	/// </summary>
+	void CreateEventOrder();
+
 private:
-	float finishTime = 1.5f * 60.0f;
+	float zoomFinishTime = 22.0f;
+	float zoomHoldFinishTime = 0.0f;
+	float returnFinishTime = 39.0f;
 
 private:// 外部から受け取る変数
 	Player* player_;
 
 private:
+	// 追従対象との距離をイージングで調整
+	EventOrder targetDistOrder_;
+	// 揺れ
 	Shake shake_;
 
 	// カメラの揺れ
