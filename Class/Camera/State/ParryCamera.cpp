@@ -6,6 +6,8 @@
 
 using namespace LWP;
 using namespace LWP::Math;
+using namespace LWP::Utility;
+using namespace LWP::Utility::Interpolation;
 
 ParryCamera::ParryCamera(Player* player, FollowCamera* followCamera) {
 	player_ = player;
@@ -18,10 +20,16 @@ ParryCamera::ParryCamera(Player* player, FollowCamera* followCamera) {
 
 	shakeRange_ = { 0.1f, 0.1f,0.0f };
 
-	shake_.SetEndFrame(30.0f);
+	// カメラの揺れ
+	shake_.SetEndFrame(22.0f);
 	shake_.SetRange(shakeRange_);
 	shake_.SetTarget(&shakeOffset_);
 	shake_.SetIsActive(true);
+
+	// 追従対象との距離をイージングするためのイベント生成
+	CreateEventOrder();
+
+	targetDistOrder_.Start();
 }
 
 ParryCamera::~ParryCamera() {
@@ -38,8 +46,10 @@ void ParryCamera::Update() {
 	shake_.Update();
 	// 揺れを適用
 	followCamera_->SetShakeOffset(shake_.GetValue());
-	shakeRange_ = LWP::Utility::Interpolation::Exponential(shakeRange_, Vector3{ 0.0f,0.0f,0.0f }, 0.3f);
+	shakeRange_ = LWP::Utility::Interpolation::Exponential(shakeRange_, Vector3{ 0.0f,0.0f,0.0f }, 0.08f);
 	shake_.SetRange(shakeRange_);
+
+	targetDistOrder_.Update();
 
 	// ロックオン対象とカメラの距離を算出
 	TargetDistUpdate();
@@ -48,42 +58,40 @@ void ParryCamera::Update() {
 	RotateUpdate();
 
 	// カメラの演出が終わったら状態変更(この処理以降何も書かないこと。Stateが解放されるのでアクセスエラーになりますよ)
-	if (currentFrame_ >= finishTime) {
+	if (targetDistOrder_.GetIsEnd()) {
 		followCamera_->ChangeState(new InputCamera(followCamera_));
 		return;
 	}
 }
 
 void ParryCamera::RotateUpdate() {
+	// カメラが近づいているときのみ行う
+	if (targetDistOrder_.GetCurrentTimeEvent().name != "Zoom") { return; }
+
 	// ロックオン対象とカメラの間の座標をロックオンする
 	// 方向ベクトルを算出
-	lwp::Vector3 dist = (player_->GetSystemManager()->GetParrySystem()->GetParryTargetPos() / 2.0f - followCamera_->GetCamera()->worldTF.translation).Normalize();
-	LWP::Math::Vector2 radian = {
-		atan2(-dist.y, sqrt(dist.x * dist.x + dist.z * dist.z)),	// X軸（上下)
-		atan2(dist.x, dist.z)										// Y軸（左右）
+	lwp::Vector3 dist = (player_->GetSystemManager()->GetParrySystem()->GetParryTargetPos() - followCamera_->GetCamera()->worldTF.translation).Normalize() / 2.0f;
+	LWP::Math::Vector3 radian = {
+		0.0f,														// X軸（上下)
+		atan2(dist.x, dist.z),										// Y軸（左右）
+		0.08f
 	};
 
 	// 数値が1なら角度制限を行わない
 	float isClampAngle = 1;
 	// 角度制限
-	followCamera_->ClampAngle(isClampAngle, (player_->GetSystemManager()->GetParrySystem()->GetParryTargetPos() - followCamera_->GetCamera()->worldTF.translation).Normalize(), LWP::Utility::DegreeToRadian(followCamera_->kOriginRotateX + 0.0f), LWP::Utility::DegreeToRadian(followCamera_->kOriginRotateX + 80.0f));
+	followCamera_->ClampAngle(isClampAngle, (player_->GetSystemManager()->GetParrySystem()->GetParryTargetPos() - followCamera_->GetCamera()->worldTF.translation).Normalize() / 2.0f, LWP::Utility::DegreeToRadian(followCamera_->kOriginRotateX + 0.0f), LWP::Utility::DegreeToRadian(followCamera_->kOriginRotateX + 80.0f));
 
-	if (currentFrame_ <= finishTime - 80.0f) {
-		damping_ = LWP::Utility::Interpolation::Exponential(damping_, Vector3{ 0.0f, 0.0f, 0.1f }, 0.5f);
-	}
-	else {
-		damping_ = LWP::Utility::Interpolation::Exponential(damping_, Vector3{ 0.0f, 0.0f, 0.0f }, 0.5f);
-	}
+	radian_.z = LWP::Utility::Interpolation::Exponential(radian_, radian, 0.1f).z;
 	// y軸は常に上を向くように固定
-	LWP::Math::Quaternion roll = LWP::Math::Quaternion::CreateFromAxisAngle(LWP::Math::Vector3{ 0, 0, 1 }, damping_.z);
-	// z軸回転
-	followCamera_->SetCameraRotate(roll * LWP::Math::Quaternion::CreateFromAxisAngle(LWP::Math::Vector3{ 1, 0, 0 }, radian.x));
+	LWP::Math::Quaternion roll = LWP::Math::Quaternion::CreateFromAxisAngle(LWP::Math::Vector3{ 0, 0, 1 }, radian_.z);
 
 	// 角度制限がない場合
 	if (isClampAngle == 1) {
-		radian_ = { radian.x, radian.y, 0.0f };
+		radian_.x = LWP::Utility::Interpolation::Exponential(radian_, radian, 0.6f).x;
+		radian_.y = LWP::Utility::Interpolation::Exponential(radian_, radian, 0.6f).y;
 		// x軸回転
-		followCamera_->SetCameraRotate(roll * LWP::Math::Quaternion::CreateFromAxisAngle(LWP::Math::Vector3{ 1, 0, 0 }, radian.x));
+		followCamera_->SetCameraRotate(roll * LWP::Math::Quaternion::CreateFromAxisAngle(LWP::Math::Vector3{ 1, 0, 0 }, radian_.x));
 	}
 	// 角度制限がある場合
 	else {
@@ -92,25 +100,36 @@ void ParryCamera::RotateUpdate() {
 	}
 
 	// y軸は常に上を向くように固定
-	followCamera_->SetCameraRotate(LWP::Math::Quaternion::CreateFromAxisAngle(LWP::Math::Vector3{ 0, 1, 0 }, radian.y) * followCamera_->GetCamera()->worldTF.rotation);
+	followCamera_->SetCameraRotate(LWP::Math::Quaternion::CreateFromAxisAngle(LWP::Math::Vector3{ 0, 1, 0 }, radian_.y) * followCamera_->GetCamera()->worldTF.rotation);
 }
 
 void ParryCamera::TargetDistUpdate() {
-	currentFrame_++;
-	if (currentFrame_ <= finishTime - 80.0f) {
-		lockOnOffset_ = {
-			0.14f,
-			0.25f,
-			-2.0f
-		};
-
-		rate_ = 0.5f;
+	// カメラを近づける
+	if (targetDistOrder_.GetCurrentTimeEvent().name == "Zoom") {
+		followCamera_->kTargetDist = Lerp(followCamera_->defaultTargetDist_, followCamera_->defaultTargetDist_ + Vector3{ -0.2f, 0.1f, 2.5f }, Easing::OutExpo(targetDistOrder_.GetCurrentFrame() / zoomFinishTime));
 	}
-	else {
-		lockOnOffset_ = followCamera_->defaultTargetDist_;
+	else if (targetDistOrder_.GetCurrentTimeEvent().name == "Wait") {
 
-		rate_ = 0.001f;
 	}
+	else if (targetDistOrder_.GetCurrentTimeEvent().name == "Return") {
+		followCamera_->kTargetDist = LWP::Utility::Interpolation::Exponential(followCamera_->kTargetDist, followCamera_->defaultTargetDist_, 0.05f);
 
-	followCamera_->kTargetDist = LWP::Utility::Interpolation::Exponential(followCamera_->kTargetDist, lockOnOffset_, rate_);
+		// Z軸を戻す
+		radian_.z = LWP::Utility::Interpolation::Exponential(radian_, Vector3{ 0,0,0 }, 0.6f).z;
+		// 
+		LWP::Math::Quaternion roll = LWP::Math::Quaternion::CreateFromAxisAngle(LWP::Math::Vector3{ 0, 0, 1 }, radian_.z);
+		// x軸回転
+		followCamera_->SetCameraRotate(roll * LWP::Math::Quaternion::CreateFromAxisAngle(LWP::Math::Vector3{ 1, 0, 0 }, radian_.x));
+		// y軸は常に上を向くように固定
+		followCamera_->SetCameraRotate(LWP::Math::Quaternion::CreateFromAxisAngle(LWP::Math::Vector3{ 0, 1, 0 }, radian_.y) * followCamera_->GetCamera()->worldTF.rotation);
+	}
+}
+
+void ParryCamera::CreateEventOrder() {
+	targetDistOrder_.Initialize();
+	// カメラを近づける
+	targetDistOrder_.CreateTimeEvent(TimeEvent{ zoomFinishTime, "Zoom" });
+	targetDistOrder_.CreateTimeEvent(TimeEvent{ zoomHoldFinishTime, "Wait" });
+	// カメラを戻す
+	targetDistOrder_.CreateTimeEvent(TimeEvent{ returnFinishTime, "Return" });
 }

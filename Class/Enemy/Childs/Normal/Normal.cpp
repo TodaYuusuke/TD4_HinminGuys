@@ -96,7 +96,6 @@ void Normal::Update()
 	//プレイヤーとの距離を計算
 	Vector3 diff = GetPlayerPosition() - GetPosition();
 	distFromPlayer_ = diff.Length();
-
 }
 
 void Normal::SetState(States state, bool isInit)
