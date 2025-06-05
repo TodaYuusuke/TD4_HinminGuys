@@ -25,6 +25,9 @@ void GameOver::Initialize() {
 	skydome_.SetAllMaterialLighting(false);
 #pragma endregion
 
+	UIGameOver_.Initialize("GameOver/GameOver.png", "GameOver");
+	UI_Button_A_.Initialize("UI/Button_A.png", "Button_A");
+
 	//シーン切り替え機能生成
 	sceneTransitioner_.Initialize(this);
 
@@ -48,6 +51,9 @@ void GameOver::Update() {
 
 	sceneTransitioner_.Update();
 
+	UIGameOver_.Update();
+	UI_Button_A_.Update();
+
 	//デバッグ
 	DebugGUI();
 
@@ -65,6 +71,15 @@ void GameOver::DebugGUI() {
 				ImGui::TreePop();
 
 			}
+
+			ImGui::EndTabItem();
+
+		}
+
+		if (ImGui::BeginTabItem("UI")) {
+
+			UIGameOver_.DebugGUI();
+			UI_Button_A_.DebugGUI();
 
 			ImGui::EndTabItem();
 
