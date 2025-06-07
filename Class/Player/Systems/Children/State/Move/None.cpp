@@ -6,7 +6,7 @@ None::None(Move* moveSystem, Player* player) {
 	player_ = player;
 
 	// ダッシュ状態解除
-	player_->GetSystemManager()->GetEvasionSystem()->SetIsDash(false);
+	//player_->GetSystemManager()->GetEvasionSystem()->SetIsDash(false);
 }
 
 void None::Initialize() {

@@ -18,37 +18,6 @@ void Evasion::Initialize() {
 	isActive_ = false;
 	isPreActive_ = false;
 
-	json_.Init("EvasionData.json");
-	json_.BeginGroup("EventOrder")
-		// 回避の無敵タイミングの設定
-		.BeginGroup("Invinsible")
-		.BeginGroup("GraceTime")
-		.AddValue<float>("SwingTime", &invinsibleSwingTime)
-		.AddValue<float>("InvinsibleTime", &invinsibleTime)
-		.AddValue<float>("RecoveryTime", &invinsibleRecoveryTime)
-		.EndGroup()
-		.EndGroup()
-		// 加速タイミングの設定
-		.BeginGroup("Acceleration")
-		.BeginGroup("GraceTime")
-		.AddValue<float>("SwingTime", &accelerationSwingTime)
-		.AddValue<float>("AccelerationTime", &accelerationTime)
-		.AddValue<float>("RecoveryTime", &accelerationRecoveryTime)
-		.EndGroup()
-		.EndGroup()
-		.EndGroup()
-		// ダッシュに関する設定
-		.BeginGroup("Dash")
-		.AddValue<float>("ButtonHoldSeconds", &dashButtonHoldSeconds)
-		.EndGroup()
-		// 回避の終了時間
-		.AddValue<float>("FinishTime", &evasionFinishTime)
-		// 回避速度の倍率
-		.AddValue<float>("MoveMultiply", &moveMultiply)
-		// 回避の移動距離
-		.AddValue<Vector3>("Movement", &evasionMovement)
-		.CheckJsonFile();
-
 	animationPlaySpeed_.Add(&animPlaySpeed_, Vector3{ 0.05f, 0.0f, 0.0f }, 0.0f, 0.1f, LWP::Utility::Easing::Type::OutExpo)
 		.Add(&animPlaySpeed_, Vector3{ 1.0f, 0.0f, 0.0f }, 0.1f, 0.5f, LWP::Utility::Easing::Type::InExpo);
 
@@ -57,8 +26,6 @@ void Evasion::Initialize() {
 }
 
 void Evasion::Update() {
-	if (!isActive_) { return; }
-
 	// ダッシュ条件を満たしているのかを確認
 	CheckDash();
 
@@ -74,7 +41,7 @@ void Evasion::Update() {
 
 	// 全てのアクションイベントが終了しているなら機能停止
 	if (eventOrder_.GetIsEnd()) {
-		Reset();
+		player_->GetSystemManager()->SetResetSystemFunc(std::bind(&Evasion::Reset, this));
 	}
 
 	isPreActive_ = isActive_;
@@ -92,6 +59,9 @@ void Evasion::Reset() {
 	radian_ = { 0.0f, 0.0f, 0.0f };
 	animPlaySpeed_ = { 1.0f, 0.0f, 0.0f };
 	player_->SetAnimationPlaySpeed(animPlaySpeed_.x);
+
+	// 入力のあったシステム
+	nextSystem_ = CheckNextSystems();
 }
 
 void Evasion::DebugGUI() {
@@ -129,30 +99,30 @@ void Evasion::CreateJsonFIle() {
 		// 回避の無敵タイミングの設定
 		.BeginGroup("Invinsible")
 		.BeginGroup("GraceTime")
-		.AddValue<float>("SwingTime", &invinsibleSwingTime)
-		.AddValue<float>("InvinsibleTime", &invinsibleTime)
-		.AddValue<float>("RecoveryTime", &invinsibleRecoveryTime)
+		.AddValue<float>("SwingTime", &jsonData_.invinsibleSwingTime)
+		.AddValue<float>("InvinsibleTime", &jsonData_.invinsibleTime)
+		.AddValue<float>("RecoveryTime", &jsonData_.invinsibleRecoveryTime)
 		.EndGroup()
 		.EndGroup()
 		// 加速タイミングの設定
 		.BeginGroup("Acceleration")
 		.BeginGroup("GraceTime")
-		.AddValue<float>("SwingTime", &accelerationSwingTime)
-		.AddValue<float>("AccelerationTime", &accelerationTime)
-		.AddValue<float>("RecoveryTime", &accelerationRecoveryTime)
+		.AddValue<float>("SwingTime", &jsonData_.accelerationSwingTime)
+		.AddValue<float>("AccelerationTime", &jsonData_.accelerationTime)
+		.AddValue<float>("RecoveryTime", &jsonData_.accelerationRecoveryTime)
 		.EndGroup()
 		.EndGroup()
 		.EndGroup()
 		// ダッシュに関する設定
 		.BeginGroup("Dash")
-		.AddValue<float>("ButtonHoldSeconds", &dashButtonHoldSeconds)
+		.AddValue<float>("ButtonHoldSeconds", &jsonData_.dashButtonHoldSeconds)
 		.EndGroup()
 		// 回避の終了時間
-		.AddValue<float>("FinishTime", &evasionFinishTime)
+		.AddValue<float>("FinishTime", &jsonData_.evasionFinishTime)
 		// 回避速度の倍率
-		.AddValue<float>("MoveMultiply", &moveMultiply)
+		.AddValue<float>("MoveMultiply", &jsonData_.moveMultiply)
 		// 回避の移動距離
-		.AddValue<Vector3>("Movement", &evasionMovement)
+		.AddValue<Vector3>("Movement", &jsonData_.evasionMovement)
 		.CheckJsonFile();
 }
 
@@ -179,27 +149,27 @@ void Evasion::AnimCommand() {
 	player_->SetBlendT(0.0f);
 	player_->ResetAnimation();
 	player_->StartAnimation("Dash", 0.1f, 0.0f);
-	player_->SetIsLoopAnimation(true);
+	player_->SetIsLoopAnimation(false);
 }
 
 void Evasion::CreateInvincibleEventOrder() {
 	eventOrders_[(int)EventOrderState::kInvincible].Initialize();
 	// 回避の無敵発生までの時間
-	eventOrders_[(int)EventOrderState::kInvincible].CreateTimeEvent(TimeEvent{ invinsibleSwingTime * 60.0f, "SwingTime" });
+	eventOrders_[(int)EventOrderState::kInvincible].CreateTimeEvent(TimeEvent{ jsonData_.invinsibleSwingTime * 60.0f, "SwingTime" });
 	// 回避の無敵猶予時間
-	eventOrders_[(int)EventOrderState::kInvincible].CreateTimeEvent(TimeEvent{ invinsibleTime * 60.0f, "InvinsibleTime" });
+	eventOrders_[(int)EventOrderState::kInvincible].CreateTimeEvent(TimeEvent{ jsonData_.invinsibleTime * 60.0f, "InvinsibleTime" });
 	// 回避の無敵硬直時間
-	eventOrders_[(int)EventOrderState::kInvincible].CreateTimeEvent(TimeEvent{ invinsibleRecoveryTime * 60.0f, "RecoveryTime" });
+	eventOrders_[(int)EventOrderState::kInvincible].CreateTimeEvent(TimeEvent{ jsonData_.invinsibleRecoveryTime * 60.0f, "RecoveryTime" });
 }
 
 void Evasion::CreateAccelerationEventOrder() {
 	eventOrders_[(int)EventOrderState::kAcceleration].Initialize();
 	// 回避の加速発生までの時間
-	eventOrders_[(int)EventOrderState::kAcceleration].CreateTimeEvent(TimeEvent{ accelerationSwingTime * 60.0f, "SwingTime" });
+	eventOrders_[(int)EventOrderState::kAcceleration].CreateTimeEvent(TimeEvent{ jsonData_.accelerationSwingTime * 60.0f, "SwingTime" });
 	// 回避の加速時間
-	eventOrders_[(int)EventOrderState::kAcceleration].CreateTimeEvent(TimeEvent{ accelerationTime * 60.0f, "AccelerationTime" });
+	eventOrders_[(int)EventOrderState::kAcceleration].CreateTimeEvent(TimeEvent{ jsonData_.accelerationTime * 60.0f, "AccelerationTime" });
 	// 回避の加速硬直時間
-	eventOrders_[(int)EventOrderState::kAcceleration].CreateTimeEvent(TimeEvent{ accelerationRecoveryTime * 60.0f, "RecoveryTime" });
+	eventOrders_[(int)EventOrderState::kAcceleration].CreateTimeEvent(TimeEvent{ jsonData_.accelerationRecoveryTime * 60.0f, "RecoveryTime" });
 }
 
 void Evasion::CreateEventOrder() {
@@ -207,7 +177,7 @@ void Evasion::CreateEventOrder() {
 	if (eventOrder_.GetIsEnd()) {
 		eventOrder_.Initialize();
 		// 回避の無敵発生までの時間
-		eventOrder_.CreateTimeEvent(TimeEvent{ evasionFinishTime * 60.0f, "FinishTime" });
+		eventOrder_.CreateTimeEvent(TimeEvent{ jsonData_.evasionFinishTime * 60.0f, "FinishTime" });
 	}
 	// 無敵タイミング
 	CreateInvincibleEventOrder();
@@ -244,8 +214,8 @@ void Evasion::CheckEvasionState() {
 		easeData_ = {
 			&velocity_,
 			Vector3{0,0,0},
-			evasionMovement * Matrix4x4::CreateRotateXYZMatrix(player_->GetSystemManager()->GetMoveSystem()->GetMoveQuat()),
-			accelerationTime * 60.0f,
+			jsonData_.evasionMovement * Matrix4x4::CreateRotateXYZMatrix(player_->GetQuat()),
+			jsonData_.accelerationTime * 60.0f,
 			0.0f,
 			false
 		};
@@ -257,8 +227,8 @@ void Evasion::CheckEvasionState() {
 			easeData_ = {
 				&velocity_,
 				Vector3{0,0,0},
-				evasionMovement * Matrix4x4::CreateRotateXYZMatrix(player_->GetSystemManager()->GetRotate()),
-				accelerationTime * 60.0f,
+				jsonData_.evasionMovement * Matrix4x4::CreateRotateXYZMatrix(player_->GetSystemManager()->GetQuat()),
+				jsonData_.accelerationTime * 60.0f,
 				0.0f,
 				false
 			};
@@ -276,6 +246,8 @@ void Evasion::CheckDash() {
 	// 長押ししている間
 	if (LWP::Input::Pad::GetPress(Command::GamePad::Evasion) || LWP::Input::Keyboard::GetPress(Command::Key::Evasion)) {
 		pressTime_++;
+		// ダッシュ可能かを設定
+		player_->GetSystemManager()->SetIsEnableDash(GetIsDash());
 		return;
 	}
 }
@@ -285,7 +257,7 @@ void Evasion::Move() {
 	if (easeData_.t < easeData_.endSecond) {
 		easeData_.t++;
 		// イージングを行う
-		velocity_ = LWP::Utility::Interpolation::Lerp(easeData_.start, easeData_.end, LWP::Utility::Easing::OutExpo(easeData_.t / easeData_.endSecond)) * moveMultiply;
+		velocity_ = LWP::Utility::Interpolation::Lerp(easeData_.start, easeData_.end, LWP::Utility::Easing::OutExpo(easeData_.t / easeData_.endSecond)) * jsonData_.moveMultiply;
 	}
 	// 徐々に減速
 	else {

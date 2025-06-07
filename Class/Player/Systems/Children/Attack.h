@@ -3,6 +3,14 @@
 #include "LockOn.h"
 #include "State/IAttackSystemState.h"
 #include "../../../ComboEditor/ComboTree.h"
+#include "../../../GameMask.h"
+
+struct AttackJsonData {
+	// ロックオン時の攻撃位置アシストを行う範囲
+	float lockOnAsisstRange = 5.0f;
+	// 非ロックオン時の攻撃位置アシストを行う範囲
+	float attackAsisstRange = 3.0f;
+};
 
 class IEnemy;
 class EnemyManager;
@@ -43,7 +51,7 @@ public:
 	/// <summary>
 	/// ImGuiによるコンボのGUI表示
 	/// </summary>
-	void DebugComboGUI() { comboTree_.DebugGUI(); }
+	//void DebugComboGUI() { comboTree_->DebugGUI(); }
 
 	/// <summary>
 	/// 攻撃のコマンド
@@ -51,11 +59,9 @@ public:
 	void Command();
 
 	/// <summary>
-	/// コンボのリセット
+	/// コンボの作成
 	/// </summary>
-	void ComboReset() { 
-		comboTree_.ResetCombo();
-	}
+	void CreateCombo();
 
 private:
 	/// <summary>
@@ -106,40 +112,31 @@ private:
 public:// Getter, Setter
 #pragma region Getter
 	/// <summary>
-	/// 攻撃時の位置アシスト用のベクトルを取得
+	/// jsonに保存する値を取得
 	/// </summary>
-	/// <returns></returns>
-	Vector3 GetAttackAssistVel() { return attackAssistVel_; }
-	/// <summary>
-	/// 攻撃時の位置アシスト用のベクトルからクォータニオンを取得
-	/// </summary>
-	/// <returns></returns>
-	Quaternion GetAttackAssistQuat() { return attackAssistQuat_; }
-	/// <summary>
-	/// 攻撃時の位置アシスト用のベクトルからラジアンを取得
-	/// </summary>
-	/// <returns></returns>
-	Vector3 GetAttackAssistRadian() { return attackAssistRadian_; }
+	AttackJsonData GetJsonData() { return jsonData_; }
+
+	//ComboTree* GetComboTreeData() { return comboTree_; }
 	/// <summary>
 	/// 編集モード中かどうかのゲッター
 	/// </summary>
 	/// <returns></returns>
-	bool GetIsEditingMode() { return comboTree_.GetIsEditingMode(); }
+	//bool GetIsEditingMode() { return comboTree_->GetIsEditingMode(); }
 	/// <summary>
 	/// 現在のコンボが大元のコンボであるかどうかを取得
 	/// </summary>
 	/// <returns></returns>
-	bool GetIsThisRoot() { return comboTree_.GetIsThisRoot(); }
+	//bool GetIsThisRoot() { return comboTree_->GetIsThisRoot(); }
 	/// <summary>
 	/// 攻撃中に入力処理を受け付けていないかを取得
 	/// </summary>
 	/// <returns></returns>
-	bool GetIsStiffness() { return comboTree_.GetIsStiffness(); }
+	//bool GetIsStiffness() { return comboTree_->GetIsStiffness(); }
 	/// <summary>
 	/// コンボの受付状態を習得
 	/// </summary>
 	/// <returns>コンボの受付状態を取得</returns>
-	bool GetIsRecept() { return comboTree_.GetIsRecept(); }
+	//bool GetIsRecept() { return comboTree_->GetIsRecept(); }
 	/// <summary>
 	/// 攻撃が全て終わった後か
 	/// </summary>
@@ -149,12 +146,12 @@ public:// Getter, Setter
 	/// ダメージ取得
 	/// </summary>
 	/// <returns></returns>
-	float GetDamage() { return comboTree_.GetDamage(); }
+	//float GetDamage() { return comboTree_->GetDamage(); }
 	/// <summary>
 	/// ノックバック量取得
 	/// </summary>
 	/// <returns></returns>
-	float GetKnockBackStrength() { return comboTree_.GetNockBackStrength(); }
+	//float GetKnockBackStrength() { return comboTree_->GetNockBackStrength(); }
 #pragma endregion
 
 #pragma region Setter
@@ -164,20 +161,11 @@ public:// Getter, Setter
 	/// <param name="lockOnSystem"></param>
 	void SetLockOnSystem(LockOn* lockOnSystem) { lockOnSystem_ = lockOnSystem; }
 	/// <summary>
-	/// 攻撃時の位置アシスト用のベクトルを設定
+	/// jsonに保存する値を設定
 	/// </summary>
-	/// <returns></returns>
-	void SetAttackAssistVel(Vector3 attackAssistVel) {  attackAssistVel_ = attackAssistVel; }
-	/// <summary>
-	/// 攻撃時の位置アシスト用のベクトルからクォータニオンを設定
-	/// </summary>
-	/// <returns></returns>
-	void SetAttackAssistQuat(Quaternion attackAssistQuat) {  attackAssistQuat_ = attackAssistQuat; }
-	/// <summary>
-	/// 攻撃時の位置アシスト用のベクトルからラジアンを設定
-	/// </summary>
-	/// <returns></returns>
-	void SetAttackAssistRadian(Vector3 attackAssistRadian) {  attackAssistRadian_ = attackAssistRadian; }
+	/// <param name="jsonData"></param>
+	void SetJsonData(const AttackJsonData& jsonData) { jsonData_ = jsonData; }
+	//void SetComboTreeData(ComboTree* comboTree) { comboTree_ = comboTree; }
 	/// <summary>
 	/// 攻撃が全て終わった後かを設定
 	/// </summary>
@@ -186,10 +174,7 @@ public:// Getter, Setter
 #pragma endregion
 
 private:// jsonで保存する値
-	// ロックオン時の攻撃位置アシストを行う範囲
-	float lockOnAsisstRange = 5.0f;
-	// 非ロックオン時の攻撃位置アシストを行う範囲
-	float attackAsisstRange = 3.0f;
+	AttackJsonData jsonData_;
 
 private:// 外部からポインタをもらう変数
 	// 敵の管理クラス
@@ -199,18 +184,14 @@ private:// 外部からポインタをもらう変数
 
 private:
 	// コンボ攻撃用クラス
-	ComboTree comboTree_;
+	//ComboTree* comboTree_;
 
 	// 当たり判定の内容
-	LWP::Object::Collision::OnHitFunction onCollision_;
+	//LWP::Object::Collision::OnHitFunction onCollision_;
 
 	// 状態遷移
 	IAttackSystemState* state_;
 
-	// 攻撃時の位置アシスト用のベクトル
-	Vector3 attackAssistVel_;
-	Vector3 attackAssistRadian_;
-	Quaternion attackAssistQuat_;
 	IEnemy* lockOnTarget_;
 	// 非ロックオン時のアシスト攻撃対象
 	IEnemy* attackAssistTarget_;

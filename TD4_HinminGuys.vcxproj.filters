@@ -48,7 +48,6 @@
     <ClCompile Include="Class\Player\Animator\IAnimation.cpp" />
     <ClCompile Include="Class\Player\Systems\Children\State\Move\Dash.cpp" />
     <ClCompile Include="Class\Player\Systems\Children\State\Move\None.cpp" />
-    <ClCompile Include="Class\Player\Systems\ISystem.cpp" />
     <ClCompile Include="Class\Player\Systems\Children\State\Move\AttackRecovery.cpp" />
     <ClCompile Include="Class\Player\Systems\Children\DamageResponse.cpp" />
     <ClCompile Include="Class\Scene\VoidScene.cpp" />

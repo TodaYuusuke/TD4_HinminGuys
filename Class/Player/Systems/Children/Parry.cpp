@@ -20,11 +20,6 @@ Parry::Parry(LWP::Object::Camera* camera, Player* player)
 void Parry::Initialize() {
 	// コマンドの登録
 	inputHandler_ = InputHandler::GetInstance();
-	isActive_ = false;
-	isPreActive_ = false;
-
-	// jsonで保存している値
-	CreateJsonFIle();
 
 	// フレーム単位で発生するアクションイベントを管理するクラス
 	CreateEventOrder();
@@ -57,9 +52,6 @@ void Parry::Update() {
 	// クールタイムの時間更新
 	CoolTimeUpdate();
 
-	// パリィ機能を使えないなら早期リターン
-	if (!isActive_) { return; }
-
 	// frameごとに起きるイベント
 	eventOrder_.Update();
 	// パリィ中の無敵時間
@@ -70,7 +62,7 @@ void Parry::Update() {
 
 	// 全てのイベントが終了しているなら機能停止
 	if (eventOrder_.GetIsEnd()) {
-		Reset();
+		player_->GetSystemManager()->SetResetSystemFunc(std::bind(&Parry::Reset, this));
 	}
 
 	isPreActive_ = isActive_;
@@ -89,6 +81,9 @@ void Parry::Reset() {
 	eventOrders_[(int)ParryInvinsibleState::kRunning].Reset();
 	// クールタイム開始
 	SetCoolTime();
+
+	// 入力のあったシステム
+	nextSystem_ = CheckNextSystems();
 }
 
 void Parry::DebugGUI() {
@@ -143,20 +138,20 @@ void Parry::CreateJsonFIle() {
 	json_.Init("ParryData.json");
 	json_.BeginGroup("Parry")
 		.BeginGroup("GraceTime")
-		.AddValue<float>("SwingTime", &kSwingTime)
-		.AddValue<float>("JustParry", &kJustParryTime)
-		.AddValue<float>("GoodParry", &kGoodParryTime)
-		.AddValue<float>("RecoveryTime", &kRecoveryTime)
+		.AddValue<float>("SwingTime", &jsonData_.kSwingTime)
+		.AddValue<float>("JustParry", &jsonData_.kJustParryTime)
+		.AddValue<float>("GoodParry", &jsonData_.kGoodParryTime)
+		.AddValue<float>("RecoveryTime", &jsonData_.kRecoveryTime)
 		.EndGroup()
 		// パリィの無敵時間
 		.BeginGroup("Invinsible")
 		// ジャストパリィ成功時
 		.BeginGroup("Success JustParry")
-		.AddValue<float>("InvinsibleTime", &successJustParryInvinsible)
+		.AddValue<float>("InvinsibleTime", &jsonData_.successJustParryInvinsible)
 		.EndGroup()
 		// 弱jパリィ成功時
 		.BeginGroup("Success GoodParry")
-		.AddValue<float>("InvinsibleTime", &successGoodParryInvinsible)
+		.AddValue<float>("InvinsibleTime", &jsonData_.successGoodParryInvinsible)
 		.EndGroup()
 
 		.EndGroup()
@@ -167,8 +162,8 @@ void Parry::CreateJsonFIle() {
 		.EndGroup()
 		// 鞘ゲージの減少量
 		.BeginGroup("SheathDecrement")
-		.AddValue<float>("JustParry", &justParryDecrement)
-		.AddValue<float>("GoodParry", &goodParryDecrement)
+		.AddValue<float>("JustParry", &jsonData_.justParryDecrement)
+		.AddValue<float>("GoodParry", &jsonData_.goodParryDecrement)
 		.EndGroup()
 
 		.EndGroup()
@@ -182,8 +177,8 @@ void Parry::Command() {
 		eventOrders_[(int)ParryInvinsibleState::kRunning].Start();
 		isActive_ = true;
 		collider_.isActive = true;
-		radian_ = player_->GetSystemManager()->GetMoveSystem()->GetMoveRadian();
-		quat_ = player_->GetSystemManager()->GetMoveSystem()->GetMoveQuat();
+		radian_ = player_->GetRadian();
+		quat_ = player_->GetQuat();
 
 		// アニメーション再生
 		AnimCommand();
@@ -224,11 +219,11 @@ void Parry::CreateCollision() {
 			// クールタイムなし
 			currentCoolTime_ = 0.0f;
 			// 鞘のゲージを減少
-			player_->GetUIManager()->ChangeSheathGauge(justParryDecrement);
+			player_->GetUIManager()->ChangeSheathGauge(jsonData_.justParryDecrement);
 			// 相手の座標を代入
 			parryTargetPos_ = hitTarget->GetWorldPosition();
 			// ノックバック量を決定
-			justParryKnockBack_ = (parryTargetPos_ - player_->GetWorldTF()->GetWorldPosition()).Normalize() * -justParryKnockBackMovement;
+			justParryKnockBack_ = (parryTargetPos_ - player_->GetWorldTF()->GetWorldPosition()).Normalize() * -jsonData_.justParryKnockBackMovement;
 			start_ = player_->GetWorldTF()->GetWorldPosition();
 			end_ = player_->GetWorldTF()->GetWorldPosition() + justParryKnockBack_;
 
@@ -246,7 +241,7 @@ void Parry::CreateCollision() {
 			// クールタイムなし
 			currentCoolTime_ = 0.0f;
 			// 鞘のゲージを減少
-			player_->GetUIManager()->ChangeSheathGauge(goodParryDecrement);
+			player_->GetUIManager()->ChangeSheathGauge(jsonData_.goodParryDecrement);
 			// 相手の座標を代入
 			parryTargetPos_ = hitTarget->GetWorldPosition();
 
@@ -259,35 +254,35 @@ void Parry::CreateCollision() {
 void Parry::CreateEventOrder() {
 	eventOrder_.Initialize();
 	// パリィ発生までの時間
-	eventOrder_.CreateTimeEvent(TimeEvent{ kSwingTime * 60.0f, "SwingTime" });
+	eventOrder_.CreateTimeEvent(TimeEvent{ jsonData_.kSwingTime * 60.0f, "SwingTime" });
 	// ジャストパリィの猶予時間
-	eventOrder_.CreateTimeEvent(TimeEvent{ kJustParryTime * 60.0f, "JustParry" });
+	eventOrder_.CreateTimeEvent(TimeEvent{ jsonData_.kJustParryTime * 60.0f, "JustParry" });
 	// 通常パリィの猶予時間
-	eventOrder_.CreateTimeEvent(TimeEvent{ kGoodParryTime * 60.0f, "GoodParry" });
+	eventOrder_.CreateTimeEvent(TimeEvent{ jsonData_.kGoodParryTime * 60.0f, "GoodParry" });
 	// パリィの硬直時間
-	eventOrder_.CreateTimeEvent(TimeEvent{ kRecoveryTime * 60.0f, "RecoveryTime" });
+	eventOrder_.CreateTimeEvent(TimeEvent{ jsonData_.kRecoveryTime * 60.0f, "RecoveryTime" });
 }
 
 void Parry::CreateParryInvinsibleEventOrder() {
 	eventOrders_[(int)ParryInvinsibleState::kRunning].Initialize();
 	// パリィ中の無敵発動までの時間
-	eventOrders_[(int)ParryInvinsibleState::kRunning].CreateTimeEvent(TimeEvent{ kSwingTime * 60.0f, "SwingTime" });
+	eventOrders_[(int)ParryInvinsibleState::kRunning].CreateTimeEvent(TimeEvent{ jsonData_.kSwingTime * 60.0f, "SwingTime" });
 	// パリィ中の無敵時間
-	eventOrders_[(int)ParryInvinsibleState::kRunning].CreateTimeEvent(TimeEvent{ (kJustParryTime + kGoodParryTime) * 60.0f, "InvinsibleTime" });
+	eventOrders_[(int)ParryInvinsibleState::kRunning].CreateTimeEvent(TimeEvent{ (jsonData_.kJustParryTime + jsonData_.kGoodParryTime) * 60.0f, "InvinsibleTime" });
 	// パリィ中の無敵硬直時間
-	eventOrders_[(int)ParryInvinsibleState::kRunning].CreateTimeEvent(TimeEvent{ kRecoveryTime * 60.0f, "RecoveryTime" });
+	eventOrders_[(int)ParryInvinsibleState::kRunning].CreateTimeEvent(TimeEvent{ jsonData_.kRecoveryTime * 60.0f, "RecoveryTime" });
 }
 
 void Parry::CreateJustParryInvinsibleEventOrder() {
 	eventOrders_[(int)ParryInvinsibleState::kJust].Initialize();
 	// ジャストパリィ成功時の無敵時間
-	eventOrders_[(int)ParryInvinsibleState::kJust].CreateTimeEvent(TimeEvent{ successJustParryInvinsible * 60.0f, "InvinsibleTime" });
+	eventOrders_[(int)ParryInvinsibleState::kJust].CreateTimeEvent(TimeEvent{ jsonData_.successJustParryInvinsible * 60.0f, "InvinsibleTime" });
 }
 
 void Parry::CreateGoodParryInvinsibleEventOrder() {
 	eventOrders_[(int)ParryInvinsibleState::kGood].Initialize();
 	// 弱パリィ成功時の無敵時間
-	eventOrders_[(int)ParryInvinsibleState::kGood].CreateTimeEvent(TimeEvent{ successGoodParryInvinsible * 60.0f, "InvinsibleTime" });
+	eventOrders_[(int)ParryInvinsibleState::kGood].CreateTimeEvent(TimeEvent{ jsonData_.successGoodParryInvinsible * 60.0f, "InvinsibleTime" });
 }
 
 void Parry::CheckParryState() {
@@ -318,7 +313,7 @@ void Parry::KnockBackUpdate() {
 	if (!isJustParry_) { return; }
 	t_++;
 
-	velocity_ = Lerp(start_, end_, Easing::OutExpo(t_ / justParryKnockBackFinishTime)) - player_->GetWorldTF()->GetWorldPosition();
+	velocity_ = Lerp(start_, end_, Easing::OutExpo(t_ / jsonData_.justParryKnockBackFinishTime)) - player_->GetWorldTF()->GetWorldPosition();
 	velocity_.y = 0.0f;
 
 	if (t_ == 1.0f) {

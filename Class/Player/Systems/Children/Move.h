@@ -2,6 +2,20 @@
 #include "../ISystem.h"
 #include "State/IMoveSystemState.h"
 
+struct MoveJsonData {
+	// 歩き時の速度倍率
+	float walkSpeedMultiply = 1.0f;
+	// 小走りの速度倍率
+	float runSpeedMultiply = 1.0f;
+	// 走り時の速度倍率
+	float dashSpeedMultiply = 1.0f;
+	// 移動の補間レート
+	float moveSpeedRate = 0.2f;
+
+	// 小走り状態に移行するのに必要なスティックの倒し具合(0.0f~1.0f)
+	float runThreshold = 0.5f;
+};
+
 /// <summary>
 /// 自機の移動機能をまとめたクラス
 /// </summary>
@@ -105,25 +119,15 @@ public:// Getter, Setter
 	LWP::Resource::RigidModel GetModel() { return *model_; }
 
 	/// <summary>
-	/// 移動速度を取得
-	/// </summary>
-	/// <returns></returns>
-	LWP::Math::Vector3 GetMoveVel() { return moveVel_; }
-	/// <summary>
-	/// 向いている方向を取得(クォータニオン)
-	/// </summary>
-	/// <returns></returns>
-	LWP::Math::Quaternion GetMoveQuat() { return quat_; }
-	/// <summary>
-	/// 向いている方向を取得(ラジアン)
-	/// </summary>
-	/// <returns></returns>
-	LWP::Math::Vector3 GetMoveRadian() { return radian_; }
-	/// <summary>
 	/// 移動状態を取得
 	/// </summary>
 	/// <returns></returns>
 	IMoveSystemState* GetMoveState() { return state_; }
+
+	/// <summary>
+	/// jsonに保存する値を取得
+	/// </summary>
+	MoveJsonData GetJsonData() { return jsonData_; }
 	/// <summary>
 	/// スティックの倒し具合を取得
 	/// </summary>
@@ -135,17 +139,12 @@ public:// Getter, Setter
 	/// <returns></returns>
 	bool GetIsMove() { return isMove_; }
 	/// <summary>
-	/// 入力処理を受けつけるかを取得
-	/// </summary>
-	/// <returns></returns>
-	bool GetEnableInput() { return enableInput_; }
-	/// <summary>
 	/// 指定した移動状態に変更された瞬間かを取得
 	/// </summary>
 	/// <param name="moveState"></param>
 	/// <returns></returns>
 	bool GetTriggerChangeMoveState(MoveState moveState){
-		if (preMoveState_ != moveState /*&& preMoveState_ != moveState*/) {
+		if (preMoveState_ != moveState) {
 			return true;
 		}
 		return false;
@@ -160,58 +159,26 @@ public:// Getter, Setter
 	void SetModel(LWP::Resource::RigidModel* model) { model_ = model; }
 
 	/// <summary>
-	/// 移動速度を設定
+	/// jsonに保存する値を設定
 	/// </summary>
-	/// <param name="moveVel">移動速度</param>
-	void SetMoveVel(const LWP::Math::Vector3& moveVel) { moveVel_ = moveVel; }
-	/// <summary>
-	/// 向いている方向を設定
-	/// </summary>
-	/// <param name="radian">向かせる方向(ラジアン)</param>
-	void SetRotate(const LWP::Math::Vector3& radian) { radian_ = radian; }
-	/// <summary>
-	/// 向いている方向を設定
-	/// </summary>
-	/// <param name="quat">向かせる方向(クォータニオン)</param>
-	void SetRotate(const LWP::Math::Quaternion& quat) { quat_ = quat; }
+	/// <param name="jsonData"></param>
+	void SetJsonData(const MoveJsonData& jsonData) { jsonData_ = jsonData; }
+
 	/// <summary>
 	/// 移動速度の倍率を設定
 	/// </summary>
 	/// <param name="moveMultiply"></param>
 	void SetMoveMultiply(const float& moveMultiply) { moveMultiply_ = moveMultiply; }
-	/// <summary>
-	/// 入力処理を受けつけるかを設定
-	/// </summary>
-	/// <returns></returns>
-	void SetEnableInput(const bool& enableInput) { enableInput_ = enableInput; }
 #pragma endregion
 
 private:// jsonで保存する値
-	// 歩き時の速度倍率
-	float walkSpeedMultiply = 1.0f;
-	// 小走りの速度倍率
-	float runSpeedMultiply = 1.0f;
-	// 走り時の速度倍率
-	float dashSpeedMultiply = 1.0f;
-	// 移動の補間レート
-	float moveSpeedRate = 0.2f;
-
-	// 小走り状態に移行するのに必要なスティックの倒し具合(0.0f~1.0f)
-	float runThreshold = 0.5f;
-
+	MoveJsonData jsonData_;
 
 private:// プライベートな変数
 	// 移動対象のモデルのアドレス
 	LWP::Resource::RigidModel* model_;
 
 	IMoveSystemState* state_;
-
-	// 移動速度
-	LWP::Math::Vector3 moveVel_;
-
-	// 向いている角度
-	LWP::Math::Quaternion quat_ = { 0.0f,0.0f,0.0f,1.0f };
-	LWP::Math::Vector3 radian_;
 
 	// 移動時のイージング
 	LWP::Math::Vector3 moveOffset_;
@@ -227,6 +194,4 @@ private:// プライベートな変数
 
 	// 移動しているか
 	bool isMove_;
-
-	bool enableInput_;
 };

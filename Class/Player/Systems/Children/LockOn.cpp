@@ -33,7 +33,7 @@ void LockOn::Initialize() {
 	lockOnUI_.enableLockOnObj.Init();
 
 	// jsonで保存している値
-	CreateJsonFIle();
+	//CreateJsonFIle();
 }
 
 void LockOn::Update() {

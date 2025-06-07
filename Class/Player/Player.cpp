@@ -62,7 +62,7 @@ void Player::Update() {
 	// 速度を加算
 	model_.worldTF.translation += systemManager_->GetVelocity();
 	// 角度を代入S
-	model_.worldTF.rotation = systemManager_->GetRotate();
+	model_.worldTF.rotation = systemManager_->GetQuat();
 
 	// 移動制限
 	LimitMoveArea();
@@ -128,17 +128,17 @@ void Player::InvinsibleUpdate() {
 	if (systemManager_->GetDamageResponseSystem()->GetIsInvinsible()) {
 		collider_.isActive = false;
 	}
-	// 回避時
-	else if (systemManager_->GetEvasionSystem()->GetIsInvinsible()) {
-		collider_.isActive = false;
-	}
-	// 鞘のダッシュ攻撃時
-	else if (systemManager_->GetSheathSystem()->GetIsInvinsible()) {
-		collider_.isActive = false;
-	}
-	else if (systemManager_->GetParrySystem()->GetIsInvinsible()) {
-		collider_.isActive = false;
-	}
+	//// 回避時
+	//else if (systemManager_->GetEvasionSystem()->GetIsInvinsible()) {
+	//	collider_.isActive = false;
+	//}
+	//// 鞘のダッシュ攻撃時
+	//else if (systemManager_->GetSheathSystem()->GetIsInvinsible()) {
+	//	collider_.isActive = false;
+	//}
+	//else if (systemManager_->GetParrySystem()->GetIsInvinsible()) {
+	//	collider_.isActive = false;
+	//}
 	// 全て当てはまらないなら当たり判定を戻す
 	else {
 		collider_.isActive = true;
@@ -146,8 +146,8 @@ void Player::InvinsibleUpdate() {
 }
 
 void Player::LimitMoveArea() {
-	// 鞘を投げた後鞘を中心に移動制限をかける(円形)
-	if (systemManager_->GetSheathSystem()->GetSheathState()->GetStateName() == "Collect") {
-		systemManager_->GetSheathSystem()->ClampToCircle(model_.worldTF.translation);
-	}
+	//// 鞘を投げた後鞘を中心に移動制限をかける(円形)
+	//if (systemManager_->GetSheathSystem()->GetSheathState()->GetStateName() == "Collect") {
+	//	systemManager_->GetSheathSystem()->ClampToCircle(model_.worldTF.translation);
+	//}
 }

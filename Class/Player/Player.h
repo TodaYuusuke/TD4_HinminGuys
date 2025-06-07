@@ -60,8 +60,9 @@ public:
 		systemManager_->GetDamageResponseSystem()->StartInvinsible();
 		// 被弾演出開始
 		systemManager_->GetDamageResponseSystem()->StartEffect();
+		systemManager_->CreateMoveSystem();
 		// コンボ状態リセット
-		systemManager_->GetAttackSystem()->ComboReset();
+		//systemManager_->GetAttackSystem()->ComboReset();
 	}
 
 	void TakeSheathDamage(const float& damageValue, const float& multiply = 1.0f) {
@@ -141,7 +142,8 @@ public:// Getter,Setter
 	/// 自機の角度を取得(クォータニオン)
 	/// </summary>
 	/// <returns></returns>
-	LWP::Math::Quaternion GetQuat() { return systemManager_->GetRotate(); }
+	LWP::Math::Quaternion GetQuat() { return systemManager_->GetQuat(); }
+	LWP::Math::Vector3 GetRadian() { return systemManager_->GetRadian(); }
 	/// <summary>
 	/// 各種パラメータの取得
 	/// </summary>

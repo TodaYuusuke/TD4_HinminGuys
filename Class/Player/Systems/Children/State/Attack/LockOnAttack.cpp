@@ -25,8 +25,8 @@ void LockOnAttack::Update() {
 	assistRadian_.y = LWP::Utility::GetRadian(LWP::Math::Vector3{ 0,0,1 }, assistVel_.Normalize(), LWP::Math::Vector3{ 0,1,0 });
 	assistQuat_ = LWP::Math::Quaternion::CreateFromAxisAngle(LWP::Math::Vector3{ 0, 1, 0 }, assistRadian_.y);
 
-	// AttackSystemクラスに送る
-	attackSystem_->SetAttackAssistVel(assistVel_);
-	attackSystem_->SetAttackAssistRadian(assistRadian_);
-	attackSystem_->SetAttackAssistQuat(assistQuat_);
+	//// AttackSystemクラスに送る
+	//attackSystem_->SetAttackAssistVel(assistVel_);
+	//attackSystem_->SetAttackAssistRadian(assistRadian_);
+	//attackSystem_->SetAttackAssistQuat(assistQuat_);
 }

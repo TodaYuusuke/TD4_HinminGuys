@@ -23,13 +23,10 @@ Move::~Move() {
 
 void Move::Initialize() {
 	// 移動速度
-	moveVel_ = { 0.0f, 0.0f, 0.0f };
+	velocity_ = { 0.0f, 0.0f, 0.0f };
 	// 向いている角度
 	quat_ = { 0.0f,0.0f,0.0f,1.0f };
 	radian_ = { 0.0f, 0.0f, 0.0f };
-
-	// jsonで保存している値
-	CreateJsonFIle();
 
 	// 移動状態を生成
 	state_ = new Idle(this, player_);
@@ -37,28 +34,23 @@ void Move::Initialize() {
 
 	// 移動状態
 	moveState_ = MoveState::kIdle;
-
-	enableInput_ = true;
 }
 
 void Move::Update() {
-	// 機能を使えないなら早期リターン
-	if (!isActive_ && IsBitSame(InputHandler::GetInstance()->GetBanInput(), BanMove, GetSetBitPosition(BanMove))) {
-		Reset();
-		return;
-	}
-
 	// 入力処理
 	InputUpdate();
 
 	CheckMoveState();
+
+	// 入力のあったシステム
+	nextSystem_ = CheckNextSystems();
 
 	isPreActive_ = isActive_;
 }
 
 void Move::Reset() {
 	// 移動速度
-	moveVel_ = { 0.0f, 0.0f, 0.0f };
+	velocity_ = { 0.0f, 0.0f, 0.0f };
 	stickStrength_ = 0;
 	isMove_ = false;
 
@@ -77,7 +69,7 @@ void Move::DebugGUI() {
 			ImGui::TreePop();
 		}
 
-		ImGui::DragFloat3("Velocity", &moveVel_.x, 0.1f, -10000, 10000);
+		ImGui::DragFloat3("Velocity", &velocity_.x, 0.1f, -10000, 10000);
 		ImGui::DragFloat3("Rotation", &radian_.x, 0.1f, -6.28f, 6.28f);
 		ImGui::DragFloat4("Quaternion", &quat_.x, 0.1f, -1, 1);
 		ImGui::Checkbox("IsMove", &isMove_);
@@ -88,17 +80,16 @@ void Move::DebugGUI() {
 void Move::CreateJsonFIle() {
 	// 値を保存する項目を作成
 	json_.Init("MoveData.json");
-	json_.AddValue<float>("WalkSpeedMultiply", &walkSpeedMultiply)
-		.AddValue<float>("RunSpeedMultiply", &runSpeedMultiply)
-		.AddValue<float>("DashSpeedMultiply", &dashSpeedMultiply)
-		.AddValue<float>("MoveSpeedRate", &moveSpeedRate)
-		.AddValue<float>("RunThreshold", &runThreshold)
+	json_.AddValue<float>("WalkSpeedMultiply", &jsonData_.walkSpeedMultiply)
+		.AddValue<float>("RunSpeedMultiply", &jsonData_.runSpeedMultiply)
+		.AddValue<float>("DashSpeedMultiply", &jsonData_.dashSpeedMultiply)
+		.AddValue<float>("MoveSpeedRate", &jsonData_.moveSpeedRate)
+		.AddValue<float>("RunThreshold", &jsonData_.runThreshold)
 		.CheckJsonFile();
 }
 
 void Move::Command() {
 	isActive_ = true;
-	enableInput_ = true;
 	player_->GetSystemManager()->SetInputState(InputState::kMove);
 }
 
@@ -109,63 +100,44 @@ void Move::AnimCommand() {
 void Move::CheckMoveState() {
 	// 待機状態に移行
 	if (!GetIsMove()) {
-		// 例外
-		// 攻撃後の硬直中はIdleモーションを再生しない
-		if (!player_->GetSystemManager()->GetAttackSystem()->GetIsStiffness()) {
-			if (player_->GetSystemManager()->GetAttackSystem()->GetIsAttackRecovery()) {
-				// 連続で同じ状態なら変更しないようにする
-				if (GetTriggerChangeMoveState(MoveState::kAttackRecovery)) {
-					moveState_ = MoveState::kAttackRecovery;
-					player_->GetSystemManager()->GetEvasionSystem()->SetIsDash(false);
-					ChangeState(new AttackRecovery(this, player_));
-				}
-			}
-			else {
-				// 待機状態
-				if (GetTriggerChangeMoveState(MoveState::kIdle) && stickStrength_ == 0) {
-					moveState_ = MoveState::kIdle;
-					// ダッシュ状態解除
-					player_->GetSystemManager()->GetEvasionSystem()->SetIsDash(false);
-					ChangeState(new Idle(this, player_));
-				}
-			}
+		// 待機状態
+		if (GetTriggerChangeMoveState(MoveState::kIdle) && stickStrength_ == 0) {
+			moveState_ = MoveState::kIdle;
+			// ダッシュ状態解除
+			player_->GetSystemManager()->SetIsEnableDash(false);
+			ChangeState(new Idle(this, player_));
 		}
 	}
 	// 移動状態に移行
 	else {
-		// もしも直前に攻撃をしていたら硬直フラグをfalseにしてAttackRecovery状態に移行しないようにする
-		player_->GetSystemManager()->GetAttackSystem()->SetIsAttackRecovery(false);
+	// もしも直前に攻撃をしていたら硬直フラグをfalseにしてAttackRecovery状態に移行しないようにする
+	//player_->GetSystemManager()->GetAttackSystem()->SetIsAttackRecovery(false);
 
-		// 走り状態に移行
-		if (player_->GetSystemManager()->GetEvasionSystem()->GetIsDash() && stickStrength_ >= runThreshold) {
-			// 走りモーション再生中なら状態遷移しない
-			if (GetTriggerChangeMoveState(MoveState::kDash)) {
-				moveState_ = MoveState::kDash;
-				player_->GetSystemManager()->GetAttackSystem()->ComboReset();
-				ChangeState(new Dash(this, player_, dashSpeedMultiply));
-			}
+	// 走り状態に移行
+	if (player_->GetSystemManager()->GetIsEnableDash() && stickStrength_ >= jsonData_.runThreshold) {
+		// 走りモーション再生中なら状態遷移しない
+		if (GetTriggerChangeMoveState(MoveState::kDash)) {
+			moveState_ = MoveState::kDash;
+			//player_->GetSystemManager()->GetAttackSystem()->ComboReset();
+			ChangeState(new Dash(this, player_, jsonData_.dashSpeedMultiply));
 		}
-		// 通常移動状態に移行
-		else {
-			if (GetTriggerChangeMoveState(MoveState::kWalk)) {
-				moveState_ = MoveState::kWalk;
-				player_->GetSystemManager()->GetAttackSystem()->ComboReset();
-				// ダッシュ状態解除
-				player_->GetSystemManager()->GetEvasionSystem()->SetIsDash(false);
-				ChangeState(new Walk(this, player_, runSpeedMultiply));
-			}
+	}
+	// 通常移動状態に移行
+	else {
+		if (GetTriggerChangeMoveState(MoveState::kWalk)) {
+			moveState_ = MoveState::kWalk;
+			//player_->GetSystemManager()->GetAttackSystem()->ComboReset();
+			// ダッシュ状態解除
+			player_->GetSystemManager()->SetIsEnableDash(false);
+			ChangeState(new Walk(this, player_, jsonData_.runSpeedMultiply));
 		}
+	}
 	}
 
 	preMoveState_ = moveState_;
 }
 
 void Move::InputUpdate() {
-	if (!enableInput_) {
-		Reset();
-		return;
-	}
-
 	// 方向を取得
 	LWP::Math::Vector3 dir{ 0.0f, 0.0f, 0.0f };
 
@@ -199,7 +171,7 @@ void Move::InputUpdate() {
 	// 回転行列を求める
 	Matrix4x4 rotMatrix = LWP::Math::Matrix4x4::CreateRotateXYZMatrix(LWP::Math::Quaternion::ConvertDirection(p2c));
 	// 方向ベクトルを求める
-	moveVel_ = LWP::Utility::Interpolation::Exponential(moveVel_, dir * moveMultiply_ * rotMatrix, moveSpeedRate);
+	velocity_ = LWP::Utility::Interpolation::Exponential(velocity_, dir * moveMultiply_ * rotMatrix, jsonData_.moveSpeedRate);
 
 	// 移動状態
 	state_->Update();
@@ -208,7 +180,7 @@ void Move::InputUpdate() {
 	// 移動ベクトルから体の向きを算出(入力があるときのみ処理する)
 	if (LWP::Math::Vector3::Dot(Abs(dir), LWP::Math::Vector3{ 1,1,1 }) != 0) {
 		// 移動速度からラジアンを求める
-		radian_.y = LWP::Utility::GetRadian(LWP::Math::Vector3{ 0,0,1 }, moveVel_.Normalize(), LWP::Math::Vector3{ 0,1,0 });
+		radian_.y = LWP::Utility::GetRadian(LWP::Math::Vector3{ 0,0,1 }, velocity_.Normalize(), LWP::Math::Vector3{ 0,1,0 });
 		quat_ = LWP::Math::Quaternion::CreateFromAxisAngle(LWP::Math::Vector3{ 0, 1, 0 }, radian_.y);
 		isMove_ = true;
 	}

@@ -12,35 +12,11 @@ InputHandler* InputHandler::GetInstance() {
 void InputHandler::Initialize() {
 	// コマンド作成
 	CreateCommand();
-
-	banInput_ = BanNone;
 }
 
-void InputHandler::Update(Player& player) {
+void InputHandler::Update() {
 	// 入力されたコマンドを確認
 	commands_ = HandleInput();
-
-	// 現在の入力がなくなったら入力禁止状態を初期化
-	if (currentCommand_) {
-		currentCommand_->Reset(player, banInput_);
-		if (!currentCommand_->isActive_) { currentCommand_ = nullptr; }
-	}
-
-	// コマンドの実行
-	for (ICommand* cmd : commands_) {
-		cmd->Exec(player, banInput_);
-
-		// 現在入力されて実行しているものを更新(移動入力はこれに該当しない)
-		if (cmd->isActive_ && currentCommand_ == nullptr && cmd->currentInput_ != ~BanMove) {
-			currentCommand_ = cmd;
-		}
-	}
-
-	// 例外
-	// 入力が何もない場合入力キーを押している状態にする
-	if (commands_.empty()) {
-		pressMoveCommand_->Exec(player, banInput_);
-	}
 }
 
 void InputHandler::DebugGUI() {
@@ -48,7 +24,6 @@ void InputHandler::DebugGUI() {
 		// 登録されているコマンド
 		if (ImGui::TreeNode("AllView")) {
 
-			ImGui::DragInt("BanBinary", &banInput_);
 			ImGui::TreePop();
 		}
 		ImGui::TreePop();
@@ -69,7 +44,7 @@ std::vector<ICommand*> InputHandler::HandleInput() {
 
 	// 通常攻撃コマンド
 	if (Keyboard::GetTrigger(Command::Key::NormalAttack) || Pad::GetTrigger(Command::GamePad::NormalAttack)) {
-		result.push_back(pressNormalAttackCommand_);
+		result.push_back(pressAttackCommand_);
 	}
 	// パリィコマンド
 	if (Keyboard::GetTrigger(Command::Key::Parry) || Pad::GetTrigger(Command::GamePad::Parry)) {
@@ -104,7 +79,7 @@ void InputHandler::AssignMoveCommand() {
 
 void InputHandler::AssignNormalAttackCommand() {
 	ICommand* command = new NormalAttackCommand();
-	this->pressNormalAttackCommand_ = command;
+	this->pressAttackCommand_ = command;
 }
 
 void InputHandler::AssignParryCommand() {

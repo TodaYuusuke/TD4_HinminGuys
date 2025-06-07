@@ -19,8 +19,7 @@ public:
 	/// <summary>
 	/// 更新処理
 	/// </summary>
-	/// <param name="player">自機のアドレス</param>
-	void Update(Player& player);
+	void Update();
 
 	/// <summary>
 	/// ImGuiによるパラメータを表示
@@ -65,44 +64,63 @@ private:
 	void AssignSheathCommand();
 
 public:
-	/// <summary>
-	/// 入力可能なコマンドかを取得
-	/// </summary>
-	/// <param name="value"></param>
-	/// <returns></returns>
-	bool CheckEnableCommand(const int& value) {
-		for (ICommand* cmd : commands_) {
-			if (IsBitSame(value, cmd->currentInput_, GetSetBitPosition(cmd->currentInput_))) {
-				return true;
-			}
-		}
-		return false;
-	}
-	int GetBanInput() { return banInput_; }
-
 	ICommand* GetMoveCommand() { return pressMoveCommand_; }
-	ICommand* GetAttackCommand() { return pressNormalAttackCommand_; }
+	ICommand* GetAttackCommand() { return pressAttackCommand_; }
 	ICommand* GetParryCommand() { return pressParryCommand_; }
 	ICommand* GetLockOnCommand() { return pressLockOnCommand_; }
 	ICommand* GetEvasionCommand() { return pressEvasionCommand_; }
 	ICommand* GetSheathCommand() { return pressSheathCommand_; }
 
-	/// <summary>
-	/// 現在の入力不可状態を設定
-	/// </summary>
-	/// <param name="banInput"></param>
-	void SetCurrentBanInput(const int& banInput) { banInput_ = banInput; }
+	bool GetPressMove() {
+		for (ICommand* cmd : commands_) {
+			if (cmd == pressMoveCommand_) { return true; }
+		}
+		return false;
+	}
+
+	bool GetPressAttack() {
+		for (ICommand* cmd : commands_) {
+			if (cmd == pressAttackCommand_) { return true; }
+		}
+		return false;
+	}
+
+	bool GetPressParry() {
+		for (ICommand* cmd : commands_) {
+			if (cmd == pressParryCommand_) { return true; }
+		}
+		return false;
+	}
+
+	bool GetPressLockOn() {
+		for (ICommand* cmd : commands_) {
+			if (cmd == pressLockOnCommand_) { return true; }
+		}
+		return false;
+	}
+
+	bool GetPressEvasion() {
+		for (ICommand* cmd : commands_) {
+			if (cmd == pressEvasionCommand_) { return true; }
+		}
+		return false;
+	}
+
+	bool GetPressSheath() {
+		for (ICommand* cmd : commands_) {
+			if (cmd == pressSheathCommand_) { return true; }
+		}
+		return false;
+	}
 
 private:
 	// 実行用のコマンド
 	std::vector<ICommand*> commands_;
-	ICommand* currentCommand_;
-	//std::vector<ICommand*> currentCommand_;
 
 	// 移動コマンド
 	ICommand* pressMoveCommand_;
-	// 通常攻撃コマンド
-	ICommand* pressNormalAttackCommand_;
+	// 攻撃コマンド
+	ICommand* pressAttackCommand_;
 	// パリィコマンド
 	ICommand* pressParryCommand_;
 	// ロックオンコマンド
@@ -111,7 +129,4 @@ private:
 	ICommand* pressEvasionCommand_;
 	// 鞘コマンド
 	ICommand* pressSheathCommand_;
-
-	// 入力禁止状態
-	int banInput_;
 };

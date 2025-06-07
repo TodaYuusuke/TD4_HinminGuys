@@ -24,7 +24,7 @@ void Sheath::Initialize() {
 	inputHandler_ = InputHandler::GetInstance();
 
 	// jsonで保存している値
-	CreateJsonFIle();
+	//CreateJsonFIle();
 
 	// アクションイベント作成
 	CreateThrowEventOrder();
@@ -46,7 +46,7 @@ void Sheath::Update() {
 	state_->Update();
 
 	// カプセルの当たり判定を更新
-	capsule_.end = dashAttackLength;
+	capsule_.end = jsonData_.dashAttackLength;
 
 	// 無敵時間
 	eventOrders_[(int)SheathState::kInvinsible].Update();
@@ -144,53 +144,53 @@ void Sheath::CreateJsonFIle() {
 	json_.BeginGroup("Throw")
 		// 鞘投げの設定
 		.BeginGroup("GraceTime")
-		.AddValue<float>("SwingTime", &throwSwingTime)
-		.AddValue<float>("ThrowFinishTime", &throwTime)
-		.AddValue<float>("RecoveryTime", &throwRecoveryTime)
+		.AddValue<float>("SwingTime", &jsonData_.throwSwingTime)
+		.AddValue<float>("ThrowFinishTime", &jsonData_.throwTime)
+		.AddValue<float>("RecoveryTime", &jsonData_.throwRecoveryTime)
 		.EndGroup()
 		// 鞘投げの移動距離
-		.AddValue<Vector3>("Movement", &throwMovement)
+		.AddValue<Vector3>("Movement", &jsonData_.throwMovement)
 		.EndGroup()
 
 		// 鞘回収の設定
 		.BeginGroup("Collect")
 		.BeginGroup("GraceTime")
-		.AddValue<float>("SwingTime", &collectSwingTime)
-		.AddValue<float>("CollectFinishTime", &collectTime)
-		.AddValue<float>("RecoveryTime", &collectRecoveryTime)
+		.AddValue<float>("SwingTime", &jsonData_.collectSwingTime)
+		.AddValue<float>("CollectFinishTime", &jsonData_.collectTime)
+		.AddValue<float>("RecoveryTime", &jsonData_.collectRecoveryTime)
 		.EndGroup()
 		.EndGroup()
 
 		// ダッシュ攻撃の設定
 		.BeginGroup("DashAttack")
 		.BeginGroup("GraceTime")
-		.AddValue<float>("SwingTime", &dashAttackSwingTime)
-		.AddValue<float>("DashAttackFinishTime", &dashAttackFinishTime)
-		.AddValue<float>("RecoveryTime", &dashAttackRecoveryTime)
+		.AddValue<float>("SwingTime", &jsonData_.dashAttackSwingTime)
+		.AddValue<float>("DashAttackFinishTime", &jsonData_.dashAttackFinishTime)
+		.AddValue<float>("RecoveryTime", &jsonData_.dashAttackRecoveryTime)
 		.EndGroup()
 		// 鞘投げの移動距離
-		.AddValue<Vector3>("Movement", &dashAttackMovement)
+		.AddValue<Vector3>("Movement", &jsonData_.dashAttackMovement)
 		.EndGroup()
 
 		// 無敵の設定
 		.BeginGroup("Invinsible")
 		.BeginGroup("GraceTime")
-		.AddValue<float>("SwingTime", &invinsibleSwingTime)
-		.AddValue<float>("InvinsibleTime", &invinsibleFinishTime)
-		.AddValue<float>("RecoveryTime", &invinsibleRecoveryTime)
+		.AddValue<float>("SwingTime", &jsonData_.invinsibleSwingTime)
+		.AddValue<float>("InvinsibleTime", &jsonData_.invinsibleFinishTime)
+		.AddValue<float>("RecoveryTime", &jsonData_.invinsibleRecoveryTime)
 		.EndGroup()
 		.EndGroup()
 
 		// 攻撃の判定
 		.BeginGroup("Collider")
 		.AddValue<float>("Radius", &capsule_.radius)
-		.AddValue<Vector3>("Length", &dashAttackLength)
+		.AddValue<Vector3>("Length", &jsonData_.dashAttackLength)
 		.EndGroup()
 
 		// 移動可能範囲
-		.AddValue<float>("MoveRange", &enableMoveRange)
+		.AddValue<float>("MoveRange", &jsonData_.enableMoveRange)
 		// クールタイム
-		.AddValue<float>("CoolTime", &coolTime)
+		.AddValue<float>("CoolTime", &jsonData_.coolTime)
 
 		.CheckJsonFile();
 }
@@ -225,41 +225,41 @@ void Sheath::CreateCollision() {
 void Sheath::CreateThrowEventOrder() {
 	eventOrders_[(int)SheathState::kThrow].Initialize();
 	// 回避の無敵発生までの時間
-	eventOrders_[(int)SheathState::kThrow].CreateTimeEvent(TimeEvent{ throwSwingTime * 60.0f, "SwingTime" });
+	eventOrders_[(int)SheathState::kThrow].CreateTimeEvent(TimeEvent{ jsonData_.throwSwingTime * 60.0f, "SwingTime" });
 	// 回避の無敵猶予時間
-	eventOrders_[(int)SheathState::kThrow].CreateTimeEvent(TimeEvent{ throwTime * 60.0f, "ThrowFinishTime" });
+	eventOrders_[(int)SheathState::kThrow].CreateTimeEvent(TimeEvent{ jsonData_.throwTime * 60.0f, "ThrowFinishTime" });
 	// 回避の無敵硬直時間
-	eventOrders_[(int)SheathState::kThrow].CreateTimeEvent(TimeEvent{ throwRecoveryTime * 60.0f, "RecoveryTime" });
+	eventOrders_[(int)SheathState::kThrow].CreateTimeEvent(TimeEvent{ jsonData_.throwRecoveryTime * 60.0f, "RecoveryTime" });
 }
 
 void Sheath::CreateCollectEventOrder() {
 	eventOrders_[(int)SheathState::kCollect].Initialize();
 	// 回避の加速発生までの時間
-	eventOrders_[(int)SheathState::kCollect].CreateTimeEvent(TimeEvent{ collectSwingTime * 60.0f, "SwingTime" });
+	eventOrders_[(int)SheathState::kCollect].CreateTimeEvent(TimeEvent{ jsonData_.collectSwingTime * 60.0f, "SwingTime" });
 	// 回避の加速時間
-	eventOrders_[(int)SheathState::kCollect].CreateTimeEvent(TimeEvent{ collectTime * 60.0f, "CollectFinishTime" });
+	eventOrders_[(int)SheathState::kCollect].CreateTimeEvent(TimeEvent{ jsonData_.collectTime * 60.0f, "CollectFinishTime" });
 	// 回避の加速硬直時間
-	eventOrders_[(int)SheathState::kCollect].CreateTimeEvent(TimeEvent{ collectRecoveryTime * 60.0f, "RecoveryTime" });
+	eventOrders_[(int)SheathState::kCollect].CreateTimeEvent(TimeEvent{ jsonData_.collectRecoveryTime * 60.0f, "RecoveryTime" });
 }
 
 void Sheath::CreateBreakEventOrder() {
 	eventOrders_[(int)SheathState::kBreak].Initialize();
 	// ダッシュ攻撃発生までの時間
-	eventOrders_[(int)SheathState::kBreak].CreateTimeEvent(TimeEvent{ dashAttackSwingTime * 60.0f, "SwingTime" });
+	eventOrders_[(int)SheathState::kBreak].CreateTimeEvent(TimeEvent{ jsonData_.dashAttackSwingTime * 60.0f, "SwingTime" });
 	// ダッシュ攻撃時間
-	eventOrders_[(int)SheathState::kBreak].CreateTimeEvent(TimeEvent{ dashAttackFinishTime * 60.0f, "DashAttackFinishTime" });
+	eventOrders_[(int)SheathState::kBreak].CreateTimeEvent(TimeEvent{ jsonData_.dashAttackFinishTime * 60.0f, "DashAttackFinishTime" });
 	// ダッシュ攻撃硬直時間
-	eventOrders_[(int)SheathState::kBreak].CreateTimeEvent(TimeEvent{ dashAttackRecoveryTime * 60.0f, "RecoveryTime" });
+	eventOrders_[(int)SheathState::kBreak].CreateTimeEvent(TimeEvent{ jsonData_.dashAttackRecoveryTime * 60.0f, "RecoveryTime" });
 }
 
 void Sheath::CreateInvinsibleEventOrder() {
 	eventOrders_[(int)SheathState::kInvinsible].Initialize();
 	// 無敵発生までの時間
-	eventOrders_[(int)SheathState::kInvinsible].CreateTimeEvent(TimeEvent{ invinsibleSwingTime * 60.0f, "SwingTime" });
+	eventOrders_[(int)SheathState::kInvinsible].CreateTimeEvent(TimeEvent{ jsonData_.invinsibleSwingTime * 60.0f, "SwingTime" });
 	// 無敵時間
-	eventOrders_[(int)SheathState::kInvinsible].CreateTimeEvent(TimeEvent{ invinsibleFinishTime * 60.0f, "InvinsibleTime" });
+	eventOrders_[(int)SheathState::kInvinsible].CreateTimeEvent(TimeEvent{ jsonData_.invinsibleFinishTime * 60.0f, "InvinsibleTime" });
 	// 無敵硬直
-	eventOrders_[(int)SheathState::kInvinsible].CreateTimeEvent(TimeEvent{ invinsibleRecoveryTime * 60.0f, "RecoveryTime" });
+	eventOrders_[(int)SheathState::kInvinsible].CreateTimeEvent(TimeEvent{ jsonData_.invinsibleRecoveryTime * 60.0f, "RecoveryTime" });
 }
 
 void Sheath::ChangeState(ISheathSystemState* pState) {
@@ -280,8 +280,8 @@ LWP::Math::Vector3 Sheath::ClampToCircle(LWP::Math::Vector3& position) {
 	LWP::Math::Vector3 offset = position - sheathModel_.worldTF.GetWorldPosition();
 	float distance = offset.Length();
 
-	if (distance > enableMoveRange) {
-		offset = offset.Normalize() * enableMoveRange;
+	if (distance > jsonData_.enableMoveRange) {
+		offset = offset.Normalize() * jsonData_.enableMoveRange;
 		position = sheathModel_.worldTF.GetWorldPosition() + offset;
 	}
 

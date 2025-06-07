@@ -1,6 +1,35 @@
 #pragma once
 #include "../ISystem.h"
 
+struct ParryJsonData {
+	// パリィ発動までにかかる時間[秒]
+	float kSwingTime = 0.0f;
+	// 通常パリィの猶予時間[秒]
+	float kGoodParryTime = 0.6f;
+	// ジャストパリィの猶予時間[秒]
+	float kJustParryTime = 0.2f;
+	// パリィの硬直[秒]
+	float kRecoveryTime = 0.0f;
+
+	// ジャストパリィ成功時の無敵時間
+	float successJustParryInvinsible = 2.0f;
+	// 弱パリィ成功時の無敵時間
+	float successGoodParryInvinsible = 1.0f;
+
+	// ジャストパリィ時の鞘ゲージの減少量
+	float justParryDecrement = 50.0f;
+	// 甘パリィ時の鞘ゲージの減少量
+	float goodParryDecrement = 10.0f;
+
+	// ジャストパリィ時のノックバック量
+	float justParryKnockBackMovement = 6.0f;
+	// ジャストパリィ時のノックバック終了時間
+	float justParryKnockBackFinishTime = 60.0f;
+
+	// クールタイム
+	float coolTime = 1.0f;
+};
+
 /// <summary>
 /// 自機のパリィ機能をまとめたクラス
 /// </summary>
@@ -106,20 +135,9 @@ public:// Getter, Setter
 
 #pragma region Getter
 	/// <summary>
-	/// 回避速度を取得
+	/// jsonに保存する値を取得
 	/// </summary>
-	/// <returns></returns>
-	LWP::Math::Vector3 GetVelocity() { return velocity_; }
-	/// <summary>
-	/// 向いている方向を取得(クォータニオン)
-	/// </summary>
-	/// <returns></returns>
-	LWP::Math::Quaternion GetMoveQuat() { return quat_; }
-	/// <summary>
-	/// 向いている方向を取得(ラジアン)
-	/// </summary>
-	/// <returns></returns>
-	LWP::Math::Vector3 GetMoveRadian() { return radian_; }
+	ParryJsonData GetJsonData() { return jsonData_; }
 	/// <summary>
 	/// パリィされた相手の座標を取得
 	/// </summary>
@@ -151,49 +169,19 @@ public:// Getter, Setter
 
 #pragma region Setter
 	/// <summary>
-	/// 向いている方向を設定
+	/// jsonに保存する値を設定
 	/// </summary>
-	/// <param name="radian">向かせる方向(ラジアン)</param>
-	void SetRotate(const LWP::Math::Vector3& radian) { radian_ = radian; }
-	/// <summary>
-	/// 向いている方向を設定
-	/// </summary>
-	/// <param name="quat">向かせる方向(クォータニオン)</param>
-	void SetRotate(const LWP::Math::Quaternion& quat) { quat_ = quat; }
+	/// <param name="jsonData"></param>
+	void SetJsonData(const ParryJsonData& jsonData) { jsonData_ = jsonData; }
 	/// <summary>
 	/// クールタイムを設定
 	/// </summary>
 	/// <param name="time"></param>
-	void SetCoolTime() { currentCoolTime_ = coolTime * 60.0f; }
+	void SetCoolTime() { currentCoolTime_ = jsonData_.coolTime * 60.0f; }
 #pragma endregion
 
 private:// jsonで保存する値
-	// パリィ発動までにかかる時間[秒]
-	float kSwingTime = 0.0f;
-	// 通常パリィの猶予時間[秒]
-	float kGoodParryTime = 0.6f;
-	// ジャストパリィの猶予時間[秒]
-	float kJustParryTime = 0.2f;
-	// パリィの硬直[秒]
-	float kRecoveryTime = 0.0f;
-
-	// ジャストパリィ成功時の無敵時間
-	float successJustParryInvinsible = 2.0f;
-	// 弱パリィ成功時の無敵時間
-	float successGoodParryInvinsible = 1.0f;
-
-	// ジャストパリィ時の鞘ゲージの減少量
-	float justParryDecrement = 50.0f;
-	// 甘パリィ時の鞘ゲージの減少量
-	float goodParryDecrement = 10.0f;
-
-	// ジャストパリィ時のノックバック量
-	float justParryKnockBackMovement = 6.0f;
-	// ジャストパリィ時のノックバック終了時間
-	float justParryKnockBackFinishTime = 60.0f;
-
-	// クールタイム
-	float coolTime = 1.0f;
+	ParryJsonData jsonData_;
 
 private:
 	// アクションイベント集(無敵に関するものだけ)
@@ -208,11 +196,6 @@ private:
 
 	// ジャストパリィ時のノックバック
 	LWP::Math::Vector3 justParryKnockBack_;
-
-	// 向いている角度
-	LWP::Math::Quaternion quat_ = { 0.0f,0.0f,0.0f,1.0f };
-	LWP::Math::Vector3 radian_;
-	LWP::Math::Vector3 velocity_;
 
 	LWP::Math::Vector3 start_;
 	LWP::Math::Vector3 end_;

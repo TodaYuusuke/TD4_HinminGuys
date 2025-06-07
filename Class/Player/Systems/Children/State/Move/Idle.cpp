@@ -17,7 +17,7 @@ void Idle::Initialize() {
 }
 
 void Idle::Update() {
-
+	//if(!player_->GetAnimation()->GetPlaying("Dash"))
 }
 
 void Idle::AnimCommand() {

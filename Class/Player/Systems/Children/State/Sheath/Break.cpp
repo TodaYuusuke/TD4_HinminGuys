@@ -68,13 +68,8 @@ void Break::Command() {
 		// 無敵開始
 		(*eventOrders_)[(int)Sheath::SheathState::kInvinsible].Start();
 		start_ = { 0,0,0 };
-		end_ = sheathSystem_->dashAttackMovement * Matrix4x4::CreateRotateXYZMatrix(player_->GetSystemManager()->GetRotate());
+		end_ = sheathSystem_->jsonData_.dashAttackMovement * Matrix4x4::CreateRotateXYZMatrix(player_->GetSystemManager()->GetQuat());
 		t_ = 0.0f;
-		// ロックオン以外何もできないようにする
-		inputHandler_->GetSheathCommand()->SetBanInput(inputHandler_->GetSheathCommand()->GetBanInput() | (BanMove));
-		inputHandler_->GetSheathCommand()->SetBanInput(inputHandler_->GetSheathCommand()->GetBanInput() | (BanAttack));
-		inputHandler_->GetSheathCommand()->SetBanInput(inputHandler_->GetSheathCommand()->GetBanInput() | (BanParry));
-		inputHandler_->GetSheathCommand()->SetBanInput(inputHandler_->GetSheathCommand()->GetBanInput() | (BanEvasion));
 	}
 }
 
@@ -103,10 +98,10 @@ void Break::CheckBreakState() {
 		sheathSystem_->SetIsCollision(true);
 
 		// 回避の速度補間がなくなるまでイージングを行う
-		if (t_ < sheathSystem_->dashAttackFinishTime * 60.0f) {
+		if (t_ < sheathSystem_->jsonData_.dashAttackFinishTime * 60.0f) {
 			t_++;
 			// イージングを行う
-			velocity_ = LWP::Utility::Interpolation::Lerp(start_, end_, LWP::Utility::Easing::OutExpo(t_ / sheathSystem_->dashAttackFinishTime * 60.0f)) * 0.1f;
+			velocity_ = LWP::Utility::Interpolation::Lerp(start_, end_, LWP::Utility::Easing::OutExpo(t_ / sheathSystem_->jsonData_.dashAttackFinishTime * 60.0f)) * 0.1f;
 		}
 
 		// 移動速度からラジアンを求める

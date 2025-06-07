@@ -74,16 +74,16 @@ void FollowCamera::DebugGUI() {
 }
 
 void FollowCamera::CheckState() {
-	// パリィカメラ中は状態を変えさせない
-	if (state_->GetStateName() == "Parry") { return; }
+	//// パリィカメラ中は状態を変えさせない
+	//if (state_->GetStateName() == "Parry") { return; }
 
-	// パリィ成功状態
-	if (player_->GetSystemManager()->GetParrySystem()->GetSuccessJustParry()) {
-		if (state_->GetStateName() != "Parry") {
-			ChangeState(new ParryCamera(player_, this));
-			return;
-		}
-	}
+	//// パリィ成功状態
+	//if (player_->GetSystemManager()->GetParrySystem()->GetSuccessJustParry()) {
+	//	if (state_->GetStateName() != "Parry") {
+	//		ChangeState(new ParryCamera(player_, this));
+	//		return;
+	//	}
+	//}
 	// 入力受付状態
 	if (!lockOnData_.targetTransform && !lockOnData_.isLocked) {
 		// カメラと追従対象との距離を初期の値に徐々に戻す

@@ -6,16 +6,8 @@ class Player;
 class ICommand {
 public:
 	virtual ~ICommand() = default;
-	virtual void Exec(Player& player,  int& banInput) = 0;
-	virtual void Reset(Player& player, int& banInput) = 0;
-	inline void SetBanInput(const int& banInput) { banInput_ = banInput; }
-	inline int GetBanInput() { return banInput_; }
 public:
-	// 入力不可状態
-	int banInput_;
-	int currentInput_;
-
-	bool isActive_;
+	bool isActive_ = false;
 };
 
 /// <summary>
@@ -24,8 +16,6 @@ public:
 class MoveCommand : public ICommand {
 public:
 	MoveCommand();
-	void Exec(Player& player,  int& banInput)override;
-	void Reset(Player& player, int& banInput) override;
 };
 /// <summary>
 /// 攻撃コマンド
@@ -33,8 +23,6 @@ public:
 class NormalAttackCommand : public ICommand {
 public:
 	NormalAttackCommand();
-	void Exec(Player& player,  int& banInput)override;
-	void Reset(Player& player, int& banInput) override;
 };
 /// <summary>
 /// パリィコマンド
@@ -42,8 +30,6 @@ public:
 class ParryCommand : public ICommand {
 public:
 	ParryCommand();
-	void Exec(Player& player,  int& banInput)override;
-	void Reset(Player& player, int& banInput) override;
 };
 /// <summary>
 /// ロックオンコマンド
@@ -51,8 +37,6 @@ public:
 class LockOnCommand : public ICommand {
 public:
 	LockOnCommand();
-	void Exec(Player& player,  int& banInput)override;
-	void Reset(Player& player, int& banInput) override;
 };
 /// <summary>
 /// 回避コマンド
@@ -60,8 +44,6 @@ public:
 class EvasionCommand : public ICommand {
 public:
 	EvasionCommand();
-	void Exec(Player& player,  int& banInput)override;
-	void Reset(Player& player, int& banInput) override;
 };
 /// <summary>
 /// 鞘コマンド
@@ -69,6 +51,4 @@ public:
 class SheathCommand : public ICommand {
 public:
 	SheathCommand();
-	void Exec(Player& player,  int& banInput)override;
-	void Reset(Player& player, int& banInput) override;
 };

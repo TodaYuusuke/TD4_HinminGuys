@@ -3,6 +3,19 @@
 #include "../../Gauge/HP/HP.h"
 #include "../EventOrder.h"
 
+struct DamageResponseJsonData {
+	// 無敵時間
+	float invinsibleTime = 2.2f;
+
+	// スタン時間
+	float stunTime = 1.8f;
+	// スタンキャンセル時間
+	float stunCancelTime = 1.0f;
+};
+
+/// <summary>
+/// ダメージリアクション
+/// </summary>
 class DamageResponse : public ISystem {
 public:
 	enum class EventOrderState {
@@ -72,26 +85,11 @@ private:
 	void CheckSunEventOrder();
 
 public:
-#pragma region Setter
-	/// <summary>
-	/// HPの最大値を設定
-	/// </summary>
-	/// <param name="maxHP"></param>
-	void SetMaxHP(const float& maxHP) {
-		maxHP;
-		//hp_.SetMaxValue(maxHP);
-	}
-	/// <summary>
-	/// 演出終了時間を設定
-	/// </summary>
-	/// <param name="endFrame">演出終了時間</param>
-	void SetEndFrame(float endFrame) {
-		endFrame_ = endFrame;
-		currentFrame_ = endFrame_;
-	}
-#pragma endregion
-
 #pragma region Getter
+	/// <summary>
+	/// jsonに保存する値を取得
+	/// </summary>
+	DamageResponseJsonData GetJsonData() { return jsonData_; }
 	/// <summary>
 	/// 無敵時間中かを取得
 	/// </summary>
@@ -129,14 +127,32 @@ public:
 	const bool& GetIsHitEffect() { return isHit_; }
 #pragma endregion
 
-private:// jsonで保存する値
-	// 無敵時間
-	float invinsibleTime = 2.2f;
+#pragma region Setter
+	/// <summary>
+	/// jsonに保存する値を設定
+	/// </summary>
+	/// <param name="jsonData"></param>
+	void SetJsonData(const DamageResponseJsonData& jsonData) { jsonData_ = jsonData; }
+	/// <summary>
+	/// HPの最大値を設定
+	/// </summary>
+	/// <param name="maxHP"></param>
+	void SetMaxHP(const float& maxHP) {
+		maxHP;
+		//hp_.SetMaxValue(maxHP);
+	}
+	/// <summary>
+	/// 演出終了時間を設定
+	/// </summary>
+	/// <param name="endFrame">演出終了時間</param>
+	void SetEndFrame(float endFrame) {
+		endFrame_ = endFrame;
+		currentFrame_ = endFrame_;
+	}
+#pragma endregion
 
-	// スタン時間
-	float stunTime = 1.8f;
-	// スタンキャンセル時間
-	float stunCancelTime = 1.0f;
+private:// jsonで保存する値
+	DamageResponseJsonData jsonData_;
 
 private:
 	std::map<int, EventOrder> eventOrders_;

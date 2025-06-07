@@ -36,13 +36,6 @@ void Throw::Update() {
 
 	// 全ての移動処理終了
 	if ((*eventOrders_)[(int)Sheath::SheathState::kThrow].GetIsEnd()) {
-		// パリィの入力禁止
-		inputHandler_->GetSheathCommand()->SetBanInput(inputHandler_->GetSheathCommand()->GetBanInput() & ~(1 << GetSetBitPosition(BanMove)));
-		inputHandler_->GetSheathCommand()->SetBanInput(inputHandler_->GetSheathCommand()->GetBanInput() & ~(1 << GetSetBitPosition(BanAttack)));
-		inputHandler_->GetSheathCommand()->SetBanInput(inputHandler_->GetSheathCommand()->GetBanInput() & ~(1 << GetSetBitPosition(BanEvasion)));
-		inputHandler_->GetSheathCommand()->SetBanInput(inputHandler_->GetSheathCommand()->GetBanInput() & ~(1 << GetSetBitPosition(BanSheath)));
-		inputHandler_->GetSheathCommand()->SetBanInput(inputHandler_->GetSheathCommand()->GetBanInput() | (BanParry));
-
 		(*eventOrders_)[(int)Sheath::SheathState::kThrow].Reset();
 		sheathSystem_->ChangeState(new Collect(sheathSystem_, player_, eventOrders_));
 		return;
@@ -69,11 +62,11 @@ void Throw::Command() {
 
 		// イージングの始点終点を設定
 		start_ = player_->GetWorldTF()->GetWorldPosition();
-		end_ = player_->GetWorldTF()->GetWorldPosition() + sheathSystem_->throwMovement * Matrix4x4::CreateRotateXYZMatrix(player_->GetSystemManager()->GetMoveSystem()->GetMoveRadian());
+		end_ = player_->GetWorldTF()->GetWorldPosition() + sheathSystem_->jsonData_.throwMovement * Matrix4x4::CreateRotateXYZMatrix(player_->GetRadian());
 
 		// 自機の角度を最後に向いている方向に固定
-		sheathSystem_->SetRotate(player_->GetSystemManager()->GetMoveSystem()->GetMoveRadian());
-		sheathSystem_->SetRotate(player_->GetSystemManager()->GetMoveSystem()->GetMoveQuat());
+		sheathSystem_->SetRotate(player_->GetRadian());
+		sheathSystem_->SetRotate(player_->GetQuat());
 	}
 }
 
@@ -110,7 +103,7 @@ void Throw::CheckThrowState() {
 		// 本体のモデルも非表示
 		player_->SetIsSheathModelActive(false);
 
-		velocity_ = (LWP::Utility::Interpolation::Lerp(start_, end_, LWP::Utility::Easing::OutExpo((*eventOrders_)[(int)Sheath::SheathState::kThrow].GetCurrentFrame() / (sheathSystem_->collectTime * 60.0f)))/* - player_->GetWorldTF()->GetWorldPosition()*/);
+		velocity_ = (LWP::Utility::Interpolation::Lerp(start_, end_, LWP::Utility::Easing::OutExpo((*eventOrders_)[(int)Sheath::SheathState::kThrow].GetCurrentFrame() / (sheathSystem_->jsonData_.collectTime * 60.0f)))/* - player_->GetWorldTF()->GetWorldPosition()*/);
 
 		// 移動速度からラジアンを求める
 		radian_.y = LWP::Utility::GetRadian(LWP::Math::Vector3{ 0,0,1 }, velocity_.Normalize(), LWP::Math::Vector3{ 0,1,0 });

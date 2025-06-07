@@ -12,76 +12,121 @@ SystemManager::SystemManager(Player* player, EnemyManager* enemyManager, FollowC
 	pCamera_ = camera;
 }
 
+SystemManager::~SystemManager() {
+	delete currentSystem_;
+	delete comboTree_;
+}
+
 void SystemManager::Initialize() {
 	// コマンドの登録
 	inputHandler_ = InputHandler::GetInstance();
 
 	// ロックオン機能
 	lockOnSystem_ = std::make_unique<LockOn>(pCamera_, player_);
+	lockOnSystem_->CreateJsonFIle();
 	lockOnSystem_->Initialize();
 	lockOnSystem_->SetEnemyList(enemyManager_->GetEnemyListPtr());
 	lockOnSystem_->SetFollowCamera(followCamera_);
-	
 	// 被弾機能
 	damageResponseSystem_ = std::make_unique<DamageResponse>(pCamera_, player_);
+	damageResponseSystem_->CreateJsonFIle();
 	damageResponseSystem_->Initialize();
-	systems_.push_back(damageResponseSystem_.get());
+
+	comboTree_ = new ComboTree();
+	// コンボツリーの初期化
+	comboTree_->Init("Combo.json", player_->GetModel(), player_->GetAnimation());
+	// コライダーのマスク設定
+	comboTree_->SetColliderMaskFrag(GameMask::GetAttack(), GameMask::GetEnemy());
+	// 攻撃の判定
+	onCollision_ = [this](LWP::Object::Collision* hitTarget) {
+		hitTarget;
+		// 鞘が外れている状態だと減らさない
+		//if (player_->GetSystemManager()->GetSheathSystem()->GetSheathState()->GetStateName() != "Throw") { return; }
+
+		player_->TakeSheathDamage(comboTree_->GetSheathDurabityLoss());
+		};
+	comboTree_->AddCollisionLamda(LWP::Utility::ComboEnum::ENTER, onCollision_);
+
+#pragma region json用
 	// 移動機能
 	moveSystem_ = std::make_unique<Move>(pCamera_, player_);
+	moveSystem_->CreateJsonFIle();
 	moveSystem_->Initialize();
+	// 角度が変になるので一度更新処理を入れ込む
+	moveSystem_->Update();
 	systems_.push_back(moveSystem_.get());
 	// パリィ機能
 	parrySystem_ = std::make_unique<Parry>(pCamera_, player_);
+	parrySystem_->CreateJsonFIle();
 	parrySystem_->Initialize();
 	systems_.push_back(parrySystem_.get());
 	// 回避機能
 	evasionSystem_ = std::make_unique<Evasion>(pCamera_, player_);
+	evasionSystem_->CreateJsonFIle();
 	evasionSystem_->Initialize();
 	systems_.push_back(evasionSystem_.get());
 	// 鞘機能
 	sheathSystem_ = std::make_unique<Sheath>(pCamera_, player_);
+	sheathSystem_->CreateJsonFIle();
 	sheathSystem_->Initialize();
 	systems_.push_back(sheathSystem_.get());
 	// 攻撃機能
 	attackSystem_ = std::make_unique<Attack>(pCamera_, player_, enemyManager_);
+	attackSystem_->CreateJsonFIle();
 	attackSystem_->Initialize();
 	attackSystem_->SetLockOnSystem(lockOnSystem_.get());
 	systems_.push_back(attackSystem_.get());
-
-	// 自機のアニメーションを管理
-	animator_.Initialize(player_->GetAnimation());
+#pragma endregion
 
 	// 入力状態
 	inputState_ = InputState::kMove;
+
+	// 移動機能をセット
+	CreateMoveSystem();
+	preSystemState_ = systemState_;
 }
 
 void SystemManager::Update() {
-	// アニメーションを振り分ける
-	//animator_.Update(*player_);
-
-	// ロックオン機能(これだけはリストに含めない)
+	// ロックオン機能
 	lockOnSystem_->Update();
+	// ダメージリアクション機能
+	damageResponseSystem_->Update();
 
-	// 各機能
-	for (ISystem* system : systems_) {
-		system->Update();
+
+	if (currentSystem_) {
+		comboTree_->Update();
+
+		// 現在稼働している機能
+		currentSystem_->Update();
+
+		// 速度
+		velocity_ = currentSystem_->GetVelocity();
+		// 角度
+		radian_ = currentSystem_->GetRadian();
+		quat_ = LWP::Math::Quaternion::CreateFromAxisAngle(LWP::Math::Vector3{ 0, 1, 0 }, radian_.y);
+
+		// リセット関数を代入されたら呼びだす
+		if (resetSystemFunc_) {
+			resetSystemFunc_();
+			resetSystemFunc_ = nullptr;
+			delete currentSystem_;
+			currentSystem_ = nullptr;
+		}
 	}
 
-	// 移動入力が可能な状態なら自機に速度を加算
-	EnableInputMoveState();
+	// 機能の切り替え条件
+	SwitchCurrentSystem();
 }
 
 void SystemManager::Reset() {
-	// 各機能
-	for (ISystem* system : systems_) {
-		system->Reset();
-	}
+
 }
 
 void SystemManager::DebugGUI() {
 #ifdef _DEBUG
 	// ロックオン
 	lockOnSystem_->DebugGUI();
+	damageResponseSystem_->DebugGUI();
 
 	// 各機能
 	for (ISystem* system : systems_) {
@@ -90,65 +135,121 @@ void SystemManager::DebugGUI() {
 #endif // DEBUG
 }
 
-void SystemManager::EnableInputMoveState() {
-	switch (inputState_) {
-	case InputState::kMove:
-		// 速度を加算
-		velocity_ = moveSystem_->GetMoveVel();
-		// 角度を加算
-		radian_ = moveSystem_->GetMoveRadian();
-		// クォータニオンに変換
-		rotate_ = LWP::Math::Quaternion::CreateFromAxisAngle(LWP::Math::Vector3{ 0, 1, 0 }, radian_.y);
-		break;
-	case InputState::kAttack:
-		// 速度を加算
-		velocity_ = LWP::Utility::Interpolation::Exponential(velocity_,attackSystem_->GetAttackAssistVel(), 0.9f);
-		// 角度を加算
-		radian_ = attackSystem_->GetAttackAssistRadian();
-		// クォータニオンに変換
-		rotate_ = LWP::Math::Quaternion::CreateFromAxisAngle(LWP::Math::Vector3{ 0, 1, 0 }, radian_.y);
+void SystemManager::CreateMoveSystem() {
+	// 現在のシステムを一度削除
+	if (currentSystem_) { delete currentSystem_; }
 
-		// MoveSystemクラス内の角度も変更
-		if (Vector3::Dot(velocity_, velocity_) != 0) {
-			moveSystem_->SetRotate(radian_);
-		}
-		moveSystem_->SetMoveVel({ 0,0,0 });
-		break;
-	case InputState::kParry:
-		// 速度を加算
-		velocity_ = parrySystem_->GetVelocity();
-		// 角度を加算
-		radian_ = parrySystem_->GetMoveRadian();
-		// クォータニオンに変換
-		rotate_ = LWP::Math::Quaternion::CreateFromAxisAngle(LWP::Math::Vector3{ 0, 1, 0 }, radian_.y);
+	// 移動機能
+	Move* moveSystem = new Move(pCamera_, player_);
+	moveSystem->SetJsonData(moveSystem_->GetJsonData());
+	moveSystem->Initialize();
+	moveSystem->Command();
+	moveSystem->SetRotate(radian_);
+	moveSystem->SetRotate(quat_);
+	moveSystem->Update();
 
-		// MoveSystemクラス内の角度も変更
-		if (Vector3::Dot(velocity_, velocity_) != 0 && !parrySystem_->GetSuccessJustParry()) {
-			moveSystem_->SetRotate(radian_);
-		}
-		break;
-	case InputState::kEvasion:
-		// 速度を加算
-		velocity_ = LWP::Utility::Interpolation::Exponential(velocity_, evasionSystem_->GetVelocity() + moveSystem_->GetMoveVel(), 1.0f);
-		// 角度を加算
-		radian_ = moveSystem_->GetMoveRadian();
-		// クォータニオンに変換
-		rotate_ = LWP::Math::Quaternion::CreateFromAxisAngle(LWP::Math::Vector3{ 0, 1, 0 }, radian_.y);
-		break;
-	case InputState::kSheath:
-		// MoveSystemクラス内の角度も変更
-		if (Vector3::Dot(velocity_, velocity_) != 0) {
-			moveSystem_->SetRotate(radian_);
-		}
+	currentSystem_ = moveSystem;
 
-		// 速度を加算
-		velocity_ = LWP::Utility::Interpolation::Exponential(velocity_, sheathSystem_->GetVelocity(), 0.9f);
-		// 角度を加算
-		radian_ = sheathSystem_->GetRadian();
-		// クォータニオンに変換
-		rotate_ = LWP::Math::Quaternion::CreateFromAxisAngle(LWP::Math::Vector3{ 0, 1, 0 }, radian_.y);
+	systemState_ = SystemState::kMove;
+}
 
+void SystemManager::CreateAttackSystem() {
+	// 現在のシステムを一度削除
+	if (currentSystem_) { delete currentSystem_; }
 
-		break;
+	// 攻撃機能
+	Attack* attackSystem = new Attack(pCamera_, player_, enemyManager_);
+	attackSystem->SetLockOnSystem(lockOnSystem_.get());
+	attackSystem->SetJsonData(attackSystem_->GetJsonData());
+	attackSystem->Initialize();
+	attackSystem->Command();
+
+	currentSystem_ = attackSystem;
+
+	systemState_ = SystemState::kAttack;
+}
+
+void SystemManager::CreateEvasionSystem() {
+	// 現在のシステムを一度削除
+	if (currentSystem_) { delete currentSystem_; }
+
+	// 回避機能
+	Evasion* evasionSystem = new Evasion(pCamera_, player_);
+	evasionSystem->SetJsonData(evasionSystem_->GetJsonData());
+	evasionSystem->Initialize();
+	evasionSystem->Command();
+
+	currentSystem_ = evasionSystem;
+
+	systemState_ = SystemState::kEvasion;
+}
+
+void SystemManager::CreateParrySystem() {
+	// 現在のシステムを一度削除
+	if (currentSystem_) { delete currentSystem_; }
+
+	// パリィ機能
+	Parry* parrySystem = new Parry(pCamera_, player_);
+	parrySystem->SetJsonData(parrySystem_->GetJsonData());
+	parrySystem->Initialize();
+	parrySystem->Command();
+
+	currentSystem_ = parrySystem;
+
+	systemState_ = SystemState::kParry;
+}
+
+void SystemManager::CreateSheathSystem() {
+	// 現在のシステムを一度削除
+	if (currentSystem_) { delete currentSystem_; }
+
+	// 鞘機能
+	Sheath* sheathSystem = new Sheath(pCamera_, player_);
+	sheathSystem->SetJsonData(sheathSystem_->GetJsonData());
+	sheathSystem->Initialize();
+	sheathSystem->Command();
+
+	currentSystem_ = sheathSystem;
+
+	systemState_ = SystemState::kSheath;
+}
+
+void SystemManager::SwitchCurrentSystem() {
+	// 現在のシステムに何も入ってないなら移動機能を入れる
+	if (!currentSystem_) { CreateMoveSystem(); }
+	// 次に遷移したい機能がない時は処理しない
+	if (currentSystem_->GetNextSystems().empty()) {
+		return;
 	}
+
+	// 攻撃
+	if (currentSystem_->GetNextSystem(SystemState::kAttack) && systemState_ != SystemState::kAttack) {
+		CreateAttackSystem();
+	}
+	// 回避
+	else if (currentSystem_->GetNextSystem(SystemState::kEvasion) && systemState_ != SystemState::kEvasion) {
+		CreateEvasionSystem();
+		// コンボ初期化
+		ComboReset();
+	}
+	// パリィ
+	else if (currentSystem_->GetNextSystem(SystemState::kParry) && systemState_ != SystemState::kParry) {
+		CreateParrySystem();
+		// コンボ初期化
+		ComboReset();
+	}
+	// 鞘
+	else if (currentSystem_->GetNextSystem(SystemState::kSheath) && systemState_ != SystemState::kSheath) {
+		//CreateSheathSystem();
+		// コンボ初期化
+		ComboReset();
+	}
+	// 移動
+	else if (currentSystem_->GetNextSystem(SystemState::kMove) && systemState_ != SystemState::kMove) {
+		CreateMoveSystem();
+		// コンボ初期化
+		ComboReset();
+	}
+
+	preSystemState_ = systemState_;
 }

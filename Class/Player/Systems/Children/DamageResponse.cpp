@@ -9,9 +9,6 @@ DamageResponse::DamageResponse(LWP::Object::Camera* camera, Player* player) {
 void DamageResponse::Initialize() {
 	inputHandler_ = InputHandler::GetInstance();
 
-	// jsonに保存している値を呼び出す
-	CreateJsonFIle();
-
 	// アクションイベントの作成
 	CreateEventOrders();
 }
@@ -36,15 +33,15 @@ void DamageResponse::Update() {
 	if (eventOrders_[(int)EventOrderState::kStun].GetIsEnd()) {
 		eventOrders_[(int)EventOrderState::kStun].Reset();
 		isActive_ = false;
-		// 回避をしてないなかったら入力をすべて受け付ける状態に戻す
-		if (!player_->GetSystemManager()->GetEvasionSystem()->GetIsActive()) {
-			inputHandler_->SetCurrentBanInput(0);
-		}
+		//// 回避をしてないなかったら入力をすべて受け付ける状態に戻す
+		//if (!player_->GetSystemManager()->GetEvasionSystem()->GetIsActive()) {
+		//	inputHandler_->SetCurrentBanInput(0);
+		//}
 	}
 }
 
 void DamageResponse::Reset() {
-
+	//nextSystem_ = CheckNextSystems();
 }
 
 void DamageResponse::DebugGUI() {
@@ -84,12 +81,12 @@ void DamageResponse::CreateJsonFIle() {
 	json_.Init("Hit.json");
 	// 無敵
 	json_.BeginGroup("Inivinsible")
-		.AddValue<float>("Time", &invinsibleTime)
+		.AddValue<float>("Time", &jsonData_.invinsibleTime)
 		.EndGroup()
 		// スタン
 		.BeginGroup("Stun")
-		.AddValue<float>("Time", &stunTime)
-		.AddValue<float>("CancelTime", &stunCancelTime)
+		.AddValue<float>("Time", &jsonData_.stunTime)
+		.AddValue<float>("CancelTime", &jsonData_.stunCancelTime)
 		.EndGroup()
 		.CheckJsonFile();
 }
@@ -100,8 +97,6 @@ void DamageResponse::StartInvinsible() {
 	eventOrders_[(int)EventOrderState::kStun].Start();
 	eventOrders_[(int)EventOrderState::kStun].Update();
 	isActive_ = true;
-	// 全ての行動をできないようにする
-	inputHandler_->SetCurrentBanInput(inputHandler_->GetBanInput() | BanALL);
 	// ガードアニメーション開始
 	player_->ResetAnimation();
 	player_->StartAnimation("Damage", 0.0f, 0.0f);
@@ -125,16 +120,16 @@ void DamageResponse::CreateInvinsibleEventOrder() {
 	// 無敵
 	eventOrders_[(int)EventOrderState::kInvinsible].Initialize();
 	// 被弾時の無敵時間
-	eventOrders_[(int)EventOrderState::kInvinsible].CreateTimeEvent(TimeEvent{ invinsibleTime * 60.0f, "InvinsibleTime" });
+	eventOrders_[(int)EventOrderState::kInvinsible].CreateTimeEvent(TimeEvent{ jsonData_.invinsibleTime * 60.0f, "InvinsibleTime" });
 }
 
 void DamageResponse::CreateStunEventOrder() {
 	// スタン
 	eventOrders_[(int)EventOrderState::kStun].Initialize();
 	// 被弾時のスタン時間
-	eventOrders_[(int)EventOrderState::kStun].CreateTimeEvent(TimeEvent{ stunTime * 60.0f, "StunTime" });
+	eventOrders_[(int)EventOrderState::kStun].CreateTimeEvent(TimeEvent{ jsonData_.stunTime * 60.0f, "StunTime" });
 	// 被弾時のスタンのキャンセル可能時間
-	eventOrders_[(int)EventOrderState::kStun].CreateTimeEvent(TimeEvent{ stunCancelTime * 60.0f, "CancelTime" });
+	eventOrders_[(int)EventOrderState::kStun].CreateTimeEvent(TimeEvent{ jsonData_.stunCancelTime * 60.0f, "CancelTime" });
 }
 
 void DamageResponse::CheckSunEventOrder() {
@@ -144,8 +139,7 @@ void DamageResponse::CheckSunEventOrder() {
 	else if (eventOrders_[(int)EventOrderState::kStun].GetCurrentTimeEvent().name == "CancelTime") {
 		// ビットの演算が一瞬じゃないと数値が壊れる
 		if (preEventOrder_ == "StunTime") {
-			// 回避のみ可能にする
-			inputHandler_->SetCurrentBanInput(EraceBanInput(inputHandler_->GetBanInput(), (BanEvasion)));
+
 		}
 	}
 

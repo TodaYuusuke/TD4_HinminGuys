@@ -51,11 +51,11 @@ void Normal::Initialize(Player* player, const Vector3& position, LWP::Object::Ca
 		if (state_->GetState() != States::kNormalAttack) {
 			SetPreState(state_->GetState());
 			SetState(States::kHitReaction);
-			SetKnockBackValue(player_->GetSystemManager()->GetAttackSystem()->GetKnockBackStrength());
+			//SetKnockBackValue(player_->GetSystemManager()->GetAttackSystem()->GetKnockBackStrength());
 		}
 
 		//ダメージを受ける
-		TakeDamage(player_->GetSystemManager()->GetAttackSystem()->GetDamage());
+		//TakeDamage(player_->GetSystemManager()->GetAttackSystem()->GetDamage());
 
 		};
 	

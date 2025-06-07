@@ -1,6 +1,37 @@
 #pragma once
 #include "../ISystem.h"
 
+struct EvasionJsonData {
+	// 回避の終了時間
+	float evasionFinishTime = 0.3f;
+
+	// 回避の無敵発動までにかかる時間[秒]
+	float invinsibleSwingTime = 0.0f;
+	// 回避の無敵時間[秒]
+	float invinsibleTime = 0.3f;
+	// 回避の無敵硬直[秒]
+	float invinsibleRecoveryTime = 0.0f;
+
+	// 回避の加速発動までにかかる時間[秒]
+	float accelerationSwingTime = 0.0f;
+	// 回避の加速時間[秒]
+	float accelerationTime = 0.3f;
+	// 回避の加速硬直[秒]
+	float accelerationRecoveryTime = 0.0f;
+
+	// ダッシュ移行するのに必要なボタンを押す時間
+	float dashButtonHoldSeconds = 60.0f * 0.3f;
+
+	// 回避速度の係数
+	float moveMultiply = 1.0f;
+
+	// 回避の移動量
+	LWP::Math::Vector3 evasionMovement = { 0.0f, 0.0f, 1.0f };
+};
+
+/// <summary>
+/// 回避機能
+/// </summary>
 class Evasion : public ISystem {
 private:
 	struct EaseData {
@@ -90,15 +121,9 @@ private:
 public:// Getter, Setter
 #pragma region Getter
 	/// <summary>
-	/// 回避速度を取得
+	/// jsonに保存する値を取得
 	/// </summary>
-	/// <returns></returns>
-	LWP::Math::Vector3 GetVelocity() { return velocity_; }
-	/// <summary>
-	/// 向いている方向を取得(ラジアン)
-	/// </summary>
-	/// <returns></returns>
-	LWP::Math::Vector3 GetRadian() { return radian_; }
+	EvasionJsonData GetJsonData() { return jsonData_; }
 	/// <summary>
 	/// 無敵状態かを取得
 	/// </summary>
@@ -115,7 +140,7 @@ public:// Getter, Setter
 	/// </summary>
 	/// <returns></returns>
 	bool GetIsDash() {
-		if (pressTime_ >= dashButtonHoldSeconds * 60.0f) { 
+		if (pressTime_ >= jsonData_.dashButtonHoldSeconds * 60.0f) { 
 			return true; 
 		}
 		return false;
@@ -124,12 +149,17 @@ public:// Getter, Setter
 
 #pragma region Setter
 	/// <summary>
+	/// jsonに保存する値を設定
+	/// </summary>
+	/// <param name="jsonData"></param>
+	void SetJsonData(const EvasionJsonData& jsonData) { jsonData_ = jsonData; }
+	/// <summary>
 	/// ダッシュ状態にするかを設定
 	/// </summary>
 	/// <param name="isDash"></param>
 	void SetIsDash(const bool& isDash) {
 		if (isDash) {
-			pressTime_ = dashButtonHoldSeconds * 60.0f;
+			pressTime_ = jsonData_.dashButtonHoldSeconds * 60.0f;
 			return;
 		}
 		pressTime_ = 0.0f;
@@ -137,38 +167,9 @@ public:// Getter, Setter
 #pragma endregion
 
 private:// jsonで保存する値
-	// 回避の終了時間
-	float evasionFinishTime = 0.3f;
-
-	// 回避の無敵発動までにかかる時間[秒]
-	float invinsibleSwingTime = 0.0f;
-	// 回避の無敵時間[秒]
-	float invinsibleTime = 0.3f;
-	// 回避の無敵硬直[秒]
-	float invinsibleRecoveryTime = 0.0f;
-
-	// 回避の加速発動までにかかる時間[秒]
-	float accelerationSwingTime = 0.0f;
-	// 回避の加速時間[秒]
-	float accelerationTime = 0.3f;
-	// 回避の加速硬直[秒]
-	float accelerationRecoveryTime = 0.0f;
-
-	// ダッシュ移行するのに必要なボタンを押す時間
-	float dashButtonHoldSeconds = 60.0f * 0.3f;
-
-	// 回避速度の係数
-	float moveMultiply = 1.0f;
-
-	// 回避の移動量
-	LWP::Math::Vector3 evasionMovement = { 0.0f, 0.0f, 1.0f };
+	EvasionJsonData jsonData_;
 
 private:// プライベートな変数
-	// 回避時の速度
-	LWP::Math::Vector3 velocity_;
-	// 回避時の角度(ラジアン)
-	LWP::Math::Vector3 radian_;
-
 	// アニメーションの再生速度をイージング
 	LWP::Resource::Motion animationPlaySpeed_;
 	// アニメーションの再生速度
