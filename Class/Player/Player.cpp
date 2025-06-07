@@ -124,22 +124,9 @@ void Player::CreateCollision() {
 }
 
 void Player::InvinsibleUpdate() {
-	// 被弾時
-	if (systemManager_->GetDamageResponseSystem()->GetIsInvinsible()) {
+	if (systemManager_->GetInvisibleTime() != 0.0f) {
 		collider_.isActive = false;
 	}
-	//// 回避時
-	//else if (systemManager_->GetEvasionSystem()->GetIsInvinsible()) {
-	//	collider_.isActive = false;
-	//}
-	//// 鞘のダッシュ攻撃時
-	//else if (systemManager_->GetSheathSystem()->GetIsInvinsible()) {
-	//	collider_.isActive = false;
-	//}
-	//else if (systemManager_->GetParrySystem()->GetIsInvinsible()) {
-	//	collider_.isActive = false;
-	//}
-	// 全て当てはまらないなら当たり判定を戻す
 	else {
 		collider_.isActive = true;
 	}

@@ -24,5 +24,6 @@ public:
 	void AnimCommand() override;
 
 private:
-
+	// ひとつ前に自機は移動していたか
+	bool isPreWalkState_;
 };

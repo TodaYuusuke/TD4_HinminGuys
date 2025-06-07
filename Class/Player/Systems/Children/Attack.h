@@ -115,43 +115,6 @@ public:// Getter, Setter
 	/// jsonに保存する値を取得
 	/// </summary>
 	AttackJsonData GetJsonData() { return jsonData_; }
-
-	//ComboTree* GetComboTreeData() { return comboTree_; }
-	/// <summary>
-	/// 編集モード中かどうかのゲッター
-	/// </summary>
-	/// <returns></returns>
-	//bool GetIsEditingMode() { return comboTree_->GetIsEditingMode(); }
-	/// <summary>
-	/// 現在のコンボが大元のコンボであるかどうかを取得
-	/// </summary>
-	/// <returns></returns>
-	//bool GetIsThisRoot() { return comboTree_->GetIsThisRoot(); }
-	/// <summary>
-	/// 攻撃中に入力処理を受け付けていないかを取得
-	/// </summary>
-	/// <returns></returns>
-	//bool GetIsStiffness() { return comboTree_->GetIsStiffness(); }
-	/// <summary>
-	/// コンボの受付状態を習得
-	/// </summary>
-	/// <returns>コンボの受付状態を取得</returns>
-	//bool GetIsRecept() { return comboTree_->GetIsRecept(); }
-	/// <summary>
-	/// 攻撃が全て終わった後か
-	/// </summary>
-	/// <returns></returns>
-	bool GetIsAttackRecovery() { return isAttackRecovery_; }
-	/// <summary>
-	/// ダメージ取得
-	/// </summary>
-	/// <returns></returns>
-	//float GetDamage() { return comboTree_->GetDamage(); }
-	/// <summary>
-	/// ノックバック量取得
-	/// </summary>
-	/// <returns></returns>
-	//float GetKnockBackStrength() { return comboTree_->GetNockBackStrength(); }
 #pragma endregion
 
 #pragma region Setter
@@ -165,12 +128,6 @@ public:// Getter, Setter
 	/// </summary>
 	/// <param name="jsonData"></param>
 	void SetJsonData(const AttackJsonData& jsonData) { jsonData_ = jsonData; }
-	//void SetComboTreeData(ComboTree* comboTree) { comboTree_ = comboTree; }
-	/// <summary>
-	/// 攻撃が全て終わった後かを設定
-	/// </summary>
-	/// <returns></returns>
-	void SetIsAttackRecovery(const bool& isAttackRecovery) { isAttackRecovery_ = isAttackRecovery; }
 #pragma endregion
 
 private:// jsonで保存する値
@@ -183,19 +140,10 @@ private:// 外部からポインタをもらう変数
 	LockOn* lockOnSystem_;
 
 private:
-	// コンボ攻撃用クラス
-	//ComboTree* comboTree_;
-
-	// 当たり判定の内容
-	//LWP::Object::Collision::OnHitFunction onCollision_;
-
 	// 状態遷移
 	IAttackSystemState* state_;
 
 	IEnemy* lockOnTarget_;
 	// 非ロックオン時のアシスト攻撃対象
 	IEnemy* attackAssistTarget_;
-
-	// 攻撃が全て終わった後か
-	bool isAttackRecovery_;
 };

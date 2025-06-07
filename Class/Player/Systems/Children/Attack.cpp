@@ -44,7 +44,6 @@ void Attack::Update() {
 	if (player_->GetSystemManager()->GetComboTree()->GetIsStiffness()) {
 		// 攻撃しているものとみなし、攻撃状態に移行
 		if (!isActive_) {
-			player_->GetSystemManager()->SetInputState(InputState::kAttack);
 			isActive_ = true;
 			// 一番近い敵に向かって攻撃できるようにする
 			// 有効距離は3M
@@ -66,23 +65,18 @@ void Attack::Update() {
 			}
 		}
 	}
-	if (!player_->GetSystemManager()->GetComboTree()->GetIsStiffness()) { // 無操作状態のコンボが選択されている場合
-		// 入力のあったシステム
+	// 無操作状態のコンボが選択されている場合
+	if (!player_->GetSystemManager()->GetComboTree()->GetIsStiffness()) { 
+		// 入力のあったシステム列挙
 		nextSystem_ = CheckNextSystems();
 		// 機能停止させる
 		if (isActive_) {
-			if (!player_->GetSystemManager()->GetComboTree()->GetIsRecept()) {
-				if (nextSystem_.empty()) {
-					//nextSystem_[SystemState::kMove] = true;
-				}
-				player_->GetSystemManager()->SetResetSystemFunc(std::bind(&Attack::Reset, this));
-				isAttackRecovery_ = true;
+			// 何も入力がなければ移動システムを入れる
+			if (nextSystem_.empty()) {
+				nextSystem_[SystemState::kMove] = true;
 			}
+			player_->GetSystemManager()->SetResetSystemFunc(std::bind(&Attack::Reset, this));
 		}
-	}
-	// 受付時間が終了していればコンボ中断
-	if (player_->GetSystemManager()->GetComboTree()->GetIsReceptEndTrigger() && !player_->GetSystemManager()->GetComboTree()->GetIsStiffness()) {
-		isAttackRecovery_ = false;
 	}
 
 	// 攻撃アシストが有効になっている場合
@@ -121,8 +115,6 @@ void Attack::Update() {
 
 void Attack::Reset() {
 	isActive_ = false;
-	isAttackRecovery_ = false;
-	velocity_ = { 0.0f,0.0f,0.0f };
 }
 
 void Attack::DebugGUI() {
@@ -156,9 +148,10 @@ void Attack::CreateJsonFIle() {
 }
 
 void Attack::Command() {
-	//collider_.isActive = true;
-	//isEnableInput_ = true;
 	player_->GetSystemManager()->GetComboTree()->SetIsRecept(true);
+	// コンボツリー自体を更新する(バグ対策:二度攻撃ボタンを押さないと攻撃しなくなる)
+	// 処理順の関係で、生成したAttackクラスのUpdateが呼び出されるのが次のフレームなので生成した瞬間に一度更新処理を呼ぶ
+	player_->GetSystemManager()->GetComboTree()->Update();
 }
 
 void Attack::CreateCombo() {

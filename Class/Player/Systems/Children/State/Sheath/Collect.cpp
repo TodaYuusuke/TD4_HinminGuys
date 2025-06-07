@@ -50,9 +50,6 @@ void Collect::Update() {
 
 void Collect::Command() {
 	if ((*eventOrders_)[(int)Sheath::SheathState::kCollect].GetIsEnd()) {
-		// 鞘クラスの速度を自機に適用
-		player_->GetSystemManager()->SetInputState(InputState::kSheath);
-
 		// 鞘アニメーション開始
 		player_->StopAnimation(LWP::Resource::Animation::TrackType::Main);
 		player_->StopAnimation(LWP::Resource::Animation::TrackType::Blend);

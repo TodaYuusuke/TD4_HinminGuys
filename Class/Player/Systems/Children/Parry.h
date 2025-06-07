@@ -144,6 +144,18 @@ public:// Getter, Setter
 	/// <returns></returns>
 	LWP::Math::Vector3 GetParryTargetPos() { return parryTargetPos_; }
 	/// <summary>
+	/// 無敵時間を取得
+	/// </summary>
+	/// <returns></returns>
+	float GetInvinsibleTime() {
+		for (int i = 0; i < eventOrders_.size(); i++) {
+			if (eventOrders_[i].GetCurrentTimeEvent().name == "InvinsibleTime") {
+				return eventOrders_[i].GetCurrentTimeEvent().graceTime;
+			}
+		}
+		return 0.0f;
+	}
+	/// <summary>
 	/// 無敵時間中かを取得
 	/// </summary>
 	/// <returns></returns>
@@ -186,10 +198,6 @@ private:// jsonで保存する値
 private:
 	// アクションイベント集(無敵に関するものだけ)
 	std::map<int, EventOrder> eventOrders_;
-
-	// パリィ判定
-	LWP::Object::Collision collider_;
-	LWP::Object::Collider::AABB& aabb_;
 
 	// パリィできた攻撃をしてきた相手の座標
 	LWP::Math::Vector3 parryTargetPos_;

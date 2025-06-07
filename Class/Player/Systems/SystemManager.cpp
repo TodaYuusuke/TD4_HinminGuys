@@ -5,7 +5,9 @@
 using namespace LWP;
 using namespace LWP::Math;
 
-SystemManager::SystemManager(Player* player, EnemyManager* enemyManager, FollowCamera* followCamera, LWP::Object::Camera* camera) {
+SystemManager::SystemManager(Player* player, EnemyManager* enemyManager, FollowCamera* followCamera, LWP::Object::Camera* camera)
+	: parryAABB_(parryCollision_.SetBroadShape(LWP::Object::Collider::AABB()))
+{
 	player_ = player;
 	enemyManager_ = enemyManager;
 	followCamera_ = followCamera;
@@ -32,20 +34,30 @@ void SystemManager::Initialize() {
 	damageResponseSystem_->CreateJsonFIle();
 	damageResponseSystem_->Initialize();
 
+	// コンボ
 	comboTree_ = new ComboTree();
 	// コンボツリーの初期化
 	comboTree_->Init("Combo.json", player_->GetModel(), player_->GetAnimation());
 	// コライダーのマスク設定
 	comboTree_->SetColliderMaskFrag(GameMask::GetAttack(), GameMask::GetEnemy());
 	// 攻撃の判定
-	onCollision_ = [this](LWP::Object::Collision* hitTarget) {
+	attackOnHitFunc_ = [this](LWP::Object::Collision* hitTarget) {
 		hitTarget;
 		// 鞘が外れている状態だと減らさない
 		//if (player_->GetSystemManager()->GetSheathSystem()->GetSheathState()->GetStateName() != "Throw") { return; }
 
 		player_->TakeSheathDamage(comboTree_->GetSheathDurabityLoss());
 		};
-	comboTree_->AddCollisionLamda(LWP::Utility::ComboEnum::ENTER, onCollision_);
+	comboTree_->AddCollisionLamda(LWP::Utility::ComboEnum::ENTER, attackOnHitFunc_);
+
+	// パリィ判定生成
+	parryAABB_.min = { -1.0f, -1.0f, -1.0f };
+	parryAABB_.max = { 1.0f, 1.0f, 1.0f };
+	parryCollision_.SetFollow(player_->GetWorldTF());
+	parryCollision_.isActive = false;
+	parryCollision_.worldTF.translation = { 0.0f, 1.0f, 0.0f };
+	parryCollision_.mask.SetBelongFrag(GameMask::GetParry());
+	parryCollision_.mask.SetHitFrag(GameMask::GetAttack());
 
 #pragma region json用
 	// 移動機能
@@ -78,9 +90,6 @@ void SystemManager::Initialize() {
 	systems_.push_back(attackSystem_.get());
 #pragma endregion
 
-	// 入力状態
-	inputState_ = InputState::kMove;
-
 	// 移動機能をセット
 	CreateMoveSystem();
 	preSystemState_ = systemState_;
@@ -92,30 +101,16 @@ void SystemManager::Update() {
 	// ダメージリアクション機能
 	damageResponseSystem_->Update();
 
-
-	if (currentSystem_) {
-		comboTree_->Update();
-
-		// 現在稼働している機能
-		currentSystem_->Update();
-
-		// 速度
-		velocity_ = currentSystem_->GetVelocity();
-		// 角度
-		radian_ = currentSystem_->GetRadian();
-		quat_ = LWP::Math::Quaternion::CreateFromAxisAngle(LWP::Math::Vector3{ 0, 1, 0 }, radian_.y);
-
-		// リセット関数を代入されたら呼びだす
-		if (resetSystemFunc_) {
-			resetSystemFunc_();
-			resetSystemFunc_ = nullptr;
-			delete currentSystem_;
-			currentSystem_ = nullptr;
-		}
-	}
+	// 現在稼働しているシステムの更新
+	CurrentSystemUpdate();
 
 	// 機能の切り替え条件
 	SwitchCurrentSystem();
+
+	// 無敵処理
+	if (invinsibleTime_ != 0.0f) {
+		invinsibleTime_--;
+	}
 }
 
 void SystemManager::Reset() {
@@ -214,12 +209,36 @@ void SystemManager::CreateSheathSystem() {
 	systemState_ = SystemState::kSheath;
 }
 
+void SystemManager::CurrentSystemUpdate() {
+	if (!currentSystem_) { return; }
+
+	// 現在稼働している機能
+	currentSystem_->Update();
+
+	// 速度
+	velocity_ = currentSystem_->GetVelocity();
+	// 角度
+	radian_ = currentSystem_->GetRadian();
+	quat_ = LWP::Math::Quaternion::CreateFromAxisAngle(LWP::Math::Vector3{ 0, 1, 0 }, radian_.y);
+
+	// リセット関数を代入されたら呼びだす
+	if (resetSystemFunc_) {
+		// 
+		resetSystemFunc_();
+		resetSystemFunc_ = nullptr;
+
+		// 現在のシステム解放
+		delete currentSystem_;
+		currentSystem_ = nullptr;
+	}
+}
+
 void SystemManager::SwitchCurrentSystem() {
 	// 現在のシステムに何も入ってないなら移動機能を入れる
-	if (!currentSystem_) { CreateMoveSystem(); }
-	// 次に遷移したい機能がない時は処理しない
-	if (currentSystem_->GetNextSystems().empty()) {
-		return;
+	if (!currentSystem_) {
+		CreateMoveSystem();
+		// コンボ初期化
+		ComboReset();
 	}
 
 	// 攻撃

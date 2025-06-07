@@ -2,10 +2,7 @@
 #include "../../Player.h"
 #include "State/Move/Idle.h"
 #include "State/Move/Walk.h"
-#include "State/Move/Run.h"
 #include "State/Move/Dash.h"
-#include "State/Move/None.h"
-#include "State/Move/AttackRecovery.h"
 #include "../../../Camera/FollowCamera.h"
 
 using namespace LWP;
@@ -53,13 +50,6 @@ void Move::Reset() {
 	velocity_ = { 0.0f, 0.0f, 0.0f };
 	stickStrength_ = 0;
 	isMove_ = false;
-
-	// 移動状態をなくす
-	if (GetTriggerChangeMoveState(MoveState::kNone)) {
-		moveState_ = MoveState::kNone;
-		ChangeState(new None(this, player_));
-		preMoveState_ = moveState_;
-	}
 }
 
 void Move::DebugGUI() {
@@ -90,11 +80,10 @@ void Move::CreateJsonFIle() {
 
 void Move::Command() {
 	isActive_ = true;
-	player_->GetSystemManager()->SetInputState(InputState::kMove);
 }
 
 void Move::AnimCommand() {
-	//CheckMoveState();
+	
 }
 
 void Move::CheckMoveState() {
@@ -110,28 +99,25 @@ void Move::CheckMoveState() {
 	}
 	// 移動状態に移行
 	else {
-	// もしも直前に攻撃をしていたら硬直フラグをfalseにしてAttackRecovery状態に移行しないようにする
-	//player_->GetSystemManager()->GetAttackSystem()->SetIsAttackRecovery(false);
-
-	// 走り状態に移行
-	if (player_->GetSystemManager()->GetIsEnableDash() && stickStrength_ >= jsonData_.runThreshold) {
-		// 走りモーション再生中なら状態遷移しない
-		if (GetTriggerChangeMoveState(MoveState::kDash)) {
-			moveState_ = MoveState::kDash;
-			//player_->GetSystemManager()->GetAttackSystem()->ComboReset();
-			ChangeState(new Dash(this, player_, jsonData_.dashSpeedMultiply));
+		// 走り状態に移行
+		if (player_->GetSystemManager()->GetIsEnableDash() && stickStrength_ >= jsonData_.runThreshold) {
+			// 走りモーション再生中なら状態遷移しない
+			if (GetTriggerChangeMoveState(MoveState::kDash)) {
+				moveState_ = MoveState::kDash;
+				player_->GetSystemManager()->ComboReset();
+				ChangeState(new Dash(this, player_, jsonData_.dashSpeedMultiply));
+			}
 		}
-	}
-	// 通常移動状態に移行
-	else {
-		if (GetTriggerChangeMoveState(MoveState::kWalk)) {
-			moveState_ = MoveState::kWalk;
-			//player_->GetSystemManager()->GetAttackSystem()->ComboReset();
-			// ダッシュ状態解除
-			player_->GetSystemManager()->SetIsEnableDash(false);
-			ChangeState(new Walk(this, player_, jsonData_.runSpeedMultiply));
+		// 通常移動状態に移行
+		else {
+			if (GetTriggerChangeMoveState(MoveState::kWalk)) {
+				moveState_ = MoveState::kWalk;
+				player_->GetSystemManager()->ComboReset();
+				// ダッシュ状態解除
+				player_->GetSystemManager()->SetIsEnableDash(false);
+				ChangeState(new Walk(this, player_, jsonData_.runSpeedMultiply));
+			}
 		}
-	}
 	}
 
 	preMoveState_ = moveState_;

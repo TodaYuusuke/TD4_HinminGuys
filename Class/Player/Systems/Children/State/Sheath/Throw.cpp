@@ -51,8 +51,6 @@ void Throw::Command() {
 		player_->SetBlendT(0.0f);
 		player_->ResetAnimation();
 		player_->StartAnimation("SheathThrow", 0.0f, 0.0f);
-		// 鞘クラスの速度を自機に適用
-		player_->GetSystemManager()->SetInputState(InputState::kSheath);
 		isActive_ = true;
 
 		sheathSystem_->SetIsActive(true);

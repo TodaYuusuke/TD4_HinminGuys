@@ -58,8 +58,6 @@ void Break::Command() {
 		player_->ResetAnimation();
 		player_->StartAnimation("SheathDash", 0.0f, 0.0f);
 
-		// 鞘クラスの速度を自機に適用
-		player_->GetSystemManager()->SetInputState(InputState::kSheath);
 		(*eventOrders_)[(int)Sheath::SheathState::kBreak].Start();
 		isActive_ = true;
 		sheathSystem_->SetIsActive(true);

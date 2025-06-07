@@ -48,20 +48,12 @@ void Evasion::Update() {
 }
 
 void Evasion::Reset() {
-	eventOrder_.Reset();
-	eventOrders_[(int)EventOrderState::kInvincible].Reset();
-	eventOrders_[(int)EventOrderState::kAcceleration].Reset();
-	isActive_ = false;
-	isPreActive_ = false;
-	// 回避時の速度
-	velocity_ = { 0.0f, 0.0f, 0.0f };
-	// 回避時の角度(ラジアン)
-	radian_ = { 0.0f, 0.0f, 0.0f };
-	animPlaySpeed_ = { 1.0f, 0.0f, 0.0f };
-	player_->SetAnimationPlaySpeed(animPlaySpeed_.x);
-
 	// 入力のあったシステム
 	nextSystem_ = CheckNextSystems();
+	// 何も入力がなければ移動システムを入れる
+	if (nextSystem_.empty()) {
+		nextSystem_[SystemState::kMove] = true;
+	}
 }
 
 void Evasion::DebugGUI() {
@@ -128,8 +120,6 @@ void Evasion::CreateJsonFIle() {
 
 void Evasion::Command() {
 	if (eventOrder_.GetIsEnd()) {
-		// 回避状態に移行
-		player_->GetSystemManager()->SetInputState(InputState::kEvasion);
 		eventOrders_[(int)EventOrderState::kInvincible].Start();
 		eventOrders_[(int)EventOrderState::kAcceleration].Start();
 		pressTime_ = 0.0f;
@@ -224,6 +214,10 @@ void Evasion::CheckEvasionState() {
 	else if (eventOrders_[(int)EventOrderState::kAcceleration].GetCurrentTimeEvent().name == "AccelerationTime") {
 		// 予備動作が無いとき用
 		if (GetTrigger()) {
+			// 自機本体の無敵開始
+			player_->GetSystemManager()->SetInvisibleTime(eventOrders_[(int)EventOrderState::kInvincible].GetCurrentTimeEvent().graceTime);
+
+			// 回避の挙動
 			easeData_ = {
 				&velocity_,
 				Vector3{0,0,0},

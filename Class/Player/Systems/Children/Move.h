@@ -22,12 +22,10 @@ struct MoveJsonData {
 class Move : public ISystem {
 public:
 enum class MoveState {
-	kNone,			// 何もなし
 	kIdle,			// 待機
 	kWalk,			// 歩き
 	kRun,			// 小走り
 	kDash,			// 走り
-	kAttackRecovery,// 攻撃後に何も移動キーを入力していない場合
 	kCount
 };
 
@@ -133,6 +131,16 @@ public:// Getter, Setter
 	/// </summary>
 	/// <returns></returns>
 	float GetStickStrength() { return stickStrength_; }
+	/// <summary>
+	/// ひとつ前の移動状態を取得
+	/// </summary>
+	/// <returns></returns>
+	bool GetPreMoveState(MoveState moveState) {
+		if (preMoveState_ == moveState) {
+			return true;
+		}
+		return false; 
+	}
 	/// <summary>
 	/// 移動しているかを取得
 	/// </summary>

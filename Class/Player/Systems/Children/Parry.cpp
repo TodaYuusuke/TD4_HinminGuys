@@ -7,9 +7,7 @@ using namespace GameMask;
 using namespace LWP::Utility;
 using namespace LWP::Utility::Interpolation;
 
-Parry::Parry(LWP::Object::Camera* camera, Player* player)
-	: aabb_(collider_.SetBroadShape(LWP::Object::Collider::AABB()))
-{
+Parry::Parry(LWP::Object::Camera* camera, Player* player) {
 	pCamera_ = camera;
 	player_ = player;
 
@@ -69,21 +67,16 @@ void Parry::Update() {
 }
 
 void Parry::Reset() {
-	isActive_ = false;
-	if (eventOrders_[(int)ParryInvinsibleState::kJust].GetIsEnd()) {
-		isJustParry_ = false;
-	}
-	if (eventOrders_[(int)ParryInvinsibleState::kGood].GetIsEnd()) {
-		isGoodParry_ = false;
-	}
-	collider_.isActive = false;
-	eventOrder_.Reset();
-	eventOrders_[(int)ParryInvinsibleState::kRunning].Reset();
+	player_->GetSystemManager()->GetParryCollision().isActive = false;
 	// クールタイム開始
 	SetCoolTime();
 
 	// 入力のあったシステム
 	nextSystem_ = CheckNextSystems();
+	// 何も入力がなければ移動システムを入れる
+	if (nextSystem_.empty()) {
+		nextSystem_[SystemState::kMove] = true;
+	}
 }
 
 void Parry::DebugGUI() {
@@ -122,10 +115,10 @@ void Parry::DebugGUI() {
 
 		eventOrder_.DebugGUI();
 
-		if (ImGui::TreeNode("Collider")) {
-			collider_.DebugGUI();
-			ImGui::TreePop();
-		}
+		//if (ImGui::TreeNode("Collider")) {
+		//	collider_.DebugGUI();
+		//	ImGui::TreePop();
+		//}
 
 		ImGui::Checkbox("IsJustParry", &isJustParry_);
 		ImGui::Checkbox("IsGoodParry", &isGoodParry_);
@@ -155,11 +148,11 @@ void Parry::CreateJsonFIle() {
 		.EndGroup()
 
 		.EndGroup()
-		// 当たり判定
-		.BeginGroup("Collider")
-		.AddValue<Vector3>("Min", &aabb_.min)
-		.AddValue<Vector3>("Max", &aabb_.max)
-		.EndGroup()
+		//// 当たり判定
+		//.BeginGroup("Collider")
+		//.AddValue<Vector3>("Min", &aabb_.min)
+		//.AddValue<Vector3>("Max", &aabb_.max)
+		//.EndGroup()
 		// 鞘ゲージの減少量
 		.BeginGroup("SheathDecrement")
 		.AddValue<float>("JustParry", &jsonData_.justParryDecrement)
@@ -172,18 +165,16 @@ void Parry::CreateJsonFIle() {
 
 void Parry::Command() {
 	if (eventOrder_.GetIsEnd()) {
-		// パリィ状態に移行
-		player_->GetSystemManager()->SetInputState(InputState::kParry);
+		eventOrder_.Start();
 		eventOrders_[(int)ParryInvinsibleState::kRunning].Start();
 		isActive_ = true;
-		collider_.isActive = true;
 		radian_ = player_->GetRadian();
 		quat_ = player_->GetQuat();
 
 		// アニメーション再生
 		AnimCommand();
 	}
-	eventOrder_.Start();
+
 }
 
 void Parry::AnimCommand() {
@@ -197,58 +188,67 @@ void Parry::AnimCommand() {
 }
 
 void Parry::CreateCollision() {
-	// 攻撃判定生成
-	aabb_.min = { -1.0f, -1.0f, -1.0f };
-	aabb_.max = { 1.0f, 1.0f, 1.0f };
-	collider_.SetFollow(player_->GetWorldTF());
-	collider_.isActive = false;
-	collider_.worldTF.translation = { 0.0f, 1.0f, 0.0f };
-	collider_.mask.SetBelongFrag(GetParry());
-	collider_.mask.SetHitFrag(GetAttack());
-	collider_.stayLambda = [this](LWP::Object::Collision* hitTarget) {
-		// すでにジャスパor甘パリィなら処理しない
-		if (isGoodParry_ || isJustParry_) { return; }
+	// 当たった時の処理
+	player_->GetSystemManager()->SetParryOnHitFunc(
+		[this](LWP::Object::Collision* hitTarget) {
+			// すでにジャスパor甘パリィなら処理しない
+			if (isGoodParry_ || isJustParry_) { return; }
 
-		LWP::Math::Vector3 p2t = (hitTarget->GetWorldPosition() - player_->GetWorldTF()->GetWorldPosition()).Normalize();
+			LWP::Math::Vector3 p2t = (hitTarget->GetWorldPosition() - player_->GetWorldTF()->GetWorldPosition()).Normalize();
 
-		// ジャストパリィ
-		if (eventOrder_.GetCurrentTimeEvent().name == "JustParry") {
-			isJustParry_ = true;
-			isGoodParry_ = false;
-			eventOrders_[(int)ParryInvinsibleState::kJust].Start();
-			// クールタイムなし
-			currentCoolTime_ = 0.0f;
-			// 鞘のゲージを減少
-			player_->GetUIManager()->ChangeSheathGauge(jsonData_.justParryDecrement);
-			// 相手の座標を代入
-			parryTargetPos_ = hitTarget->GetWorldPosition();
-			// ノックバック量を決定
-			justParryKnockBack_ = (parryTargetPos_ - player_->GetWorldTF()->GetWorldPosition()).Normalize() * -jsonData_.justParryKnockBackMovement;
-			start_ = player_->GetWorldTF()->GetWorldPosition();
-			end_ = player_->GetWorldTF()->GetWorldPosition() + justParryKnockBack_;
+			// ジャストパリィ
+			if (eventOrder_.GetCurrentTimeEvent().name == "JustParry") {
+				isJustParry_ = true;
+				isGoodParry_ = false;
+				eventOrders_[(int)ParryInvinsibleState::kJust].Start();
 
-			radian_.y = LWP::Utility::GetRadian(LWP::Math::Vector3{ 0,0,1 }, p2t, LWP::Math::Vector3{ 0,1,0 });
-			quat_ = LWP::Math::Quaternion::CreateFromAxisAngle(LWP::Math::Vector3{ 0, 1, 0 }, radian_.y);
+				// 無敵時間を設定
+				player_->GetSystemManager()->SetInvisibleTime(jsonData_.successJustParryInvinsible * 60.0f);
+
+				// クールタイムなし
+				currentCoolTime_ = 0.0f;
+
+				// 鞘のゲージを減少
+				player_->GetUIManager()->ChangeSheathGauge(jsonData_.justParryDecrement);
+
+				// 相手の座標を代入
+				parryTargetPos_ = hitTarget->GetWorldPosition();
+
+				// ノックバック量を決定
+				justParryKnockBack_ = (parryTargetPos_ - player_->GetWorldTF()->GetWorldPosition()).Normalize() * -jsonData_.justParryKnockBackMovement;
+				start_ = player_->GetWorldTF()->GetWorldPosition();
+				end_ = player_->GetWorldTF()->GetWorldPosition() + justParryKnockBack_;
+
+				radian_.y = LWP::Utility::GetRadian(LWP::Math::Vector3{ 0,0,1 }, p2t, LWP::Math::Vector3{ 0,1,0 });
+				quat_ = LWP::Math::Quaternion::CreateFromAxisAngle(LWP::Math::Vector3{ 0, 1, 0 }, radian_.y);
+			}
+			// 甘めパリィ
+			else if (eventOrder_.GetCurrentTimeEvent().name == "GoodParry") {
+				isGoodParry_ = true;
+				isJustParry_ = false;
+				eventOrders_[(int)ParryInvinsibleState::kGood].Start();
+
+				// ガードアニメーション開始
+				player_->ResetAnimation();
+				player_->StartAnimation("WeakParry", 0.0f, 0.0f);
+
+				// 無敵時間を設定
+				player_->GetSystemManager()->SetInvisibleTime(jsonData_.successGoodParryInvinsible * 60.0f);
+
+				// クールタイムなし
+				currentCoolTime_ = 0.0f;
+
+				// 鞘のゲージを減少
+				player_->GetUIManager()->ChangeSheathGauge(jsonData_.goodParryDecrement);
+
+				// 相手の座標を代入
+				parryTargetPos_ = hitTarget->GetWorldPosition();
+
+				radian_.y = LWP::Utility::GetRadian(LWP::Math::Vector3{ 0,0,1 }, p2t, LWP::Math::Vector3{ 0,1,0 });
+				quat_ = LWP::Math::Quaternion::CreateFromAxisAngle(LWP::Math::Vector3{ 0, 1, 0 }, radian_.y);
+			}
 		}
-		// 甘めパリィ
-		else if (eventOrder_.GetCurrentTimeEvent().name == "GoodParry") {
-			isGoodParry_ = true;
-			isJustParry_ = false;
-			eventOrders_[(int)ParryInvinsibleState::kGood].Start();
-			// ガードアニメーション開始
-			player_->ResetAnimation();
-			player_->StartAnimation("WeakParry", 0.0f, 0.0f);
-			// クールタイムなし
-			currentCoolTime_ = 0.0f;
-			// 鞘のゲージを減少
-			player_->GetUIManager()->ChangeSheathGauge(jsonData_.goodParryDecrement);
-			// 相手の座標を代入
-			parryTargetPos_ = hitTarget->GetWorldPosition();
-
-			radian_.y = LWP::Utility::GetRadian(LWP::Math::Vector3{ 0,0,1 }, p2t, LWP::Math::Vector3{ 0,1,0 });
-			quat_ = LWP::Math::Quaternion::CreateFromAxisAngle(LWP::Math::Vector3{ 0, 1, 0 }, radian_.y);
-		}
-		};
+	);
 }
 
 void Parry::CreateEventOrder() {
@@ -288,21 +288,26 @@ void Parry::CreateGoodParryInvinsibleEventOrder() {
 void Parry::CheckParryState() {
 	// 予備動作
 	if (eventOrder_.GetCurrentTimeEvent().name == "SwingTime") {
-		collider_.isActive = false;
+		player_->GetSystemManager()->GetParryCollision().isActive = false;
 		isJustParry_ = false;
 		isGoodParry_ = false;
 	}
 	// ジャストパリィ
 	else if (eventOrder_.GetCurrentTimeEvent().name == "JustParry") {
-		collider_.isActive = true;
+		// 自機本体の無敵開始
+		if (!player_->GetSystemManager()->GetParryCollision().isActive) {
+			// 無敵時間を設定
+			player_->GetSystemManager()->SetInvisibleTime((jsonData_.kJustParryTime + jsonData_.kGoodParryTime) * 60.0f);
+		}
+		player_->GetSystemManager()->GetParryCollision().isActive = true;
 	}
 	// 甘めパリィ
 	else if (eventOrder_.GetCurrentTimeEvent().name == "GoodParry") {
-		collider_.isActive = true;
+		player_->GetSystemManager()->GetParryCollision().isActive = true;
 	}
 	// 硬直
 	else if (eventOrder_.GetCurrentTimeEvent().name == "RecoveryTime") {
-		collider_.isActive = false;
+		player_->GetSystemManager()->GetParryCollision().isActive = false;
 		isJustParry_ = false;
 		isGoodParry_ = false;
 	}

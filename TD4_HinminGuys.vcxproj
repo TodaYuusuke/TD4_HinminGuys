@@ -150,7 +150,6 @@
   <ItemGroup>
     <ClCompile Include="Class\Enemy\Childs\Normal\State\HitReaction.cpp" />
     <ClCompile Include="Class\Player\Systems\Children\State\Sheath\Break.cpp" />
-    <ClCompile Include="Class\Player\Systems\Children\State\Move\AttackRecovery.cpp" />
     <ClCompile Include="Class\ComboEditor\ComboTree.cpp" />
     <ClCompile Include="Class\Condition\child\Input\ButtonCondition.cpp" />
     <ClCompile Include="Class\DeltaTimer\DeltaTimer.cpp" />
@@ -198,12 +197,10 @@
     <ClCompile Include="Class\Player\Systems\SystemManager.cpp" />
     <ClCompile Include="Class\Player\Systems\Children\State\Attack\NoneAttack.cpp" />
     <ClCompile Include="Class\TestCollider.cpp" />
-    <ClCompile Include="Class\Player\Systems\Children\State\Move\Run.cpp" />
     <ClCompile Include="Class\Player\Systems\Children\State\Move\Walk.cpp" />
     <ClCompile Include="Class\Player\Gauge\Sheath\SheathGauge.cpp" />
     <ClCompile Include="Class\Player\Systems\Children\State\Sheath\Throw.cpp" />
     <ClCompile Include="Class\Player\Animator\PlayerAnimator.cpp" />
-    <ClCompile Include="Class\Player\Systems\Children\State\Move\None.cpp" />
     <ClCompile Include="Class\UI\UIManager.cpp" />
     <ClCompile Include="Class\Camera\State\ParryCamera.cpp" />
     <ClCompile Include="Class\Player\PlayerParameter.cpp" />
@@ -215,7 +212,6 @@
     <ClInclude Include="Class\Enemy\Childs\Normal\NormalStateParameter.h" />
     <ClInclude Include="Class\Player\Systems\Children\State\Sheath\Break.h" />
     <ClInclude Include="Class\IParameter.h" />
-    <ClInclude Include="Class\Player\Systems\Children\State\Move\AttackRecovery.h" />
     <ClInclude Include="Class\ComboEditor\ComboTree.h" />
     <ClInclude Include="Class\Condition\child\Input\ButtonCondition.h" />
     <ClInclude Include="Class\Condition\ConditionEnums.h" />
@@ -271,7 +267,6 @@
     <ClInclude Include="Class\TestCollider.h" />
     <ClInclude Include="Class\GameMask.h" />
     <ClInclude Include="Class\Player\Systems\Children\State\Move\Idle.h" />
-    <ClInclude Include="Class\Player\Systems\Children\State\Move\Run.h" />
     <ClInclude Include="Class\Player\Systems\Children\State\Move\Walk.h" />
     <ClInclude Include="Class\Player\Gauge\IGauge.h" />
     <ClInclude Include="Class\Player\Gauge\HP\HP.h" />
@@ -281,7 +276,6 @@
     <ClInclude Include="Class\Player\Animator\PlayerAnimator.h" />
     <ClInclude Include="Class\Player\Animator\IAnimation.h" />
     <ClInclude Include="Class\Player\Systems\Children\State\Move\Dash.h" />
-    <ClInclude Include="Class\Player\Systems\Children\State\Move\None.h" />
     <ClInclude Include="Class\Player\Systems\Children\DamageResponse.h" />
     <ClInclude Include="Class\UI\UIManager.h" />
     <ClInclude Include="Class\Camera\State\IFollowCameraState.h" />

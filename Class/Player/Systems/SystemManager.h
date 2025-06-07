@@ -61,7 +61,6 @@ public:
 	/// </summary>
 	void ComboReset() {
 		comboTree_->ResetCombo();
-		comboTree_->SetIsRecept(false);
 	}
 
 public:
@@ -89,10 +88,11 @@ public:
 	///// ダメージ反応機能を生成
 	///// </summary>
 	//void CreateDamageResponseSystem();
-	///// <summary>
-	///// ロックオン機能を生成
-	///// </summary>
-	//void CreateLockOnSystem();
+
+	/// <summary>
+	/// 現在のシステムの更新処理
+	/// </summary>
+	void CurrentSystemUpdate();
 
 	/// <summary>
 	/// 機能の切り替え
@@ -101,42 +101,27 @@ public:
 
 public:// Getter, Setter
 #pragma region Getter
+	/// <summary>
+	/// コンボツリーを取得
+	/// </summary>
+	/// <returns></returns>
 	ComboTree* GetComboTree() { return comboTree_; }
+	/// <summary>
+	/// パリィの当たり判定を取得
+	/// </summary>
+	/// <returns></returns>
+	LWP::Object::Collision& GetParryCollision() { return parryCollision_; }
 	/// <summary>
 	/// ロックオン機能のアドレスを取得
 	/// </summary>
 	/// <returns></returns>
 	LockOn* GetLockOnSystem() { return lockOnSystem_.get(); }
-	///// <summary>
-	///// パリィ機能のアドレスを取得
-	///// </summary>
-	///// <returns></returns>
-	//Parry* GetParrySystem() { return parrySystem_.get(); }
-	///// <summary>
-	///// 攻撃機能のアドレスを取得
-	///// </summary>
-	///// <returns></returns>
-	//Attack* GetAttackSystem() { return attackSystem_.get(); }
-	///// <summary>
-	///// 移動機能のアドレスを取得
-	///// </summary>
-	///// <returns></returns>
-	//Move* GetMoveSystem() { return moveSystem_.get(); }
-	///// <summary>
-	///// 回避機能のアドレスを取得
-	///// </summary>
-	///// <returns></returns>
-	//Evasion* GetEvasionSystem() { return evasionSystem_.get(); }
-	///// <summary>
-	///// 鞘機能のアドレスを取得
-	///// </summary>
-	///// <returns></returns>
-	//Sheath* GetSheathSystem() { return sheathSystem_.get(); }
 	/// <summary>
 	/// 被弾機能のアドレスを取得
 	/// </summary>
 	/// <returns></returns>
 	DamageResponse* GetDamageResponseSystem() { return damageResponseSystem_.get(); }
+
 	/// <summary>
 	/// 速度を取得
 	/// </summary>
@@ -158,6 +143,11 @@ public:// Getter, Setter
 	/// <returns></returns>
 	ISystem* GetCurrentSystem() { return currentSystem_; }
 	/// <summary>
+	/// 無敵時間を取得
+	/// </summary>
+	/// <param name="invinsibleTime"></param>
+	float GetInvisibleTime() { return invinsibleTime_; }
+	/// <summary>
 	/// ダッシュ可能かを取得
 	/// </summary>
 	bool GetIsEnableDash() { return isEnableDash_; }
@@ -169,6 +159,11 @@ public:// Getter, Setter
 	/// </summary>
 	/// <param name="resetSystemFunc"></param>
 	void SetResetSystemFunc(std::function<void()> resetSystemFunc) { resetSystemFunc_ = resetSystemFunc; }
+	/// <summary>
+	/// パリィの当たった時の処理の関数ポインタを設定
+	/// </summary>
+	void SetParryOnHitFunc(LWP::Object::Collision::OnHitFunction parryOnHitFunc) { parryCollision_.stayLambda = parryOnHitFunc; }
+
 	/// <summary>
 	/// 移動速度を設定
 	/// </summary>
@@ -185,10 +180,10 @@ public:// Getter, Setter
 	/// <param name="quat">向かせる方向(クォータニオン)</param>
 	void SetRotate(const LWP::Math::Quaternion& quat) { quat_ = quat; }
 	/// <summary>
-	/// 入力状態を設定
+	/// 無敵時間を設定
 	/// </summary>
-	/// <param name="inputState"></param>
-	void SetInputState(InputState inputState) { inputState_ = inputState; }
+	/// <param name="invinsibleTime"></param>
+	void SetInvisibleTime(const float& invinsibleTime) { invinsibleTime_ = invinsibleTime; }
 	/// <summary>
 	/// ダッシュ可能かを設定
 	/// </summary>
@@ -214,10 +209,7 @@ private:
 	std::unique_ptr<Parry> parrySystem_;
 	// 攻撃機能
 	std::unique_ptr<Attack> attackSystem_;
-	// コンボ攻撃用クラス
-	ComboTree* comboTree_;
-	// 当たり判定の内容
-	LWP::Object::Collision::OnHitFunction onCollision_;
+
 	// 移動機能
 	std::unique_ptr<Move> moveSystem_;
 	// 回避機能
@@ -238,6 +230,18 @@ private:
 	// systemのリセット関数を格納
 	std::function<void()> resetSystemFunc_;
 
+	SystemState systemState_;
+	// ひとつ前に使用していた機能
+	SystemState preSystemState_;
+
+	// コンボ攻撃用クラス
+	ComboTree* comboTree_;
+	// 攻撃の当たり判定の内容
+	LWP::Object::Collision::OnHitFunction attackOnHitFunc_;
+	// パリィ判定
+	LWP::Object::Collision parryCollision_;
+	LWP::Object::Collider::AABB& parryAABB_;
+
 	// 速度
 	LWP::Math::Vector3 velocity_;
 	// 角度
@@ -250,12 +254,6 @@ private:
 	float invinsibleTime_;
 	// クールタイム
 	float coolTime_;
-
-	// 入力状態
-	InputState inputState_;
-	SystemState systemState_;
-	// ひとつ前に使用していた機能
-	SystemState preSystemState_;
 
 	// 鞘ゲージがなくなっているか
 	bool isNoneSheathGauge_;
