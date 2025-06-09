@@ -1,6 +1,5 @@
 #include "EnemyManager.h"
 #include "../Player/Player.h"
-#include "Childs/Normal/State/States.h"
 
 EnemyManager::~EnemyManager()
 {
@@ -268,22 +267,57 @@ void EnemyManager::DebugState(States states)
 	switch (states)
 	{
 	case States::kNormalIdle:
-		NormalIdle::DebugGUI();
+		
+		if (ImGui::TreeNode("NormalIdle")) {
+			ImGui::DragFloat("followingDist", &IdleParameter::followingDist_, 0.1f);
+			ImGui::TreePop();
+		}
+
 		break;
 	case States::kNormalMove:
-		NormalMove::DebugGUI();
+		
+		if (ImGui::TreeNode("NormalMove")) {
+			ImGui::DragFloat("attackDist", &MoveParameter::attackDist_, 0.1f);
+			ImGui::DragInt("runTime", &MoveParameter::runTime_, 0.2f);
+			ImGui::TreePop();
+		}
+
 		break;
 	case States::kNormalAttack:
-		NormalAttack::DebugGUI();
+		
+		if (ImGui::TreeNode("NormalAttack")) {
+			ImGui::TreePop();
+		}
+
 		break;
 	case States::kSpacing:
-		Spacing::DebugGUI();
+		
+		if (ImGui::TreeNode("Spacing")) {
+			ImGui::DragFloat("spaceDist", &SpacingParameter::spaceDist_, 0.1f);
+			ImGui::DragInt("spacingTime", &SpacingParameter::spacingTime_, 0.2f);
+			ImGui::TreePop();
+		}
+
 		break;
 	case States::kFollowing:
-		Following::DebugGUI();
+		
+		if (ImGui::TreeNode("Following")) {
+			ImGui::DragFloat("idleDist", &FollowingParameter::idleDist_, 0.1f);
+			ImGui::TreePop();
+		}
+
 		break;
 	case States::kWaitingForAttack:
-		WaitingForAttack::DebugGUI();
+		
+		if (ImGui::TreeNode("WaitingForAttack")) {
+			ImGui::Text("attack Count : %d", WaitingForAttackParameter::attackCount_);
+			ImGui::Text("next Attack Count : %d", WaitingForAttackParameter::nextAttackCount_);
+			ImGui::TreePop();
+		}
+
+		break;
+	case States::kHitReaction:
+
 		break;
 	default:
 		break;

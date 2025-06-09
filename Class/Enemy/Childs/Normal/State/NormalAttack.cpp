@@ -1,74 +1,63 @@
-#include "NormalAttack.h"
-#include "NormalIdle.h"
 #include "../../../../Player/Player.h"
 #include "../Normal.h"
 #include "../../../EnemyManager.h"
 #include "../../../../GameMask.h"
 
 using namespace GameMask;
+using namespace LWP::Math;
 
-float NormalAttack::attackAcceptTime_ = 0.13f;
+void Normal::AttackFinalize(const States& pre) {
 
-NormalAttack::NormalAttack(Normal* enemy)
-{
-
-	enemy_ = enemy;
-	enemy_->SetAnimation("LightAttack2", false, 0.1f);
-	stateType_ = States::kNormalAttack;
+	//待機ステートの待機時間セット
+	stateParameter_.idleParameter.countStandTime = IdleParameter::standTime_;
 
 }
 
-void NormalAttack::Initialize()
+void Normal::AttackInit(const States& pre)
 {
 	
-	enemy_->GetSwordCollider().isActive = false;
-	enemy_->BeginAttack();
+	preState_ = States::kNormalAttack;
+	SetAnimation("LightAttack2", false, 0.1f);
+	swordCollider_.isActive = false;
+	BeginAttack();
 	//パリィエフェクト開始
-	enemy_->StartParryEffect();
+	StartParryEffect();
 
 }
 
-void NormalAttack::Update()
+void Normal::AttackUpdate(std::optional<States>& req, const States& pre)
 {
 
 	//パリィエフェクト中ならアニメーションをゆっくりにして判定オフ
-	if (enemy_->GetIsStartParryEffect()) {
-		enemy_->GetAnimation()->GetPlayBackSpeed() = 0.1f;
-		enemy_->GetSwordCollider().isActive = false;
+	if (isStartParryEffect_) {
+		animation_.GetPlayBackSpeed() = 0.1f;
+		swordCollider_.isActive = false;
 	}
 	//パリィエフェクトが終わったら通常スピードで判定をオンにする
-	else if(enemy_->IsExitParryEffect()) {
-		enemy_->GetAnimation()->GetPlayBackSpeed() = 1.0f;
-		enemy_->GetSwordCollider().isActive = true;
+	else if(IsExitParryEffect()) {
+		animation_.GetPlayBackSpeed() = 1.0f;
+		swordCollider_.isActive = true;
 	}
 
 	//攻撃受付時間を超過したら判定オフ
-	if (enemy_->GetAnimation()->GetProgress() > attackAcceptTime_) {
-		enemy_->GetSwordCollider().isActive = false;
+	if (animation_.GetProgress() > AttackParameter::attackAcceptTime_) {
+		swordCollider_.isActive = false;
 	}
 
 	//攻撃が終了した時
-	if (not enemy_->GetAnimation()->GetPlaying()) {
+	if (not animation_.GetPlaying()) {
 
 		//攻撃判定オフ
-		enemy_->GetSwordCollider().isActive = false;
+		swordCollider_.isActive = false;
 		//待機状態に移行
-		enemy_->EndAttack();
-		enemy_->SetIsAttackPhase(false);
-		enemy_->SetState(States::kNormalIdle);
+		EndAttack();
+		SetIsAttackPhase(false);
+		state_.request = States::kNormalIdle;
 		return;
 
 	}
 
-	enemy_->SetPosition(enemy_->GetPosition() + (enemy_->GetRepulsiveForce() * LWP::Info::GetDeltaTime()));
+	SetPosition(GetPosition() + (GetRepulsiveForce() * LWP::Info::GetDeltaTime()));
 
 }
 
-void NormalAttack::DebugGUI()
-{
-
-	if (ImGui::TreeNode("NormalAttack")) {
-		ImGui::TreePop();
-	}
-
-}

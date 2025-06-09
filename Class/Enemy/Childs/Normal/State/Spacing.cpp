@@ -1,68 +1,59 @@
-#include "Spacing.h"
-#include "NormalMove.h"
-#include "NormalIdle.h"
 #include "../Normal.h"
 #include "../../../EnemyManager.h"
 
-int32_t Spacing::spacingTime_ = 120;
-float Spacing::spaceDist_ = 3.0f;
+using namespace LWP::Math;
 
-Spacing::Spacing(Normal* enemy)
+void Normal::SpacingFinalize(const States& pre)
 {
-	enemy_ = enemy;
-	enemy_->SetAnimation("Run", true, 0.3f);
-	stateType_ = States::kSpacing;
+
+	//移動ステートの時間セット
+	stateParameter_.moveParameter.countRunTime = MoveParameter::runTime_;
+	//待機ステートの待機時間セット
+	stateParameter_.idleParameter.countStandTime = IdleParameter::standTime_;
+
 }
 
-Spacing::~Spacing()
-{
-}
-
-void Spacing::Initialize()
+void Normal::SpacingInit(const States& pre)
 {
 	
-	//時間セット
-	enemy_->GetStateParameter().spacingParameter.countSpacingTime = spacingTime_;
-	//ランダムな数字を利用して右回りかどうかを決める
-	if (LWP::Utility::GenerateRandamNum(0, 1) == 0) {
-		enemy_->GetStateParameter().spacingParameter.isClockwise = true;
-	}
+	SetAnimation("Run", true, 0.3f);
+	preState_ = States::kSpacing;
 
 }
 
-void Spacing::Update()
+void Normal::SpacingUpdate(std::optional<States>& req, const States& pre)
 {
 
 	//カウントダウン
-	if (enemy_->GetStateParameter().spacingParameter.countSpacingTime > 0) {
-		enemy_->GetStateParameter().spacingParameter.countSpacingTime--;
+	if (stateParameter_.spacingParameter.countSpacingTime > 0) {
+		stateParameter_.spacingParameter.countSpacingTime--;
 	}
 
 	//0になったら行動変化
-	if (enemy_->GetStateParameter().spacingParameter.countSpacingTime <= 0) {
+	if (stateParameter_.spacingParameter.countSpacingTime <= 0) {
 
 		//攻撃人数が3人未満且つ敵の中で距離の近さが3位以内の時
-		if (enemy_->GetManagerPtr()->GetAttackPhaseCount() < IEnemy::GetMaxAttackCount() and
-			enemy_->GetClosenessCount() < IEnemy::GetMaxAttackCount()) {
+		if (enemyManager_->GetAttackPhaseCount() < IEnemy::GetMaxAttackCount() and
+			GetClosenessCount() < IEnemy::GetMaxAttackCount()) {
 			//接近状態に移行
-			enemy_->SetIsAttackPhase(true);
-			enemy_->SetState(States::kNormalMove);
+			SetIsAttackPhase(true);
+			state_.request = States::kNormalMove;
 			return;
 		}
 		//そうでない場合
 		else {
 			//待機状態に戻る
-			enemy_->SetState(States::kNormalIdle);
+			state_.request = States::kNormalIdle;
 			return;
 		}
 
 	}
 
 	//プレイヤーが存在する場合
-	if (enemy_->GetPlayerPtr()) {
+	if (player_) {
 
 		//移動
-		Vector3 dist = enemy_->GetPlayerPosition() - enemy_->GetPosition();
+		Vector3 dist = GetPlayerPosition() - GetPosition();
 
 		//y軸の移動ベクトルを消す
 		dist.y = 0.0f;
@@ -88,22 +79,22 @@ void Spacing::Update()
 		result.z = cosf(theta);
 
 		//右回りならベクトルを逆にする
-		if (enemy_->GetStateParameter().spacingParameter.isClockwise) {
+		if (stateParameter_.spacingParameter.isClockwise) {
 			result *= -1.0f;
 		}
 
 		//プレイヤーとの間合いをあらかじめ決めておき、その範囲内に入ったら押し出しベクトルを加算するようにする
-		if (length < spaceDist_ && length > 0.0001f) {
-			enemy_->AddRepulsiveForce(dist.Normalize() * -((spaceDist_ - length) * 2.0f / spaceDist_));
+		if (length < SpacingParameter::spaceDist_ && length > 0.0001f) {
+			AddRepulsiveForce(dist.Normalize() * -((SpacingParameter::spaceDist_ - length) * 2.0f / SpacingParameter::spaceDist_));
 		}
 
 		result = result + dist.Normalize();
 
 		result = result.Normalize();
 
-		enemy_->SetPosition(enemy_->GetPosition() + result * LWP::Info::GetDeltaTime() + (enemy_->GetRepulsiveForce() * LWP::Info::GetDeltaTime()));
+		SetPosition(GetPosition() + result * LWP::Info::GetDeltaTime() + (GetRepulsiveForce() * LWP::Info::GetDeltaTime()));
 		//プレイヤーの向きに回転
-		enemy_->RotateTowardsPlayer();
+		RotateTowardsPlayer();
 
 	}
 
@@ -111,13 +102,3 @@ void Spacing::Update()
 
 }
 
-void Spacing::DebugGUI()
-{
-
-	if (ImGui::TreeNode("Spacing")) {
-		ImGui::DragFloat("spaceDist", &spaceDist_, 0.1f);
-		ImGui::DragInt("spacingTime", &spacingTime_, 0.2f);
-		ImGui::TreePop();
-	}
-
-}

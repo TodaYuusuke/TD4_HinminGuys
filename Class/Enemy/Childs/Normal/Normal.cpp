@@ -1,6 +1,5 @@
 #include "Normal.h"
 #include "../../../Player/Player.h"
-#include "State/NormalIdle.h"
 #include "../../DirectXGame/Engine/primitive/model/Material.h"
 #include "../../../GameMask.h"
 
@@ -10,10 +9,7 @@ using namespace GameMask;
 Normal::~Normal()
 {
 
-	//ステートが存在していたら削除
-	if (state_) {
-		delete state_;
-	}
+	
 
 }
 
@@ -32,8 +28,10 @@ void Normal::Initialize(Player* player, const Vector3& position, LWP::Object::Ca
 	model_.worldTF.translation = position;
 	// 大きさを一時的に調整
 	model_.worldTF.scale = { 0.5f, 0.5f, 0.5f };
-	state_ = new NormalIdle(this);
-	state_->Initialize();
+	//関数セット
+	AddStateFunc();
+	state_.request = States::kNormalIdle;
+
 	// 刀モデルをプレイヤーの手に追従させる
 	swordModel_.GetJoint("Grip")->localTF.Parent(&model_, "WeaponAnchor");
 	// 体の判定生成
@@ -48,9 +46,9 @@ void Normal::Initialize(Player* player, const Vector3& position, LWP::Object::Ca
 		hitTarget;
 
 		//ステートをセット(攻撃中はリアクションしない)
-		if (state_->GetState() != States::kNormalAttack) {
-			SetPreState(state_->GetState());
-			SetState(States::kHitReaction);
+		if (state_.GetCurrentBehavior() != States::kNormalAttack) {
+			SetPreState(state_.GetCurrentBehavior());
+			state_.request = States::kHitReaction;
 			SetKnockBackValue(player_->GetSystemManager()->GetAttackSystem()->GetKnockBackStrength());
 		}
 
@@ -88,7 +86,7 @@ void Normal::Update()
 	}
 
 	//現在の状態を更新
-	state_->Update();
+	state_.Update();
 
 	//反発力リセット
 	repulsiveForce_ = { 0.0f,0.0f,0.0f };
@@ -98,46 +96,35 @@ void Normal::Update()
 	distFromPlayer_ = diff.Length();
 }
 
-void Normal::SetState(States state, bool isInit)
+void Normal::AddStateFunc()
 {
 
-	//前回の状態を開放、新しい状態に置き換える
-	if (state_) {
-		delete state_;
-	}
+	state_.init[int(States::kNormalIdle)] = [this](const States& pre) {IdleInit(pre); };
+	state_.update[int(States::kNormalIdle)] = [this](std::optional<States>& req, const States& pre) {IdleUpdate(req, pre); };
+	state_.finalize[int(States::kNormalIdle)] = [this](const States& pre) {IdleFinalize(pre); };
 
-	switch (state)
-	{
-	case States::kNormalIdle:
-		state_ = new NormalIdle(this);
-		break;
-	case States::kNormalMove:
-		state_ = new NormalMove(this);
-		break;
-	case States::kNormalAttack:
-		state_ = new NormalAttack(this);
-		break;
-	case States::kSpacing:
-		state_ = new Spacing(this);
-		break;
-	case States::kFollowing:
-		state_ = new Following(this);
-		break;
-	case States::kWaitingForAttack:
-		state_ = new WaitingForAttack(this);
-		break;
-	case States::kHitReaction:
-		state_ = new HitReaction(this);
-		break;
-	default:
-		break;
-	}
+	state_.init[int(States::kNormalMove)] = [this](const States& pre) {MoveInit(pre); };
+	state_.update[int(States::kNormalMove)] = [this](std::optional<States>& req, const States& pre) {MoveUpdate(req, pre); };
+	state_.finalize[int(States::kNormalMove)] = [this](const States& pre) {MoveFinalize(pre); };
 
-	//初期化フラグが立っているなら初期化
-	if (isInit) {
-		//初期化
-		state_->Initialize();
-	}
+	state_.init[int(States::kNormalAttack)] = [this](const States& pre) {AttackInit(pre); };
+	state_.update[int(States::kNormalAttack)] = [this](std::optional<States>& req, const States& pre) {AttackUpdate(req, pre); };
+	state_.finalize[int(States::kNormalAttack)] = [this](const States& pre) {AttackFinalize(pre); };
+
+	state_.init[int(States::kSpacing)] = [this](const States& pre) {SpacingInit(pre); };
+	state_.update[int(States::kSpacing)] = [this](std::optional<States>& req, const States& pre) {SpacingUpdate(req, pre); };
+	state_.finalize[int(States::kSpacing)] = [this](const States& pre) {SpacingFinalize(pre); };
+
+	state_.init[int(States::kFollowing)] = [this](const States& pre) {FollowingInit(pre); };
+	state_.update[int(States::kFollowing)] = [this](std::optional<States>& req, const States& pre) {FollowingUpdate(req, pre); };
+	state_.finalize[int(States::kFollowing)] = [this](const States& pre) {FollowingFinalize(pre); };
+
+	state_.init[int(States::kWaitingForAttack)] = [this](const States& pre) {WaitingForAttackInit(pre); };
+	state_.update[int(States::kWaitingForAttack)] = [this](std::optional<States>& req, const States& pre) {WaitingForAttackUpdate(req, pre); };
+	state_.finalize[int(States::kWaitingForAttack)] = [this](const States& pre) {WaitingForAttackFinalize(pre); };
+
+	state_.init[int(States::kHitReaction)] = [this](const States& pre) {HitReactionInit(pre); };
+	state_.update[int(States::kHitReaction)] = [this](std::optional<States>& req, const States& pre) {HitReactionUpdate(req, pre); };
+	state_.finalize[int(States::kHitReaction)] = [this](const States& pre) {HitReactionFinalize(pre); };
 
 }
-

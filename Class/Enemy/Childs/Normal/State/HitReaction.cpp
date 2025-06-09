@@ -1,52 +1,38 @@
-#include "HitReaction.h"
 #include "../../../../Player/Player.h"
 #include "../Normal.h"
 #include "../../../EnemyManager.h"
-#include "States.h"
 
-float HitReaction::decay_ = 0.9f;
+using namespace LWP::Math;
 
-HitReaction::HitReaction(Normal* enemy)
-{
+void Normal::HitReactionFinalize(const States& pre) {
 
-	enemy_ = enemy;
-	enemy_->SetAnimation("Damage", false);
-	stateType_ = States::kHitReaction;
+
 
 }
 
-void HitReaction::Initialize()
+void Normal::HitReactionInit(const States& pre)
 {
 	
+	SetAnimation("Damage", false);
+
 }
 
-void HitReaction::Update()
+void Normal::HitReactionUpdate(std::optional<States>& req, const States& pre)
 {
 
-	enemy_->SetPosition(enemy_->GetPosition() + (enemy_->GetKnockBackVelocity() + enemy_->GetRepulsiveForce()) *
+	SetPosition(GetPosition() + (GetKnockBackVelocity() + GetRepulsiveForce()) *
 		LWP::Info::GetDeltaTime());
 	//ノックバック減衰
-	enemy_->SetKnockBackVelocity(enemy_->GetKnockBackVelocity() * decay_);
+	SetKnockBackVelocity(GetKnockBackVelocity() * HitReactionParameter::decay_);
 
-	//攻撃が終了した時
-	if (not enemy_->GetAnimation()->GetPlaying()) {
+	//ノックバックが終了した時
+	if (not animation_.GetPlaying()) {
 
-		//攻撃判定オフ
-		enemy_->GetSwordCollider().isActive = false;
-		//待機状態に移行
-		enemy_->EndAttack();
-		enemy_->SetIsAttackPhase(false);
 		//直前の状態を再開
-		enemy_->SetState(enemy_->GetPreState(), false);
+		state_.request = preState_;
 		return;
 
 	}
 
 }
 
-void HitReaction::DebugGUI()
-{
-
-	
-
-}

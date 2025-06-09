@@ -1,51 +1,48 @@
-#include "NormalIdle.h"
-#include "NormalMove.h"
-#include "Spacing.h"
-#include "Following.h"
 #include "../../../../Player/Player.h"
 #include "../Normal.h"
 #include "../../../EnemyManager.h"
 
-int32_t NormalIdle::standTime_ = 60;
-float NormalIdle::followingDist_ = 6.0f;
+using namespace LWP::Math;
 
-NormalIdle::NormalIdle(Normal* enemy)
-{
+void Normal::IdleFinalize(const States& pre) {
 
-	enemy_ = enemy;
-	enemy_->SetAnimation("Idle", true);
-	stateType_ = States::kNormalIdle;
+	//時間セット
+	stateParameter_.spacingParameter.countSpacingTime = SpacingParameter::spacingTime_;
+	//ランダムな数字を利用して右回りかどうかを決める
+	if (LWP::Utility::GenerateRandamNum(0, 1) == 0) {
+		stateParameter_.spacingParameter.isClockwise = true;
+	}
 
 }
 
-void NormalIdle::Initialize()
+void Normal::IdleInit(const States& pre)
 {
 	
-	//待機時間
-	enemy_->GetStateParameter().idleParameter.countStandTime = standTime_;
+	SetAnimation("Idle", true);
+	preState_ = States::kNormalIdle;
+
 }
 
-void NormalIdle::Update()
+void Normal::IdleUpdate(std::optional<States>& req, const States& pre)
 {
 
 	//プレイヤーが存在する場合
-	if (enemy_->GetPlayerPtr()) {
+	if (player_) {
 		//カウントダウン
-		if (enemy_->GetStateParameter().idleParameter.countStandTime > 0) {
-			enemy_->GetStateParameter().idleParameter.countStandTime--;
+		if (stateParameter_.idleParameter.countStandTime > 0) {
+			stateParameter_.idleParameter.countStandTime--;
 		}
 
 		//プレイヤーから一定以上の距離離れたら追従モーションに移行
-		if (enemy_->GetDistFromPlayer() > followingDist_) {
-			enemy_->SetState(States::kFollowing);
+		if (distFromPlayer_ > IdleParameter::followingDist_) {
+			state_.request = States::kFollowing;
 			return;
 		}
 
 		//0になったら状態切り替え
-		if (enemy_->GetStateParameter().idleParameter.countStandTime <= 0) {
-
+		if (stateParameter_.idleParameter.countStandTime <= 0) {
 			//間合い取り状態に移行
-			enemy_->SetState(States::kSpacing);
+			state_.request = States::kSpacing;
 			return;
 		}
 
@@ -53,12 +50,3 @@ void NormalIdle::Update()
 
 }
 
-void NormalIdle::DebugGUI()
-{
-
-	if (ImGui::TreeNode("NormalIdle")) {
-		ImGui::DragFloat("followingDist", &followingDist_, 0.1f);
-		ImGui::TreePop();
-	}
-
-}

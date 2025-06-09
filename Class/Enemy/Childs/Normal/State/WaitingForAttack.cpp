@@ -1,44 +1,44 @@
-#include "WaitingForAttack.h"
-#include "NormalAttack.h"
 #include "../Normal.h"
 #include "../../../EnemyManager.h"
 
-uint16_t WaitingForAttack::attackCount_ = 0;
-uint16_t WaitingForAttack::nextAttackCount_ = 0;
+using namespace LWP::Math;
 
-WaitingForAttack::WaitingForAttack(Normal* enemy)
-{
-	
-	enemy_ = enemy;
-	enemy_->SetAnimation("Run", true);
-	stateType_ = States::kWaitingForAttack;
-
-	//現在の攻撃カウントから順番を決める
-	enemy_->GetStateParameter().waitingForAttackParameter.attackID = attackCount_;
-	//攻撃の順番を決める数字を上昇させる
-	attackCount_++;
-
-}
-
-WaitingForAttack::~WaitingForAttack()
+void Normal::WaitingForAttackFinalize(const States& pre)
 {
 
-	//次攻撃する番号を上昇させる
-	nextAttackCount_++;
-
-}
-
-void WaitingForAttack::Initialize()
-{
-
-	//ランダムな数字を利用して右回りかどうかを決める
-	if (LWP::Utility::GenerateRandamNum(0, 1) == 0) {
-		enemy_->GetStateParameter().waitingForAttackParameter.isClockwise = true;
+	//消えたときのIDが一致している場合
+	if (stateParameter_.waitingForAttackParameter.attackID == WaitingForAttackParameter::nextAttackCount_) {
+		//次攻撃する番号を上昇させる
+		WaitingForAttackParameter::nextAttackCount_++;
+	}
+	//違う場合
+	else {
+		//攻撃の順番を決める数字を減少させる
+		WaitingForAttackParameter::attackCount_--;
 	}
 
 }
 
-void WaitingForAttack::Update()
+void Normal::WaitingForAttackInit(const States& pre)
+{
+
+	SetAnimation("Run", true);
+
+	//現在の攻撃カウントから順番を決める
+	stateParameter_.waitingForAttackParameter.attackID = WaitingForAttackParameter::attackCount_;
+	//攻撃の順番を決める数字を上昇させる
+	WaitingForAttackParameter::attackCount_++;
+
+	//ランダムな数字を利用して右回りかどうかを決める
+	if (LWP::Utility::GenerateRandamNum(0, 1) == 0) {
+		stateParameter_.waitingForAttackParameter.isClockwise = true;
+	}
+
+	preState_ = States::kWaitingForAttack;
+
+}
+
+void Normal::WaitingForAttackUpdate(std::optional<States>& req, const States& pre)
 {
 
 	//
@@ -46,18 +46,18 @@ void WaitingForAttack::Update()
 	//
 
 	//誰も攻撃しておらず、順番が回ってきたら攻撃に移行
-	if (not enemy_->GetManagerPtr()->IsAnyAttack() and 
-		enemy_->GetStateParameter().waitingForAttackParameter.attackID == nextAttackCount_) {
+	if (not enemyManager_->IsAnyAttack() and 
+		stateParameter_.waitingForAttackParameter.attackID == WaitingForAttackParameter::nextAttackCount_) {
 		//攻撃状態に移行
-		enemy_->SetState(States::kNormalAttack);
+		state_.request = States::kNormalAttack;
 		return;
 	}
 
 	//プレイヤーが存在する場合
-	if (enemy_->GetPlayerPtr()) {
+	if (player_) {
 
 		//移動
-		Vector3 dist = enemy_->GetPlayerPosition() - enemy_->GetPosition();
+		Vector3 dist = GetPlayerPosition() - GetPosition();
 
 		//y軸の移動ベクトルを消す
 		dist.y = 0.0f;
@@ -83,25 +83,14 @@ void WaitingForAttack::Update()
 		result.z = cosf(theta);
 
 		//右回りならベクトルを逆にする
-		if (enemy_->GetStateParameter().waitingForAttackParameter.isClockwise) {
+		if (stateParameter_.waitingForAttackParameter.isClockwise) {
 			result *= -1.0f;
 		}
 
-		enemy_->SetPosition(enemy_->GetPosition() + result * LWP::Info::GetDeltaTime() + (enemy_->GetRepulsiveForce() * LWP::Info::GetDeltaTime()));
+		SetPosition(GetPosition() + result * LWP::Info::GetDeltaTime() + (GetRepulsiveForce() * LWP::Info::GetDeltaTime()));
 		//プレイヤーの向きに回転
-		enemy_->RotateTowardsPlayer();
+		RotateTowardsPlayer();
 
-	}
-
-}
-
-void WaitingForAttack::DebugGUI()
-{
-
-	if (ImGui::TreeNode("WaitingForAttack")) {
-		ImGui::Text("attack Count : %d", attackCount_);
-		ImGui::Text("next Attack Count : %d", nextAttackCount_);
-		ImGui::TreePop();
 	}
 
 }

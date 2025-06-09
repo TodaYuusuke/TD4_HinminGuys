@@ -1,95 +1,77 @@
-#include "NormalMove.h"
-#include "NormalAttack.h"
-#include "NormalIdle.h"
-#include "WaitingForAttack.h"
 #include "../../../../Player/Player.h"
 #include "../Normal.h"
 #include "../../../EnemyManager.h"
 
-float NormalMove::attackDist_ = 0.5f;
-int32_t NormalMove::runTime_ = 120;
+using namespace LWP::Math;
 
-NormalMove::NormalMove(Normal* enemy)
-{
+void Normal::MoveFinalize(const States& pre) {
 
-	enemy_ = enemy;
-	enemy_->SetAnimation("Run", true);
-	stateType_ = States::kNormalMove;
+	//待機ステートの待機時間セット
+	stateParameter_.idleParameter.countStandTime = IdleParameter::standTime_;
 
 }
 
-void NormalMove::Initialize()
+void Normal::MoveInit(const States& pre)
 {
 	
-	//時間セット
-	enemy_->GetStateParameter().moveParameter.countRunTime = runTime_;
-
+	SetAnimation("Run", true);
+	preState_ = States::kNormalMove;
 
 }
 
-void NormalMove::Update()
+void Normal::MoveUpdate(std::optional<States>& req, const States& pre)
 {
 
 	//プレイヤーが存在する場合
-	if (enemy_->GetPlayerPtr()) {
+	if (player_) {
 
 		//カウントダウン
-		if (enemy_->GetStateParameter().moveParameter.countRunTime > 0) {
-			enemy_->GetStateParameter().moveParameter.countRunTime--;
+		if (stateParameter_.moveParameter.countRunTime > 0) {
+			stateParameter_.moveParameter.countRunTime--;
 		}
 
 		//プレイヤーとの距離が近く、誰も攻撃していなかったら攻撃
-		if (Vector3::Distance(enemy_->GetPlayerPosition(), enemy_->GetPosition()) < attackDist_) {
+		if (Vector3::Distance(GetPlayerPosition(), GetPosition()) < MoveParameter::attackDist_) {
 
 			//誰も攻撃していない状態で、攻撃待機中の敵もいない場合、攻撃にそのまま移行
-			if (not enemy_->GetManagerPtr()->IsAnyAttack() and
-				WaitingForAttack::GetAttackCount() == WaitingForAttack::GetNextAttackCount()) {
+			if (not enemyManager_->IsAnyAttack() and
+				WaitingForAttackParameter::attackCount_ == WaitingForAttackParameter::nextAttackCount_) {
 				//攻撃状態に移行
-				enemy_->SetState(States::kNormalAttack);
+				state_.request = States::kNormalAttack;
 			}
 			else {
 				//攻撃待機状態に移行
-				enemy_->SetState(States::kWaitingForAttack);
+				state_.request = States::kWaitingForAttack;
 			}
 
 			return;
 		}
 
 		//0になったら行動を切り替える
-		if (enemy_->GetStateParameter().moveParameter.countRunTime <= 0) {
+		if (stateParameter_.moveParameter.countRunTime <= 0) {
 
 			//待機状態に移行
-			enemy_->SetIsAttackPhase(false);
-			enemy_->SetState(States::kNormalIdle);
+			SetIsAttackPhase(false);
+			state_.request = States::kNormalIdle;
 			return;
 
 		}
 
 		//移動
-		enemy_->GetStateParameter().moveParameter.velocity = enemy_->GetPlayerPosition() - enemy_->GetPosition();
+		stateParameter_.moveParameter.velocity = GetPlayerPosition() - GetPosition();
 		//y軸の移動ベクトルを消す
-		enemy_->GetStateParameter().moveParameter.velocity.y = 0.0f;
+		stateParameter_.moveParameter.velocity.y = 0.0f;
 
-		enemy_->GetStateParameter().moveParameter.velocity =
-			enemy_->GetStateParameter().moveParameter.velocity.Normalize() * LWP::Info::GetDeltaTime();
+		stateParameter_.moveParameter.velocity =
+			stateParameter_.moveParameter.velocity.Normalize() * LWP::Info::GetDeltaTime();
 
-		enemy_->SetPosition(enemy_->GetPosition() + enemy_->GetStateParameter().moveParameter.velocity +
-			(enemy_->GetRepulsiveForce() * LWP::Info::GetDeltaTime()));
+		SetPosition(GetPosition() + stateParameter_.moveParameter.velocity +
+			(GetRepulsiveForce() * LWP::Info::GetDeltaTime()));
 
 		//プレイヤーの向きに回転
-		enemy_->RotateTowardsPlayer();
+		RotateTowardsPlayer();
 
 	}
 
 }
 
-void NormalMove::DebugGUI()
-{
-
-	if (ImGui::TreeNode("NormalMove")) {
-		ImGui::DragFloat("attackDist", &attackDist_, 0.1f);
-		ImGui::DragInt("runTime", &runTime_, 0.2f);
-		ImGui::TreePop();
-	}
-
-}
