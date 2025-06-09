@@ -45,6 +45,26 @@ void EnemyManager::Update()
 
 	//全ての敵の更新
 	for (auto enemyA = enemies_.begin(); enemyA != enemies_.end(); enemyA++) {
+
+		//プレイヤーとの押し出し処理
+		{
+
+			//二人の距離を測る
+			Vector3 diff = (*enemyA)->GetPosition() - *player_->GetModelPos();
+			//Y軸移動は考えない
+			diff.y = 0.0f;
+			//距離
+			float dist = diff.Length();
+			//押し出し判定距離
+			float judgeDist = playerDist_;
+
+			//距離が一定以上近い場合、押し出しベクトルを加算する
+			if (dist < judgeDist && dist > 0.0001f) {
+				(*enemyA)->AddRepulsiveForce(diff.Normalize() * ((judgeDist - dist) / judgeDist));
+			}
+
+		}
+
 		//互いの情報を共有するためのループ
 		for (auto enemyB = enemies_.begin(); enemyB != enemies_.end(); enemyB++) {
 

@@ -60,6 +60,8 @@ void NormalAttack::Update()
 
 	}
 
+	enemy_->SetPosition(enemy_->GetPosition() + (enemy_->GetRepulsiveForce() * LWP::Info::GetDeltaTime()));
+
 }
 
 void NormalAttack::DebugGUI()
