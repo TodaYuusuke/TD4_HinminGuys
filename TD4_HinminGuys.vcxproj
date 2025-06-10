@@ -189,6 +189,7 @@
     <ClCompile Include="Class\Camera\State\InputCamera.cpp" />
     <ClCompile Include="Class\Camera\State\LockOnCamera.cpp" />
     <ClCompile Include="Class\UI\GameUI.cpp" />
+    <ClCompile Include="Class\Player\CoolTimer\CoolTimer.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Class\Player\Player.cpp" />
     <ClCompile Include="Class\Player\Systems\Children\Move.cpp" />
@@ -205,6 +206,7 @@
     <ClCompile Include="Class\Camera\State\ParryCamera.cpp" />
     <ClCompile Include="Class\Player\PlayerParameter.cpp" />
     <ClCompile Include="Class\Shake\Shake.cpp" />
+    <ClCompile Include="Class\Player\Systems\Children\State\Sheath\SwordDrawn.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Class\Enemy\Childs\Normal\INormalEnemyState.h" />
@@ -286,6 +288,8 @@
     <ClInclude Include="Class\Player\Systems\Children\Hit.h" />
     <ClInclude Include="Class\UI\GameUI.h" />
     <ClInclude Include="Class\Shake\Shake.h" />
+    <ClInclude Include="Class\Player\Systems\Children\State\Sheath\SwordDrawn.h" />
+    <ClInclude Include="Class\Player\CoolTimer\CoolTimer.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />

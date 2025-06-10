@@ -21,6 +21,11 @@ Break::Break(Sheath* sheathSystem, Player* player, std::map<int, EventOrder>* ev
 	sheathSystem_->SetIsSheathModelActive(false);
 	// 本体のモデルも非表示
 	player_->SetIsSheathModelActive(false);
+
+	// 鞘破壊状態にする
+	sheathSystem_->SetIsBreak(true);
+	sheathSystem_->SetIsNone(false);
+	sheathSystem_->SetIsSheathing(false);
 }
 
 void Break::Initialize() {
@@ -45,6 +50,14 @@ void Break::Update() {
 	// ダッシュ攻撃終了
 	if ((*eventOrders_)[(int)Sheath::SheathState::kBreak].GetIsEnd()) {
 		Reset();
+		sheathSystem_->Reset();
+		// 入力のあったシステム
+		sheathSystem_->SetNextSystems(sheathSystem_->CheckNextSystems());
+		// 何も入力がなければ移動システムを入れる
+		if (sheathSystem_->GetNextSystems().empty()) {
+			sheathSystem_->SetNextSystem(SystemState::kMove);
+		}
+		sheathSystem_->ChangeState(new Throw(sheathSystem_, player_, eventOrders_));
 	}
 }
 
@@ -62,11 +75,11 @@ void Break::Command() {
 		isActive_ = true;
 		sheathSystem_->SetIsActive(true);
 		// 攻撃判定を出す
-		sheathSystem_->SetIsCollision(true);
+		player_->GetSystemManager()->GetSheathAttackCollision().isActive = true;
 		// 無敵開始
 		(*eventOrders_)[(int)Sheath::SheathState::kInvinsible].Start();
 		start_ = { 0,0,0 };
-		end_ = sheathSystem_->jsonData_.dashAttackMovement * Matrix4x4::CreateRotateXYZMatrix(player_->GetSystemManager()->GetQuat());
+		end_ = sheathSystem_->jsonData_.dashAttackMovement * Matrix4x4::CreateRotateXYZMatrix(player_->GetQuat());
 		t_ = 0.0f;
 	}
 }
@@ -78,22 +91,25 @@ void Break::AnimCommand() {
 void Break::Reset() {
 	(*eventOrders_)[(int)Sheath::SheathState::kBreak].Reset();
 	velocity_ = { 0,0,0 };
+	sheathSystem_->SetVelocity(velocity_);
 	start_ = { 0,0,0 };
 	end_ = { 0,0,0 };
 	isActive_ = false;
-	sheathSystem_->SetIsCollision(false);
+	// 鞘攻撃の当たり判定をなくす
+	player_->GetSystemManager()->GetSheathAttackCollision().isActive = false;
 	t_ = 0.0f;
 }
 
 void Break::CheckBreakState() {
 	// 振りかぶり時間
 	if ((*eventOrders_)[(int)Sheath::SheathState::kBreak].GetCurrentTimeEvent().name == "SwingTime") {
-		sheathSystem_->SetIsCollision(false);
+		// 鞘攻撃の当たり判定をなくす
+		player_->GetSystemManager()->GetSheathAttackCollision().isActive = false;
 	}
 	// ダッシュ攻撃時間
 	else if ((*eventOrders_)[(int)Sheath::SheathState::kBreak].GetCurrentTimeEvent().name == "DashAttackFinishTime") {
 		// 当たり判定を出す
-		sheathSystem_->SetIsCollision(true);
+		player_->GetSystemManager()->GetSheathAttackCollision().isActive = true;
 
 		// 回避の速度補間がなくなるまでイージングを行う
 		if (t_ < sheathSystem_->jsonData_.dashAttackFinishTime * 60.0f) {
@@ -107,7 +123,8 @@ void Break::CheckBreakState() {
 	}
 	// 硬直時間
 	else if ((*eventOrders_)[(int)Sheath::SheathState::kBreak].GetCurrentTimeEvent().name == "RecoveryTime") {
-		sheathSystem_->SetIsCollision(false);
+		// 鞘攻撃の当たり判定をなくす
+		player_->GetSystemManager()->GetSheathAttackCollision().isActive = false;
 
 		// 徐々に減速
 		velocity_ = LWP::Utility::Interpolation::Exponential(velocity_, Vector3{ 0,0,0 }, 0.1f);

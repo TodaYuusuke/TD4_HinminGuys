@@ -27,6 +27,9 @@ struct EvasionJsonData {
 
 	// 回避の移動量
 	LWP::Math::Vector3 evasionMovement = { 0.0f, 0.0f, 1.0f };
+
+	// クールタイム
+	float coolTime = 0.0f;
 };
 
 /// <summary>

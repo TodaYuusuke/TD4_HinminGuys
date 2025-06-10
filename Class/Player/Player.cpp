@@ -133,8 +133,8 @@ void Player::InvinsibleUpdate() {
 }
 
 void Player::LimitMoveArea() {
-	//// 鞘を投げた後鞘を中心に移動制限をかける(円形)
-	//if (systemManager_->GetSheathSystem()->GetSheathState()->GetStateName() == "Collect") {
-	//	systemManager_->GetSheathSystem()->ClampToCircle(model_.worldTF.translation);
-	//}
+	// 鞘を投げた後鞘を中心に移動制限をかける(円形)
+	if (systemManager_->GetSheathSystem()->GetSheathState()->GetStateName() == "Collect") {
+		systemManager_->GetSheathSystem()->ClampToCircle(model_.worldTF.translation);
+	}
 }

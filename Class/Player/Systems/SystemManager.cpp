@@ -6,7 +6,8 @@ using namespace LWP;
 using namespace LWP::Math;
 
 SystemManager::SystemManager(Player* player, EnemyManager* enemyManager, FollowCamera* followCamera, LWP::Object::Camera* camera)
-	: parryAABB_(parryCollision_.SetBroadShape(LWP::Object::Collider::AABB()))
+	: parryAABB_(parryCollision_.SetBroadShape(LWP::Object::Collider::AABB())),
+	sheathAttackCapsule_(sheathCollision_.SetBroadShape(LWP::Object::Collider::Capsule()))
 {
 	player_ = player;
 	enemyManager_ = enemyManager;
@@ -17,6 +18,7 @@ SystemManager::SystemManager(Player* player, EnemyManager* enemyManager, FollowC
 SystemManager::~SystemManager() {
 	delete currentSystem_;
 	delete comboTree_;
+	delete coolTimer_;
 }
 
 void SystemManager::Initialize() {
@@ -29,10 +31,13 @@ void SystemManager::Initialize() {
 	lockOnSystem_->Initialize();
 	lockOnSystem_->SetEnemyList(enemyManager_->GetEnemyListPtr());
 	lockOnSystem_->SetFollowCamera(followCamera_);
-	// 被弾機能
-	damageResponseSystem_ = std::make_unique<DamageResponse>(pCamera_, player_);
-	damageResponseSystem_->CreateJsonFIle();
-	damageResponseSystem_->Initialize();
+	// 鞘機能
+	sheathSystem_ = std::make_unique<Sheath>(pCamera_, player_);
+	sheathSystem_->CreateJsonFIle();
+	sheathSystem_->Initialize();
+
+	// クールタイマー生成
+	coolTimer_ = new CoolTimer();
 
 	// コンボ
 	comboTree_ = new ComboTree();
@@ -44,7 +49,7 @@ void SystemManager::Initialize() {
 	attackOnHitFunc_ = [this](LWP::Object::Collision* hitTarget) {
 		hitTarget;
 		// 鞘が外れている状態だと減らさない
-		//if (player_->GetSystemManager()->GetSheathSystem()->GetSheathState()->GetStateName() != "Throw") { return; }
+		if (player_->GetSystemManager()->GetSheathSystem()->GetSheathState()->GetStateName() != "Throw") { return; }
 
 		player_->TakeSheathDamage(comboTree_->GetSheathDurabityLoss());
 		};
@@ -59,7 +64,19 @@ void SystemManager::Initialize() {
 	parryCollision_.mask.SetBelongFrag(GameMask::GetParry());
 	parryCollision_.mask.SetHitFrag(GameMask::GetAttack());
 
+	// 攻撃判定生成
+	sheathCollision_.SetFollow(player_->GetWorldTF());
+	sheathCollision_.isActive = false;
+	sheathCollision_.worldTF.translation = { 0.0f, 1.0f, 0.0f };
+	sheathCollision_.mask.SetBelongFrag(GameMask::GetAttack());
+	sheathCollision_.mask.SetHitFrag(GameMask::GetEnemy());
+
 #pragma region json用
+	// 被弾機能
+	damageResponse_ = std::make_unique<DamageResponse>(pCamera_, player_);
+	damageResponse_->CreateJsonFIle();
+	damageResponse_->Initialize();
+	systems_.push_back(damageResponse_.get());
 	// 移動機能
 	moveSystem_ = std::make_unique<Move>(pCamera_, player_);
 	moveSystem_->CreateJsonFIle();
@@ -77,11 +94,6 @@ void SystemManager::Initialize() {
 	evasionSystem_->CreateJsonFIle();
 	evasionSystem_->Initialize();
 	systems_.push_back(evasionSystem_.get());
-	// 鞘機能
-	sheathSystem_ = std::make_unique<Sheath>(pCamera_, player_);
-	sheathSystem_->CreateJsonFIle();
-	sheathSystem_->Initialize();
-	systems_.push_back(sheathSystem_.get());
 	// 攻撃機能
 	attackSystem_ = std::make_unique<Attack>(pCamera_, player_, enemyManager_);
 	attackSystem_->CreateJsonFIle();
@@ -91,21 +103,33 @@ void SystemManager::Initialize() {
 #pragma endregion
 
 	// 移動機能をセット
-	CreateMoveSystem();
-	preSystemState_ = systemState_;
+	CreateMoveSystem(currentSystem_);
+	systemState_ = SystemState::kMove;
 }
 
 void SystemManager::Update() {
 	// ロックオン機能
 	lockOnSystem_->Update();
-	// ダメージリアクション機能
-	damageResponseSystem_->Update();
 
 	// 現在稼働しているシステムの更新
 	CurrentSystemUpdate();
 
 	// 機能の切り替え条件
 	SwitchCurrentSystem();
+
+	// 鞘機能(ダメージ中は何もしない)
+	if (systemState_ != SystemState::kDamage) {
+		sheathSystem_->Update();
+		if (sheathSystem_->GetIsActive() && sheathSystem_->GetSheathState()->GetStateName() != "SwordDrawn") {
+			// 速度
+			velocity_ = sheathSystem_->GetVelocity();
+			// 角度
+			radian_ = sheathSystem_->GetRadian();
+		}
+	}
+
+	// 各機能のクールタイムの処理
+	coolTimer_->Update();
 
 	// 無敵処理
 	if (invinsibleTime_ != 0.0f) {
@@ -114,25 +138,46 @@ void SystemManager::Update() {
 }
 
 void SystemManager::Reset() {
-
+	delete currentSystem_;
+	currentSystem_ = nullptr;
+	sheathSystem_->Reset();
 }
 
 void SystemManager::DebugGUI() {
 #ifdef _DEBUG
 	// ロックオン
 	lockOnSystem_->DebugGUI();
-	damageResponseSystem_->DebugGUI();
+	// 鞘
+	sheathSystem_->DebugGUI();
 
 	// 各機能
 	for (ISystem* system : systems_) {
 		system->DebugGUI();
 	}
+
+	// 当たり判定
+	if (ImGui::TreeNode("Collider")) {
+		if (ImGui::TreeNode("Parry")) {
+			parryCollision_.DebugGUI();
+			ImGui::TreePop();
+		}
+		if (ImGui::TreeNode("SheathAttack")) {
+			sheathCollision_.DebugGUI();
+			ImGui::TreePop();
+		}
+		ImGui::TreePop();
+	}
+
+	if (ImGui::Button("Take Damage")) {
+		player_->TakeDamage(1.0f);
+	}
+
 #endif // DEBUG
 }
 
-void SystemManager::CreateMoveSystem() {
+void SystemManager::CreateMoveSystem(ISystem*& system) {
 	// 現在のシステムを一度削除
-	if (currentSystem_) { delete currentSystem_; }
+	if (system) { delete system; }
 
 	// 移動機能
 	Move* moveSystem = new Move(pCamera_, player_);
@@ -143,14 +188,12 @@ void SystemManager::CreateMoveSystem() {
 	moveSystem->SetRotate(quat_);
 	moveSystem->Update();
 
-	currentSystem_ = moveSystem;
-
-	systemState_ = SystemState::kMove;
+	system = moveSystem;
 }
 
-void SystemManager::CreateAttackSystem() {
+void SystemManager::CreateAttackSystem(ISystem*& system) {
 	// 現在のシステムを一度削除
-	if (currentSystem_) { delete currentSystem_; }
+	if (system) { delete system; }
 
 	// 攻撃機能
 	Attack* attackSystem = new Attack(pCamera_, player_, enemyManager_);
@@ -159,14 +202,12 @@ void SystemManager::CreateAttackSystem() {
 	attackSystem->Initialize();
 	attackSystem->Command();
 
-	currentSystem_ = attackSystem;
-
-	systemState_ = SystemState::kAttack;
+	system = attackSystem;
 }
 
-void SystemManager::CreateEvasionSystem() {
+void SystemManager::CreateEvasionSystem(ISystem*& system) {
 	// 現在のシステムを一度削除
-	if (currentSystem_) { delete currentSystem_; }
+	if (system) { delete system; }
 
 	// 回避機能
 	Evasion* evasionSystem = new Evasion(pCamera_, player_);
@@ -174,14 +215,12 @@ void SystemManager::CreateEvasionSystem() {
 	evasionSystem->Initialize();
 	evasionSystem->Command();
 
-	currentSystem_ = evasionSystem;
-
-	systemState_ = SystemState::kEvasion;
+	system = evasionSystem;
 }
 
-void SystemManager::CreateParrySystem() {
+void SystemManager::CreateParrySystem(ISystem*& system) {
 	// 現在のシステムを一度削除
-	if (currentSystem_) { delete currentSystem_; }
+	if (system) { delete system; }
 
 	// パリィ機能
 	Parry* parrySystem = new Parry(pCamera_, player_);
@@ -189,14 +228,12 @@ void SystemManager::CreateParrySystem() {
 	parrySystem->Initialize();
 	parrySystem->Command();
 
-	currentSystem_ = parrySystem;
-
-	systemState_ = SystemState::kParry;
+	system = parrySystem;
 }
 
-void SystemManager::CreateSheathSystem() {
+void SystemManager::CreateSheathSystem(ISystem*& system) {
 	// 現在のシステムを一度削除
-	if (currentSystem_) { delete currentSystem_; }
+	if (system) { delete system; }
 
 	// 鞘機能
 	Sheath* sheathSystem = new Sheath(pCamera_, player_);
@@ -204,9 +241,26 @@ void SystemManager::CreateSheathSystem() {
 	sheathSystem->Initialize();
 	sheathSystem->Command();
 
-	currentSystem_ = sheathSystem;
+	system = sheathSystem;
+}
 
-	systemState_ = SystemState::kSheath;
+void SystemManager::CreateDamageResponseSystem(ISystem*& system) {
+	// 現在のシステムを一度削除
+	if (system) { delete system; }
+
+	// 鞘機能
+	DamageResponse* damageResponse = new DamageResponse(pCamera_, player_);
+	damageResponse->SetJsonData(damageResponse_->GetJsonData());
+	damageResponse->Initialize();
+	// 無敵開始
+	damageResponse->StartInvinsible();
+	// 被弾演出開始
+	damageResponse->StartEffect();
+	// コンボ状態リセット
+	ComboReset();
+
+	system = damageResponse;
+	systemState_ = SystemState::kDamage;
 }
 
 void SystemManager::CurrentSystemUpdate() {
@@ -220,55 +274,54 @@ void SystemManager::CurrentSystemUpdate() {
 	// 角度
 	radian_ = currentSystem_->GetRadian();
 	quat_ = LWP::Math::Quaternion::CreateFromAxisAngle(LWP::Math::Vector3{ 0, 1, 0 }, radian_.y);
-
-	// リセット関数を代入されたら呼びだす
-	if (resetSystemFunc_) {
-		// 
-		resetSystemFunc_();
-		resetSystemFunc_ = nullptr;
-
-		// 現在のシステム解放
-		delete currentSystem_;
-		currentSystem_ = nullptr;
-	}
 }
 
 void SystemManager::SwitchCurrentSystem() {
+	// 鞘機能が稼働しているときは何もしない
+	if (sheathSystem_->GetIsActive() && sheathSystem_->GetSheathState()->GetStateName() != "SwordDrawn") { return; }
+
 	// 現在のシステムに何も入ってないなら移動機能を入れる
 	if (!currentSystem_) {
-		CreateMoveSystem();
+		CreateMoveSystem(currentSystem_);
+		systemState_ = SystemState::kMove;
 		// コンボ初期化
 		ComboReset();
 	}
 
 	// 攻撃
 	if (currentSystem_->GetNextSystem(SystemState::kAttack) && systemState_ != SystemState::kAttack) {
-		CreateAttackSystem();
+		CreateAttackSystem(currentSystem_);
+		systemState_ = SystemState::kAttack;
 	}
 	// 回避
-	else if (currentSystem_->GetNextSystem(SystemState::kEvasion) && systemState_ != SystemState::kEvasion) {
-		CreateEvasionSystem();
+	else if (currentSystem_->GetNextSystem(SystemState::kEvasion) && systemState_ != SystemState::kEvasion && coolTimer_->GetEvasionCoolTimeData().isFinish) {
+		CreateEvasionSystem(currentSystem_);
+		systemState_ = SystemState::kEvasion;
 		// コンボ初期化
 		ComboReset();
 	}
 	// パリィ
-	else if (currentSystem_->GetNextSystem(SystemState::kParry) && systemState_ != SystemState::kParry) {
-		CreateParrySystem();
+	else if (currentSystem_->GetNextSystem(SystemState::kParry) && systemState_ != SystemState::kParry && coolTimer_->GetParryCoolTimeData().isFinish) {
+		CreateParrySystem(currentSystem_);
+		systemState_ = SystemState::kParry;
 		// コンボ初期化
 		ComboReset();
 	}
 	// 鞘
-	else if (currentSystem_->GetNextSystem(SystemState::kSheath) && systemState_ != SystemState::kSheath) {
-		//CreateSheathSystem();
+	else if (currentSystem_->GetNextSystem(SystemState::kSheath) && systemState_ != SystemState::kSheath && coolTimer_->GetSheathCoolTimeData().isFinish) {
+		sheathSystem_->Command();
+		systemState_ = SystemState::kSheath;
 		// コンボ初期化
 		ComboReset();
+
+		delete currentSystem_;
+		currentSystem_ = nullptr;
 	}
 	// 移動
 	else if (currentSystem_->GetNextSystem(SystemState::kMove) && systemState_ != SystemState::kMove) {
-		CreateMoveSystem();
+		CreateMoveSystem(currentSystem_);
+		systemState_ = SystemState::kMove;
 		// コンボ初期化
 		ComboReset();
 	}
-
-	preSystemState_ = systemState_;
 }

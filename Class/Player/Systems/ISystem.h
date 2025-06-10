@@ -10,6 +10,7 @@ enum class SystemState {
 	kParry,
 	kSheath,
 	kAttack,
+	kDamage,
 	kAll
 };
 
@@ -84,6 +85,12 @@ public:// Getter, Setter
 
 		return nextSystem;
 	}
+
+	/// <summary>
+	/// 次に遷移したいシステムリストクリア
+	/// </summary>
+	void ClearNextSystems() { nextSystem_.clear(); }
+
 #pragma region Getter
 	/// <summary>
 	/// 次に遷移したいシステムを取得
@@ -130,6 +137,14 @@ public:// Getter, Setter
 #pragma endregion
 
 #pragma region Setter
+	/// <summary>
+	/// 次に遷移したいシステムリストを設定
+	/// </summary>
+	void SetNextSystems(std::map<SystemState, bool> nextSystems) { nextSystem_ = nextSystems; }
+	/// <summary>
+	/// 指定したシステムが次に遷移したい
+	/// </summary>
+	void SetNextSystem(SystemState systemState) { nextSystem_[systemState] = true; }
 	/// <summary>
 	/// jsonの情報を設定
 	/// </summary>

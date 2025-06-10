@@ -4,9 +4,7 @@
 #include "../../Player.h"
 #include "../../../GameMask.h"
 
-Sheath::Sheath(LWP::Object::Camera* camera, Player* player)
-	: capsule_(collider_.SetBroadShape(LWP::Object::Collider::Capsule()))
-{
+Sheath::Sheath(LWP::Object::Camera* camera, Player* player) {
 	pCamera_ = camera;
 	player_ = player;
 
@@ -15,16 +13,15 @@ Sheath::Sheath(LWP::Object::Camera* camera, Player* player)
 	sheathModel_.worldTF.scale = { 2.0f, 2.0f, 2.0f };
 	sheathModel_.isActive = false;
 
-	// ダッシュ攻撃の判定を作成
-	CreateCollision();
+	// 鞘のある状態
+	isSheathing_ = true;
+	// 機能を稼働させない
+	isActive_ = false;
 }
 
 void Sheath::Initialize() {
 	// コマンドの登録
 	inputHandler_ = InputHandler::GetInstance();
-
-	// jsonで保存している値
-	//CreateJsonFIle();
 
 	// アクションイベント作成
 	CreateThrowEventOrder();
@@ -38,15 +35,13 @@ void Sheath::Initialize() {
 }
 
 void Sheath::Update() {
-	// クールタイムの時間更新
-	CoolTimeUpdate();
 	if (!isActive_) { return; }
 
 	// 状態
 	state_->Update();
 
 	// カプセルの当たり判定を更新
-	capsule_.end = jsonData_.dashAttackLength;
+	player_->GetSystemManager()->GetSheathAttackCapsule().end = jsonData_.dashAttackLength;
 
 	// 無敵時間
 	eventOrders_[(int)SheathState::kInvinsible].Update();
@@ -72,8 +67,6 @@ void Sheath::Reset() {
 	// 向いている角度
 	quat_ = { 0.0f,0.0f,0.0f,1.0f };
 	radian_ = { 0.0f,0.0f,0.0f };
-
-	currentCoolTime_ = 0.0f;
 }
 
 void Sheath::DebugGUI() {
@@ -124,14 +117,9 @@ void Sheath::DebugGUI() {
 			eventOrders_[(int)SheathState::kInvinsible].DebugGUI();
 			ImGui::TreePop();
 		}
-		if (ImGui::TreeNode("Collider")) {
-			collider_.DebugGUI();
-			ImGui::TreePop();
-		}
 
 		ImGui::DragFloat3("Velocity", &velocity_.x);
 		ImGui::DragFloat3("Radian", &radian_.x);
-		ImGui::DragFloat("CoolTime", &currentCoolTime_);
 
 		ImGui::Checkbox("IsEvasion", &isActive_);
 
@@ -183,7 +171,7 @@ void Sheath::CreateJsonFIle() {
 
 		// 攻撃の判定
 		.BeginGroup("Collider")
-		.AddValue<float>("Radius", &capsule_.radius)
+		.AddValue<float>("Radius", &player_->GetSystemManager()->GetSheathAttackCapsule().radius)
 		.AddValue<Vector3>("Length", &jsonData_.dashAttackLength)
 		.EndGroup()
 
@@ -201,7 +189,7 @@ void Sheath::Command() {
 		isBreak_ = true;
 		ChangeState(new Break(this, player_, &eventOrders_));
 	}
-	isActive_ = true;
+	//isActive_ = true;
 	// 状態によって変更
 	state_->Command();
 	// 状態によって変更
@@ -211,15 +199,6 @@ void Sheath::Command() {
 void Sheath::AnimCommand() {
 	// 状態によって変更
 	state_->AnimCommand();
-}
-
-void Sheath::CreateCollision() {
-	// 攻撃判定生成
-	collider_.SetFollow(player_->GetWorldTF());
-	collider_.isActive = false;
-	collider_.worldTF.translation = { 0.0f, 1.0f, 0.0f };
-	collider_.mask.SetBelongFrag(GameMask::GetAttack());
-	collider_.mask.SetHitFrag(GameMask::GetEnemy());
 }
 
 void Sheath::CreateThrowEventOrder() {
@@ -265,15 +244,6 @@ void Sheath::CreateInvinsibleEventOrder() {
 void Sheath::ChangeState(ISheathSystemState* pState) {
 	delete state_;
 	state_ = pState;
-}
-
-void Sheath::CoolTimeUpdate() {
-	// 既定の時間を越していなかったら鞘投げを使えない
-	if (CheckCoolTime()) {
-		return;
-	}
-
-	currentCoolTime_--;
 }
 
 LWP::Math::Vector3 Sheath::ClampToCircle(LWP::Math::Vector3& position) {

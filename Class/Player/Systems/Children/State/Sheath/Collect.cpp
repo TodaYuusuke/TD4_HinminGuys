@@ -14,6 +14,8 @@ Collect::Collect(Sheath* sheathSystem, Player* player, std::map<int, EventOrder>
 
 	// 状態の名前
 	stateName_ = "Collect";
+
+	Command();
 }
 
 void Collect::Initialize() {
@@ -30,18 +32,33 @@ void Collect::Update() {
 
 	// 全ての移動処理終了
 	if ((*eventOrders_)[(int)Sheath::SheathState::kCollect].GetIsEnd()) {
+		// 入力のあったシステム
+		sheathSystem_->SetNextSystems(sheathSystem_->CheckNextSystems());
+		// 何も入力がなければ移動システムを入れる
+		if (sheathSystem_->GetNextSystems().empty()) {
+			sheathSystem_->SetNextSystem(SystemState::kMove);
+		}
+
 		sheathSystem_->Reset();
 		(*eventOrders_)[(int)Sheath::SheathState::kCollect].Reset();
 
 		// 投げる用の鞘モデルを非表示
 		sheathSystem_->SetIsSheathModelActive(false);
 		// 本体のモデルも非表示
-		player_->SetIsSheathModelActive(true);
-		sheathSystem_->SetIsCollision(false);
+		player_->SetIsSheathModelActive(true);	
+		// 鞘攻撃の当たり判定をなくす
+		player_->GetSystemManager()->GetSheathAttackCollision().isActive = false;
 
 		// クールタイム開始
-		sheathSystem_->SetCoolTime();
+		player_->GetSystemManager()->SetSheathCoolTime(sheathSystem_->jsonData_.coolTime);
 
+		// 鞘がある状態にする
+		sheathSystem_->SetIsNone(false);
+		sheathSystem_->SetIsBreak(false);
+		sheathSystem_->SetIsSheathing(true);
+
+		// リストクリア
+		sheathSystem_->ClearNextSystems();
 		// 投げ可能状態に変更
 		sheathSystem_->ChangeState(new Throw(sheathSystem_, player_, eventOrders_));
 		return;
@@ -61,7 +78,8 @@ void Collect::Command() {
 		// 鞘回収機能を開始
 		isActive_ = true;
 		// 攻撃判定を出す
-		sheathSystem_->SetIsCollision(true);
+		player_->GetSystemManager()->GetSheathAttackCollision().isActive = true;
+		sheathSystem_->SetIsActive(true);
 
 		// 無敵開始
 		(*eventOrders_)[(int)Sheath::SheathState::kInvinsible].Start();
@@ -87,7 +105,13 @@ void Collect::Reset() {
 	sheathSystem_->SetIsSheathModelActive(true);
 	// 本体のモデルも非表示
 	player_->SetIsSheathModelActive(false);
-	sheathSystem_->SetIsCollision(false);
+	sheathSystem_->SetIsActive(false);
+	// 鞘攻撃の当たり判定をなくす
+	player_->GetSystemManager()->GetSheathAttackCollision().isActive = false;
+	// 無敵開始
+	(*eventOrders_)[(int)Sheath::SheathState::kInvinsible].Reset();
+	// アクションイベント開始
+	(*eventOrders_)[(int)Sheath::SheathState::kCollect].Reset();
 
 	velocity_ = { 0,0,0 };
 	start_ = { 0,0,0 };
@@ -100,7 +124,7 @@ void Collect::CollectMove() {
 	// 鞘回収するために自機が動いているときの処理
 	if ((*eventOrders_)[(int)Sheath::SheathState::kCollect].GetCurrentTimeEvent().name == "CollectFinishTime") {
 		// 攻撃判定を出す
-		sheathSystem_->SetIsCollision(true);
+		player_->GetSystemManager()->GetSheathAttackCollision().isActive = true;
 
 		// 速度を算出
 		velocity_ = (LWP::Utility::Interpolation::Lerp(start_, end_, LWP::Utility::Easing::OutExpo((*eventOrders_)[(int)Sheath::SheathState::kCollect].GetCurrentFrame() / (sheathSystem_->jsonData_.collectTime * 60.0f))) - player_->GetWorldTF()->GetWorldPosition());
@@ -114,8 +138,8 @@ void Collect::CollectMove() {
 		sheathSystem_->SetRotate(quat_);
 	}
 	else {
-		// 当たり判定を消す
-		sheathSystem_->SetIsCollision(false);
+		// 鞘攻撃の当たり判定をなくす
+		player_->GetSystemManager()->GetSheathAttackCollision().isActive = false;
 	}
 
 }

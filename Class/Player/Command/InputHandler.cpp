@@ -1,5 +1,6 @@
 #include "InputHandler.h"
 #include "InputConfig.h"
+#include "../Player.h"
 
 using namespace LWP::Input;
 using namespace InputConfig;
@@ -14,9 +15,13 @@ void InputHandler::Initialize() {
 	CreateCommand();
 }
 
-void InputHandler::Update() {
+void InputHandler::Update(Player& player) {
 	// 入力されたコマンドを確認
-	commands_ = HandleInput();
+	commands_ = HandleInput(player);
+
+	for (ICommand* command : commands_) {
+		command->Exec(player);
+	}
 }
 
 void InputHandler::DebugGUI() {
@@ -39,20 +44,28 @@ void InputHandler::CreateCommand() {
 	AssignMoveCommand();
 }
 
-std::vector<ICommand*> InputHandler::HandleInput() {
+std::vector<ICommand*> InputHandler::HandleInput(Player& player) {
 	std::vector<ICommand*> result;
 
-	// 通常攻撃コマンド
-	if (Keyboard::GetTrigger(Command::Key::NormalAttack) || Pad::GetTrigger(Command::GamePad::NormalAttack)) {
-		result.push_back(pressAttackCommand_);
-	}
-	// パリィコマンド
-	if (Keyboard::GetTrigger(Command::Key::Parry) || Pad::GetTrigger(Command::GamePad::Parry)) {
-		result.push_back(pressParryCommand_);
-	}
 	// ロックオンコマンド
 	if (Keyboard::GetTrigger(Command::Key::LockOn) || Pad::GetTrigger(Command::GamePad::LockOn)) {
 		result.push_back(pressLockOnCommand_);
+	}
+
+	// 鞘機能稼働中で抜刀後状態以外なら何もしない
+	if (player.GetSystemManager()->GetSheathSystem()->GetIsActive()) {
+		if (player.GetSystemManager()->GetSheathSystem()->GetSheathState()->GetStateName() != "SwordDrawn") {
+			return result;
+		}
+	}
+
+	// 通常攻撃コマンド
+	if ((Keyboard::GetTrigger(Command::Key::NormalAttack) || Pad::GetTrigger(Command::GamePad::NormalAttack))) {
+		result.push_back(pressAttackCommand_);
+	}
+	// パリィコマンド(鞘を回収できる状態の時はパリィできない)
+	if ((Keyboard::GetTrigger(Command::Key::Parry) || Pad::GetTrigger(Command::GamePad::Parry)) && !player.GetSystemManager()->GetSheathSystem()->GetIsNone()) {
+		result.push_back(pressParryCommand_);
 	}
 	// 回避コマンド
 	if (Keyboard::GetTrigger(Command::Key::Evasion) || Pad::GetTrigger(Command::GamePad::Evasion)) {

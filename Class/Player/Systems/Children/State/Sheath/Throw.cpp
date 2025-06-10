@@ -1,7 +1,7 @@
 #include "Throw.h"
 #include "../../../../Player.h"
 #include "../../Sheath.h"
-#include "Collect.h"
+#include "SwordDrawn.h"
 #include "../../../../Command/InputHandler.h"
 
 using namespace LWP;
@@ -20,7 +20,9 @@ Throw::Throw(Sheath* sheathSystem, Player* player, std::map<int, EventOrder>* ev
 	stateName_ = "Throw";
 
 	// 鞘破壊状態でなくす
+	sheathSystem_->SetIsNone(false);
 	sheathSystem_->SetIsBreak(false);
+	sheathSystem_->SetIsSheathing(true);
 }
 
 void Throw::Initialize() {
@@ -37,7 +39,8 @@ void Throw::Update() {
 	// 全ての移動処理終了
 	if ((*eventOrders_)[(int)Sheath::SheathState::kThrow].GetIsEnd()) {
 		(*eventOrders_)[(int)Sheath::SheathState::kThrow].Reset();
-		sheathSystem_->ChangeState(new Collect(sheathSystem_, player_, eventOrders_));
+		// 鞘なし状態に移行
+		sheathSystem_->ChangeState(new SwordDrawn(sheathSystem_, player_, eventOrders_));
 		return;
 	}
 }
@@ -52,7 +55,6 @@ void Throw::Command() {
 		player_->ResetAnimation();
 		player_->StartAnimation("SheathThrow", 0.0f, 0.0f);
 		isActive_ = true;
-
 		sheathSystem_->SetIsActive(true);
 
 		// アクションイベント開始
@@ -77,7 +79,10 @@ void Throw::Reset() {
 	sheathSystem_->SetIsSheathModelActive(false);
 	// 本体のモデルも非表示
 	player_->SetIsSheathModelActive(true);
-	sheathSystem_->SetIsCollision(false);
+	sheathSystem_->SetIsActive(false);
+	// 鞘攻撃の当たり判定をなくす
+	player_->GetSystemManager()->GetSheathAttackCollision().isActive = false;
+	(*eventOrders_)[(int)Sheath::SheathState::kThrow].Reset();
 
 	velocity_ = { 0,0,0 };
 	start_ = { 0,0,0 };

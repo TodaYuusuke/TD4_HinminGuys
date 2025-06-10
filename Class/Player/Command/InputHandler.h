@@ -19,7 +19,7 @@ public:
 	/// <summary>
 	/// 更新処理
 	/// </summary>
-	void Update();
+	void Update(Player& player);
 
 	/// <summary>
 	/// ImGuiによるパラメータを表示
@@ -36,7 +36,7 @@ private:
 	/// コマンドの入力状況の確認
 	/// </summary>
 	/// <returns></returns>
-	std::vector<ICommand*> HandleInput();
+	std::vector<ICommand*> HandleInput(Player& player);
 
 	/// <summary>
 	/// 移動のコマンドを登録

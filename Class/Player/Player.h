@@ -56,13 +56,8 @@ public:
 		Reset();
 		// HPゲージ変動
 		uiManager_->ChangeHPGauge(damageValue, multiply);
-		// 無敵開始
-		systemManager_->GetDamageResponseSystem()->StartInvinsible();
-		// 被弾演出開始
-		systemManager_->GetDamageResponseSystem()->StartEffect();
-		systemManager_->CreateMoveSystem();
-		// コンボ状態リセット
-		//systemManager_->GetAttackSystem()->ComboReset();
+		// ダメージ機能を生成しすべての行動キャンセル
+		systemManager_->StartDamageResponse();
 	}
 
 	void TakeSheathDamage(const float& damageValue, const float& multiply = 1.0f) {

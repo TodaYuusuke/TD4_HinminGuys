@@ -1,20 +1,26 @@
 #include "ICommand.h"
 #include "../Player.h"
 
-MoveCommand::MoveCommand() {
+void MoveCommand::Exec(Player& player) {
+	player;
 }
 
-NormalAttackCommand::NormalAttackCommand() {
+void NormalAttackCommand::Exec(Player& player) {
+	player;
 }
 
-ParryCommand::ParryCommand() {
+void ParryCommand::Exec(Player& player) {
+	player;
 }
 
-LockOnCommand::LockOnCommand() {
+void LockOnCommand::Exec(Player& player) {
+	player.GetSystemManager()->GetLockOnSystem()->Command();
 }
 
-EvasionCommand::EvasionCommand() {
+void EvasionCommand::Exec(Player& player) {
+	player;
 }
 
-SheathCommand::SheathCommand() {
+void SheathCommand::Exec(Player& player) {
+	player;
 }

@@ -45,7 +45,7 @@ public:
 	// コンストラクタ
 	Parry(LWP::Object::Camera* camera, Player* player);
 	// デストラクタ
-	~Parry() override = default;
+	~Parry() override;
 
 	/// <summary>
 	/// 初期化
@@ -115,24 +115,7 @@ private:
 	/// </summary>
 	void KnockBackUpdate();
 
-	/// <summary>
-	/// クールタイムの更新
-	/// </summary>
-	void CoolTimeUpdate();
-
 public:// Getter, Setter
-	/// <summary>
-	/// クールタイムが終了しているかを確認
-	/// </summary>
-	/// <returns>true = 既定の時間を越している</returns>
-	bool CheckCoolTime() {
-		// 既定の時間を越している
-		if (currentCoolTime_ <= 0.0f) {
-			return true;
-		}
-		return false;
-	}
-
 #pragma region Getter
 	/// <summary>
 	/// jsonに保存する値を取得
@@ -185,11 +168,6 @@ public:// Getter, Setter
 	/// </summary>
 	/// <param name="jsonData"></param>
 	void SetJsonData(const ParryJsonData& jsonData) { jsonData_ = jsonData; }
-	/// <summary>
-	/// クールタイムを設定
-	/// </summary>
-	/// <param name="time"></param>
-	void SetCoolTime() { currentCoolTime_ = jsonData_.coolTime * 60.0f; }
 #pragma endregion
 
 private:// jsonで保存する値
@@ -209,9 +187,6 @@ private:
 	LWP::Math::Vector3 end_;
 
 	float t_;
-
-	// クールタイムの経過時間
-	float currentCoolTime_;
 
 	bool isJustParry_;
 	bool isGoodParry_;

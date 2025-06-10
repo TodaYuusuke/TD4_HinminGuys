@@ -40,15 +40,12 @@
     <ClCompile Include="Class\Player\Systems\SystemManager.cpp" />
     <ClCompile Include="Class\Player\Systems\Children\State\Attack\NoneAttack.cpp" />
     <ClCompile Include="Class\TestCollider.cpp" />
-    <ClCompile Include="Class\Player\Systems\Children\State\Move\Run.cpp" />
     <ClCompile Include="Class\Player\Systems\Children\State\Move\Walk.cpp" />
     <ClCompile Include="Class\Player\Gauge\Sheath\SheathGauge.cpp" />
     <ClCompile Include="Class\Player\Systems\Children\State\Sheath\Throw.cpp" />
     <ClCompile Include="Class\Player\Animator\PlayerAnimator.cpp" />
     <ClCompile Include="Class\Player\Animator\IAnimation.cpp" />
     <ClCompile Include="Class\Player\Systems\Children\State\Move\Dash.cpp" />
-    <ClCompile Include="Class\Player\Systems\Children\State\Move\None.cpp" />
-    <ClCompile Include="Class\Player\Systems\Children\State\Move\AttackRecovery.cpp" />
     <ClCompile Include="Class\Player\Systems\Children\DamageResponse.cpp" />
     <ClCompile Include="Class\Scene\VoidScene.cpp" />
     <ClCompile Include="Class\UI\UIManager.cpp" />
@@ -61,6 +58,8 @@
     <ClCompile Include="Class\Shake\Shake.cpp" />
     <ClCompile Include="Class\Enemy\Childs\Normal\State\HitReaction.cpp" />
     <ClCompile Include="Class\Scene\GameOver.cpp" />
+    <ClCompile Include="Class\Player\Systems\Children\State\Sheath\SwordDrawn.cpp" />
+    <ClCompile Include="Class\Player\CoolTimer\CoolTimer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Class\ComboEditor\ComboTree.h" />
@@ -114,7 +113,6 @@
     <ClInclude Include="Class\TestCollider.h" />
     <ClInclude Include="Class\GameMask.h" />
     <ClInclude Include="Class\Player\Systems\Children\State\Move\Idle.h" />
-    <ClInclude Include="Class\Player\Systems\Children\State\Move\Run.h" />
     <ClInclude Include="Class\Player\Systems\Children\State\Move\Walk.h" />
     <ClInclude Include="Class\Player\Gauge\IGauge.h" />
     <ClInclude Include="Class\Player\Gauge\HP\HP.h" />
@@ -126,8 +124,6 @@
     <ClInclude Include="Class\Player\Animator\AnimConfig.h" />
     <ClInclude Include="Class\Player\Systems\Children\State\Move\Dash.h" />
     <ClInclude Include="Class\Player\Command\BanInput.h" />
-    <ClInclude Include="Class\Player\Systems\Children\State\Move\None.h" />
-    <ClInclude Include="Class\Player\Systems\Children\State\Move\AttackRecovery.h" />
     <ClInclude Include="Class\Player\Systems\Children\DamageResponse.h" />
     <ClInclude Include="Class\Scene\VoidScene.h" />
     <ClInclude Include="Class\UI\UIManager.h" />
@@ -145,6 +141,8 @@
     <ClInclude Include="Class\Enemy\Childs\Normal\NormalStateParameter.h" />
     <ClInclude Include="Class\Enemy\Childs\Normal\INormalEnemyState.h" />
     <ClInclude Include="Class\Scene\GameOver.h" />
+    <ClInclude Include="Class\Player\Systems\Children\State\Sheath\SwordDrawn.h" />
+    <ClInclude Include="Class\Player\CoolTimer\CoolTimer.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />

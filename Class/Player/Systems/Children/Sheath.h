@@ -95,11 +95,6 @@ public:
 	void AnimCommand();
 
 	/// <summary>
-	/// 当たり判定の作成
-	/// </summary>
-	void CreateCollision();
-
-	/// <summary>
 	/// 投げるときのアクションイベントを生成
 	/// </summary>
 	void CreateThrowEventOrder();
@@ -128,28 +123,11 @@ public:
 	void ChangeState(ISheathSystemState* pState);
 
 	/// <summary>
-	/// クールタイムの更新
-	/// </summary>
-	void CoolTimeUpdate();
-
-	/// <summary>
 	/// 移動制限
 	/// </summary>
 	/// <param name="position"></param>
 	/// <returns></returns>
 	LWP::Math::Vector3 ClampToCircle(LWP::Math::Vector3& position);
-
-	/// <summary>
-	/// クールタイムが終了しているかを確認
-	/// </summary>
-	/// <returns>true = 既定の時間を越している</returns>
-	bool CheckCoolTime() {
-		// 既定の時間を越している
-		if (currentCoolTime_ <= 0.0f) {
-			return true;
-		}
-		return false;
-	}
 
 public:// Getter, Setter
 #pragma region Getter
@@ -169,6 +147,18 @@ public:// Getter, Setter
 	/// </summary>
 	SheathJsonData GetJsonData() { return jsonData_; }
 
+	/// <summary>
+	/// 鞘破壊状態かを取得
+	/// </summary>
+	bool GetIsBreak() { return isBreak_; }
+	/// <summary>
+	/// 鞘がない状態かを取得
+	/// </summary>
+	bool GetIsNone() { return isNone_; }
+	/// <summary>
+	/// 鞘がある状態かを取得
+	/// </summary>
+	bool GetIsSheathing() { return isSheathing_; }
 	/// <summary>
 	/// 無敵状態かを判定
 	/// </summary>
@@ -192,13 +182,11 @@ public:// Getter, Setter
 #pragma endregion
 
 #pragma region Setter
-	void SetSheathPos(const LWP::Math::Vector3& pos) { sheathModel_.worldTF.translation = pos; }
 	/// <summary>
-	/// クールタイムを設定
+	/// 鞘の座標を設定
 	/// </summary>
-	/// <param name="time"></param>
-	void SetCoolTime() { currentCoolTime_ = jsonData_.coolTime * 60.0f; }
-
+	/// <param name="pos"></param>
+	void SetSheathPos(const LWP::Math::Vector3& pos) { sheathModel_.worldTF.translation = pos; }
 	/// <summary>
 	/// jsonに保存する値を設定
 	/// </summary>
@@ -206,22 +194,20 @@ public:// Getter, Setter
 	void SetJsonData(const SheathJsonData& jsonData) { jsonData_ = jsonData; }
 
 	/// <summary>
-	/// ダッシュ攻撃のカプセル判定の終点を設定
-	/// </summary>
-	/// <param name="end"></param>
-	void SetCapsuleEndPos(const LWP::Math::Vector3& end) { capsule_.end = end; }
-	/// <summary>
-	/// 当たり判定をとるかを設定
-	/// </summary>
-	/// <param name="isCollision"></param>
-	void SetIsCollision(const bool& isCollision) {
-		collider_.isActive = isCollision;
-	}
-	/// <summary>
 	/// 鞘破壊状態かを設定
 	/// </summary>
 	/// <param name="isBreak"></param>
 	void SetIsBreak(const bool& isBreak) { isBreak_ = isBreak; }
+	/// <summary>
+	/// 鞘がない状態かを設定
+	/// </summary>
+	/// <param name="isBreak"></param>
+	void SetIsNone(const bool& isNone) { isNone_ = isNone; }
+	/// <summary>
+	/// 鞘がある状態かを設定
+	/// </summary>
+	/// <param name="isBreak"></param>
+	void SetIsSheathing(const bool& isSheathing) { isSheathing_ = isSheathing; }
 	/// <summary>
 	/// 鞘モデルの表示の設定
 	/// </summary>
@@ -242,13 +228,10 @@ private:// プライベートな変数
 	// 鞘のモデル
 	LWP::Resource::RigidModel sheathModel_;
 
-	// ダッシュ攻撃判定
-	LWP::Object::Collision collider_;
-	LWP::Object::Collider::Capsule& capsule_;
-
-	// クールタイムの経過時間
-	float currentCoolTime_;
-
 	// 鞘破壊状態か
 	bool isBreak_;
+	// 鞘がない状態(投げた後の状態想定)
+	bool isNone_;
+	// 鞘のある状態
+	bool isSheathing_;
 };

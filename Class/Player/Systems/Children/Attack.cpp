@@ -75,7 +75,8 @@ void Attack::Update() {
 			if (nextSystem_.empty()) {
 				nextSystem_[SystemState::kMove] = true;
 			}
-			player_->GetSystemManager()->SetResetSystemFunc(std::bind(&Attack::Reset, this));
+			Reset();
+			//player_->GetSystemManager()->SetResetSystemFunc(std::bind(&Attack::Reset, this));
 		}
 	}
 

@@ -3,14 +3,14 @@
 #include "../../../EventOrder.h"
 
 /// <summary>
-/// 鞘破壊可能状態
+/// 鞘がない状態
 /// </summary>
-class Break : public ISheathSystemState {
+class SwordDrawn : public ISheathSystemState {
 public:
 	// コンストラクタ
-	Break(Sheath* sheathSystem, Player* player, std::map<int, EventOrder>* eventOrders);
+	SwordDrawn(Sheath* sheathSystem, Player* player, std::map<int, EventOrder>* eventOrders);
 	// デストラクタ
-	~Break() override = default;
+	~SwordDrawn() override;
 
 	/// <summary>
 	/// 初期化
@@ -37,14 +37,5 @@ public:
 	void Reset();
 
 private:
-	/// <summary>
-	/// アクションイベント応じて処理を変える
-	/// </summary>
-	void CheckBreakState();
 
-private:
-	LWP::Math::Vector3 velocity_;
-	LWP::Math::Vector3 start_;
-	LWP::Math::Vector3 end_;
-	float t_;
 };

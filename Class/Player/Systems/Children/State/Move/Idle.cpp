@@ -9,6 +9,9 @@ Idle::Idle(Move* moveSystem, Player* player) {
 	// 状態の名前を付与
 	stateName_ = "Idle";
 
+	player_->SetBlendT(0.0f);
+	player_->SetIsLoopAnimation(false);
+
 	if (moveSystem_->GetPreMoveState(Move::MoveState::kWalk)) {
 		isPreWalkState_ = true;
 	}
@@ -22,7 +25,7 @@ void Idle::Initialize() {
 }
 
 void Idle::Update() {
-	// 
+	// ループしていないアニメーションが終了しているか
 	if (!player_->GetAnimation()->GetPlaying() && !isActive_) {
 		AnimCommand();
 	}

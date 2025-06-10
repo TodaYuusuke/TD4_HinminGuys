@@ -15,6 +15,10 @@ Parry::Parry(LWP::Object::Camera* camera, Player* player) {
 	CreateCollision();
 }
 
+Parry::~Parry() {
+	
+}
+
 void Parry::Initialize() {
 	// コマンドの登録
 	inputHandler_ = InputHandler::GetInstance();
@@ -47,8 +51,6 @@ void Parry::Update() {
 	if (eventOrders_[(int)ParryInvinsibleState::kGood].GetIsEnd()) {
 		isGoodParry_ = false;
 	}
-	// クールタイムの時間更新
-	CoolTimeUpdate();
 
 	// frameごとに起きるイベント
 	eventOrder_.Update();
@@ -60,7 +62,13 @@ void Parry::Update() {
 
 	// 全てのイベントが終了しているなら機能停止
 	if (eventOrder_.GetIsEnd()) {
-		player_->GetSystemManager()->SetResetSystemFunc(std::bind(&Parry::Reset, this));
+		// 入力のあったシステム
+		nextSystem_ = CheckNextSystems();
+		// 何も入力がなければ移動システムを入れる
+		if (nextSystem_.empty()) {
+			nextSystem_[SystemState::kMove] = true;
+		}
+		Reset();
 	}
 
 	isPreActive_ = isActive_;
@@ -68,14 +76,10 @@ void Parry::Update() {
 
 void Parry::Reset() {
 	player_->GetSystemManager()->GetParryCollision().isActive = false;
-	// クールタイム開始
-	SetCoolTime();
 
-	// 入力のあったシステム
-	nextSystem_ = CheckNextSystems();
-	// 何も入力がなければ移動システムを入れる
-	if (nextSystem_.empty()) {
-		nextSystem_[SystemState::kMove] = true;
+	// クールタイム設定
+	if (!isJustParry_ || !isGoodParry_) {
+		player_->GetSystemManager()->SetParryCoolTime(jsonData_.coolTime);
 	}
 }
 
@@ -205,9 +209,6 @@ void Parry::CreateCollision() {
 				// 無敵時間を設定
 				player_->GetSystemManager()->SetInvisibleTime(jsonData_.successJustParryInvinsible * 60.0f);
 
-				// クールタイムなし
-				currentCoolTime_ = 0.0f;
-
 				// 鞘のゲージを減少
 				player_->GetUIManager()->ChangeSheathGauge(jsonData_.justParryDecrement);
 
@@ -234,9 +235,6 @@ void Parry::CreateCollision() {
 
 				// 無敵時間を設定
 				player_->GetSystemManager()->SetInvisibleTime(jsonData_.successGoodParryInvinsible * 60.0f);
-
-				// クールタイムなし
-				currentCoolTime_ = 0.0f;
 
 				// 鞘のゲージを減少
 				player_->GetUIManager()->ChangeSheathGauge(jsonData_.goodParryDecrement);
@@ -326,13 +324,4 @@ void Parry::KnockBackUpdate() {
 		player_->ResetAnimation();
 		player_->StartAnimation("StrongParry", 0.0f, 0.0f);
 	}
-}
-
-void Parry::CoolTimeUpdate() {
-	// 既定の時間を越していなかったらパリィを使えない
-	if (CheckCoolTime()) {
-		return;
-	}
-
-	currentCoolTime_--;
 }

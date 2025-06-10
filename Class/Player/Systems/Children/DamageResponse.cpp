@@ -4,6 +4,7 @@
 DamageResponse::DamageResponse(LWP::Object::Camera* camera, Player* player) {
 	pCamera_ = camera;
 	player_ = player;
+
 }
 
 void DamageResponse::Initialize() {
@@ -17,13 +18,11 @@ void DamageResponse::Update() {
 	// 無敵時間の更新
 	eventOrders_[(int)EventOrderState::kInvinsible].Update();
 
-	if (!isActive_) { return; }
-
 	// スタン時間
 	eventOrders_[(int)EventOrderState::kStun].Update();
 
 	// スタン状態
-	CheckSunEventOrder();
+	CheckStunEventOrder();
 
 	// 無敵時間終了
 	if (eventOrders_[(int)EventOrderState::kInvinsible].GetIsEnd()) {
@@ -33,10 +32,13 @@ void DamageResponse::Update() {
 	if (eventOrders_[(int)EventOrderState::kStun].GetIsEnd()) {
 		eventOrders_[(int)EventOrderState::kStun].Reset();
 		isActive_ = false;
-		//// 回避をしてないなかったら入力をすべて受け付ける状態に戻す
-		//if (!player_->GetSystemManager()->GetEvasionSystem()->GetIsActive()) {
-		//	inputHandler_->SetCurrentBanInput(0);
-		//}
+
+		// 入力のあったシステム
+		nextSystem_ = CheckNextSystems();
+		// 何も入力がなければ移動システムを入れる
+		if (nextSystem_.empty()) {
+			nextSystem_[SystemState::kMove] = true;
+		}
 	}
 }
 
@@ -97,6 +99,8 @@ void DamageResponse::StartInvinsible() {
 	eventOrders_[(int)EventOrderState::kStun].Start();
 	eventOrders_[(int)EventOrderState::kStun].Update();
 	isActive_ = true;
+	// 無敵時間を設定
+	player_->GetSystemManager()->SetInvisibleTime(jsonData_.invinsibleTime);
 	// ガードアニメーション開始
 	player_->ResetAnimation();
 	player_->StartAnimation("Damage", 0.0f, 0.0f);
@@ -132,14 +136,14 @@ void DamageResponse::CreateStunEventOrder() {
 	eventOrders_[(int)EventOrderState::kStun].CreateTimeEvent(TimeEvent{ jsonData_.stunCancelTime * 60.0f, "CancelTime" });
 }
 
-void DamageResponse::CheckSunEventOrder() {
+void DamageResponse::CheckStunEventOrder() {
 	if (eventOrders_[(int)EventOrderState::kStun].GetCurrentTimeEvent().name == "StunTime") {
 
 	}
 	else if (eventOrders_[(int)EventOrderState::kStun].GetCurrentTimeEvent().name == "CancelTime") {
-		// ビットの演算が一瞬じゃないと数値が壊れる
-		if (preEventOrder_ == "StunTime") {
-
+		// 回避だけ入力可能
+		if (GetNextSystem(SystemState::kEvasion)) {
+			nextSystem_[SystemState::kEvasion] = true;
 		}
 	}
 

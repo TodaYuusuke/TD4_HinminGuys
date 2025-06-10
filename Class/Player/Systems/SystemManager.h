@@ -10,6 +10,7 @@
 #include "../Animator/PlayerAnimator.h"
 #include "../Command/InputHandler.h"
 #include "../../ComboEditor/ComboTree.h"
+#include "../CoolTimer/CoolTimer.h"
 #include <memory>
 #include <functional>
 
@@ -63,44 +64,64 @@ public:
 		comboTree_->ResetCombo();
 	}
 
-public:
+	/// <summary>
+	/// ダメージリアクション開始
+	/// </summary>
+	void StartDamageResponse() { CreateDamageResponseSystem(currentSystem_); }
+
+private:
 	/// <summary>
 	/// 移動機能を生成
 	/// </summary>
-	void CreateMoveSystem();
+	void CreateMoveSystem(ISystem*& system);
 	/// <summary>
 	/// 攻撃機能を生成
 	/// </summary>
-	void CreateAttackSystem();
+	void CreateAttackSystem(ISystem*& system);
 	/// <summary>
 	/// 回避機能を生成
 	/// </summary>
-	void CreateEvasionSystem();
+	void CreateEvasionSystem(ISystem*& system);
 	/// <summary>
 	/// パリィ機能を生成
 	/// </summary>
-	void CreateParrySystem();
+	void CreateParrySystem(ISystem*& system);
 	/// <summary>
 	/// 鞘機能を生成
 	/// </summary>
-	void CreateSheathSystem();
+	void CreateSheathSystem(ISystem*& system);
 	///// <summary>
 	///// ダメージ反応機能を生成
 	///// </summary>
-	//void CreateDamageResponseSystem();
+	void CreateDamageResponseSystem(ISystem*& system);
 
 	/// <summary>
 	/// 現在のシステムの更新処理
 	/// </summary>
 	void CurrentSystemUpdate();
-
 	/// <summary>
-	/// 機能の切り替え
+	/// 現在使用する機能の切り替え
 	/// </summary>
 	void SwitchCurrentSystem();
 
 public:// Getter, Setter
 #pragma region Getter
+	/// <summary>
+	/// ロックオン機能のアドレスを取得
+	/// </summary>
+	/// <returns></returns>
+	LockOn* GetLockOnSystem() { return lockOnSystem_.get(); }
+	/// <summary>
+	/// 鞘機能のアドレスを取得
+	/// </summary>
+	/// <returns></returns>
+	Sheath* GetSheathSystem() { return sheathSystem_.get(); }
+
+	/// <summary>
+	/// クールタイマーを取得
+	/// </summary>
+	/// <returns></returns>
+	CoolTimer* GetCoolTimer() { return coolTimer_; }
 	/// <summary>
 	/// コンボツリーを取得
 	/// </summary>
@@ -112,15 +133,15 @@ public:// Getter, Setter
 	/// <returns></returns>
 	LWP::Object::Collision& GetParryCollision() { return parryCollision_; }
 	/// <summary>
-	/// ロックオン機能のアドレスを取得
+	/// 鞘攻撃の当たり判定を取得
 	/// </summary>
 	/// <returns></returns>
-	LockOn* GetLockOnSystem() { return lockOnSystem_.get(); }
+	LWP::Object::Collision& GetSheathAttackCollision() { return sheathCollision_; }
 	/// <summary>
-	/// 被弾機能のアドレスを取得
+	/// 鞘攻撃のカプセル情報を取得
 	/// </summary>
 	/// <returns></returns>
-	DamageResponse* GetDamageResponseSystem() { return damageResponseSystem_.get(); }
+	LWP::Object::Collider::Capsule& GetSheathAttackCapsule() { return sheathAttackCapsule_; }
 
 	/// <summary>
 	/// 速度を取得
@@ -155,14 +176,13 @@ public:// Getter, Setter
 
 #pragma region Setter
 	/// <summary>
-	/// 現在のsystemのリセット関数を設定
-	/// </summary>
-	/// <param name="resetSystemFunc"></param>
-	void SetResetSystemFunc(std::function<void()> resetSystemFunc) { resetSystemFunc_ = resetSystemFunc; }
-	/// <summary>
 	/// パリィの当たった時の処理の関数ポインタを設定
 	/// </summary>
 	void SetParryOnHitFunc(LWP::Object::Collision::OnHitFunction parryOnHitFunc) { parryCollision_.stayLambda = parryOnHitFunc; }
+	/// <summary>
+	/// 鞘攻撃に当たった時の処理の関数ポインタを設定
+	/// </summary>
+	void SetSheathAttackOnHitFunc(LWP::Object::Collision::OnHitFunction sheathAttackOnHitFunc) { sheathCollision_.stayLambda = sheathAttackOnHitFunc; }
 
 	/// <summary>
 	/// 移動速度を設定
@@ -179,6 +199,21 @@ public:// Getter, Setter
 	/// </summary>
 	/// <param name="quat">向かせる方向(クォータニオン)</param>
 	void SetRotate(const LWP::Math::Quaternion& quat) { quat_ = quat; }
+	/// <summary>
+	/// パリィのクールタイムを設定
+	/// </summary>
+	/// <param name="coolTime">クールタイム[秒]</param>
+	void SetParryCoolTime(const float& coolTime) { coolTimer_->SetParryCoolTime(coolTime); }
+	/// <summary>
+	/// 回避のクールタイムを設定
+	/// </summary>
+	/// <param name="coolTime">クールタイム[秒]</param>
+	void SetEvasionCoolTime(const float& coolTime) { coolTimer_->SetEvasionCoolTime(coolTime); }
+	/// <summary>
+	/// 鞘のクールタイムを設定
+	/// </summary>
+	/// <param name="coolTime">クールタイム[秒]</param>
+	void SetSheathCoolTime(const float& coolTime) { coolTimer_->SetSheathCoolTime(coolTime); }
 	/// <summary>
 	/// 無敵時間を設定
 	/// </summary>
@@ -203,44 +238,50 @@ private:// 外部からポインタをもらう変数
 	InputHandler* inputHandler_;
 
 private:
+#pragma region 常に作動させる機能
 	// ロックオン機能
 	std::unique_ptr<LockOn> lockOnSystem_;
+	// 鞘機能
+	std::unique_ptr<Sheath> sheathSystem_;
+#pragma endregion
+
+#pragma region JSONファイル作成のために一度作る機能
 	// パリィ機能
 	std::unique_ptr<Parry> parrySystem_;
 	// 攻撃機能
 	std::unique_ptr<Attack> attackSystem_;
-
 	// 移動機能
 	std::unique_ptr<Move> moveSystem_;
 	// 回避機能
 	std::unique_ptr<Evasion> evasionSystem_;
-	// 鞘機能
-	std::unique_ptr<Sheath> sheathSystem_;
 	// 被弾機能
-	std::unique_ptr<DamageResponse> damageResponseSystem_;
+	std::unique_ptr<DamageResponse> damageResponse_;
+#pragma endregion
 
 	// 機能クラスをまとめた変数
 	std::vector<ISystem*> systems_;
 
 	// 現在稼働しているシステム
 	ISystem* currentSystem_;
-	// 並列で稼働するシステム(鞘システムのような状態で使うことを想定)
-	ISystem* secondSystem_;
-
-	// systemのリセット関数を格納
-	std::function<void()> resetSystemFunc_;
-
+	// 使用している機能
 	SystemState systemState_;
-	// ひとつ前に使用していた機能
-	SystemState preSystemState_;
+
+	// クールタイマー
+	CoolTimer* coolTimer_;
 
 	// コンボ攻撃用クラス
 	ComboTree* comboTree_;
+
+#pragma region 当たり判定に関する変数
 	// 攻撃の当たり判定の内容
 	LWP::Object::Collision::OnHitFunction attackOnHitFunc_;
 	// パリィ判定
 	LWP::Object::Collision parryCollision_;
 	LWP::Object::Collider::AABB& parryAABB_;
+	// ダッシュ攻撃判定
+	LWP::Object::Collision sheathCollision_;
+	LWP::Object::Collider::Capsule& sheathAttackCapsule_;
+#pragma endregion
 
 	// 速度
 	LWP::Math::Vector3 velocity_;

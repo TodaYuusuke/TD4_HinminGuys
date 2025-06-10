@@ -41,19 +41,21 @@ void Evasion::Update() {
 
 	// 全てのアクションイベントが終了しているなら機能停止
 	if (eventOrder_.GetIsEnd()) {
-		player_->GetSystemManager()->SetResetSystemFunc(std::bind(&Evasion::Reset, this));
+		// 入力のあったシステム
+		nextSystem_ = CheckNextSystems();
+		// 何も入力がなければ移動システムを入れる
+		if (nextSystem_.empty()) {
+			nextSystem_[SystemState::kMove] = true;
+		}
+		Reset();
 	}
 
 	isPreActive_ = isActive_;
 }
 
 void Evasion::Reset() {
-	// 入力のあったシステム
-	nextSystem_ = CheckNextSystems();
-	// 何も入力がなければ移動システムを入れる
-	if (nextSystem_.empty()) {
-		nextSystem_[SystemState::kMove] = true;
-	}
+	// クールタイムを設定
+	player_->GetSystemManager()->SetEvasionCoolTime(jsonData_.coolTime);
 }
 
 void Evasion::DebugGUI() {
@@ -76,7 +78,6 @@ void Evasion::DebugGUI() {
 		eventOrder_.DebugGUI();
 
 		ImGui::DragFloat3("Velocity", &velocity_.x);
-		ImGui::DragFloat3("AnimSpeed", &animPlaySpeed_.x);
 		ImGui::DragFloat("pressTime", &pressTime_);
 
 		ImGui::Checkbox("IsEvasion", &isActive_);
@@ -111,6 +112,8 @@ void Evasion::CreateJsonFIle() {
 		.EndGroup()
 		// 回避の終了時間
 		.AddValue<float>("FinishTime", &jsonData_.evasionFinishTime)
+		// クールタイム
+		.AddValue<float>("CoolTime", &jsonData_.coolTime)
 		// 回避速度の倍率
 		.AddValue<float>("MoveMultiply", &jsonData_.moveMultiply)
 		// 回避の移動距離

@@ -90,7 +90,7 @@ void GameScene::Update() {
 	}
 
 	// 入力されたコマンドを確認
-	inputHandler_->Update();
+	inputHandler_->Update(player_);
 
 	//敵全て
 	enemyManager_.Update();

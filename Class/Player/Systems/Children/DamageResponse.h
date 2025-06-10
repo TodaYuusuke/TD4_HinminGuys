@@ -82,7 +82,7 @@ private:
 	/// <summary>
 	/// スタンのアクションイベント
 	/// </summary>
-	void CheckSunEventOrder();
+	void CheckStunEventOrder();
 
 public:
 #pragma region Getter
