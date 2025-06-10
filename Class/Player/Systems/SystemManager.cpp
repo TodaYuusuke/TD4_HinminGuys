@@ -125,6 +125,7 @@ void SystemManager::Update() {
 			velocity_ = sheathSystem_->GetVelocity();
 			// 角度
 			radian_ = sheathSystem_->GetRadian();
+			quat_ = LWP::Math::Quaternion::CreateFromAxisAngle(LWP::Math::Vector3{ 0, 1, 0 }, radian_.y);
 		}
 	}
 
@@ -138,8 +139,6 @@ void SystemManager::Update() {
 }
 
 void SystemManager::Reset() {
-	delete currentSystem_;
-	currentSystem_ = nullptr;
 	sheathSystem_->Reset();
 }
 
@@ -168,10 +167,12 @@ void SystemManager::DebugGUI() {
 		ImGui::TreePop();
 	}
 
+	ImGui::DragFloat3("Velocity", &velocity_.x);
+	ImGui::DragFloat3("Radian", &radian_.x);
+
 	if (ImGui::Button("Take Damage")) {
 		player_->TakeDamage(1.0f);
 	}
-
 #endif // DEBUG
 }
 

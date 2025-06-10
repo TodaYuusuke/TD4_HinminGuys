@@ -93,6 +93,10 @@ void Collect::Command() {
 		// イージングの始点終点から角度を求める
 		radian_.y = LWP::Utility::GetRadian(LWP::Math::Vector3{ 0,0,1 }, (end_ - start_).Normalize(), LWP::Math::Vector3{ 0,1,0 });
 		quat_ = LWP::Math::Quaternion::CreateFromAxisAngle(LWP::Math::Vector3{ 0, 1, 0 }, radian_.y);
+
+		sheathSystem_->SetVelocity(velocity_);
+		sheathSystem_->SetRotate(radian_);
+		sheathSystem_->SetRotate(quat_);
 	}
 }
 
@@ -141,7 +145,6 @@ void Collect::CollectMove() {
 		// 鞘攻撃の当たり判定をなくす
 		player_->GetSystemManager()->GetSheathAttackCollision().isActive = false;
 	}
-
 }
 
 float Collect::SmoothDampF(float current, float target, float& currentVelocity, float smoothTime, float maxSpeed, float deltaTime) {

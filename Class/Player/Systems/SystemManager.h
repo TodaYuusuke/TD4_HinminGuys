@@ -218,7 +218,7 @@ public:// Getter, Setter
 	/// 無敵時間を設定
 	/// </summary>
 	/// <param name="invinsibleTime"></param>
-	void SetInvisibleTime(const float& invinsibleTime) { invinsibleTime_ = invinsibleTime; }
+	void SetInvisibleTime(const float& invinsibleTime) { invinsibleTime_ = invinsibleTime * 60.0f; }
 	/// <summary>
 	/// ダッシュ可能かを設定
 	/// </summary>

@@ -207,7 +207,7 @@ void Parry::CreateCollision() {
 				eventOrders_[(int)ParryInvinsibleState::kJust].Start();
 
 				// 無敵時間を設定
-				player_->GetSystemManager()->SetInvisibleTime(jsonData_.successJustParryInvinsible * 60.0f);
+				player_->GetSystemManager()->SetInvisibleTime(jsonData_.successJustParryInvinsible);
 
 				// 鞘のゲージを減少
 				player_->GetUIManager()->ChangeSheathGauge(jsonData_.justParryDecrement);
@@ -234,7 +234,7 @@ void Parry::CreateCollision() {
 				player_->StartAnimation("WeakParry", 0.0f, 0.0f);
 
 				// 無敵時間を設定
-				player_->GetSystemManager()->SetInvisibleTime(jsonData_.successGoodParryInvinsible * 60.0f);
+				player_->GetSystemManager()->SetInvisibleTime(jsonData_.successGoodParryInvinsible);
 
 				// 鞘のゲージを減少
 				player_->GetUIManager()->ChangeSheathGauge(jsonData_.goodParryDecrement);
@@ -295,7 +295,7 @@ void Parry::CheckParryState() {
 		// 自機本体の無敵開始
 		if (!player_->GetSystemManager()->GetParryCollision().isActive) {
 			// 無敵時間を設定
-			player_->GetSystemManager()->SetInvisibleTime((jsonData_.kJustParryTime + jsonData_.kGoodParryTime) * 60.0f);
+			player_->GetSystemManager()->SetInvisibleTime((jsonData_.kJustParryTime + jsonData_.kGoodParryTime));
 		}
 		player_->GetSystemManager()->GetParryCollision().isActive = true;
 	}

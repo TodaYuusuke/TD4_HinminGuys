@@ -189,7 +189,6 @@ void Sheath::Command() {
 		isBreak_ = true;
 		ChangeState(new Break(this, player_, &eventOrders_));
 	}
-	//isActive_ = true;
 	// 状態によって変更
 	state_->Command();
 	// 状態によって変更
