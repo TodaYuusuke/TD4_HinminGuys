@@ -74,8 +74,6 @@ void Break::Command() {
 		(*eventOrders_)[(int)Sheath::SheathState::kBreak].Start();
 		isActive_ = true;
 		sheathSystem_->SetIsActive(true);
-		// 攻撃判定を出す
-		player_->GetSystemManager()->GetSheathAttackCollision().isActive = true;
 		// 無敵開始
 		(*eventOrders_)[(int)Sheath::SheathState::kInvinsible].Start();
 		start_ = { 0,0,0 };
@@ -108,6 +106,11 @@ void Break::CheckBreakState() {
 	}
 	// ダッシュ攻撃時間
 	else if ((*eventOrders_)[(int)Sheath::SheathState::kBreak].GetCurrentTimeEvent().name == "DashAttackFinishTime") {
+		// 無敵時間を設定
+		if (!player_->GetSystemManager()->GetSheathAttackCollision().isActive) {
+			player_->GetSystemManager()->SetInvisibleTime(sheathSystem_->jsonData_.invinsibleFinishTime);
+		}
+
 		// 当たり判定を出す
 		player_->GetSystemManager()->GetSheathAttackCollision().isActive = true;
 

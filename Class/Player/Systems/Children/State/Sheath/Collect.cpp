@@ -77,8 +77,6 @@ void Collect::Command() {
 
 		// 鞘回収機能を開始
 		isActive_ = true;
-		// 攻撃判定を出す
-		player_->GetSystemManager()->GetSheathAttackCollision().isActive = true;
 		sheathSystem_->SetIsActive(true);
 
 		// 無敵開始
@@ -127,6 +125,10 @@ void Collect::Reset() {
 void Collect::CollectMove() {
 	// 鞘回収するために自機が動いているときの処理
 	if ((*eventOrders_)[(int)Sheath::SheathState::kCollect].GetCurrentTimeEvent().name == "CollectFinishTime") {
+		// 無敵時間を設定
+		if (!player_->GetSystemManager()->GetSheathAttackCollision().isActive) {
+			player_->GetSystemManager()->SetInvisibleTime(sheathSystem_->jsonData_.invinsibleFinishTime);
+		}
 		// 攻撃判定を出す
 		player_->GetSystemManager()->GetSheathAttackCollision().isActive = true;
 

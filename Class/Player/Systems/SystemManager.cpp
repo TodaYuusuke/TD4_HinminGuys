@@ -169,6 +169,7 @@ void SystemManager::DebugGUI() {
 
 	ImGui::DragFloat3("Velocity", &velocity_.x);
 	ImGui::DragFloat3("Radian", &radian_.x);
+	ImGui::DragFloat("InvinsibleTime", &invinsibleTime_);
 
 	if (ImGui::Button("Take Damage")) {
 		player_->TakeDamage(1.0f);

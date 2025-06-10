@@ -217,9 +217,6 @@ void Evasion::CheckEvasionState() {
 	else if (eventOrders_[(int)EventOrderState::kAcceleration].GetCurrentTimeEvent().name == "AccelerationTime") {
 		// 予備動作が無いとき用
 		if (GetTrigger()) {
-			// 自機本体の無敵開始
-			player_->GetSystemManager()->SetInvisibleTime(eventOrders_[(int)EventOrderState::kInvincible].GetCurrentTimeEvent().graceTime);
-
 			// 回避の挙動
 			easeData_ = {
 				&velocity_,
@@ -236,6 +233,14 @@ void Evasion::CheckEvasionState() {
 	// 硬直時間
 	else if (eventOrders_[(int)EventOrderState::kAcceleration].GetCurrentTimeEvent().name == "RecoveryTime") {
 
+	}
+
+	// 無敵時間
+	if (eventOrders_[(int)EventOrderState::kInvincible].GetCurrentTimeEvent().name == "InvinsibleTime") {
+		if (GetTrigger()) {
+			// 自機本体の無敵開始
+			player_->GetSystemManager()->SetInvisibleTime(jsonData_.invinsibleTime);
+		}
 	}
 }
 

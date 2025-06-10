@@ -83,6 +83,10 @@ private:
 	/// スタンのアクションイベント
 	/// </summary>
 	void CheckStunEventOrder();
+	/// <summary>
+	/// 無敵のアクションイベント
+	/// </summary>
+	void CheckInvinsibleEventOrder();
 
 public:
 #pragma region Getter

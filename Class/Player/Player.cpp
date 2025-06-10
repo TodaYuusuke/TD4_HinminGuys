@@ -134,7 +134,7 @@ void Player::InvinsibleUpdate() {
 
 void Player::LimitMoveArea() {
 	// 鞘を投げた後鞘を中心に移動制限をかける(円形)
-	if (systemManager_->GetSheathSystem()->GetSheathState()->GetStateName() == "Collect") {
+	if (systemManager_->GetSheathSystem()->GetSheathState()->GetStateName() == "SwordDrawn") {
 		systemManager_->GetSheathSystem()->ClampToCircle(model_.worldTF.translation);
 	}
 }

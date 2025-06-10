@@ -142,10 +142,14 @@ void DamageResponse::CheckStunEventOrder() {
 	}
 	else if (eventOrders_[(int)EventOrderState::kStun].GetCurrentTimeEvent().name == "CancelTime") {
 		// 回避だけ入力可能
-		if (GetNextSystem(SystemState::kEvasion)) {
+		if (CheckNextSystems()[SystemState::kEvasion]) {
 			nextSystem_[SystemState::kEvasion] = true;
 		}
 	}
 
 	preEventOrder_ = eventOrders_[(int)EventOrderState::kStun].GetCurrentTimeEvent().name;
+}
+
+void DamageResponse::CheckInvinsibleEventOrder() {
+
 }
