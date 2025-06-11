@@ -15,6 +15,9 @@ public:
 		EnemyManager* manager) override;
 
 	void Update() override;
+
+	void DebugGUI() override;
+
 	//直前のステートを取得
 	States& GetPreState() { return preState_; }
 	//直前のステートをセット(HitReactionは除外)

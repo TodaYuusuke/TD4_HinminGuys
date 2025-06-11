@@ -96,6 +96,17 @@ void Normal::Update()
 	distFromPlayer_ = diff.Length();
 }
 
+void Normal::DebugGUI()
+{
+
+	if (ImGui::TreeNode(std::to_string(ID_).c_str())) {
+		state_.DebugGUI();
+		ImGui::Text(std::to_string(distFromPlayer_).c_str());
+		ImGui::TreePop();
+	}
+
+}
+
 void Normal::AddStateFunc()
 {
 

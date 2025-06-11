@@ -42,6 +42,8 @@ public:
 	IEnemy();
 	virtual ~IEnemy();
 
+	//デバッグ
+	virtual void DebugGUI() = 0;
 	//敵の全種類ネームタグ
 	static std::array<const char*, int(EnemyType::kMax)> enemyTypeName;
 
@@ -82,8 +84,6 @@ public:
 	void SetIsLocked(bool flag) { isLocked_ = flag; }
 	//ロックオンゲッター
 	bool GetIsLocked() const { return isLocked_; }
-	//デバッグ
-	void DebugGUI();
 	//プレイヤーからの距離セット
 	void SetDistFromPlayer(float dist) { distFromPlayer_ = dist; }
 	//プレイヤーからの距離ゲット

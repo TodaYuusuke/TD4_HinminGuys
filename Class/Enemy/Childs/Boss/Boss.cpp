@@ -28,3 +28,13 @@ void Boss::Update()
 	IEnemy::Update();
 
 }
+
+void Boss::DebugGUI()
+{
+
+	if (ImGui::TreeNode(std::to_string(ID_).c_str())) {
+		ImGui::Text(std::to_string(distFromPlayer_).c_str());
+		ImGui::TreePop();
+	}
+
+}

@@ -8,6 +8,9 @@ using namespace LWP::Math;
 
 void Normal::AttackFinalize(const States& pre) {
 
+	//待機状態に移行
+	EndAttack();
+	SetIsAttackPhase(false);
 	//待機ステートの待機時間セット
 	stateParameter_.idleParameter.countStandTime = IdleParameter::standTime_;
 
@@ -40,18 +43,13 @@ void Normal::AttackUpdate(std::optional<States>& req, const States& pre)
 	}
 
 	//攻撃受付時間を超過したら判定オフ
-	if (animation_.GetProgress() > AttackParameter::attackAcceptTime_) {
+	if (animation_.GetProgress() > AttackParameter::attackAcceptTime_ and swordCollider_.isActive) {
+		EndAttack();
 		swordCollider_.isActive = false;
 	}
 
 	//攻撃が終了した時
 	if (not animation_.GetPlaying()) {
-
-		//攻撃判定オフ
-		swordCollider_.isActive = false;
-		//待機状態に移行
-		EndAttack();
-		SetIsAttackPhase(false);
 		state_.request = States::kNormalIdle;
 		return;
 

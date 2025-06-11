@@ -67,16 +67,6 @@ void IEnemy::SetAnimation(const std::string& animName, bool isLoop, float speed)
 	animation_.GetPlayBackSpeed() = speed;
 }
 
-void IEnemy::DebugGUI()
-{
-
-	if (ImGui::TreeNode(std::to_string(ID_).c_str())) {
-		ImGui::Text(std::to_string(distFromPlayer_).c_str());
-		ImGui::TreePop();
-	}
-
-}
-
 void IEnemy::RotateTowardsPlayer()
 {
 
