@@ -6,6 +6,7 @@
 #include <list>
 #include <memory>
 #include "SpawnData.h"
+#include "../UI/DamageEffectEmitter.h"
 
 class Player;
 
@@ -28,6 +29,10 @@ public:
 	void SetPlayer(Player* player) { player_ = player; }
 	//カメラセット
 	void SetCamera(LWP::Object::Camera* camera) { camera_ = camera; }
+	//ダメージエフェクトエミッターのセット
+	void SetDamageEffectEmitter(DamageEffectEmitter* emitter) { damageEffectEmitter_ = emitter; }
+	//ダメージエフェクトエミッター取得
+	DamageEffectEmitter& GetDamageEffectEmitter() { return *damageEffectEmitter_; }
 	//敵追加、配置
 	void CreateEnemy(const Vector3& position, EnemyType type);
 	//リストのクリア
@@ -69,9 +74,11 @@ private:
 	void EndGame();
 
 private:
-
+	//プレイヤーのポインタ
 	Player* player_;
-
+	//ダメージエフェクトエミッターのポインタ
+	DamageEffectEmitter* damageEffectEmitter_;
+	//カメラのポインタ
 	LWP::Object::Camera* camera_ = nullptr;
 
 	//全ての敵を管理するリスト

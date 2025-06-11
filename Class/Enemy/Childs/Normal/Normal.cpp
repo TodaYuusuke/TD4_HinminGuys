@@ -2,6 +2,7 @@
 #include "../../../Player/Player.h"
 #include "../../DirectXGame/Engine/primitive/model/Material.h"
 #include "../../../GameMask.h"
+#include "../../EnemyManager.h"
 
 using namespace LWP::Primitive;
 using namespace GameMask;
@@ -51,6 +52,13 @@ void Normal::Initialize(Player* player, const Vector3& position, LWP::Object::Ca
 			state_.request = States::kHitReaction;
 			SetKnockBackValue(player_->GetSystemManager()->GetAttackSystem()->GetKnockBackStrength());
 		}
+
+		//ダメージの加算値(テスト用)
+		int plusDamage = LWP::Utility::GenerateRandamNum(0, 1000);
+
+		//ダメージエフェクト追加
+		enemyManager_->GetDamageEffectEmitter().AddEffect(player_->GetSystemManager()->GetAttackSystem()->GetDamage() + float(plusDamage),
+			model_.GetJointWorldPosition("Root"));
 
 		//ダメージを受ける
 		TakeDamage(player_->GetSystemManager()->GetAttackSystem()->GetDamage());

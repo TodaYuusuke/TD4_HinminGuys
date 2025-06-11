@@ -98,7 +98,5 @@ void Normal::SpacingUpdate(std::optional<States>& req, const States& pre)
 
 	}
 
-	
-
 }
 

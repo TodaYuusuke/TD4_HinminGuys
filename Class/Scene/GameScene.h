@@ -8,6 +8,7 @@
 #include "../UI/UIManager.h"
 #include <set>
 #include "SceneTransitioner.h"
+#include "../UI/DamageEffectEmitter.h"
 
 class GameScene final
 	: public IScene {
@@ -34,6 +35,9 @@ private: // ** これより先に必要な処理や変数を記述 ** //
 
 	// 自機
 	Player player_;
+
+	//ダメージエフェクトエミッター
+	DamageEffectEmitter damageEffectEmitter_;
 
 	// 追従カメラ
 	FollowCamera followCamera_;

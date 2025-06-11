@@ -191,6 +191,7 @@
     <ClCompile Include="Class\Scene\VoidScene.cpp" />
     <ClCompile Include="Class\Camera\State\InputCamera.cpp" />
     <ClCompile Include="Class\Camera\State\LockOnCamera.cpp" />
+    <ClCompile Include="Class\UI\DamageEffectEmitter.cpp" />
     <ClCompile Include="Class\UI\GameUI.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Class\Player\Player.cpp" />
@@ -276,6 +277,7 @@
     <ClInclude Include="Class\Player\Systems\Children\State\Move\Dash.h" />
     <ClInclude Include="Class\Player\Systems\Children\State\Move\None.h" />
     <ClInclude Include="Class\Player\Systems\Children\DamageResponse.h" />
+    <ClInclude Include="Class\UI\DamageEffectEmitter.h" />
     <ClInclude Include="Class\UI\UIManager.h" />
     <ClInclude Include="Class\Camera\State\IFollowCameraState.h" />
     <ClInclude Include="Class\Camera\State\InputCamera.h" />

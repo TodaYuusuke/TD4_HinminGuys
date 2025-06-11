@@ -32,6 +32,7 @@ void GameScene::Initialize() {
 	// 敵管理クラス
 	enemyManager_.Initialize();
 	enemyManager_.SetPlayer(&player_);
+	enemyManager_.SetDamageEffectEmitter(&damageEffectEmitter_);
 	enemyManager_.SetCamera(followCamera_.GetCamera());
 	enemyManager_.SetIsShowSpawnDataModel(false);
 
@@ -40,6 +41,10 @@ void GameScene::Initialize() {
 
 	// 自機の動作確認のため生成
 	player_.Initialize();
+
+	//ダメージエフェクトエミッターを生成
+	damageEffectEmitter_.Initialize();
+	damageEffectEmitter_.SetCamera(followCamera_.GetCamera());
 
 #pragma region フィールドを一時的に生成
 	// 一時的に平面を生成
@@ -100,6 +105,9 @@ void GameScene::Update() {
 
 	// 自機
 	player_.Update();
+
+	//ダメージエフェクトエミッター
+	damageEffectEmitter_.Update();
 
 	// uiの管理クラス
 	uiManager_.Update();
