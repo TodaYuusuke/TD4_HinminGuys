@@ -7,7 +7,6 @@
 #include "Children/Evasion.h"
 #include "Children/Sheath.h"
 #include "Children/DamageResponse.h"
-#include "../Animator/PlayerAnimator.h"
 #include "../Command/InputHandler.h"
 #include "../../ComboEditor/ComboTree.h"
 #include "../CoolTimer/CoolTimer.h"

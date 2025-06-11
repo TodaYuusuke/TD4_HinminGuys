@@ -66,7 +66,7 @@ void Attack::Update() {
 		}
 	}
 	// 無操作状態のコンボが選択されている場合
-	if (!player_->GetSystemManager()->GetComboTree()->GetIsStiffness()) { 
+	if (!player_->GetSystemManager()->GetComboTree()->GetIsStiffness()) {
 		// 入力のあったシステム列挙
 		nextSystem_ = CheckNextSystems();
 		// 機能停止させる
@@ -76,7 +76,6 @@ void Attack::Update() {
 				nextSystem_[SystemState::kMove] = true;
 			}
 			Reset();
-			//player_->GetSystemManager()->SetResetSystemFunc(std::bind(&Attack::Reset, this));
 		}
 	}
 
@@ -188,14 +187,18 @@ void Attack::LockOnAssist(IEnemy* lockOnTarget) {
 	if (!lockOnTarget) { return; }
 
 	// 自機とロックオン中の敵との距離
-	Vector3 attackTargetDist = (lockOnTarget->GetWorldTF()->GetWorldPosition() - player_->GetWorldTF()->GetWorldPosition());
-	Vector3 aa = lockOnTarget->GetWorldTF()->GetWorldPosition() + (-0.01f * attackTargetDist.Normalize()) - player_->GetWorldTF()->GetWorldPosition();
+	Vector3 attackTargetDist = (player_->GetWorldTF()->GetWorldPosition() - lockOnTarget->GetWorldTF()->GetWorldPosition());
+	Vector3 assistPos = lockOnTarget->GetWorldTF()->GetWorldPosition() + Vector3{ 0,0,1.3f } *LWP::Math::Matrix4x4::CreateRotateXYZMatrix(LWP::Math::Quaternion::ConvertDirection(attackTargetDist));
 
-	velocity_ = LWP::Utility::Interpolation::Lerp(Vector3{ 0,0,0 }, aa, 0.25f);
-
+	// 速度
+	velocity_ = LWP::Utility::Interpolation::Exponential(player_->GetWorldTF()->GetWorldPosition(), assistPos, 0.8f) - player_->GetWorldTF()->GetWorldPosition();
 	// 移動速度からラジアンを求める
-	radian_.y = LWP::Utility::GetRadian(LWP::Math::Vector3{ 0,0,1 }, velocity_.Normalize(), LWP::Math::Vector3{ 0,1,0 });
-	quat_ = LWP::Math::Quaternion::CreateFromAxisAngle(LWP::Math::Vector3{ 0, 1, 0 }, velocity_.y);
+	radian_.y = LWP::Utility::GetRadian(LWP::Math::Vector3{ 0,0,1 }, (lockOnTarget->GetWorldTF()->GetWorldPosition() - player_->GetWorldTF()->GetWorldPosition()).Normalize(), LWP::Math::Vector3{ 0,1,0 });
+	quat_ = LWP::Math::Quaternion::CreateFromAxisAngle(LWP::Math::Vector3{ 0, 1, 0 }, radian_.y);
+
+	if ((lockOnTarget->GetWorldTF()->GetWorldPosition() - player_->GetWorldTF()->GetWorldPosition()).Length() <= std::powf(1.3f, 2.0f)) {
+		velocity_ = { 0.0f,0.0f,0.0f };
+	}
 }
 
 void Attack::AttackAssist() {
