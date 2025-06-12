@@ -10,11 +10,13 @@ struct DamageEffect {
 	LWP::Math::Vector3 position; //座標
 	int digit; //桁数
 	float damage; //受けたダメージ
-	float maxScale; //最大スケール
-	float widthSpacing; //横幅間隔
+	static float maxScale; //最大スケール
+	static float widthSpacing; //横幅間隔
 	static float maxDisplayTime; //最大表示時間(秒)
+	static float vanishThreshold; //消えていく時間のしきい値
 	float remainingDisplayTime; //残りの表示時間(秒)
 	static float divide; //分割数
+	bool isVanish = false; //消えていくかどうか
 };
 
 /// <summary>

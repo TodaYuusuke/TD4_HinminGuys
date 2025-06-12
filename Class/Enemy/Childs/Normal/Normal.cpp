@@ -58,7 +58,7 @@ void Normal::Initialize(Player* player, const Vector3& position, LWP::Object::Ca
 
 		//ダメージエフェクト追加
 		enemyManager_->GetDamageEffectEmitter().AddEffect(player_->GetSystemManager()->GetAttackSystem()->GetDamage() + float(plusDamage),
-			model_.GetJointWorldPosition("Root"));
+			model_.GetJointWorldPosition("UpperBody"));
 
 		//ダメージを受ける
 		TakeDamage(player_->GetSystemManager()->GetAttackSystem()->GetDamage());

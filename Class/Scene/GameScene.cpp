@@ -143,6 +143,11 @@ void GameScene::DebugGUI() {
 			enemyManager_.DebugGUI();
 			ImGui::EndTabItem();
 		}
+		//ダメージエフェクトエミッター
+		if (ImGui::BeginTabItem("DamageEffectEmitter")) {
+			damageEffectEmitter_.DebugGUI();
+			ImGui::EndTabItem();
+		}
 		// 地面
 		if (ImGui::BeginTabItem("Ground")) {
 			plane.DebugGUI();
