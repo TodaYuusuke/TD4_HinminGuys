@@ -69,7 +69,7 @@ void Break::Command() {
 		player_->SetAnimationPlaySpeed(1.0f);
 		player_->SetBlendT(0.0f);
 		player_->ResetAnimation();
-		player_->StartAnimation("SheathDash", 0.0f, 0.0f);
+		player_->StartAnimation("SheathDash", 0.15f, 0.0f);
 
 		(*eventOrders_)[(int)Sheath::SheathState::kBreak].Start();
 		isActive_ = true;

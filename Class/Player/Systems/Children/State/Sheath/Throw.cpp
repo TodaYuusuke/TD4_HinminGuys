@@ -3,6 +3,7 @@
 #include "../../Sheath.h"
 #include "SwordDrawn.h"
 #include "../../../../Command/InputHandler.h"
+#include "../../../../../Components/HitStopController.h"
 
 using namespace LWP;
 using namespace LWP::Math;
@@ -53,7 +54,7 @@ void Throw::Command() {
 		player_->SetAnimationPlaySpeed(1.0f);
 		player_->SetBlendT(0.0f);
 		player_->ResetAnimation();
-		player_->StartAnimation("SheathThrow", 0.0f, 0.0f);
+		player_->StartAnimation("SheathThrow", 0.15f, 0.0f);
 		isActive_ = true;
 		sheathSystem_->SetIsActive(true);
 
@@ -106,7 +107,7 @@ void Throw::CheckThrowState() {
 		// 本体のモデルも非表示
 		player_->SetIsSheathModelActive(false);
 
-		velocity_ = (LWP::Utility::Interpolation::Lerp(start_, end_, LWP::Utility::Easing::OutExpo((*eventOrders_)[(int)Sheath::SheathState::kThrow].GetCurrentFrame() / (sheathSystem_->jsonData_.collectTime * 60.0f)))/* - player_->GetWorldTF()->GetWorldPosition()*/);
+		velocity_ = LWP::Utility::Interpolation::Lerp(start_, end_, LWP::Utility::Easing::OutExpo((*eventOrders_)[(int)Sheath::SheathState::kThrow].GetCurrentFrame() / (sheathSystem_->jsonData_.collectTime * 60.0f))) * HitStopController::GetInstance()->GetDeltaTime();
 
 		// 移動速度からラジアンを求める
 		radian_.y = LWP::Utility::GetRadian(LWP::Math::Vector3{ 0,0,1 }, velocity_.Normalize(), LWP::Math::Vector3{ 0,1,0 });

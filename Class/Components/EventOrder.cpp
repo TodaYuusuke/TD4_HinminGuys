@@ -1,4 +1,5 @@
 #include "EventOrder.h"
+#include "HitStopController.h"
 
 void EventOrder::Initialize() {
 	timeEvents_.clear();
@@ -18,7 +19,7 @@ void EventOrder::Update() {
 	}
 
 	// 時間を進める
-	currentTime_++;
+	currentTime_ += HitStopController::GetInstance()->GetDeltaTime();
 
 	// 全てのアクションイベントが終了しているなら機能停止
 	if (timeEvents_.empty()) {

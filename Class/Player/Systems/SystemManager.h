@@ -9,7 +9,7 @@
 #include "Children/DamageResponse.h"
 #include "../Command/InputHandler.h"
 #include "../../ComboEditor/ComboTree.h"
-#include "../CoolTimer/CoolTimer.h"
+#include "../../Components/CoolTimer.h"
 #include <memory>
 #include <functional>
 
@@ -24,6 +24,10 @@ enum class InputState {
 	kLockOn,
 	kEvasion,
 	kSheath
+};
+struct SuccessParryData {
+	bool isActive;
+	Vector3 targetPos;
 };
 class SystemManager {
 public:
@@ -163,6 +167,11 @@ public:// Getter, Setter
 	/// <returns></returns>
 	ISystem* GetCurrentSystem() { return currentSystem_; }
 	/// <summary>
+	/// パリィ成功時の情報を取得
+	/// </summary>
+	/// <returns></returns>
+	SuccessParryData GetSuccessParryData() { return successParryData_; }
+	/// <summary>
 	/// 無敵時間を取得
 	/// </summary>
 	/// <param name="invinsibleTime"></param>
@@ -171,6 +180,10 @@ public:// Getter, Setter
 	/// ダッシュ可能かを取得
 	/// </summary>
 	bool GetIsEnableDash() { return isEnableDash_; }
+	/// <summary>
+	/// パリィが成功したかを取得
+	/// </summary>
+	bool GetIsSuccessParry() { return successParryData_.isActive; }
 #pragma endregion
 
 #pragma region Setter
@@ -199,6 +212,10 @@ public:// Getter, Setter
 	/// <param name="quat">向かせる方向(クォータニオン)</param>
 	void SetRotate(const LWP::Math::Quaternion& quat) { quat_ = quat; }
 	/// <summary>
+	/// パリィされた対象の座標を設定
+	/// </summary>
+	void SetOnParryTargetPos(const LWP::Math::Vector3& pos) { successParryData_.targetPos = pos; }
+	/// <summary>
 	/// パリィのクールタイムを設定
 	/// </summary>
 	/// <param name="coolTime">クールタイム[秒]</param>
@@ -223,6 +240,11 @@ public:// Getter, Setter
 	/// </summary>
 	/// <param name="isEnableDash"></param>
 	void SetIsEnableDash(const bool& isEnableDash) { isEnableDash_ = isEnableDash; }
+	/// <summary>
+	/// パリィが成功したかを設定
+	/// </summary>
+	/// <param name="isSuccessParry"></param>
+	void SetIsSuccessParry(const bool& isSuccessParry) { successParryData_.isActive = isSuccessParry; }
 #pragma endregion
 
 private:// 外部からポインタをもらう変数
@@ -287,6 +309,9 @@ private:
 	// 角度
 	LWP::Math::Vector3 radian_;
 	LWP::Math::Quaternion quat_;
+
+	// パリィ成功時の情報
+	SuccessParryData successParryData_;
 
 	// ノックバックの速度
 	Vector3 knockBackVel_;

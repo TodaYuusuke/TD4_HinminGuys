@@ -10,13 +10,15 @@ using namespace LWP::Utility::Interpolation;
 Parry::Parry(LWP::Object::Camera* camera, Player* player) {
 	pCamera_ = camera;
 	player_ = player;
+	// ヒットストップの管理クラス
+	hitStopController_ = HitStopController::GetInstance();
 
 	// パリィ判定生成
 	CreateCollision();
 }
 
 Parry::~Parry() {
-	
+
 }
 
 void Parry::Initialize() {
@@ -44,11 +46,33 @@ void Parry::Update() {
 
 	// ジャストパリィ成功時の無敵時間が終了
 	if (eventOrders_[(int)ParryInvinsibleState::kJust].GetIsEnd()) {
+		if (isJustParry_) {
+			// 入力のあったシステム
+			nextSystem_ = CheckNextSystems();
+			// 何も入力がなければ移動システムを入れる
+			if (nextSystem_.empty()) {
+				nextSystem_[SystemState::kMove] = true;
+			}
+		}
+
+		// パリィ成功フラグをfalseにする
+		player_->GetSystemManager()->SetIsSuccessParry(false);
 		isJustParry_ = false;
 		velocity_ = { 0,0,0 };
 		t_ = 0.0f;
 	}
 	if (eventOrders_[(int)ParryInvinsibleState::kGood].GetIsEnd()) {
+		if (isGoodParry_) {
+			// 入力のあったシステム
+			nextSystem_ = CheckNextSystems();
+			// 何も入力がなければ移動システムを入れる
+			if (nextSystem_.empty()) {
+				nextSystem_[SystemState::kMove] = true;
+			}
+		}
+
+		// パリィ成功フラグをfalseにする
+		player_->GetSystemManager()->SetIsSuccessParry(false);
 		isGoodParry_ = false;
 	}
 
@@ -62,11 +86,13 @@ void Parry::Update() {
 
 	// 全てのイベントが終了しているなら機能停止
 	if (eventOrder_.GetIsEnd()) {
-		// 入力のあったシステム
-		nextSystem_ = CheckNextSystems();
-		// 何も入力がなければ移動システムを入れる
-		if (nextSystem_.empty()) {
-			nextSystem_[SystemState::kMove] = true;
+		if (!isJustParry_ || !isGoodParry_) {
+			// 入力のあったシステム
+			nextSystem_ = CheckNextSystems();
+			// 何も入力がなければ移動システムを入れる
+			if (nextSystem_.empty()) {
+				nextSystem_[SystemState::kMove] = true;
+			}
 		}
 		Reset();
 	}
@@ -178,7 +204,6 @@ void Parry::Command() {
 		// アニメーション再生
 		AnimCommand();
 	}
-
 }
 
 void Parry::AnimCommand() {
@@ -188,7 +213,7 @@ void Parry::AnimCommand() {
 	player_->SetAnimationPlaySpeed(1.0f);
 	player_->SetBlendT(0.0f);
 	player_->ResetAnimation();
-	player_->StartAnimation("Gaurd", 0.0f, 0.0f);
+	player_->StartAnimation("Gaurd", 0.15f, 0.0f);
 }
 
 void Parry::CreateCollision() {
@@ -202,6 +227,13 @@ void Parry::CreateCollision() {
 
 			// ジャストパリィ
 			if (eventOrder_.GetCurrentTimeEvent().name == "JustParry") {
+				// パリィ成功
+				player_->GetSystemManager()->SetOnParryTargetPos(hitTarget->GetWorldPosition());
+				player_->GetSystemManager()->SetIsSuccessParry(true);
+				// ガードアニメーション開始
+				player_->ResetAnimation();
+				player_->StartAnimation("StrongParry", 0.15f, 0.0f);
+
 				isJustParry_ = true;
 				isGoodParry_ = false;
 				eventOrders_[(int)ParryInvinsibleState::kJust].Start();
@@ -225,13 +257,16 @@ void Parry::CreateCollision() {
 			}
 			// 甘めパリィ
 			else if (eventOrder_.GetCurrentTimeEvent().name == "GoodParry") {
+				// パリィ成功
+				player_->GetSystemManager()->SetOnParryTargetPos(hitTarget->GetWorldPosition());
+				player_->GetSystemManager()->SetIsSuccessParry(true);
 				isGoodParry_ = true;
 				isJustParry_ = false;
 				eventOrders_[(int)ParryInvinsibleState::kGood].Start();
 
 				// ガードアニメーション開始
 				player_->ResetAnimation();
-				player_->StartAnimation("WeakParry", 0.0f, 0.0f);
+				player_->StartAnimation("WeakParry", 0.15f, 0.0f);
 
 				// 無敵時間を設定
 				player_->GetSystemManager()->SetInvisibleTime(jsonData_.successGoodParryInvinsible);
@@ -314,14 +349,8 @@ void Parry::CheckParryState() {
 void Parry::KnockBackUpdate() {
 	// ジャストパリィ時のみ
 	if (!isJustParry_) { return; }
-	t_++;
+	t_ += hitStopController_->GetDeltaTime();
 
-	velocity_ = Lerp(start_, end_, Easing::OutExpo(t_ / jsonData_.justParryKnockBackFinishTime)) - player_->GetWorldTF()->GetWorldPosition();
+	velocity_ = Lerp(start_, end_, Easing::OutExpo(t_ / jsonData_.justParryKnockBackFinishTime)) - player_->GetWorldTF()->GetWorldPosition() * hitStopController_->GetDeltaTime();
 	velocity_.y = 0.0f;
-
-	if (t_ == 1.0f) {
-		// ガードアニメーション開始
-		player_->ResetAnimation();
-		player_->StartAnimation("StrongParry", 0.0f, 0.0f);
-	}
 }

@@ -73,7 +73,7 @@ void Collect::Command() {
 		player_->SetAnimationPlaySpeed(1.0f);
 		player_->SetBlendT(0.0f);
 		player_->ResetAnimation();
-		player_->StartAnimation("SheathDash", 0.0f, 0.0f);
+		player_->StartAnimation("SheathDash", 0.15f, 0.0f);
 
 		// 鞘回収機能を開始
 		isActive_ = true;
@@ -118,8 +118,6 @@ void Collect::Reset() {
 	velocity_ = { 0,0,0 };
 	start_ = { 0,0,0 };
 	end_ = { 0,0,0 };
-
-	t_ = 0.0f;
 }
 
 void Collect::CollectMove() {
@@ -133,7 +131,7 @@ void Collect::CollectMove() {
 		player_->GetSystemManager()->GetSheathAttackCollision().isActive = true;
 
 		// 速度を算出
-		velocity_ = (LWP::Utility::Interpolation::Lerp(start_, end_, LWP::Utility::Easing::OutExpo((*eventOrders_)[(int)Sheath::SheathState::kCollect].GetCurrentFrame() / (sheathSystem_->jsonData_.collectTime * 60.0f))) - player_->GetWorldTF()->GetWorldPosition());
+		velocity_ = (LWP::Utility::Interpolation::Lerp(start_, end_, LWP::Utility::Easing::OutExpo((*eventOrders_)[(int)Sheath::SheathState::kCollect].GetCurrentFrame() / (sheathSystem_->jsonData_.collectTime * 60.0f))) - player_->GetWorldTF()->GetWorldPosition()) * HitStopController::GetInstance()->GetDeltaTime();
 
 		// 移動速度からラジアンを求める
 		radian_.y = LWP::Utility::GetRadian(LWP::Math::Vector3{ 0,0,1 }, velocity_.Normalize(), LWP::Math::Vector3{ 0,1,0 });
@@ -147,43 +145,4 @@ void Collect::CollectMove() {
 		// 鞘攻撃の当たり判定をなくす
 		player_->GetSystemManager()->GetSheathAttackCollision().isActive = false;
 	}
-}
-
-float Collect::SmoothDampF(float current, float target, float& currentVelocity, float smoothTime, float maxSpeed, float deltaTime) {
-	// Based on Game Programming Gems 4 Chapter 1.10
-	float limitTime;
-	limitTime = max(0.0001f, smoothTime);
-	float omega = 2.0f / limitTime;
-
-	float x = omega * deltaTime;
-	float exp = 1.0f / (1.0f + x + 0.48f * x * x + 0.235f * x * x * x);
-	float change = current - target;
-	float originalTo = target;
-
-	// Clamp maximum speed
-	float maxChange = maxSpeed * limitTime;
-	change = std::clamp<float>(change, -maxChange, maxChange);
-	float tValue = current - change;
-
-	float temp = (currentVelocity + omega * change) * deltaTime;
-	currentVelocity = (currentVelocity - omega * temp) * exp;
-	float output = tValue + (change + temp) * exp;
-
-	// Prevent overshooting
-	if (originalTo - current > 0.0f == output > originalTo)
-	{
-		output = originalTo;
-		currentVelocity = (output - originalTo) / deltaTime;
-	}
-
-	return output;
-}
-LWP::Math::Vector3 Collect::SmoothDamp(LWP::Math::Vector3 current, LWP::Math::Vector3 target, LWP::Math::Vector3& currentVelocity, float smoothTime, float maxSpeed, float deltaTime) {
-	LWP::Math::Vector3 result = {
-		SmoothDampF(current.x, target.x, currentVelocity.x,smoothTime, maxSpeed, deltaTime),
-		SmoothDampF(current.y, target.y, currentVelocity.y,smoothTime, maxSpeed, deltaTime),
-		SmoothDampF(current.z, target.z, currentVelocity.z,smoothTime, maxSpeed, deltaTime)
-	};
-
-	return result;
 }

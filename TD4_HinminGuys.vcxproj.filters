@@ -23,7 +23,7 @@
     <ClCompile Include="Class\Scene\SceneTransitioner.cpp" />
     <ClCompile Include="Class\Scene\Title.cpp" />
     <ClCompile Include="Class\Camera\FollowCamera.cpp" />
-    <ClCompile Include="Class\Player\Systems\EventOrder.cpp" />
+    <ClCompile Include="Class\Components\EventOrder.cpp" />
     <ClCompile Include="Class\Player\Command\ICommand.cpp" />
     <ClCompile Include="Class\Player\Command\InputHandler.cpp" />
     <ClCompile Include="Class\Player\Systems\Children\State\Attack\LockOnAttack.cpp" />
@@ -50,14 +50,14 @@
     <ClCompile Include="Class\Camera\State\InputCamera.cpp" />
     <ClCompile Include="Class\Camera\State\ParryCamera.cpp" />
     <ClCompile Include="Class\Camera\State\LockOnCamera.cpp" />
-    <ClCompile Include="Class\Player\PlayerParameter.cpp" />
     <ClCompile Include="Class\Player\Systems\Children\State\Sheath\Break.cpp" />
     <ClCompile Include="Class\UI\GameUI.cpp" />
     <ClCompile Include="Class\Shake\Shake.cpp" />
     <ClCompile Include="Class\Enemy\Childs\Normal\State\HitReaction.cpp" />
     <ClCompile Include="Class\Scene\GameOver.cpp" />
     <ClCompile Include="Class\Player\Systems\Children\State\Sheath\SwordDrawn.cpp" />
-    <ClCompile Include="Class\Player\CoolTimer\CoolTimer.cpp" />
+    <ClCompile Include="Class\Components\CoolTimer.cpp" />
+    <ClCompile Include="Class\Components\HitStopController.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Class\ComboEditor\ComboTree.h" />
@@ -98,7 +98,7 @@
     <ClInclude Include="Class\Player\Systems\Children\Move.h" />
     <ClInclude Include="Class\Player\Systems\Children\Parry.h" />
     <ClInclude Include="Class\Camera\FollowCamera.h" />
-    <ClInclude Include="Class\Player\Systems\EventOrder.h" />
+    <ClInclude Include="Class\Components\EventOrder.h" />
     <ClInclude Include="Class\Player\Command\ICommand.h" />
     <ClInclude Include="Class\Player\Command\InputHandler.h" />
     <ClInclude Include="Class\Player\Systems\Children\Sheath.h" />
@@ -126,7 +126,6 @@
     <ClInclude Include="Class\Camera\State\InputCamera.h" />
     <ClInclude Include="Class\Camera\State\ParryCamera.h" />
     <ClInclude Include="Class\Camera\State\LockOnCamera.h" />
-    <ClInclude Include="Class\Player\PlayerParameter.h" />
     <ClInclude Include="Class\IParameter.h" />
     <ClInclude Include="Class\Player\Systems\Children\State\Sheath\Break.h" />
     <ClInclude Include="Class\Player\Systems\Children\Hit.h" />
@@ -137,7 +136,8 @@
     <ClInclude Include="Class\Enemy\Childs\Normal\INormalEnemyState.h" />
     <ClInclude Include="Class\Scene\GameOver.h" />
     <ClInclude Include="Class\Player\Systems\Children\State\Sheath\SwordDrawn.h" />
-    <ClInclude Include="Class\Player\CoolTimer\CoolTimer.h" />
+    <ClInclude Include="Class\Components\CoolTimer.h" />
+    <ClInclude Include="Class\Components\HitStopController.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />

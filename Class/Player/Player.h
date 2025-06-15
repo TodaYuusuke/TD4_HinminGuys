@@ -8,8 +8,8 @@
 #include "Systems/SystemManager.h"
 #include "Gauge/HP/HP.h"
 #include "Gauge/Sheath/SheathGauge.h"
-#include "PlayerParameter.h"
 #include "Command/InputHandler.h"
+#include "../Components/HitStopController.h"
 #include "../UI/UIManager.h"
 #include <memory>
 
@@ -140,11 +140,6 @@ public:// Getter,Setter
 	LWP::Math::Quaternion GetQuat() { return systemManager_->GetQuat(); }
 	LWP::Math::Vector3 GetRadian() { return systemManager_->GetRadian(); }
 	/// <summary>
-	/// 各種パラメータの取得
-	/// </summary>
-	/// <returns></returns>
-	//PlayerParameter GetParameter() { return parameter_; }
-	/// <summary>
 	/// 自機が生きているかを取得
 	/// </summary>
 	/// <returns></returns>
@@ -184,8 +179,6 @@ public:// Getter,Setter
 	void ResetAnimation() {
 		animation_.Loop(false, LWP::Resource::Animation::TrackType::Main);
 		animation_.Loop(false, LWP::Resource::Animation::TrackType::Blend);
-		//animation_.Stop(LWP::Resource::Animation::TrackType::Main);
-		//animation_.Stop(LWP::Resource::Animation::TrackType::Blend);
 	}
 	/// <summary>
 	/// ブレンドされているアニメーションを停止
@@ -219,13 +212,11 @@ private:// 外部からポインタをもらう変数
 	InputHandler* inputHandler_;
 	// UIの管理クラス
 	UIManager* uiManager_;
+	// ヒットストップ
+	HitStopController* hitStopController_;
 
 private:
 	LWP::Utility::JsonIO json_;
-
-	// 攻撃力や鞘ゲージの減少量などのパラメータ
-	//PlayerParameter parameter_;
-
 
 	// 刀モデル
 	LWP::Resource::SkinningModel swordModel_;

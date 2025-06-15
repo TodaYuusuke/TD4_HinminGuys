@@ -7,6 +7,8 @@
 Sheath::Sheath(LWP::Object::Camera* camera, Player* player) {
 	pCamera_ = camera;
 	player_ = player;
+	// ヒットストップの管理クラス
+	hitStopController_ = HitStopController::GetInstance();
 
 	// 鞘
 	sheathModel_.LoadShortPath("player/Sheath.gltf");

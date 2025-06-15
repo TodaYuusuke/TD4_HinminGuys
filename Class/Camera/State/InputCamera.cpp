@@ -5,6 +5,8 @@ InputCamera::InputCamera(FollowCamera* followCamera) {
 	followCamera_ = followCamera;
 
 	stateName_ = "Input";
+
+	radian_ = followCamera_->GetRadian();
 }
 
 void InputCamera::Initialize() {
@@ -45,8 +47,20 @@ void InputCamera::RotateUpdate() {
 	// 角度制限
 	followCamera_->ClampAngle(stickDir_.x, (followCamera_->GetTargetPos() - followCamera_->GetCamera()->worldTF.translation).Normalize(), LWP::Utility::DegreeToRadian(followCamera_->kOriginRotateX + followCamera_->kMinRotateX), LWP::Utility::DegreeToRadian(followCamera_->kOriginRotateX + followCamera_->kMaxRotateX));
 
+	radian_ = LWP::Utility::Interpolation::Exponential(radian_, LWP::Math::Vector3{ radian_.x, radian_.y, 0.0f }, 0.01f);
+
+	radian_.x += stickDir_.x;
+	radian_.y += stickDir_.y;
+	if (radian_.y >= 2 * (float)std::numbers::pi) {
+		radian_.y -= 2 * (float)std::numbers::pi;
+	}
+	if (radian_.y <= -2 * (float)std::numbers::pi) {
+		radian_.y += 2 * (float)std::numbers::pi;
+	}
+	followCamera_->SetRadian(radian_);
+
 	// x軸回転
-	followCamera_->SetCameraRotate(followCamera_->GetCamera()->worldTF.rotation * LWP::Math::Quaternion::CreateFromAxisAngle(LWP::Math::Vector3{ 1, 0, 0 }, 0.03f * stickDir_.x));
+	followCamera_->SetCameraRotate(LWP::Math::Quaternion::CreateFromAxisAngle(LWP::Math::Vector3{ 0, 0, 1 }, radian_.z) * LWP::Math::Quaternion::CreateFromAxisAngle(LWP::Math::Vector3{ 1, 0, 0 }, radian_.x + 0.03f * stickDir_.x));
 	// y軸は常に上を向くように固定
-	followCamera_->SetCameraRotate(LWP::Math::Quaternion::CreateFromAxisAngle(LWP::Math::Vector3{ 0, 1, 0 }, 0.03f * stickDir_.y) * followCamera_->GetCamera()->worldTF.rotation);
+	followCamera_->SetCameraRotate(LWP::Math::Quaternion::CreateFromAxisAngle(LWP::Math::Vector3{ 0, 1, 0 }, radian_.y + 0.03f * stickDir_.y) * followCamera_->GetCamera()->worldTF.rotation);
 }

@@ -12,6 +12,8 @@ Evasion::Evasion(LWP::Object::Camera* camera, Player* player) {
 	pCamera_ = camera;
 	player_ = player;
 	inputHandler_ = InputHandler::GetInstance();
+	// ヒットストップの管理クラス
+	hitStopController_ = HitStopController::GetInstance();
 }
 
 void Evasion::Initialize() {
@@ -141,7 +143,7 @@ void Evasion::AnimCommand() {
 	player_->SetAnimationPlaySpeed(1.0f);
 	player_->SetBlendT(0.0f);
 	player_->ResetAnimation();
-	player_->StartAnimation("Dash", 0.1f, 0.0f);
+	player_->StartAnimation("Dash", 0.15f, 0.0f);
 	player_->SetIsLoopAnimation(false);
 }
 

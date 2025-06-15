@@ -6,6 +6,7 @@
 #include "../Player/Command/InputHandler.h"
 #include "../TestCollider.h"
 #include "../UI/UIManager.h"
+#include "../Components/HitStopController.h"
 #include <set>
 #include "SceneTransitioner.h"
 
@@ -29,6 +30,9 @@ public:
 
 
 private: // ** これより先に必要な処理や変数を記述 ** //
+	// ヒットストップ
+	HitStopController* hitStopController_;
+
 	//　キー入力
 	InputHandler* inputHandler_;
 

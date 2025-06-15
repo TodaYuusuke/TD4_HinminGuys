@@ -1,6 +1,7 @@
 #pragma once
 #include "../Adapter/Adapter.h"
-#include "EventOrder.h"
+#include "../../Components/EventOrder.h"
+#include "../../Components/HitStopController.h"
 #include "../Command/InputHandler.h"
 
 // 行動の状態
@@ -184,12 +185,12 @@ public:// Getter, Setter
 protected:// 外部から受け取る変数
 	// 自機のアドレス
 	Player* player_;
-
-	//　キー入力
-	InputHandler* inputHandler_;
-
 	// シーンで使用しているカメラのポインタ
 	LWP::Object::Camera* pCamera_;
+	// キー入力
+	InputHandler* inputHandler_;
+	// ヒットストップ
+	HitStopController* hitStopController_;
 
 protected:
 	// フレーム単位で発生するアクションイベントを管理するクラス

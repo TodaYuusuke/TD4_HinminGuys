@@ -85,6 +85,7 @@ public:// Getter,Setter
 	/// </summary>
 	/// <returns></returns>
 	LWP::Math::Vector3 GetTargetPos() { return *targetPos_; }
+	LWP::Math::Vector3 GetRadian() { return radian_; }
 	/// <summary>
 	/// ロックオン中かを取得
 	/// </summary>
@@ -113,6 +114,11 @@ public:// Getter,Setter
 	/// </summary>
 	/// <returns></returns>
 	void SetCameraRotate(LWP::Math::Quaternion quat) { camera_->worldTF.rotation = quat; }
+	/// <summary>
+	/// ラジアンを設定
+	/// </summary>
+	/// <param name="radian"></param>
+	void SetRadian(LWP::Math::Vector3 radian) { radian_ = radian; }
 #pragma endregion
 
 	/// <summary>
@@ -158,6 +164,17 @@ public:// jsonで保存する値
 	// 追従対象との初期距離
 	LWP::Math::Vector3 defaultTargetDist_;
 
+
+	// パリィ時のカメラのズーム時間
+	float zoomFinishTime = 55.0f;
+	float zoomHoldFinishTime = 33.0f;
+	// パリィ時のカメラの揺れる時間
+	float parryShakeTime = 22.0f;
+	// パリィ時の角度
+	LWP::Math::Vector3 parryAngle = { 0.0f,0.523f,0.06f };
+	// パリィ時のカメラ距離
+	LWP::Math::Vector3 parryDist = { 0.0f,0.0f,2.5f };
+
 private:// 外部からポインタをもらう変数
 	// カメラ
 	LWP::Object::Camera* camera_;
@@ -179,6 +196,8 @@ private:
 	LWP::Math::Vector3 interTarget_;
 	// カメラの補間なし時の座標(自機の移動処理に使うために作成)
 	LWP::Math::Vector3 defaultPos_;
+
+	LWP::Math::Vector3 radian_;
 
 	// ロックオン時に使う情報
 	LockOnData lockOnData_;

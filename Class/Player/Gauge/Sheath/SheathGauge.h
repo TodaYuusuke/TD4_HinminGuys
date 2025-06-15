@@ -1,6 +1,6 @@
 #pragma once
 #include "../IGauge.h"
-#include "../../Systems/EventOrder.h"
+#include "../../../Components/EventOrder.h"
 
 class SheathGauge : public IGauge {
 public:

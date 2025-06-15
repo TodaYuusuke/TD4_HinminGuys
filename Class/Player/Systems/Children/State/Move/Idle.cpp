@@ -43,7 +43,7 @@ void Idle::AnimCommand() {
 	player_->SetBlendT(0.0f);
 	player_->StopAnimation(LWP::Resource::Animation::TrackType::Main);
 	player_->StopAnimation(LWP::Resource::Animation::TrackType::Blend);
-	player_->StartAnimation("Idle", 0.0f, 0.0f);
+	player_->StartAnimation("Idle", 0.2f, 0.0f);
 	player_->SetIsLoopAnimation(true);
 
 	isActive_ = true;

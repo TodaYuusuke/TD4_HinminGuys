@@ -27,4 +27,6 @@ public:
 private:
 	// スティックの入力を受け取る
 	LWP::Math::Vector3 stickDir_;
+
+	LWP::Math::Vector3 radian_;
 };

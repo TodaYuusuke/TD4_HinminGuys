@@ -4,7 +4,8 @@
 DamageResponse::DamageResponse(LWP::Object::Camera* camera, Player* player) {
 	pCamera_ = camera;
 	player_ = player;
-
+	// ヒットストップの管理クラス
+	hitStopController_ = HitStopController::GetInstance();
 }
 
 void DamageResponse::Initialize() {
@@ -103,7 +104,7 @@ void DamageResponse::StartInvinsible() {
 	player_->GetSystemManager()->SetInvisibleTime(jsonData_.invinsibleTime);
 	// ガードアニメーション開始
 	player_->ResetAnimation();
-	player_->StartAnimation("Damage", 0.0f, 0.0f);
+	player_->StartAnimation("Damage", 0.15f, 0.0f);
 }
 
 void DamageResponse::HitUpdate() {

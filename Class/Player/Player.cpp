@@ -28,6 +28,8 @@ Player::Player(LWP::Object::Camera* camera, EnemyManager* enemyManager, FollowCa
 
 void Player::Initialize() {
 	inputHandler_ = InputHandler::GetInstance();
+	// ヒットストップの管理クラス
+	hitStopController_ = HitStopController::GetInstance();
 
 	// 自機機能を生成
 	CreateSystems();
@@ -51,8 +53,8 @@ void Player::Initialize() {
 
 void Player::Update() {
 	// 体力がないなら自機は死亡
-	if (uiManager_->GetHPGauge().GetIsBelowPercent(0.0f)) { 
-		isAlive_ = false; 
+	if (uiManager_->GetHPGauge().GetIsBelowPercent(0.0f)) {
+		isAlive_ = false;
 		return;
 	}
 

@@ -1,7 +1,6 @@
 #pragma once
 #include "../ISystem.h"
 #include "../../Gauge/HP/HP.h"
-#include "../EventOrder.h"
 
 struct DamageResponseJsonData {
 	// 無敵時間

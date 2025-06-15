@@ -26,6 +26,10 @@ void GameScene::Initialize() {
 	inputHandler_ = InputHandler::GetInstance();
 	inputHandler_->Initialize();
 
+	// ヒットストップの管理クラス
+	hitStopController_ = HitStopController::GetInstance();
+	hitStopController_->Initialize();
+
 	// UIの管理クラスを生成
 	uiManager_.Initialize();
 
@@ -63,6 +67,7 @@ void GameScene::Initialize() {
 
 // 更新
 void GameScene::Update() {
+	//LWP::Information::SetDeltaTimeMultiply(0.1f);
 	
 	//シーン遷移が終わった時点でウェーブを開始していない場合、ウェーブを開始
 	if (not sceneTransitioner_.GetIsSceneChange() and not enemyManager_.GetIsDefeatedAllEnemy() and
@@ -91,6 +96,9 @@ void GameScene::Update() {
 
 	// 入力されたコマンドを確認
 	inputHandler_->Update(player_);
+
+	// ヒットストップ
+	hitStopController_->Update();
 
 	//敵全て
 	enemyManager_.Update();

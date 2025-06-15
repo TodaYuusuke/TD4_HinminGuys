@@ -12,6 +12,8 @@ using namespace LWP::Input;
 Move::Move(LWP::Object::Camera* camera, Player* player) {
 	pCamera_ = camera;
 	player_ = player;
+	// ヒットストップの管理クラス
+	hitStopController_ = HitStopController::GetInstance();
 }
 
 Move::~Move() {
