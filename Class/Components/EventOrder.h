@@ -79,6 +79,14 @@ public:// Getter, Setter
 	bool GetIsEnd() { return timeEvents_.empty(); }
 #pragma endregion
 
+#pragma region Setter
+	/// <summary>
+	/// タイムスケールの影響を受けるかを設定
+	/// </summary>
+	/// <returns></returns>
+	void SetIsTimeScale(const bool& isTimeScale) { isTimeScale_ = isTimeScale; }
+#pragma endregion
+
 private:
 	// フレーム単位で発生するアクションイベントをまとめたリスト(0番が今実行しているアクションイベント)
 	std::vector<TimeEvent> timeEvents_;
@@ -90,5 +98,7 @@ private:
 
 	// 機能が使える状態か
 	bool isActive_;
+
+	bool isTimeScale_ = true;
 };
 

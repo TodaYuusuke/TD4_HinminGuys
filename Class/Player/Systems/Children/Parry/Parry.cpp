@@ -213,7 +213,7 @@ void Parry::AnimCommand() {
 	player_->SetAnimationPlaySpeed(1.0f);
 	player_->SetBlendT(0.0f);
 	player_->ResetAnimation();
-	player_->StartAnimation("Gaurd", 0.15f, 0.0f);
+	player_->StartAnimation("Gaurd", 0.0f, 0.0f);
 }
 
 void Parry::CreateCollision() {
@@ -228,14 +228,14 @@ void Parry::CreateCollision() {
 			// ジャストパリィ
 			if (eventOrder_.GetCurrentTimeEvent().name == "JustParry") {
 				// ヒットストップ
-				hitStopController_->Start(0.125f, 0.0f);
+				hitStopController_->Start(0.3f, 0.0f);
 
 				// パリィ成功
 				player_->GetSystemManager()->SetOnParryTargetPos(hitTarget->GetWorldPosition());
 				player_->GetSystemManager()->SetIsSuccessParry(true);
 				// ガードアニメーション開始
 				player_->ResetAnimation();
-				player_->StartAnimation("StrongParry", 0.15f, 0.0f);
+				player_->StartAnimation("StrongParry", 0.0f, 0.0f);
 
 				isJustParry_ = true;
 				isGoodParry_ = false;

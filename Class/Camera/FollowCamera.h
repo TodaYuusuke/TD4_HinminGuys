@@ -175,10 +175,11 @@ public:// jsonで保存する値
 	// パリィ時のカメラ距離
 	LWP::Math::Vector3 parryDist = { 0.0f,0.0f,2.5f };
 
-private:// 外部からポインタをもらう変数
+public:// 外部からポインタをもらう変数
 	// カメラ
 	LWP::Object::Camera* camera_;
 
+private:
 	Player* player_;
 
 private:

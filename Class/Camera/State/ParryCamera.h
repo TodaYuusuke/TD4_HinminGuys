@@ -1,6 +1,6 @@
 #pragma once
 #include "IFollowCameraState.h"
-#include "../../Shake/Shake.h"
+#include "../../Components/Shake.h"
 #include "../../Components/EventOrder.h"
 
 class Player;

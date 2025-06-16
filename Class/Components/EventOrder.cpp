@@ -19,7 +19,12 @@ void EventOrder::Update() {
 	}
 
 	// 時間を進める
-	currentTime_ += HitStopController::GetInstance()->GetDeltaTime();
+	if (isTimeScale_) {
+		currentTime_ += HitStopController::GetInstance()->GetDeltaTime();
+	}
+	else {
+		currentTime_++;
+	}
 
 	// 全てのアクションイベントが終了しているなら機能停止
 	if (timeEvents_.empty()) {

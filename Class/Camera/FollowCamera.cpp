@@ -84,6 +84,8 @@ void FollowCamera::DebugGUI() {
 		player_->GetSystemManager()->SetIsSuccessParry(true);
 	}
 
+	camera_->DebugGUI();
+
 	ImGui::DragFloat3("Translation", &camera_->worldTF.translation.x, 0.1f, -1000, 1000);
 	ImGui::DragFloat4("Quaternion", &camera_->worldTF.rotation.x, 0.1f, -1000, 1000);
 	ImGui::DragFloat3("Radian", &radian_.x, 0.1f, -1000, 1000);

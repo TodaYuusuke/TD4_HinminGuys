@@ -200,7 +200,7 @@
     <ClCompile Include="Class\Player\Systems\Children\Sheath\State\Throw.cpp" />
     <ClCompile Include="Class\UI\UIManager.cpp" />
     <ClCompile Include="Class\Camera\State\ParryCamera.cpp" />
-    <ClCompile Include="Class\Shake\Shake.cpp" />
+    <ClCompile Include="Class\Components\Shake.cpp" />
     <ClCompile Include="Class\Player\Systems\Children\Sheath\State\SwordDrawn.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -274,7 +274,7 @@
     <ClInclude Include="Class\Camera\State\LockOnCamera.h" />
     <ClInclude Include="Class\Player\Systems\Children\Hit.h" />
     <ClInclude Include="Class\UI\GameUI.h" />
-    <ClInclude Include="Class\Shake\Shake.h" />
+    <ClInclude Include="Class\Components\Shake.h" />
     <ClInclude Include="Class\Player\Systems\Children\Sheath\State\SwordDrawn.h" />
     <ClInclude Include="Class\Components\CoolTimer.h" />
     <ClInclude Include="Class\Components\HitStopController.h" />

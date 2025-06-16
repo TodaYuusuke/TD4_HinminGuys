@@ -56,10 +56,15 @@ ParryCamera::ParryCamera(Player* player, FollowCamera* followCamera) {
 	else {
 		end_ = checkCloseAngle[0];
 	}
+
+	// ラジアルブラー
+	followCamera_->camera_->pp.use = true;
+	followCamera_->camera_->pp.radialBlur.use = true;
 }
 
 ParryCamera::~ParryCamera() {
-
+	followCamera_->camera_->pp.use = false;
+	followCamera_->camera_->pp.radialBlur.use = false;
 }
 
 void ParryCamera::Initialize() {
@@ -74,7 +79,7 @@ void ParryCamera::Update() {
 	shakeRange_ = LWP::Utility::Interpolation::Exponential(shakeRange_, Vector3{ 0.0f,0.0f,0.0f }, 0.05f);
 	shake_.SetRange(shakeRange_);
 
-	t_+= HitStopController::GetInstance()->GetDeltaTime();
+	t_++;
 
 	// ロックオン対象とカメラの距離を算出
 	TargetDistUpdate();
@@ -113,6 +118,7 @@ void ParryCamera::TargetDistUpdate() {
 
 void ParryCamera::CreateEventOrder() {
 	targetDistOrder_.Initialize();
+	targetDistOrder_.SetIsTimeScale(false);
 	// カメラを近づける
 	targetDistOrder_.CreateTimeEvent(TimeEvent{ followCamera_->zoomFinishTime, "Zoom" });
 	targetDistOrder_.CreateTimeEvent(TimeEvent{ followCamera_->zoomHoldFinishTime, "Wait" });
