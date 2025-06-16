@@ -1,15 +1,15 @@
 #pragma once
 #include "ICharacter.h"
-#include "Systems/Children/Move.h"
-#include "Systems/Children/Parry.h"
-#include "Systems/Children/Attack.h"
-#include "Systems/Children/LockOn.h"
-#include "Systems/Children/DamageResponse.h"
+#include "Systems/Children/Move/Move.h"
+#include "Systems/Children/Parry/Parry.h"
+#include "Systems/Children/Attack/Attack.h"
+#include "Systems/Children/LockOn/LockOn.h"
+#include "Systems/Children/Damage/DamageResponse.h"
 #include "Systems/SystemManager.h"
 #include "Gauge/HP/HP.h"
 #include "Gauge/Sheath/SheathGauge.h"
-#include "PlayerParameter.h"
 #include "Command/InputHandler.h"
+#include "../Components/HitStopController.h"
 #include "../UI/UIManager.h"
 #include <memory>
 
@@ -56,12 +56,8 @@ public:
 		Reset();
 		// HPゲージ変動
 		uiManager_->ChangeHPGauge(damageValue, multiply);
-		// 無敵開始
-		systemManager_->GetDamageResponseSystem()->StartInvinsible();
-		// 被弾演出開始
-		systemManager_->GetDamageResponseSystem()->StartEffect();
-		// コンボ状態リセット
-		systemManager_->GetAttackSystem()->ComboReset();
+		// ダメージ機能を生成しすべての行動キャンセル
+		systemManager_->StartDamageResponse();
 	}
 
 	void TakeSheathDamage(const float& damageValue, const float& multiply = 1.0f) {
@@ -141,12 +137,8 @@ public:// Getter,Setter
 	/// 自機の角度を取得(クォータニオン)
 	/// </summary>
 	/// <returns></returns>
-	LWP::Math::Quaternion GetQuat() { return systemManager_->GetRotate(); }
-	/// <summary>
-	/// 各種パラメータの取得
-	/// </summary>
-	/// <returns></returns>
-	//PlayerParameter GetParameter() { return parameter_; }
+	LWP::Math::Quaternion GetQuat() { return systemManager_->GetQuat(); }
+	LWP::Math::Vector3 GetRadian() { return systemManager_->GetRadian(); }
 	/// <summary>
 	/// 自機が生きているかを取得
 	/// </summary>
@@ -187,8 +179,6 @@ public:// Getter,Setter
 	void ResetAnimation() {
 		animation_.Loop(false, LWP::Resource::Animation::TrackType::Main);
 		animation_.Loop(false, LWP::Resource::Animation::TrackType::Blend);
-		//animation_.Stop(LWP::Resource::Animation::TrackType::Main);
-		//animation_.Stop(LWP::Resource::Animation::TrackType::Blend);
 	}
 	/// <summary>
 	/// ブレンドされているアニメーションを停止
@@ -222,13 +212,11 @@ private:// 外部からポインタをもらう変数
 	InputHandler* inputHandler_;
 	// UIの管理クラス
 	UIManager* uiManager_;
+	// ヒットストップ
+	HitStopController* hitStopController_;
 
 private:
 	LWP::Utility::JsonIO json_;
-
-	// 攻撃力や鞘ゲージの減少量などのパラメータ
-	//PlayerParameter parameter_;
-
 
 	// 刀モデル
 	LWP::Resource::SkinningModel swordModel_;

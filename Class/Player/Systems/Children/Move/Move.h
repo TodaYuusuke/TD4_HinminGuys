@@ -1,0 +1,205 @@
+#pragma once
+#include "../../ISystem.h"
+#include "State/IMoveSystemState.h"
+
+struct MoveJsonData {
+	// 歩き時の速度倍率
+	float walkSpeedMultiply = 1.0f;
+	// 小走りの速度倍率
+	float runSpeedMultiply = 1.0f;
+	// 走り時の速度倍率
+	float dashSpeedMultiply = 1.0f;
+	// 移動の補間レート
+	float moveSpeedRate = 0.2f;
+
+	// 小走り状態に移行するのに必要なスティックの倒し具合(0.0f~1.0f)
+	float runThreshold = 0.5f;
+};
+
+/// <summary>
+/// 自機の移動機能をまとめたクラス
+/// </summary>
+class Move : public ISystem {
+public:
+enum class MoveState {
+	kIdle,			// 待機
+	kWalk,			// 歩き
+	kRun,			// 小走り
+	kDash,			// 走り
+	kCount
+};
+
+public:
+	// コンストラクタ
+	Move(LWP::Object::Camera* camera, Player* player);
+	// デストラクタ
+	~Move() override;
+
+	/// <summary>
+	/// 初期化
+	/// </summary>
+	void Initialize() override;
+	/// <summary>
+	/// 更新処理
+	/// </summary>
+	void Update() override;
+
+	/// <summary>
+	/// 全ての数値をリセット
+	/// </summary>
+	void Reset() override;
+
+	/// <summary>
+	/// ImGuiによるパラメータ表示
+	/// </summary>
+	void DebugGUI() override;
+
+	/// <summary>
+	/// jsonファイルの作成
+	/// </summary>
+	void CreateJsonFIle() override;
+
+	/// <summary>
+	/// 移動コマンド
+	/// </summary>
+	void Command();
+
+	/// <summary>
+	/// アニメーションのコマンド
+	/// </summary>
+	void AnimCommand();
+
+	/// <summary>
+	/// 移動の状態を更新
+	/// </summary>
+	void CheckMoveState();
+
+	/// <summary>
+	/// 状態の遷移
+	/// </summary>
+	/// <param name="pState">次の状態</param>
+	void ChangeState(IMoveSystemState* pState);
+
+private:
+	/// <summary>
+	/// 入力処理
+	/// </summary>
+	void InputUpdate();
+
+	/// <summary>
+	/// クォータニオンのy軸のみ取り出す
+	/// </summary>
+	/// <param name="q"></param>
+	/// <returns></returns>
+	float GetYawFromQuaternion(const LWP::Math::Quaternion& q) {
+		// Yaw（Y軸まわりの回転）を取り出す
+		float siny_cosp = 2.0f * (q.w * q.y + q.z * q.x);
+		float cosy_cosp = 1.0f - 2.0f * (q.y * q.y + q.z * q.z);
+		return std::atan2(siny_cosp, cosy_cosp); // ラジアン
+	}
+
+	// 絶対値に変換
+	LWP::Math::Vector3 Abs(LWP::Math::Vector3 value) {
+		LWP::Math::Vector3 result{
+			std::fabsf(value.x),
+			std::fabsf(value.y),
+			std::fabsf(value.z)
+		};
+		return result;
+	}
+
+public:// Getter, Setter
+#pragma region Getter
+	/// <summary>
+	/// 移動対象のモデルのアドレスを取得
+	/// </summary>
+	/// <returns></returns>
+	LWP::Resource::RigidModel GetModel() { return *model_; }
+
+	/// <summary>
+	/// 移動状態を取得
+	/// </summary>
+	/// <returns></returns>
+	IMoveSystemState* GetMoveState() { return state_; }
+
+	/// <summary>
+	/// jsonに保存する値を取得
+	/// </summary>
+	MoveJsonData GetJsonData() { return jsonData_; }
+	/// <summary>
+	/// スティックの倒し具合を取得
+	/// </summary>
+	/// <returns></returns>
+	float GetStickStrength() { return stickStrength_; }
+	/// <summary>
+	/// ひとつ前の移動状態を取得
+	/// </summary>
+	/// <returns></returns>
+	bool GetPreMoveState(MoveState moveState) {
+		if (preMoveState_ == moveState) {
+			return true;
+		}
+		return false; 
+	}
+	/// <summary>
+	/// 移動しているかを取得
+	/// </summary>
+	/// <returns></returns>
+	bool GetIsMove() { return isMove_; }
+	/// <summary>
+	/// 指定した移動状態に変更された瞬間かを取得
+	/// </summary>
+	/// <param name="moveState"></param>
+	/// <returns></returns>
+	bool GetTriggerChangeMoveState(MoveState moveState){
+		if (preMoveState_ != moveState) {
+			return true;
+		}
+		return false;
+	}
+#pragma endregion
+
+#pragma region Setter
+	/// <summary>
+	/// 移動対象のモデルのアドレスを設定
+	/// </summary>
+	/// <param name="model">モデルのアドレス</param>
+	void SetModel(LWP::Resource::RigidModel* model) { model_ = model; }
+
+	/// <summary>
+	/// jsonに保存する値を設定
+	/// </summary>
+	/// <param name="jsonData"></param>
+	void SetJsonData(const MoveJsonData& jsonData) { jsonData_ = jsonData; }
+
+	/// <summary>
+	/// 移動速度の倍率を設定
+	/// </summary>
+	/// <param name="moveMultiply"></param>
+	void SetMoveMultiply(const float& moveMultiply) { moveMultiply_ = moveMultiply; }
+#pragma endregion
+
+private:// jsonで保存する値
+	MoveJsonData jsonData_;
+
+private:// プライベートな変数
+	// 移動対象のモデルのアドレス
+	LWP::Resource::RigidModel* model_;
+
+	IMoveSystemState* state_;
+
+	// 移動時のイージング
+	LWP::Math::Vector3 moveOffset_;
+
+	MoveState moveState_;
+	MoveState preMoveState_;
+
+	// スティックの倒し具合
+	float stickStrength_;
+
+	// 移動速度の倍率
+	float moveMultiply_;
+
+	// 移動しているか
+	bool isMove_;
+};

@@ -28,6 +28,8 @@ Player::Player(LWP::Object::Camera* camera, EnemyManager* enemyManager, FollowCa
 
 void Player::Initialize() {
 	inputHandler_ = InputHandler::GetInstance();
+	// ヒットストップの管理クラス
+	hitStopController_ = HitStopController::GetInstance();
 
 	// 自機機能を生成
 	CreateSystems();
@@ -51,8 +53,8 @@ void Player::Initialize() {
 
 void Player::Update() {
 	// 体力がないなら自機は死亡
-	if (uiManager_->GetHPGauge().GetIsBelowPercent(0.0f)) { 
-		isAlive_ = false; 
+	if (uiManager_->GetHPGauge().GetIsBelowPercent(0.0f)) {
+		isAlive_ = false;
 		return;
 	}
 
@@ -62,7 +64,7 @@ void Player::Update() {
 	// 速度を加算
 	model_.worldTF.translation += systemManager_->GetVelocity();
 	// 角度を代入S
-	model_.worldTF.rotation = systemManager_->GetRotate();
+	model_.worldTF.rotation = systemManager_->GetQuat();
 
 	// 移動制限
 	LimitMoveArea();
@@ -95,7 +97,6 @@ void Player::DebugGUI() {
 		animation_.DebugGUI();
 		ImGui::TreePop();
 	}
-
 #endif // DEBUG
 }
 
@@ -124,22 +125,9 @@ void Player::CreateCollision() {
 }
 
 void Player::InvinsibleUpdate() {
-	// 被弾時
-	if (systemManager_->GetDamageResponseSystem()->GetIsInvinsible()) {
+	if (systemManager_->GetInvisibleTime() != 0.0f) {
 		collider_.isActive = false;
 	}
-	// 回避時
-	else if (systemManager_->GetEvasionSystem()->GetIsInvinsible()) {
-		collider_.isActive = false;
-	}
-	// 鞘のダッシュ攻撃時
-	else if (systemManager_->GetSheathSystem()->GetIsInvinsible()) {
-		collider_.isActive = false;
-	}
-	else if (systemManager_->GetParrySystem()->GetIsInvinsible()) {
-		collider_.isActive = false;
-	}
-	// 全て当てはまらないなら当たり判定を戻す
 	else {
 		collider_.isActive = true;
 	}
@@ -147,7 +135,7 @@ void Player::InvinsibleUpdate() {
 
 void Player::LimitMoveArea() {
 	// 鞘を投げた後鞘を中心に移動制限をかける(円形)
-	if (systemManager_->GetSheathSystem()->GetSheathState()->GetStateName() == "Collect") {
+	if (systemManager_->GetSheathSystem()->GetSheathState()->GetStateName() == "SwordDrawn") {
 		systemManager_->GetSheathSystem()->ClampToCircle(model_.worldTF.translation);
 	}
 }

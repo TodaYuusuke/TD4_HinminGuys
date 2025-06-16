@@ -73,7 +73,7 @@ void UIManager::Initialize() {
 
 void UIManager::Update() {
 	// 回避中はダッシュUIに変更
-	if (player_->GetSystemManager()->GetEvasionSystem()->GetIsActive()) {
+	if (player_->GetSystemManager()->GetIsEnableDash()) {
 		guideOperation_[1].isActive = false;
 		guideOperation_[2].isActive = true;
 	}

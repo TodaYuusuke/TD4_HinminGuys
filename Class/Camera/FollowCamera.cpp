@@ -22,18 +22,31 @@ void FollowCamera::Initialize() {
 		.AddValue<float>("TargetDist", &targetDistRate)
 		.AddValue<float>("Rotate", &rotateRate)
 		.EndGroup()
+		.BeginGroup("Parry")
+		.AddValue<Vector3>("Angle", &parryAngle)
+		.AddValue<Vector3>("Distance", &parryDist)
+		.AddValue<float>("ZoomTime", &zoomFinishTime)
+		.AddValue<float>("HoldTime", &zoomHoldFinishTime)
+		.AddValue<float>("ShakeTime", &parryShakeTime)
+		.EndGroup()
 		.CheckJsonFile();
 
-	// 状態
-	state_ = new InputCamera(this);
 
 	kTargetDist = defaultTargetDist_;
 	lockOnOffset_ = kTargetDist;
+
+	radian_ = {
+		LWP::Utility::DegreeToRadian(kStartAngle.x),
+		LWP::Utility::DegreeToRadian(kStartAngle.y)
+	};
 
 	// x軸回転
 	camera_->worldTF.rotation = LWP::Math::Quaternion::CreateFromAxisAngle(LWP::Math::Vector3{ 1, 0, 0 }, LWP::Utility::DegreeToRadian(kStartAngle.x));
 	// y軸は常に上を向くように固定
 	camera_->worldTF.rotation = LWP::Math::Quaternion::CreateFromAxisAngle(LWP::Math::Vector3{ 0, 1, 0 }, LWP::Utility::DegreeToRadian(kStartAngle.y)) * camera_->worldTF.rotation;
+
+	// 状態
+	state_ = new InputCamera(this);
 }
 
 void FollowCamera::Update() {
@@ -67,9 +80,15 @@ void FollowCamera::DebugGUI() {
 		}
 		ImGui::TreePop();
 	}
+	if (ImGui::Button("Start Parry Camera")) {
+		player_->GetSystemManager()->SetIsSuccessParry(true);
+	}
+
+	camera_->DebugGUI();
 
 	ImGui::DragFloat3("Translation", &camera_->worldTF.translation.x, 0.1f, -1000, 1000);
 	ImGui::DragFloat4("Quaternion", &camera_->worldTF.rotation.x, 0.1f, -1000, 1000);
+	ImGui::DragFloat3("Radian", &radian_.x, 0.1f, -1000, 1000);
 	ImGui::DragFloat3("Distance", &kTargetDist.x, 0.1f, -100, 100);
 }
 
@@ -78,7 +97,7 @@ void FollowCamera::CheckState() {
 	if (state_->GetStateName() == "Parry") { return; }
 
 	// パリィ成功状態
-	if (player_->GetSystemManager()->GetParrySystem()->GetSuccessJustParry()) {
+	if (player_->GetSystemManager()->GetIsSuccessParry()) {
 		if (state_->GetStateName() != "Parry") {
 			ChangeState(new ParryCamera(player_, this));
 			return;

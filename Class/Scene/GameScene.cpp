@@ -26,6 +26,10 @@ void GameScene::Initialize() {
 	inputHandler_ = InputHandler::GetInstance();
 	inputHandler_->Initialize();
 
+	// ヒットストップの管理クラス
+	hitStopController_ = HitStopController::GetInstance();
+	hitStopController_->Initialize();
+
 	// UIの管理クラスを生成
 	uiManager_.Initialize();
 
@@ -96,6 +100,9 @@ void GameScene::Update() {
 
 	// 入力されたコマンドを確認
 	inputHandler_->Update(player_);
+
+	// ヒットストップ
+	hitStopController_->Update();
 
 	//敵全て
 	enemyManager_.Update();

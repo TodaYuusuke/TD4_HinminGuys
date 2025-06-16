@@ -9,7 +9,7 @@ using namespace LWP::Object;
 using namespace LWP::Info;
 
 void Title::Initialize() {
-	LWP::Window::ChangeFullScreenMode();
+	//LWP::Window::ChangeFullScreenMode();
 
 	// 平行光源を配置(これも一時的に配置)
 	light_.worldTF.translation = { 0,10,0 };
@@ -48,11 +48,11 @@ void Title::Update() {
 		if (selectUI_ == SelectUI::kStart) {
 
 			//下キーでEndに移動
-			if (Controller::GetTrigger(XBOX_DPAD_DOWN)) {
+			if (Controller::GetTrigger(XBOX_DPAD_DOWN) || Keyboard::GetTrigger(DIK_DOWN)) {
 				selectUI_ = SelectUI::kEnd;
 			}
 			//Aボタンでゲームスタート
-			if (Controller::GetTrigger(XBOX_A)) {
+			if (Controller::GetTrigger(XBOX_A) || Keyboard::GetTrigger(DIK_SPACE)) {
 				sceneTransitioner_.SetNextScene(SceneName::kGameScene);
 				sceneTransitioner_.SceneTransitionStart();
 			}
@@ -64,10 +64,10 @@ void Title::Update() {
 		else if (selectUI_ == SelectUI::kEnd) {
 
 			//上キーでStartに移動
-			if (Controller::GetTrigger(XBOX_DPAD_UP)) {
+			if (Controller::GetTrigger(XBOX_DPAD_UP) || Keyboard::GetTrigger(DIK_UP)) {
 				selectUI_ = SelectUI::kStart;
 			}
-			if (Controller::GetTrigger(XBOX_A)) {
+			if (Controller::GetTrigger(XBOX_A) || Keyboard::GetTrigger(DIK_SPACE)) {
 				LWP::System::ShutDown();
 			}
 

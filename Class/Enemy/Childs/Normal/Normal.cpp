@@ -52,18 +52,20 @@ void Normal::Initialize(Player* player, const Vector3& position, LWP::Object::Ca
 		if (state_.GetCurrentBehavior() != States::kNormalAttack) {
 			SetPreState(state_.GetCurrentBehavior());
 			state_.request = States::kHitReaction;
-			SetKnockBackValue(player_->GetSystemManager()->GetAttackSystem()->GetKnockBackStrength());
+			//今後プレイヤーから取得する
+			SetKnockBackValue(1.0f);
 		}
 
 		//ダメージの加算値(テスト用)
 		int plusDamage = LWP::Utility::GenerateRandamNum(0, 1000);
 
 		//ダメージエフェクト追加
-		enemyManager_->GetDamageEffectEmitter().AddEffect(player_->GetSystemManager()->GetAttackSystem()->GetDamage() + float(plusDamage),
+		//今後プレイヤーから取得する
+		enemyManager_->GetDamageEffectEmitter().AddEffect(float(plusDamage),
 			model_.GetJointWorldPosition("UpperBody"));
 
 		//ダメージを受ける
-		TakeDamage(player_->GetSystemManager()->GetAttackSystem()->GetDamage());
+		TakeDamage(player_->GetSystemManager()->GetComboTree()->GetDamage());
 
 		};
 	

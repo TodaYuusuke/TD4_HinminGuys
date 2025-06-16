@@ -5,17 +5,16 @@
 class Player;
 class ICommand {
 public:
+	// デストラクタ
 	virtual ~ICommand() = default;
-	virtual void Exec(Player& player,  int& banInput) = 0;
-	virtual void Reset(Player& player, int& banInput) = 0;
-	inline void SetBanInput(const int& banInput) { banInput_ = banInput; }
-	inline int GetBanInput() { return banInput_; }
-public:
-	// 入力不可状態
-	int banInput_;
-	int currentInput_;
 
-	bool isActive_;
+	/// <summary>
+	/// コマンド実行
+	/// </summary>
+	virtual void Exec(Player& player) = 0;
+
+public:
+
 };
 
 /// <summary>
@@ -23,52 +22,58 @@ public:
 /// </summary>
 class MoveCommand : public ICommand {
 public:
-	MoveCommand();
-	void Exec(Player& player,  int& banInput)override;
-	void Reset(Player& player, int& banInput) override;
+	/// <summary>
+	/// コマンド実行
+	/// </summary>
+	void Exec(Player& player) override;
 };
 /// <summary>
 /// 攻撃コマンド
 /// </summary>
 class NormalAttackCommand : public ICommand {
 public:
-	NormalAttackCommand();
-	void Exec(Player& player,  int& banInput)override;
-	void Reset(Player& player, int& banInput) override;
+	/// <summary>
+	/// コマンド実行
+	/// </summary>
+	void Exec(Player& player) override;
 };
 /// <summary>
 /// パリィコマンド
 /// </summary>
 class ParryCommand : public ICommand {
 public:
-	ParryCommand();
-	void Exec(Player& player,  int& banInput)override;
-	void Reset(Player& player, int& banInput) override;
+	/// <summary>
+	/// コマンド実行
+	/// </summary>
+	void Exec(Player& player) override;
 };
 /// <summary>
 /// ロックオンコマンド
 /// </summary>
 class LockOnCommand : public ICommand {
 public:
-	LockOnCommand();
-	void Exec(Player& player,  int& banInput)override;
-	void Reset(Player& player, int& banInput) override;
+	/// <summary>
+	/// コマンド実行
+	/// </summary>
+	void Exec(Player& player) override;
 };
 /// <summary>
 /// 回避コマンド
 /// </summary>
 class EvasionCommand : public ICommand {
 public:
-	EvasionCommand();
-	void Exec(Player& player,  int& banInput)override;
-	void Reset(Player& player, int& banInput) override;
+	/// <summary>
+	/// コマンド実行
+	/// </summary>
+	void Exec(Player& player) override;
 };
 /// <summary>
 /// 鞘コマンド
 /// </summary>
 class SheathCommand : public ICommand {
 public:
-	SheathCommand();
-	void Exec(Player& player,  int& banInput)override;
-	void Reset(Player& player, int& banInput) override;
+	/// <summary>
+	/// コマンド実行
+	/// </summary>
+	void Exec(Player& player) override;
 };
