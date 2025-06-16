@@ -134,7 +134,7 @@ void SystemManager::Update() {
 
 	// 無敵処理
 	if (invinsibleTime_ != 0.0f) {
-		invinsibleTime_--;
+		invinsibleTime_-= HitStopController::GetInstance()->GetDeltaTime();
 	}
 }
 

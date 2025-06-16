@@ -2,10 +2,15 @@
     "Group :Parry": {
         "Vector3 :Angle": [
             -0.05000000074505806,
-            0.12999999523162842,
+            0.20000000298023224,
             0.10000000149011612
         ],
-        "float :HoldTime": 33.0,
+        "Vector3 :Distance": [
+            0.0,
+            0.0,
+            3.5
+        ],
+        "float :HoldTime": 11.0,
         "float :ShakeTime": 10.0,
         "float :ZoomTime": 22.0
     },

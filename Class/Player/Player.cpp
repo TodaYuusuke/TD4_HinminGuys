@@ -97,7 +97,6 @@ void Player::DebugGUI() {
 		animation_.DebugGUI();
 		ImGui::TreePop();
 	}
-
 #endif // DEBUG
 }
 

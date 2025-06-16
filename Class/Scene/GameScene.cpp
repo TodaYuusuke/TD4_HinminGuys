@@ -67,7 +67,6 @@ void GameScene::Initialize() {
 
 // 更新
 void GameScene::Update() {
-	//LWP::Information::SetDeltaTimeMultiply(0.1f);
 	
 	//シーン遷移が終わった時点でウェーブを開始していない場合、ウェーブを開始
 	if (not sceneTransitioner_.GetIsSceneChange() and not enemyManager_.GetIsDefeatedAllEnemy() and

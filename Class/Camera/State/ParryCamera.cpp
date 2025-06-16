@@ -74,7 +74,7 @@ void ParryCamera::Update() {
 	shakeRange_ = LWP::Utility::Interpolation::Exponential(shakeRange_, Vector3{ 0.0f,0.0f,0.0f }, 0.05f);
 	shake_.SetRange(shakeRange_);
 
-	t_++;
+	t_+= HitStopController::GetInstance()->GetDeltaTime();
 
 	// ロックオン対象とカメラの距離を算出
 	TargetDistUpdate();

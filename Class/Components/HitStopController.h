@@ -43,10 +43,10 @@ public:// Getter, Setter
 	/// </summary>
 	float GetCurrentFrame() { return currentFrame_; }
 	/// <summary>
-	/// 経過時間を取得
+	/// 経過時間を取得(既存のΔタイムだと数値のばらつきがありジッターが起きてしまうので固定値にする)
 	/// </summary>
 	/// <returns></returns>
-	float GetDeltaTime() { return LWP::Information::GetDeltaTimeF() * fps; }
+	float GetDeltaTime() { return 1.0f * multiply_; }
 	/// <summary>
 	/// ヒットストップが終了しているかを取得
 	/// </summary>
@@ -59,23 +59,30 @@ public:// Getter, Setter
 	/// ヒットストップ時間を設定
 	/// </summary>
 	/// <param name="time"></param>
-	void SetHitStopTime(const float& time) { hitStopTime_ = time * 60.0f; }
+	void SetHitStopTime(const float& time) {
+		hitStopTime_ = time * fps;
+		currentFrame_ = hitStopTime_;
+	}
 	/// <summary>
 	/// ヒットストップのデルタタイムの係数を設定
 	/// </summary>
 	/// <param name="multiply"></param>
-	void SetTimeMultiply(const float& multiply) { LWP::Information::SetDeltaTimeMultiply(multiply); }
+	void SetTimeMultiply(const float& multiply) { 
+		LWP::Information::SetDeltaTimeMultiply(multiply); 
+		multiply_ = multiply;
+	}
 #pragma endregion
 
 private:
 	// フレームパーセカンド
-	const float fps = 60.0f;
+	float fps = 60.0f;
 
-private:
 	// ヒットストップする時間
 	float hitStopTime_;
 	// 経過時間
 	float currentFrame_;
+
+	float multiply_ = 1.0f;
 
 	// 終了しているかを取得
 	bool isFinish_;
