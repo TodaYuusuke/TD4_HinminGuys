@@ -1,19 +1,20 @@
 #include "NormalStateParameter.h"
 
-int32_t IdleParameter::standTime_ = 60;
-float IdleParameter::followingDist_ = 6.0f;
+float IdleParameter::standTime = 1.0f;
+float IdleParameter::followingDist = 6.0f;
 
-float MoveParameter::attackDist_ = 0.5f;
-int32_t MoveParameter::runTime_ = 120;
+float MoveParameter::attackDist = 0.5f;
+float MoveParameter::runTime = 2.0f;
+float MoveParameter::defaultSpeed = 2.0f;
 
-float AttackParameter::attackAcceptTime_ = 0.13f;
+float AttackParameter::attackAcceptTime = 0.13f;
 
-int32_t SpacingParameter::spacingTime_ = 120;
-float SpacingParameter::spaceDist_ = 3.0f;
+float SpacingParameter::spacingTime = 2.0f;
+float SpacingParameter::spaceDist = 3.0f;
 
-uint16_t WaitingForAttackParameter::attackCount_ = 0;
-uint16_t WaitingForAttackParameter::nextAttackCount_ = 0;
+uint16_t WaitingForAttackParameter::attackCount = 0;
+uint16_t WaitingForAttackParameter::nextAttackCount = 0;
 
-float FollowingParameter::idleDist_ = 4.0f;
+float FollowingParameter::idleDist = 4.0f;
 
-float HitReactionParameter::decay_ = 0.9f;
+float HitReactionParameter::decay = 0.9f;

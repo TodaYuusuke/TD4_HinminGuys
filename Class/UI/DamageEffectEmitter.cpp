@@ -1,6 +1,7 @@
 #include "DamageEffectEmitter.h"
 
-float DamageEffect::divide = 8.0f;
+LWP::Math::Vector3 DamageEffect::color = { 0.0f,127.0f,255.0f };
+float DamageEffect::divide = 20.0f;
 float DamageEffect::maxDisplayTime = 1.5f;
 float DamageEffect::vanishThreshold = 0.5f;
 float DamageEffect::maxScale = 1.0f;
@@ -9,6 +10,19 @@ float DamageEffect::widthSpacing = 24.0f;
 void DamageEffectEmitter::Initialize() {
 
 	effects_.clear();
+
+	// 初期化
+	json_.Init("DamageEffectEmitter.json");
+
+	json_.BeginGroup("DamageEffectEmitter")
+		.AddValue<LWP::Math::Vector3>("Color", &DamageEffect::color)
+		.AddValue<float>("Divide", &DamageEffect::divide)
+		.AddValue<float>("MaxDisplayTime", &DamageEffect::maxDisplayTime)
+		.AddValue<float>("VanishThreshold", &DamageEffect::vanishThreshold)
+		.AddValue<float>("MaxScale", &DamageEffect::maxScale)
+		.AddValue<float>("WidthSpacing", &DamageEffect::widthSpacing)
+		.EndGroup()
+		.CheckJsonFile();
 
 }
 
@@ -45,6 +59,7 @@ void DamageEffectEmitter::Update() {
 
 				//消える時の演出
 				if (effect.isVanish) {
+
 					sprite.material.color.A = LWP::Utility::Interpolation::LerpF(255.0f, 0.0f,
 						LWP::Utility::Easing::Liner(std::clamp((DamageEffect::vanishThreshold -
 							(effect.remainingDisplayTime + (DamageEffect::maxDisplayTime / DamageEffect::divide) * i)) /
@@ -88,12 +103,8 @@ void DamageEffectEmitter::Update() {
 void DamageEffectEmitter::DebugGUI() {
 
 	if (ImGui::TreeNode("Damage Effect")) {
-
-		ImGui::DragFloat("Dvide", &DamageEffect::divide, 0.1f, 1.0f, 100.0f);
-		ImGui::DragFloat("MaxDisplayTime", &DamageEffect::maxDisplayTime, 0.1f, 0.1f, 10.0f);
-		ImGui::DragFloat("VanishThreshold", &DamageEffect::vanishThreshold, 0.1f, 0.0f, DamageEffect::maxDisplayTime);
-		ImGui::DragFloat("MaxScale", &DamageEffect::maxScale, 0.1f);
-		ImGui::DragFloat("WidthSpacing", &DamageEffect::widthSpacing, 0.1f);
+		//パラメータ編集
+		json_.DebugGUI();
 
 		ImGui::TreePop();
 
@@ -139,6 +150,9 @@ void DamageEffectEmitter::AddEffect(const float& damage, const LWP::Math::Vector
 		effects_.back().sprites.back().material.uvTransform.translation.x = shiftVal * float(assignNum);
 		effects_.back().sprites.back().worldTF.translation = effects_.back().position * viewProjectionViewport;
 		effects_.back().sprites.back().anchorPoint = { 0.5f,0.5f };
+		effects_.back().sprites.back().material.color.R = DamageEffect::color.x;
+		effects_.back().sprites.back().material.color.G = DamageEffect::color.y;
+		effects_.back().sprites.back().material.color.B = DamageEffect::color.z;
 		effects_.back().sprites.back().Init();
 
 		//次の桁に移行

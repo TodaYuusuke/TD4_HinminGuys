@@ -22,7 +22,7 @@ void Normal::FollowingUpdate(std::optional<States>& req, const States& pre)
 	if (player_) {
 
 		//待機状態に移行する距離になるまでプレイヤーに向かう
-		if (distFromPlayer_ < FollowingParameter::idleDist_) {
+		if (distFromPlayer_ < FollowingParameter::idleDist) {
 			state_.request = States::kNormalIdle;
 			return;
 		}

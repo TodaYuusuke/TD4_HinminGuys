@@ -8,6 +8,7 @@
 struct DamageEffect {
 	std::list<LWP::Primitive::Sprite> sprites; //画像
 	LWP::Math::Vector3 position; //座標
+	static LWP::Math::Vector3 color; //色
 	int digit; //桁数
 	float damage; //受けたダメージ
 	static float maxScale; //最大スケール
@@ -45,5 +46,8 @@ private:
 
 	//数字エフェクト
 	std::list<DamageEffect> effects_;
+
+	//json
+	LWP::Utility::JsonIO json_;
 
 };

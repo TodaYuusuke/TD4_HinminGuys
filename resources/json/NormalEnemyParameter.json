@@ -1,0 +1,27 @@
+{
+    "Group :NormalEnemyParameter": {
+        "Group :Attack": {
+            "float :AttackAcceptTime": 0.12999999523162842
+        },
+        "Group :Following": {
+            "float :IdleDist": 4.0
+        },
+        "Group :HitReaction": {
+            "float :Decay": 0.8999999761581421
+        },
+        "Group :Idle": {
+            "float :FollowingDist": 6.0,
+            "float :StandTime": 1.0
+        },
+        "Group :Move": {
+            "float :AttackDist": 0.5,
+            "float :DefaultSpeed": 4.0,
+            "float :RunTime": 2.0
+        },
+        "Group :Spacing": {
+            "float :SpacingDist": 3.0,
+            "float :SpacingTime": 2.0
+        },
+        "float :EnemyDist": 1.5
+    }
+}

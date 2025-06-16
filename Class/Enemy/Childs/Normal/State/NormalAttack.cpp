@@ -12,7 +12,7 @@ void Normal::AttackFinalize(const States& pre) {
 	EndAttack();
 	SetIsAttackPhase(false);
 	//待機ステートの待機時間セット
-	stateParameter_.idleParameter.countStandTime = IdleParameter::standTime_;
+	stateParameter_.idleParameter.countStandTime = IdleParameter::standTime;
 
 }
 
@@ -43,7 +43,7 @@ void Normal::AttackUpdate(std::optional<States>& req, const States& pre)
 	}
 
 	//攻撃受付時間を超過したら判定オフ
-	if (animation_.GetProgress() > AttackParameter::attackAcceptTime_ and swordCollider_.isActive) {
+	if (animation_.GetProgress() > AttackParameter::attackAcceptTime and swordCollider_.isActive) {
 		EndAttack();
 		swordCollider_.isActive = false;
 	}

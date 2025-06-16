@@ -13,6 +13,37 @@ void EnemyManager::Initialize()
 	spawnPoint_ = { 0.0f,0.0f,0.0f };
 	isDefeatedAllEnemy_ = false;
 	isStartWave_ = false;
+
+	json_.Init("NormalEnemyParameter.json");
+
+	json_.BeginGroup("NormalEnemyParameter")
+		.AddValue<float>("EnemyDist", &enemyDist_)
+		.AddValue<float>("EnemyDist", &attackEnemyDist_)
+		.BeginGroup("Idle")
+		.AddValue<float>("StandTime", &IdleParameter::standTime)
+		.AddValue<float>("FollowingDist", &IdleParameter::followingDist)
+		.EndGroup()
+		.BeginGroup("Move")
+		.AddValue<float>("AttackDist", &MoveParameter::attackDist)
+		.AddValue<float>("RunTime", &MoveParameter::runTime)
+		.AddValue<float>("DefaultSpeed", &MoveParameter::defaultSpeed)
+		.EndGroup()
+		.BeginGroup("Attack")
+		.AddValue<float>("AttackAcceptTime", &AttackParameter::attackAcceptTime)
+		.EndGroup()
+		.BeginGroup("Spacing")
+		.AddValue<float>("SpacingTime", &SpacingParameter::spacingTime)
+		.AddValue<float>("SpacingDist", &SpacingParameter::spaceDist)
+		.EndGroup()
+		.BeginGroup("Following")
+		.AddValue<float>("IdleDist", &FollowingParameter::idleDist)
+		.EndGroup()
+		.BeginGroup("HitReaction")
+		.AddValue<float>("Decay", &HitReactionParameter::decay)
+		.EndGroup()
+		.EndGroup()
+		.CheckJsonFile();
+
 }
 
 void EnemyManager::Finalize()
@@ -205,14 +236,7 @@ void EnemyManager::DebugGUI()
 		//敵の共通ステート変数をいじる
 		if (ImGui::BeginTabItem("State Parameter")) {
 
-			//マネージャーで取っている敵の距離調整
-			ImGui::DragFloat("enemyDist", &enemyDist_, 0.1f);
-			ImGui::DragFloat("attackEnemyDist", &attackEnemyDist_, 0.1f);
-
-			//各ステートのパラメータ調整
-			for (int32_t i = 0; i < int32_t(States::kMax); i++) {
-				DebugState(States(i));
-			}
+			json_.DebugGUI();
 
 			ImGui::EndTabItem();
 
@@ -258,70 +282,6 @@ const EnemyAttackParameter& EnemyManager::GetEnemyAttackParameter(const std::str
 	assert(false);
 
 	return EnemyAttackParameter();
-
-}
-
-void EnemyManager::DebugState(States states)
-{
-
-	switch (states)
-	{
-	case States::kNormalIdle:
-		
-		if (ImGui::TreeNode("NormalIdle")) {
-			ImGui::DragFloat("followingDist", &IdleParameter::followingDist_, 0.1f);
-			ImGui::TreePop();
-		}
-
-		break;
-	case States::kNormalMove:
-		
-		if (ImGui::TreeNode("NormalMove")) {
-			ImGui::DragFloat("attackDist", &MoveParameter::attackDist_, 0.1f);
-			ImGui::DragInt("runTime", &MoveParameter::runTime_, 0.2f);
-			ImGui::TreePop();
-		}
-
-		break;
-	case States::kNormalAttack:
-		
-		if (ImGui::TreeNode("NormalAttack")) {
-			ImGui::TreePop();
-		}
-
-		break;
-	case States::kSpacing:
-		
-		if (ImGui::TreeNode("Spacing")) {
-			ImGui::DragFloat("spaceDist", &SpacingParameter::spaceDist_, 0.1f);
-			ImGui::DragInt("spacingTime", &SpacingParameter::spacingTime_, 0.2f);
-			ImGui::TreePop();
-		}
-
-		break;
-	case States::kFollowing:
-		
-		if (ImGui::TreeNode("Following")) {
-			ImGui::DragFloat("idleDist", &FollowingParameter::idleDist_, 0.1f);
-			ImGui::TreePop();
-		}
-
-		break;
-	case States::kWaitingForAttack:
-		
-		if (ImGui::TreeNode("WaitingForAttack")) {
-			ImGui::Text("attack Count : %d", WaitingForAttackParameter::attackCount_);
-			ImGui::Text("next Attack Count : %d", WaitingForAttackParameter::nextAttackCount_);
-			ImGui::TreePop();
-		}
-
-		break;
-	case States::kHitReaction:
-
-		break;
-	default:
-		break;
-	}
 
 }
 

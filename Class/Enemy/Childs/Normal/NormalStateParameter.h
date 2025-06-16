@@ -24,11 +24,11 @@ enum class States {
 /// </summary>
 struct IdleParameter {
 	//待機時間
-	static int32_t standTime_;
+	static float standTime;
 	//追従モーションに移行する距離
-	static float followingDist_;
+	static float followingDist;
 	//カウント
-	int32_t countStandTime;
+	float countStandTime;
 };
 
 /// <summary>
@@ -36,13 +36,17 @@ struct IdleParameter {
 /// </summary>
 struct MoveParameter {
 	//移動時間
-	static int32_t runTime_;
+	static float runTime;
 	//攻撃モーションに入る距離
-	static float attackDist_;
+	static float attackDist;
+	//デフォのスピード
+	static float defaultSpeed;
 	//移動方向
-	LWP::Math::Vector3 velocity;
+	LWP::Math::Vector3 direction;
+	//速度
+	float speed;
 	//カウント
-	int32_t countRunTime;
+	float countRunTime;
 	//プレイヤーに近づくかどうか
 	bool isApproach = true;
 };
@@ -52,7 +56,7 @@ struct MoveParameter {
 /// </summary>
 struct AttackParameter {
 	//攻撃判定受付時間
-	static float attackAcceptTime_;
+	static float attackAcceptTime;
 };
 
 /// <summary>
@@ -60,11 +64,11 @@ struct AttackParameter {
 /// </summary>
 struct SpacingParameter {
 	//間合いを取る時間
-	static int32_t spacingTime_;
+	static float spacingTime;
 	//間合い距離
-	static float spaceDist_;
+	static float spaceDist;
 	//カウント
-	int32_t countSpacingTime;
+	float countSpacingTime;
 	//右回りかどうか
 	bool isClockwise = false;
 };
@@ -74,9 +78,9 @@ struct SpacingParameter {
 /// </summary>
 struct WaitingForAttackParameter {
 	//攻撃の順番を決める変数
-	static uint16_t attackCount_;
+	static uint16_t attackCount;
 	//次攻撃するのは何番かを決める変数
-	static uint16_t nextAttackCount_;
+	static uint16_t nextAttackCount;
 	//自身の攻撃する順番
 	uint16_t attackID;
 	//右回りかどうか
@@ -88,7 +92,7 @@ struct WaitingForAttackParameter {
 /// </summary>
 struct FollowingParameter {
 	//待機モーションに移行する距離
-	static float idleDist_;
+	static float idleDist;
 };
 
 /// <summary>
@@ -96,7 +100,7 @@ struct FollowingParameter {
 /// </summary>
 struct HitReactionParameter {
 	//減衰
-	static float decay_;
+	static float decay;
 };
 
 /// <summary>

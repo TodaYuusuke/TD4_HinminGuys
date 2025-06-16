@@ -7,7 +7,7 @@ using namespace LWP::Math;
 void Normal::MoveFinalize(const States& pre) {
 
 	//待機ステートの待機時間セット
-	stateParameter_.idleParameter.countStandTime = IdleParameter::standTime_;
+	stateParameter_.idleParameter.countStandTime = IdleParameter::standTime;
 
 }
 
@@ -27,15 +27,15 @@ void Normal::MoveUpdate(std::optional<States>& req, const States& pre)
 
 		//カウントダウン
 		if (stateParameter_.moveParameter.countRunTime > 0) {
-			stateParameter_.moveParameter.countRunTime--;
+			stateParameter_.moveParameter.countRunTime -= 1.0f * LWP::Info::GetDeltaTimeF();
 		}
 
 		//プレイヤーとの距離が近く、誰も攻撃していなかったら攻撃
-		if (Vector3::Distance(GetPlayerPosition(), GetPosition()) < MoveParameter::attackDist_) {
+		if (Vector3::Distance(GetPlayerPosition(), GetPosition()) < MoveParameter::attackDist) {
 
 			//誰も攻撃していない状態で、攻撃待機中の敵もいない場合、攻撃にそのまま移行
 			if (not enemyManager_->IsAnyAttack() and
-				WaitingForAttackParameter::attackCount_ == WaitingForAttackParameter::nextAttackCount_) {
+				WaitingForAttackParameter::attackCount == WaitingForAttackParameter::nextAttackCount) {
 				//攻撃状態に移行
 				state_.request = States::kNormalAttack;
 			}
@@ -58,14 +58,15 @@ void Normal::MoveUpdate(std::optional<States>& req, const States& pre)
 		}
 
 		//移動
-		stateParameter_.moveParameter.velocity = GetPlayerPosition() - GetPosition();
+		stateParameter_.moveParameter.direction = GetPlayerPosition() - GetPosition();
 		//y軸の移動ベクトルを消す
-		stateParameter_.moveParameter.velocity.y = 0.0f;
+		stateParameter_.moveParameter.direction.y = 0.0f;
 
-		stateParameter_.moveParameter.velocity =
-			stateParameter_.moveParameter.velocity.Normalize() * LWP::Info::GetDeltaTime();
+		stateParameter_.moveParameter.direction =
+			stateParameter_.moveParameter.direction.Normalize() *
+			stateParameter_.moveParameter.speed * LWP::Info::GetDeltaTime();
 
-		SetPosition(GetPosition() + stateParameter_.moveParameter.velocity +
+		SetPosition(GetPosition() + stateParameter_.moveParameter.direction +
 			(GetRepulsiveForce() * LWP::Info::GetDeltaTime()));
 
 		//プレイヤーの向きに回転

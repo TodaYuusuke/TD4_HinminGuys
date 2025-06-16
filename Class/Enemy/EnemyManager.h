@@ -64,8 +64,6 @@ public:
 
 private:
 
-	//特定のステートのデバッグGUIを開く
-	void DebugState(States states);
 	//ウェーブデータから敵をスポーンさせる
 	void SpawnFromWaveData(WaveData& waveData);
 	//スポーンするかどうかをチェック
@@ -83,8 +81,11 @@ private:
 
 	//全ての敵を管理するリスト
 	std::list<IEnemy*> enemies_;
-
+	//出現管理データ
 	SpawnData spawnData_;
+
+	//json
+	LWP::Utility::JsonIO json_;
 
 #pragma region デバッグ用
 

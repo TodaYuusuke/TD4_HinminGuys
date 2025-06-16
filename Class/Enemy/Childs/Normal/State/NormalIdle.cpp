@@ -7,7 +7,7 @@ using namespace LWP::Math;
 void Normal::IdleFinalize(const States& pre) {
 
 	//時間セット
-	stateParameter_.spacingParameter.countSpacingTime = SpacingParameter::spacingTime_;
+	stateParameter_.spacingParameter.countSpacingTime = SpacingParameter::spacingTime;
 	//ランダムな数字を利用して右回りかどうかを決める
 	if (LWP::Utility::GenerateRandamNum(0, 1) == 0) {
 		stateParameter_.spacingParameter.isClockwise = true;
@@ -30,11 +30,11 @@ void Normal::IdleUpdate(std::optional<States>& req, const States& pre)
 	if (player_) {
 		//カウントダウン
 		if (stateParameter_.idleParameter.countStandTime > 0) {
-			stateParameter_.idleParameter.countStandTime--;
+			stateParameter_.idleParameter.countStandTime -= 1.0f * LWP::Info::GetDeltaTimeF();
 		}
 
 		//プレイヤーから一定以上の距離離れたら追従モーションに移行
-		if (distFromPlayer_ > IdleParameter::followingDist_) {
+		if (distFromPlayer_ > IdleParameter::followingDist) {
 			state_.request = States::kFollowing;
 			return;
 		}

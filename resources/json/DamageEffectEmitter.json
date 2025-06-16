@@ -1,0 +1,14 @@
+{
+    "Group :DamageEffectEmitter": {
+        "Vector3 :Color": [
+            0.0,
+            255.0,
+            255.0
+        ],
+        "float :Divide": 20.0,
+        "float :MaxDisplayTime": 1.3799999952316284,
+        "float :MaxScale": 1.0,
+        "float :VanishThreshold": 0.5,
+        "float :WidthSpacing": 24.0
+    }
+}

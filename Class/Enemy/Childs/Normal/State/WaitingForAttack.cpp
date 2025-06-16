@@ -7,14 +7,14 @@ void Normal::WaitingForAttackFinalize(const States& pre)
 {
 
 	//消えたときのIDが一致している場合
-	if (stateParameter_.waitingForAttackParameter.attackID == WaitingForAttackParameter::nextAttackCount_) {
+	if (stateParameter_.waitingForAttackParameter.attackID == WaitingForAttackParameter::nextAttackCount) {
 		//次攻撃する番号を上昇させる
-		WaitingForAttackParameter::nextAttackCount_++;
+		WaitingForAttackParameter::nextAttackCount++;
 	}
 	//違う場合
 	else {
 		//攻撃の順番を決める数字を減少させる
-		WaitingForAttackParameter::attackCount_--;
+		WaitingForAttackParameter::attackCount--;
 	}
 
 }
@@ -25,9 +25,9 @@ void Normal::WaitingForAttackInit(const States& pre)
 	SetAnimation("Run", true);
 
 	//現在の攻撃カウントから順番を決める
-	stateParameter_.waitingForAttackParameter.attackID = WaitingForAttackParameter::attackCount_;
+	stateParameter_.waitingForAttackParameter.attackID = WaitingForAttackParameter::attackCount;
 	//攻撃の順番を決める数字を上昇させる
-	WaitingForAttackParameter::attackCount_++;
+	WaitingForAttackParameter::attackCount++;
 
 	//ランダムな数字を利用して右回りかどうかを決める
 	if (LWP::Utility::GenerateRandamNum(0, 1) == 0) {
@@ -47,7 +47,7 @@ void Normal::WaitingForAttackUpdate(std::optional<States>& req, const States& pr
 
 	//誰も攻撃しておらず、順番が回ってきたら攻撃に移行
 	if (not enemyManager_->IsAnyAttack() and 
-		stateParameter_.waitingForAttackParameter.attackID == WaitingForAttackParameter::nextAttackCount_) {
+		stateParameter_.waitingForAttackParameter.attackID == WaitingForAttackParameter::nextAttackCount) {
 		//攻撃状態に移行
 		state_.request = States::kNormalAttack;
 		return;

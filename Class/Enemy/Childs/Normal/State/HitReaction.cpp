@@ -23,7 +23,7 @@ void Normal::HitReactionUpdate(std::optional<States>& req, const States& pre)
 	SetPosition(GetPosition() + (GetKnockBackVelocity() + GetRepulsiveForce()) *
 		LWP::Info::GetDeltaTime());
 	//ノックバック減衰
-	SetKnockBackVelocity(GetKnockBackVelocity() * HitReactionParameter::decay_);
+	SetKnockBackVelocity(GetKnockBackVelocity() * HitReactionParameter::decay);
 
 	//ノックバックが終了した時
 	if (not animation_.GetPlaying()) {
