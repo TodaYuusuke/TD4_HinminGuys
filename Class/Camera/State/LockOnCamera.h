@@ -1,13 +1,14 @@
 #pragma once
 #include "IFollowCameraState.h"
 
+class Player;
 /// <summary>
 ///	対象をロックオン中の状態
 /// </summary>
 class LockOnCamera : public IFollowCameraState {
 public:
 	// コンストラクタ
-	LockOnCamera(FollowCamera* followCamera);
+	LockOnCamera(Player* player, FollowCamera* followCamera);
 	// デストラクタ
 	~LockOnCamera() override = default;
 
@@ -23,6 +24,9 @@ public:
 	/// 角度の更新
 	/// </summary>
 	void RotateUpdate() override;
+
+private:
+	Player* player_;
 
 private:
 	LWP::Math::Vector3 lockOnOffset_;

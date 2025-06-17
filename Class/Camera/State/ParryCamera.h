@@ -77,8 +77,10 @@ private:
 	LWP::Math::Quaternion quat_;
 	LWP::Math::Vector3 start_;
 	LWP::Math::Vector3 end_;
+	LWP::Math::Vector3 targetPos_;
 	float t_;
 
+	float timeScale_;
 	float rate_;
 	float currentFrame_;
 };

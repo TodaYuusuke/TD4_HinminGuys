@@ -1,7 +1,9 @@
 #include "LockOnCamera.h"
 #include "../FollowCamera.h"
+#include "../../Player/Player.h"
 
-LockOnCamera::LockOnCamera(FollowCamera* followCamera) {
+LockOnCamera::LockOnCamera(Player* player, FollowCamera* followCamera) {
+	player_ = player;
 	followCamera_ = followCamera;
 
 	stateName_ = "LockOn";
@@ -12,6 +14,8 @@ void LockOnCamera::Initialize() {
 }
 
 void LockOnCamera::Update() {
+	followCamera_->SetTargetPosition(player_->GetWorldTF()->GetWorldPosition());
+
 	// カメラの角度を算出
 	RotateUpdate();
 }

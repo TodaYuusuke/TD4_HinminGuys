@@ -55,6 +55,7 @@
     <ClCompile Include="Class\Player\Systems\Children\Sheath\State\SwordDrawn.cpp" />
     <ClCompile Include="Class\Components\CoolTimer.cpp" />
     <ClCompile Include="Class\Components\HitStopController.cpp" />
+    <ClCompile Include="Class\Player\Systems\Children\Parry\Effect\ParryEffect.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Class\ComboEditor\ComboTree.h" />
@@ -131,6 +132,7 @@
     <ClInclude Include="Class\Player\Systems\Children\Sheath\State\SwordDrawn.h" />
     <ClInclude Include="Class\Components\CoolTimer.h" />
     <ClInclude Include="Class\Components\HitStopController.h" />
+    <ClInclude Include="Class\Player\Systems\Children\Parry\Effect\ParryEffect.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />

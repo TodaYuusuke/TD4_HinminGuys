@@ -1,12 +1,17 @@
 #include "InputCamera.h"
 #include "../FollowCamera.h"
+#include "../../Player/Player.h"
 
-InputCamera::InputCamera(FollowCamera* followCamera) {
+InputCamera::InputCamera(Player* player, FollowCamera* followCamera) {
+	player_ = player;
 	followCamera_ = followCamera;
 
 	stateName_ = "Input";
 
 	radian_ = followCamera_->GetRadian();
+
+	startDist_ = followCamera_->kTargetDist;
+	startTargetPos_ = followCamera_->GetTargetPosition();
 }
 
 void InputCamera::Initialize() {
@@ -14,6 +19,16 @@ void InputCamera::Initialize() {
 }
 
 void InputCamera::Update() {
+	if (t_ <= followCamera_->returnTargetDist) {
+		t_++;
+		// カメラと追従対象との距離を初期の値に徐々に戻す
+		followCamera_->kTargetDist = LWP::Utility::Interpolation::Lerp(startDist_, followCamera_->defaultTargetDist_, (t_ / followCamera_->returnTargetDist));
+		followCamera_->SetTargetPosition(LWP::Utility::Interpolation::Lerp(startTargetPos_, player_->GetWorldTF()->GetWorldPosition(), (t_ / followCamera_->returnTargetDist)));
+	}
+	else {
+		followCamera_->SetTargetPosition(player_->GetWorldTF()->GetWorldPosition());
+	}
+
 	// カメラの角度を算出
 	RotateUpdate();
 }

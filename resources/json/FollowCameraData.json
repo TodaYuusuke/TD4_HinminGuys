@@ -2,22 +2,27 @@
     "Group :Parry": {
         "Vector3 :Angle": [
             -0.05000000074505806,
-            0.20000000298023224,
+            0.1599999964237213,
             0.10000000149011612
         ],
         "Vector3 :Distance": [
             0.0,
             0.0,
-            3.5
+            2.0
         ],
-        "float :HoldTime": 11.0,
+        "Vector3 :ShakeRange": [
+            0.009999999776482582,
+            0.009999999776482582,
+            0.0
+        ],
+        "float :HoldTime": 10.0,
         "float :ShakeTime": 10.0,
         "float :ZoomTime": 22.0
     },
     "Group :Rate": {
         "float :InterTarget": 0.6000000238418579,
         "float :Rotate": 0.23000000417232513,
-        "float :TargetDist": 0.05000000074505806
+        "float :TargetDist": 0.00800000037997961
     },
     "Vector3 :GameStartAngle": [
         20.0,

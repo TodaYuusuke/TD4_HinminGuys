@@ -227,9 +227,6 @@ void Parry::CreateCollision() {
 
 			// ジャストパリィ
 			if (eventOrder_.GetCurrentTimeEvent().name == "JustParry") {
-				// ヒットストップ
-				hitStopController_->Start(0.3f, 0.0f);
-
 				// パリィ成功
 				player_->GetSystemManager()->SetOnParryTargetPos(hitTarget->GetWorldPosition());
 				player_->GetSystemManager()->SetIsSuccessParry(true);
