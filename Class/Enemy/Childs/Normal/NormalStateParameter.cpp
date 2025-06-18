@@ -7,7 +7,8 @@ float MoveParameter::attackDist = 0.5f;
 float MoveParameter::runTime = 2.0f;
 float MoveParameter::defaultSpeed = 2.0f;
 
-float AttackParameter::attackAcceptTime = 0.13f;
+float AttackParameter::endAcceptTime = 0.13f;
+float AttackParameter::startAcceptTime = 0.05f;
 
 float SpacingParameter::spacingTime = 2.0f;
 float SpacingParameter::spaceDist = 3.0f;

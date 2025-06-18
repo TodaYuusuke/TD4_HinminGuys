@@ -39,17 +39,26 @@ void Normal::AttackUpdate(std::optional<States>& req, const States& pre)
 	//パリィエフェクトが終わったら通常スピードで判定をオンにする
 	else if(IsExitParryEffect()) {
 		animation_.GetPlayBackSpeed() = 1.0f;
-		swordCollider_.isActive = true;
 	}
 
 	//攻撃受付時間を超過したら判定オフ
-	if (animation_.GetProgress() > AttackParameter::attackAcceptTime and swordCollider_.isActive) {
+	if (animation_.GetProgress() > AttackParameter::endAcceptTime and swordCollider_.isActive) {
 		EndAttack();
+		swordCollider_.isActive = false;
+	}
+	//開始と終了時間の間だけ判定を付ける
+	else if (animation_.GetProgress() >= AttackParameter::startAcceptTime and
+		animation_.GetProgress() <= AttackParameter::endAcceptTime) {
+		swordCollider_.isActive = true;
+	}
+	//開始時間未満も判定を付けない
+	else {
 		swordCollider_.isActive = false;
 	}
 
 	//攻撃が終了した時
 	if (not animation_.GetPlaying()) {
+		EndAttack();
 		state_.request = States::kNormalIdle;
 		return;
 

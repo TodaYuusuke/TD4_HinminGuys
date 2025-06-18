@@ -55,8 +55,10 @@ struct MoveParameter {
 /// 攻撃パラメータ
 /// </summary>
 struct AttackParameter {
-	//攻撃判定受付時間
-	static float attackAcceptTime;
+	//攻撃判定受付開始時間
+	static float startAcceptTime;
+	//攻撃判定受付終了時間
+	static float endAcceptTime;
 };
 
 /// <summary>

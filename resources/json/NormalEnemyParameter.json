@@ -1,7 +1,8 @@
 {
     "Group :NormalEnemyParameter": {
         "Group :Attack": {
-            "float :AttackAcceptTime": 0.12999999523162842
+            "float :EndAcceptTime": 0.12999999523162842,
+            "float :StartAcceptTime": 0.05999999865889549
         },
         "Group :Following": {
             "float :IdleDist": 4.0
