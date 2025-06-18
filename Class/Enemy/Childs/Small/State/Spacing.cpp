@@ -1,9 +1,9 @@
-#include "../Normal.h"
+#include "../Small.h"
 #include "../../../EnemyManager.h"
 
 using namespace LWP::Math;
 
-void Normal::SpacingFinalize(const States& pre)
+void Small::SpacingFinalize(const States& pre)
 {
 
 	//移動ステートの時間セット
@@ -14,7 +14,7 @@ void Normal::SpacingFinalize(const States& pre)
 
 }
 
-void Normal::SpacingInit(const States& pre)
+void Small::SpacingInit(const States& pre)
 {
 	
 	SetAnimation("Run", true, 0.3f);
@@ -22,7 +22,7 @@ void Normal::SpacingInit(const States& pre)
 
 }
 
-void Normal::SpacingUpdate(std::optional<States>& req, const States& pre)
+void Small::SpacingUpdate(std::optional<States>& req, const States& pre)
 {
 
 	//カウントダウン
@@ -38,13 +38,13 @@ void Normal::SpacingUpdate(std::optional<States>& req, const States& pre)
 			GetClosenessCount() < IEnemy::GetMaxAttackCount()) {
 			//接近状態に移行
 			SetIsAttackPhase(true);
-			state_.request = States::kNormalMove;
+			state_.request = States::kMove;
 			return;
 		}
 		//そうでない場合
 		else {
 			//待機状態に戻る
-			state_.request = States::kNormalIdle;
+			state_.request = States::kIdle;
 			return;
 		}
 

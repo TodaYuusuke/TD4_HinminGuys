@@ -1,4 +1,4 @@
-#include "NormalStateParameter.h"
+#include "SmallStateParameter.h"
 
 float IdleParameter::standTime = 1.0f;
 float IdleParameter::followingDist = 6.0f;

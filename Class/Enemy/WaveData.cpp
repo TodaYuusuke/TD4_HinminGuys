@@ -80,8 +80,8 @@ void WaveData::AddEnemyData(const LWP::Math::Vector3& position)
 
 	//新しいデータを作成し、初期化する
 	EnemyData enemyData{};
-	enemyData.typeStr = IEnemy::enemyTypeName[int(EnemyType::kNormal)];
-	enemyData.type = EnemyType::kNormal;
+	enemyData.typeStr = IEnemy::enemyTypeName[int(EnemyType::kSmall)];
+	enemyData.type = EnemyType::kSmall;
 	enemyData.position = position;
 	enemyData.delayTime = 0;
 	enemyData.isDelete = false;
@@ -154,8 +154,8 @@ void WaveData::SetType()
 	for (EnemyData& enemyData : enemyData_) {
 		
 		//タイプに応じて変更
-		if (enemyData.typeStr == IEnemy::enemyTypeName[int(EnemyType::kNormal)]) {
-			enemyData.type = EnemyType::kNormal;
+		if (enemyData.typeStr == IEnemy::enemyTypeName[int(EnemyType::kSmall)]) {
+			enemyData.type = EnemyType::kSmall;
 		}
 		else if (enemyData.typeStr == IEnemy::enemyTypeName[int(EnemyType::kBoss)]) {
 			enemyData.type = EnemyType::kBoss;

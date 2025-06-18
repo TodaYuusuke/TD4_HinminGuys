@@ -11,7 +11,7 @@ class EnemyManager;
 /// 敵の種類
 /// </summary>
 enum class EnemyType {
-	kNormal, //雑魚敵
+	kSmall, //雑魚敵
 	kBoss, //ボス敵
 
 	kMax

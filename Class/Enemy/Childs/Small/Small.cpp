@@ -1,4 +1,4 @@
-#include "Normal.h"
+#include "Small.h"
 #include "../../../Player/Player.h"
 #include "../../DirectXGame/Engine/primitive/model/Material.h"
 #include "../../../GameMask.h"
@@ -7,18 +7,18 @@
 using namespace LWP::Primitive;
 using namespace GameMask;
 
-Normal::~Normal()
+Small::~Small()
 {
 
 	
 
 }
 
-void Normal::Initialize(Player* player, const Vector3& position, LWP::Object::Camera* camera,
+void Small::Initialize(Player* player, const Vector3& position, LWP::Object::Camera* camera,
 	EnemyManager* manager)
 {
 	model_.LoadShortPath("player/Player_Simple.gltf");
-	type_ = EnemyType::kNormal;
+	type_ = EnemyType::kSmall;
 	//アニメーションロード
 	animation_.LoadFullPath("resources/model/player/Player_Simple.gltf", &model_);
 	swordModel_.LoadShortPath("player/SimpleWeapon.gltf");
@@ -31,7 +31,7 @@ void Normal::Initialize(Player* player, const Vector3& position, LWP::Object::Ca
 	model_.worldTF.scale = { 0.5f, 0.5f, 0.5f };
 	//関数セット
 	AddStateFunc();
-	state_.request = States::kNormalIdle;
+	state_.request = States::kIdle;
 
 	// 刀モデルをプレイヤーの手に追従させる
 	swordModel_.GetJoint("Grip")->localTF.Parent(&model_, "WeaponAnchor");
@@ -49,7 +49,7 @@ void Normal::Initialize(Player* player, const Vector3& position, LWP::Object::Ca
 		hitTarget;
 
 		//ステートをセット(攻撃中はリアクションしない)
-		if (state_.GetCurrentBehavior() != States::kNormalAttack) {
+		if (state_.GetCurrentBehavior() != States::kAttack) {
 			SetPreState(state_.GetCurrentBehavior());
 			state_.request = States::kHitReaction;
 			//今後プレイヤーから取得する
@@ -70,13 +70,13 @@ void Normal::Initialize(Player* player, const Vector3& position, LWP::Object::Ca
 		};
 	
 	//名前設定
-	collider_.name = "Normal" + std::to_string(ID_);
+	collider_.name = "Small" + std::to_string(ID_);
 	//刀のコライダー生成
 	CreateSwordCollider();
 
 }
 
-void Normal::Update()
+void Small::Update()
 {
 
 	preIsStartParryEffect_ = isStartParryEffect_;
@@ -108,7 +108,7 @@ void Normal::Update()
 	distFromPlayer_ = diff.Length();
 }
 
-void Normal::DebugGUI()
+void Small::DebugGUI()
 {
 
 	if (ImGui::TreeNode(std::to_string(ID_).c_str())) {
@@ -119,20 +119,20 @@ void Normal::DebugGUI()
 
 }
 
-void Normal::AddStateFunc()
+void Small::AddStateFunc()
 {
 
-	state_.init[int(States::kNormalIdle)] = [this](const States& pre) {IdleInit(pre); };
-	state_.update[int(States::kNormalIdle)] = [this](std::optional<States>& req, const States& pre) {IdleUpdate(req, pre); };
-	state_.finalize[int(States::kNormalIdle)] = [this](const States& pre) {IdleFinalize(pre); };
+	state_.init[int(States::kIdle)] = [this](const States& pre) {IdleInit(pre); };
+	state_.update[int(States::kIdle)] = [this](std::optional<States>& req, const States& pre) {IdleUpdate(req, pre); };
+	state_.finalize[int(States::kIdle)] = [this](const States& pre) {IdleFinalize(pre); };
 
-	state_.init[int(States::kNormalMove)] = [this](const States& pre) {MoveInit(pre); };
-	state_.update[int(States::kNormalMove)] = [this](std::optional<States>& req, const States& pre) {MoveUpdate(req, pre); };
-	state_.finalize[int(States::kNormalMove)] = [this](const States& pre) {MoveFinalize(pre); };
+	state_.init[int(States::kMove)] = [this](const States& pre) {MoveInit(pre); };
+	state_.update[int(States::kMove)] = [this](std::optional<States>& req, const States& pre) {MoveUpdate(req, pre); };
+	state_.finalize[int(States::kMove)] = [this](const States& pre) {MoveFinalize(pre); };
 
-	state_.init[int(States::kNormalAttack)] = [this](const States& pre) {AttackInit(pre); };
-	state_.update[int(States::kNormalAttack)] = [this](std::optional<States>& req, const States& pre) {AttackUpdate(req, pre); };
-	state_.finalize[int(States::kNormalAttack)] = [this](const States& pre) {AttackFinalize(pre); };
+	state_.init[int(States::kAttack)] = [this](const States& pre) {AttackInit(pre); };
+	state_.update[int(States::kAttack)] = [this](std::optional<States>& req, const States& pre) {AttackUpdate(req, pre); };
+	state_.finalize[int(States::kAttack)] = [this](const States& pre) {AttackFinalize(pre); };
 
 	state_.init[int(States::kSpacing)] = [this](const States& pre) {SpacingInit(pre); };
 	state_.update[int(States::kSpacing)] = [this](std::optional<States>& req, const States& pre) {SpacingUpdate(req, pre); };

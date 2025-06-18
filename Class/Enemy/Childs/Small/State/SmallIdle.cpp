@@ -1,10 +1,10 @@
 #include "../../../../Player/Player.h"
-#include "../Normal.h"
+#include "../Small.h"
 #include "../../../EnemyManager.h"
 
 using namespace LWP::Math;
 
-void Normal::IdleFinalize(const States& pre) {
+void Small::IdleFinalize(const States& pre) {
 
 	//時間セット
 	stateParameter_.spacingParameter.countSpacingTime = SpacingParameter::spacingTime;
@@ -15,15 +15,15 @@ void Normal::IdleFinalize(const States& pre) {
 
 }
 
-void Normal::IdleInit(const States& pre)
+void Small::IdleInit(const States& pre)
 {
 	
 	SetAnimation("Idle", true);
-	preState_ = States::kNormalIdle;
+	preState_ = States::kIdle;
 
 }
 
-void Normal::IdleUpdate(std::optional<States>& req, const States& pre)
+void Small::IdleUpdate(std::optional<States>& req, const States& pre)
 {
 
 	//プレイヤーが存在する場合

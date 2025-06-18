@@ -8,15 +8,8 @@
     <ClCompile Include="Class\ComboEditor\Combo.cpp" />
     <ClCompile Include="Class\Enemy\SpawnData.cpp" />
     <ClCompile Include="Class\Enemy\Childs\Boss\Boss.cpp" />
-    <ClCompile Include="Class\Enemy\Childs\Normal\State\Following.cpp" />
-    <ClCompile Include="Class\Enemy\Childs\Normal\State\Spacing.cpp" />
-    <ClCompile Include="Class\Enemy\Childs\Normal\State\WaitingForAttack.cpp" />
     <ClCompile Include="Class\Enemy\EnemyManager.cpp" />
     <ClCompile Include="Class\Enemy\IEnemy.cpp" />
-    <ClCompile Include="Class\Enemy\Childs\Normal\Normal.cpp" />
-    <ClCompile Include="Class\Enemy\Childs\Normal\State\NormalAttack.cpp" />
-    <ClCompile Include="Class\Enemy\Childs\Normal\State\NormalIdle.cpp" />
-    <ClCompile Include="Class\Enemy\Childs\Normal\State\NormalMove.cpp" />
     <ClCompile Include="Class\Enemy\WaveData.cpp" />
     <ClCompile Include="Class\Player\Systems\Children\Attack\Attack.cpp" />
     <ClCompile Include="Class\Player\Systems\Children\LockOn\LockOn.cpp" />
@@ -50,13 +43,20 @@
     <ClCompile Include="Class\Player\Systems\Children\Sheath\State\Break.cpp" />
     <ClCompile Include="Class\UI\GameUI.cpp" />
     <ClCompile Include="Class\Components\Shake.cpp" />
-    <ClCompile Include="Class\Enemy\Childs\Normal\State\HitReaction.cpp" />
     <ClCompile Include="Class\Scene\GameOver.cpp" />
     <ClCompile Include="Class\Player\Systems\Children\Sheath\State\SwordDrawn.cpp" />
     <ClCompile Include="Class\Components\CoolTimer.cpp" />
     <ClCompile Include="Class\Components\HitStopController.cpp" />
-    <ClCompile Include="Class\Enemy\Childs\Normal\NormalStateParameter.cpp" />
     <ClCompile Include="Class\UI\DamageEffectEmitter.cpp" />
+    <ClCompile Include="Class\Enemy\Childs\Small\SmallStateParameter.cpp" />
+    <ClCompile Include="Class\Enemy\Childs\Small\State\HitReaction.cpp" />
+    <ClCompile Include="Class\Enemy\Childs\Small\State\Following.cpp" />
+    <ClCompile Include="Class\Enemy\Childs\Small\State\Spacing.cpp" />
+    <ClCompile Include="Class\Enemy\Childs\Small\State\WaitingForAttack.cpp" />
+    <ClCompile Include="Class\Enemy\Childs\Small\Small.cpp" />
+    <ClCompile Include="Class\Enemy\Childs\Small\State\SmallAttack.cpp" />
+    <ClCompile Include="Class\Enemy\Childs\Small\State\SmallIdle.cpp" />
+    <ClCompile Include="Class\Enemy\Childs\Small\State\SmallMove.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Class\ComboEditor\ComboTree.h" />
@@ -76,7 +76,6 @@
     <ClInclude Include="Class\Enemy\SpawnData.h" />
     <ClInclude Include="Class\Enemy\WaveData.h" />
     <ClInclude Include="Class\Player\Command\InputConfig.h" />
-    <ClInclude Include="Class\Enemy\Childs\Normal\Normal.h" />
     <ClInclude Include="Class\Player\ICharacter.h" />
     <ClInclude Include="Class\Player\Systems\Children\Attack\Attack.h" />
     <ClInclude Include="Class\Player\Systems\Children\Move\State\IMoveSystemState.h" />
@@ -119,12 +118,13 @@
     <ClInclude Include="Class\Player\Systems\Children\Hit.h" />
     <ClInclude Include="Class\UI\GameUI.h" />
     <ClInclude Include="Class\Components\Shake.h" />
-    <ClInclude Include="Class\Enemy\Childs\Normal\NormalStateParameter.h" />
     <ClInclude Include="Class\Scene\GameOver.h" />
     <ClInclude Include="Class\Player\Systems\Children\Sheath\State\SwordDrawn.h" />
     <ClInclude Include="Class\Components\CoolTimer.h" />
     <ClInclude Include="Class\Components\HitStopController.h" />
     <ClInclude Include="Class\UI\DamageEffectEmitter.h" />
+    <ClInclude Include="Class\Enemy\Childs\Small\SmallStateParameter.h" />
+    <ClInclude Include="Class\Enemy\Childs\Small\Small.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />

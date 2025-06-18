@@ -1,23 +1,23 @@
 #include "../../../../Player/Player.h"
-#include "../Normal.h"
+#include "../Small.h"
 #include "../../../EnemyManager.h"
 
 using namespace LWP::Math;
 
-void Normal::HitReactionFinalize(const States& pre) {
+void Small::HitReactionFinalize(const States& pre) {
 
 
 
 }
 
-void Normal::HitReactionInit(const States& pre)
+void Small::HitReactionInit(const States& pre)
 {
 	
 	SetAnimation("Damage", false);
 
 }
 
-void Normal::HitReactionUpdate(std::optional<States>& req, const States& pre)
+void Small::HitReactionUpdate(std::optional<States>& req, const States& pre)
 {
 
 	SetPosition(GetPosition() + (GetKnockBackVelocity() + GetRepulsiveForce()) *

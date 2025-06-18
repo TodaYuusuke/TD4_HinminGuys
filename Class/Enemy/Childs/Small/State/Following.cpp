@@ -1,13 +1,13 @@
-#include "../Normal.h"
+#include "../Small.h"
 #include "../../../EnemyManager.h"
 
 using namespace LWP::Math;
 
-void Normal::FollowingFinalize(const States& pre)
+void Small::FollowingFinalize(const States& pre)
 {
 }
 
-void Normal::FollowingInit(const States& pre)
+void Small::FollowingInit(const States& pre)
 {
 	
 	SetAnimation("Run", true);
@@ -15,7 +15,7 @@ void Normal::FollowingInit(const States& pre)
 
 }
 
-void Normal::FollowingUpdate(std::optional<States>& req, const States& pre)
+void Small::FollowingUpdate(std::optional<States>& req, const States& pre)
 {
 
 	//プレイヤーが存在する場合
@@ -23,7 +23,7 @@ void Normal::FollowingUpdate(std::optional<States>& req, const States& pre)
 
 		//待機状態に移行する距離になるまでプレイヤーに向かう
 		if (distFromPlayer_ < FollowingParameter::idleDist) {
-			state_.request = States::kNormalIdle;
+			state_.request = States::kIdle;
 			return;
 		}
 

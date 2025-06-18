@@ -1,25 +1,25 @@
 #include "../../../../Player/Player.h"
-#include "../Normal.h"
+#include "../Small.h"
 #include "../../../EnemyManager.h"
 
 using namespace LWP::Math;
 
-void Normal::MoveFinalize(const States& pre) {
+void Small::MoveFinalize(const States& pre) {
 
 	//待機ステートの待機時間セット
 	stateParameter_.idleParameter.countStandTime = IdleParameter::standTime;
 
 }
 
-void Normal::MoveInit(const States& pre)
+void Small::MoveInit(const States& pre)
 {
 	
 	SetAnimation("Run", true);
-	preState_ = States::kNormalMove;
+	preState_ = States::kMove;
 
 }
 
-void Normal::MoveUpdate(std::optional<States>& req, const States& pre)
+void Small::MoveUpdate(std::optional<States>& req, const States& pre)
 {
 
 	//プレイヤーが存在する場合
@@ -37,7 +37,7 @@ void Normal::MoveUpdate(std::optional<States>& req, const States& pre)
 			if (not enemyManager_->IsAnyAttack() and
 				WaitingForAttackParameter::attackCount == WaitingForAttackParameter::nextAttackCount) {
 				//攻撃状態に移行
-				state_.request = States::kNormalAttack;
+				state_.request = States::kAttack;
 			}
 			else {
 				//攻撃待機状態に移行
@@ -52,7 +52,7 @@ void Normal::MoveUpdate(std::optional<States>& req, const States& pre)
 
 			//待機状態に移行
 			SetIsAttackPhase(false);
-			state_.request = States::kNormalIdle;
+			state_.request = States::kIdle;
 			return;
 
 		}

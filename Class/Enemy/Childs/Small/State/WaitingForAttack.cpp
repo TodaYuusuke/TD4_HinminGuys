@@ -1,9 +1,9 @@
-#include "../Normal.h"
+#include "../Small.h"
 #include "../../../EnemyManager.h"
 
 using namespace LWP::Math;
 
-void Normal::WaitingForAttackFinalize(const States& pre)
+void Small::WaitingForAttackFinalize(const States& pre)
 {
 
 	//消えたときのIDが一致している場合
@@ -19,7 +19,7 @@ void Normal::WaitingForAttackFinalize(const States& pre)
 
 }
 
-void Normal::WaitingForAttackInit(const States& pre)
+void Small::WaitingForAttackInit(const States& pre)
 {
 
 	SetAnimation("Run", true);
@@ -38,7 +38,7 @@ void Normal::WaitingForAttackInit(const States& pre)
 
 }
 
-void Normal::WaitingForAttackUpdate(std::optional<States>& req, const States& pre)
+void Small::WaitingForAttackUpdate(std::optional<States>& req, const States& pre)
 {
 
 	//
@@ -49,7 +49,7 @@ void Normal::WaitingForAttackUpdate(std::optional<States>& req, const States& pr
 	if (not enemyManager_->IsAnyAttack() and 
 		stateParameter_.waitingForAttackParameter.attackID == WaitingForAttackParameter::nextAttackCount) {
 		//攻撃状態に移行
-		state_.request = States::kNormalAttack;
+		state_.request = States::kAttack;
 		return;
 	}
 

@@ -1,12 +1,12 @@
 #include "../../../../Player/Player.h"
-#include "../Normal.h"
+#include "../Small.h"
 #include "../../../EnemyManager.h"
 #include "../../../../GameMask.h"
 
 using namespace GameMask;
 using namespace LWP::Math;
 
-void Normal::AttackFinalize(const States& pre) {
+void Small::AttackFinalize(const States& pre) {
 
 	//待機状態に移行
 	EndAttack();
@@ -16,10 +16,10 @@ void Normal::AttackFinalize(const States& pre) {
 
 }
 
-void Normal::AttackInit(const States& pre)
+void Small::AttackInit(const States& pre)
 {
 	
-	preState_ = States::kNormalAttack;
+	preState_ = States::kAttack;
 	SetAnimation("LightAttack2", false, 0.1f);
 	swordCollider_.isActive = false;
 	BeginAttack();
@@ -28,7 +28,7 @@ void Normal::AttackInit(const States& pre)
 
 }
 
-void Normal::AttackUpdate(std::optional<States>& req, const States& pre)
+void Small::AttackUpdate(std::optional<States>& req, const States& pre)
 {
 
 	//パリィエフェクト中ならアニメーションをゆっくりにして判定オフ
@@ -59,7 +59,7 @@ void Normal::AttackUpdate(std::optional<States>& req, const States& pre)
 	//攻撃が終了した時
 	if (not animation_.GetPlaying()) {
 		EndAttack();
-		state_.request = States::kNormalIdle;
+		state_.request = States::kIdle;
 		return;
 
 	}

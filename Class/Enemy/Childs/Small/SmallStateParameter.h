@@ -9,9 +9,9 @@
 /// 状態一覧
 /// </summary>
 enum class States {
-	kNormalIdle,
-	kNormalMove,
-	kNormalAttack,
+	kIdle,
+	kMove,
+	kAttack,
 	kSpacing,
 	kFollowing,
 	kWaitingForAttack,
@@ -108,7 +108,7 @@ struct HitReactionParameter {
 /// <summary>
 /// 雑魚敵の全てのパラメータ
 /// </summary>
-struct NormalStateParameter {
+struct StateParameter {
 	IdleParameter idleParameter;
 	MoveParameter moveParameter;
 	SpacingParameter spacingParameter;

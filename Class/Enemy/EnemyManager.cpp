@@ -148,8 +148,8 @@ void EnemyManager::CreateEnemy(const Vector3& position, EnemyType type)
 	//タイプに応じて生成するものを変更
 	switch (type)
 	{
-	case EnemyType::kNormal:
-		enemies_.push_back(new Normal());
+	case EnemyType::kSmall:
+		enemies_.push_back(new Small());
 		break;
 	case EnemyType::kBoss:
 		enemies_.push_back(new Boss());
@@ -199,8 +199,8 @@ void EnemyManager::DebugGUI()
 		}
 
 		//ザコ召喚
-		if (ImGui::Button("Create Normal")) {
-			CreateEnemy(spawnPoint_, EnemyType::kNormal);
+		if (ImGui::Button("Create Small")) {
+			CreateEnemy(spawnPoint_, EnemyType::kSmall);
 		}
 
 	}

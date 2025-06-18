@@ -1,15 +1,15 @@
 #pragma once
 #include "../../IEnemy.h"
-#include "NormalStateParameter.h"
+#include "SmallStateParameter.h"
 
 /// <summary>
 /// 雑魚敵クラス
 /// </summary>
-class Normal : public IEnemy
+class Small : public IEnemy
 {
 public:
-	Normal() = default;
-	~Normal() override;
+	Small() = default;
+	~Small() override;
 
 	void Initialize(Player* player, const Vector3& position, LWP::Object::Camera* camera,
 		EnemyManager* manager) override;
@@ -23,7 +23,7 @@ public:
 	//直前のステートをセット(HitReactionは除外)
 	void SetPreState(States state) { if (state != States::kHitReaction) { preState_ = state; } }
 
-	NormalStateParameter& GetStateParameter() { return stateParameter_; }
+	StateParameter& GetStateParameter() { return stateParameter_; }
 
 private:
 
@@ -68,7 +68,7 @@ private:
 	static EnemyParameter configParameter_;
 
 	//雑魚敵パラメータ
-	NormalStateParameter stateParameter_;
+	StateParameter stateParameter_;
 
 	//直前のステート保存
 	States preState_;
