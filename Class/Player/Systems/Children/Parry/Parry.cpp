@@ -145,11 +145,6 @@ void Parry::DebugGUI() {
 
 		eventOrder_.DebugGUI();
 
-		//if (ImGui::TreeNode("Collider")) {
-		//	collider_.DebugGUI();
-		//	ImGui::TreePop();
-		//}
-
 		ImGui::Checkbox("IsJustParry", &isJustParry_);
 		ImGui::Checkbox("IsGoodParry", &isGoodParry_);
 
@@ -172,21 +167,21 @@ void Parry::CreateJsonFIle() {
 		.BeginGroup("Success JustParry")
 		.AddValue<float>("InvinsibleTime", &jsonData_.successJustParryInvinsible)
 		.EndGroup()
-		// 弱jパリィ成功時
+		// 弱パリィ成功時
 		.BeginGroup("Success GoodParry")
 		.AddValue<float>("InvinsibleTime", &jsonData_.successGoodParryInvinsible)
 		.EndGroup()
-
 		.EndGroup()
-		//// 当たり判定
-		//.BeginGroup("Collider")
-		//.AddValue<Vector3>("Min", &aabb_.min)
-		//.AddValue<Vector3>("Max", &aabb_.max)
-		//.EndGroup()
+
 		// 鞘ゲージの減少量
 		.BeginGroup("SheathDecrement")
 		.AddValue<float>("JustParry", &jsonData_.justParryDecrement)
 		.AddValue<float>("GoodParry", &jsonData_.goodParryDecrement)
+		.EndGroup()
+
+		.BeginGroup("KnockBack")
+		.AddValue<float>("FinishTime", &jsonData_.justParryKnockBackFinishTime)
+		.AddValue<float>("Movement", &jsonData_.justParryKnockBackMovement)
 		.EndGroup()
 
 		.EndGroup()
@@ -349,6 +344,11 @@ void Parry::CheckParryState() {
 void Parry::KnockBackUpdate() {
 	// ジャストパリィ時のみ
 	if (!isJustParry_) { return; }
+	if (t_ > jsonData_.justParryKnockBackFinishTime) { 
+		velocity_ = { 0,0,0 };
+		return;
+	}
+
 	t_ += hitStopController_->GetDeltaTime();
 
 	velocity_ = Lerp(start_, end_, Easing::OutExpo(t_ / jsonData_.justParryKnockBackFinishTime)) - player_->GetWorldTF()->GetWorldPosition();

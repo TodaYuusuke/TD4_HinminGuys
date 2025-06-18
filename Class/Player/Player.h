@@ -49,21 +49,9 @@ public:
 	/// <summary>
 	/// ダメージを与える
 	/// </summary>
-	void TakeDamage(const float& damageValue, const float& multiply = 1.0f) {
-		// 自機が無敵中ならダメージ判定をとらない
-		if (!collider_.isActive) { return; }
-		// 全ての機能をリセット
-		Reset();
-		// HPゲージ変動
-		uiManager_->ChangeHPGauge(damageValue, multiply);
-		// ダメージ機能を生成しすべての行動キャンセル
-		systemManager_->StartDamageResponse();
-	}
+	void TakeDamage(const float& damageValue, const float& multiply = 1.0f);
 
-	void TakeSheathDamage(const float& damageValue, const float& multiply = 1.0f) {
-		// 鞘ゲージ変動
-		uiManager_->ChangeSheathGauge(damageValue, multiply);
-	}
+	void TakeSheathDamage(const float& damageValue, const float& multiply = 1.0f);
 
 	/// <summary>
 	/// 移動機能以外をリセット

@@ -4,6 +4,8 @@
 #include "State/LockOnCamera.h"
 #include "../Player/Player.h"
 
+using namespace LWP::Utility::Interpolation;
+
 FollowCamera::FollowCamera(Player* player, LWP::Object::Camera* camera, LWP::Math::Vector3* targetPos) {
 	player_ = player;
 	camera_ = camera;
@@ -14,9 +16,11 @@ void FollowCamera::Initialize() {
 	json_.Init("FollowCameraData.json");
 	json_.AddValue<LWP::Math::Vector3>("TargetDistance", &defaultTargetDist_)
 		.AddValue<LWP::Math::Vector3>("GameStartAngle", &kStartAngle)
+		.AddValue<LWP::Math::Vector3>("ReturnAngle", &returnAngle)
 		.AddValue<float>("MinRotateX", &kMinRotateX)
 		.AddValue<float>("MaxRotateX", &kMaxRotateX)
 		.AddValue<float>("Sensitivity", &sensitivity)
+		.AddValue<float>("ReturnTargetDist", &returnTargetDistTime)
 		.BeginGroup("Rate")
 		.AddValue<float>("InterTarget", &interTargetRate)
 		.AddValue<float>("TargetDist", &targetDistRate)
@@ -29,6 +33,7 @@ void FollowCamera::Initialize() {
 		.AddValue<float>("ZoomTime", &zoomFinishTime)
 		.AddValue<float>("HoldTime", &zoomHoldFinishTime)
 		.AddValue<float>("ShakeTime", &parryShakeTime)
+		.AddValue<float>("HitStopTime", &parryHitStopTime)
 		.EndGroup()
 		.CheckJsonFile();
 
@@ -47,7 +52,10 @@ void FollowCamera::Initialize() {
 	camera_->worldTF.rotation = LWP::Math::Quaternion::CreateFromAxisAngle(LWP::Math::Vector3{ 0, 1, 0 }, LWP::Utility::DegreeToRadian(kStartAngle.y)) * camera_->worldTF.rotation;
 
 	// 状態
-	state_ = new InputCamera(player_, this);
+	InputCamera* pState = new InputCamera(player_, this);
+	pState->FinishReturnTargetDistance();
+	state_ = pState;
+	state_->Initialize();
 }
 
 void FollowCamera::Update() {
@@ -56,6 +64,11 @@ void FollowCamera::Update() {
 
 	// 状態
 	state_->Update();
+
+	// x軸回転
+	SetCameraRotate(LWP::Math::Quaternion::CreateFromAxisAngle(LWP::Math::Vector3{ 0, 0, 1 }, radian_.z) * LWP::Math::Quaternion::CreateFromAxisAngle(LWP::Math::Vector3{ 1, 0, 0 }, radian_.x));
+	// y軸は常に上を向くように固定
+	SetCameraRotate(LWP::Math::Quaternion::CreateFromAxisAngle(LWP::Math::Vector3{ 0, 1, 0 }, radian_.y) * camera_->worldTF.rotation);
 
 	// 座標の補間をしていない座標を算出
 	defaultPos_ = (targetPosition_) + kTargetDist * LWP::Math::Matrix4x4::CreateRotateXYZMatrix(camera_->worldTF.rotation);
@@ -105,7 +118,9 @@ void FollowCamera::CheckState() {
 	// 入力受付状態
 	if (!lockOnData_.targetTransform && !lockOnData_.isLocked) {
 		if (state_->GetStateName() != "Input") {
-			ChangeState(new InputCamera(player_, this));
+			InputCamera* pState = new InputCamera(player_, this);
+			//pState->FinishReturnTargetDistance();
+			ChangeState(pState);
 		}
 	}
 	// 対象をロックオン状態

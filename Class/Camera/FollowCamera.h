@@ -144,6 +144,9 @@ public:// jsonで保存する値
 	LWP::Math::Vector3 kTargetDist = { 0.0f,0.0f,-20.0f };
 	// 初期角度 
 	LWP::Math::Vector3 kStartAngle = { 0.3f, 0.0f, 0.0f };
+	// パリィ後に操作がなかったときに戻す角度
+	LWP::Math::Vector3 returnAngle = { 0.3f, 0.0f, 0.0f };
+
 	// x軸の下限値
 	float kMinRotateX = (float)std::numbers::pi / 2.0f - 0.1f;
 	// x軸の上限値
@@ -167,7 +170,7 @@ public:// jsonで保存する値
 	LWP::Math::Vector3 defaultTargetDist_;
 
 	// 追従対象とカメラの距離をもとに戻すまでの時間
-	float returnTargetDist = 120.0f;
+	float returnTargetDistTime = 20.0f;
 
 	// パリィ時のカメラのズーム時間
 	float zoomFinishTime = 55.0f;
@@ -176,6 +179,8 @@ public:// jsonで保存する値
 	float parryShakeTime = 22.0f;
 	// ラジアルブラーの強度
 	float parryBlurWidth = 0.003f;
+	// パリィ時のヒットストップのする時間
+	float parryHitStopTime = 0.25f;
 	// パリィ時の角度
 	LWP::Math::Vector3 parryAngle = { 0.0f,0.523f,0.06f };
 	// パリィ時のカメラ距離

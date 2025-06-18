@@ -133,7 +133,7 @@ void SystemManager::Update() {
 	coolTimer_->Update();
 
 	// 無敵処理
-	if (invinsibleTime_ != 0.0f) {
+	if (invinsibleTime_ >= 0.0f) {
 		invinsibleTime_-= HitStopController::GetInstance()->GetDeltaTime();
 	}
 }
@@ -170,10 +170,6 @@ void SystemManager::DebugGUI() {
 	ImGui::DragFloat3("Velocity", &velocity_.x);
 	ImGui::DragFloat3("Radian", &radian_.x);
 	ImGui::DragFloat("InvinsibleTime", &invinsibleTime_);
-
-	if (ImGui::Button("Take Damage")) {
-		player_->TakeDamage(1.0f);
-	}
 #endif // DEBUG
 }
 

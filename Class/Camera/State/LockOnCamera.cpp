@@ -57,14 +57,9 @@ void LockOnCamera::RotateUpdate() {
 
 	if (isClampAngle == 1) {
 		radian_ = { dir.x, dir.y, 0.0f };
-		// x軸回転
-		followCamera_->SetCameraRotate(LWP::Math::Quaternion::CreateFromAxisAngle(LWP::Math::Vector3{ 0, 0, 1 }, 0.0f) * LWP::Math::Quaternion::CreateFromAxisAngle(LWP::Math::Vector3{ 1, 0, 0 }, dir.x));
+		followCamera_->SetRadian(radian_);
 	}
 	else {
-		// x軸回転
-		followCamera_->SetCameraRotate(LWP::Math::Quaternion::CreateFromAxisAngle(LWP::Math::Vector3{ 0, 0, 1 }, 0.0f) * LWP::Math::Quaternion::CreateFromAxisAngle(LWP::Math::Vector3{ 1, 0, 0 }, radian_.x));
+		followCamera_->SetRadian(radian_);
 	}
-
-	// y軸は常に上を向くように固定
-	followCamera_->SetCameraRotate(LWP::Math::Quaternion::CreateFromAxisAngle(LWP::Math::Vector3{ 0, 1, 0 }, dir.y) * followCamera_->GetCamera()->worldTF.rotation);
 }

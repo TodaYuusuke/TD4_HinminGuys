@@ -1,17 +1,5 @@
 {
     "Group :Parry": {
-        "Group :Collider": {
-            "Vector3 :Max": [
-                2.0,
-                2.0,
-                2.0
-            ],
-            "Vector3 :Min": [
-                -2.0,
-                -2.0,
-                -2.0
-            ]
-        },
         "Group :GraceTime": {
             "float :GoodParry": 0.6000000238418579,
             "float :JustParry": 0.20000000298023224,
@@ -25,6 +13,10 @@
             "Group :Success JustParry": {
                 "float :InvinsibleTime": 1.0
             }
+        },
+        "Group :KnockBack": {
+            "float :FinishTime": 50.0,
+            "float :Movement": 6.0
         },
         "Group :SheathDecrement": {
             "float :GoodParry": 10.0,

@@ -97,7 +97,26 @@ void Player::DebugGUI() {
 		animation_.DebugGUI();
 		ImGui::TreePop();
 	}
+	if (ImGui::Button("Take Damage")) {
+		TakeDamage(1.0f);
+	}
 #endif // DEBUG
+}
+
+void Player::TakeDamage(const float& damageValue, const float& multiply) {
+	// 自機が無敵中ならダメージ判定をとらない
+	if (!collider_.isActive) { return; }
+	// 全ての機能をリセット
+	Reset();
+	// HPゲージ変動
+	uiManager_->ChangeHPGauge(damageValue, multiply);
+	// ダメージ機能を生成しすべての行動キャンセル
+	systemManager_->StartDamageResponse();
+}
+
+void Player::TakeSheathDamage(const float& damageValue, const float& multiply) {
+	// 鞘ゲージ変動
+	uiManager_->ChangeSheathGauge(damageValue, multiply);
 }
 
 void Player::ResetSystems() {
@@ -125,7 +144,7 @@ void Player::CreateCollision() {
 }
 
 void Player::InvinsibleUpdate() {
-	if (systemManager_->GetInvisibleTime() != 0.0f) {
+	if (systemManager_->GetInvisibleTime() >= 0.0f) {
 		collider_.isActive = false;
 	}
 	else {

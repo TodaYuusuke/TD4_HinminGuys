@@ -1,23 +1,24 @@
 {
     "Group :Parry": {
         "Vector3 :Angle": [
-            -0.05000000074505806,
-            0.1599999964237213,
+            -0.03999999910593033,
+            0.27000001072883606,
             0.10000000149011612
         ],
         "Vector3 :Distance": [
             0.0,
-            0.0,
-            2.0
+            -0.029999999329447746,
+            2.799999952316284
         ],
         "Vector3 :ShakeRange": [
-            0.009999999776482582,
-            0.009999999776482582,
+            0.30000001192092896,
+            0.30000001192092896,
             0.0
         ],
-        "float :HoldTime": 10.0,
-        "float :ShakeTime": 10.0,
-        "float :ZoomTime": 22.0
+        "float :HitStopTime": 0.25,
+        "float :HoldTime": 0.0,
+        "float :ShakeTime": 15.0,
+        "float :ZoomTime": 30.0
     },
     "Group :Rate": {
         "float :InterTarget": 0.6000000238418579,
@@ -29,12 +30,18 @@
         0.0,
         0.0
     ],
+    "Vector3 :ReturnAngle": [
+        10.0,
+        0.0,
+        0.0
+    ],
     "Vector3 :TargetDistance": [
         0.0,
-        0.4399999976158142,
+        0.6000000238418579,
         -6.420000076293945
     ],
     "float :MaxRotateX": 70.0,
     "float :MinRotateX": 4.0,
-    "float :Sensitivity": 0.05999999865889549
+    "float :ReturnTargetDist": 15.0,
+    "float :Sensitivity": 1.600000023841858
 }

@@ -54,9 +54,6 @@ private:// 数学関数
 	/// <returns></returns>
 	int DetermineSide3D(const LWP::Math::Vector3& forward, const LWP::Math::Vector3& targetDir, const LWP::Math::Vector3& up);
 
-private:
-	//float zoomFinishTime = 55.0f;
-
 private:// 外部から受け取る変数
 	Player* player_;
 
@@ -78,6 +75,7 @@ private:
 	LWP::Math::Vector3 start_;
 	LWP::Math::Vector3 end_;
 	LWP::Math::Vector3 targetPos_;
+	LWP::Math::Vector3 startTargetPos_;
 	float t_;
 
 	float timeScale_;
