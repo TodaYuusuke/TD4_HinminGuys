@@ -268,7 +268,13 @@ void SystemManager::CurrentSystemUpdate() {
 	currentSystem_->Update();
 
 	// 速度
-	velocity_ = currentSystem_->GetVelocity();
+	if (systemState_ != SystemState::kAttack) {
+		velocity_ = LWP::Utility::Interpolation::Exponential(velocity_, currentSystem_->GetVelocity(), 0.4f);
+	}
+	else {
+		velocity_ = currentSystem_->GetVelocity();
+	}
+
 	// 角度
 	radian_ = currentSystem_->GetRadian();
 	quat_ = LWP::Math::Quaternion::CreateFromAxisAngle(LWP::Math::Vector3{ 0, 1, 0 }, radian_.y);

@@ -214,6 +214,18 @@ void Evasion::CheckEvasionState() {
 			0.0f,
 			false
 		};
+
+		// 入力が何もなかったら後ろに回避
+		if (dir.Length() == 0.0f) {
+			isBackStep_ = true;
+		}
+		else {
+			isBackStep_ = false;
+		}
+
+		if (isBackStep_) {
+			easeData_.end = -1.0f * jsonData_.evasionMovement * Matrix4x4::CreateRotateXYZMatrix(player_->GetSystemManager()->GetQuat());
+		}
 	}
 	// 無敵時間
 	else if (eventOrders_[(int)EventOrderState::kAcceleration].GetCurrentTimeEvent().name == "AccelerationTime") {
@@ -229,7 +241,6 @@ void Evasion::CheckEvasionState() {
 				false
 			};
 		}
-
 		Move();
 	}
 	// 硬直時間
@@ -259,16 +270,21 @@ void Evasion::CheckDash() {
 void Evasion::Move() {
 	// 回避の速度補間がなくなるまでイージングを行う
 	if (easeData_.t < easeData_.endSecond) {
-		easeData_.t+= hitStopController_->GetDeltaTime();
+		easeData_.t += hitStopController_->GetDeltaTime();
 		// イージングを行う
-		velocity_ = LWP::Utility::Interpolation::Lerp(easeData_.start, easeData_.end, LWP::Utility::Easing::OutExpo(easeData_.t / easeData_.endSecond)) * jsonData_.moveMultiply * hitStopController_->GetDeltaTime();
+		velocity_ = LWP::Utility::Interpolation::Lerp(easeData_.start, easeData_.end, LWP::Utility::Easing::InExpo(easeData_.t / easeData_.endSecond)) * jsonData_.moveMultiply * hitStopController_->GetDeltaTime();
 	}
 	// 徐々に減速
 	else {
 		velocity_ = LWP::Utility::Interpolation::Exponential(velocity_, Vector3{ 0,0,0 }, 0.1f) * hitStopController_->GetDeltaTime();
 	}
 
-	// 移動ベクトルから体の向きを算出(入力があるときのみ処理する)
+	// 移動ベクトルから体の向きを算出
 	// 移動速度からラジアンを求める
-	radian_.y = LWP::Utility::GetRadian(LWP::Math::Vector3{ 0,0,1 }, velocity_.Normalize(), LWP::Math::Vector3{ 0,1,0 });
+	if (!isBackStep_) {
+		radian_.y = LWP::Utility::GetRadian(LWP::Math::Vector3{ 0,0,1 }, velocity_.Normalize(), LWP::Math::Vector3{ 0,1,0 });
+	}
+	else {
+		radian_.y = LWP::Utility::GetRadian(LWP::Math::Vector3{ 0,0,1 }, -1.0f*velocity_.Normalize(), LWP::Math::Vector3{ 0,1,0 });
+	}
 }
