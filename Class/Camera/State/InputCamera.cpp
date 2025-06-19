@@ -23,11 +23,14 @@ void InputCamera::Initialize() {
 }
 
 void InputCamera::Update() {
+	t_++;
+	// カメラと追従対象との距離を初期の値に徐々に戻す
 	if (t_ < followCamera_->returnTargetDistTime) {
-		t_++;
-		// カメラと追従対象との距離を初期の値に徐々に戻す
 		followCamera_->kTargetDist = LWP::Utility::Interpolation::Lerp(startDist_, followCamera_->defaultTargetDist_, (t_ / followCamera_->returnTargetDistTime));
-		followCamera_->SetTargetPosition(LWP::Utility::Interpolation::Lerp(startTargetPos_, player_->GetWorldTF()->GetWorldPosition(), (t_ / followCamera_->returnTargetDistTime)));
+	}
+
+	if (t_ < followCamera_->switchTargetPosTime) {
+		followCamera_->SetTargetPosition(LWP::Utility::Interpolation::Lerp(startTargetPos_, player_->GetWorldTF()->GetWorldPosition(), (t_ / followCamera_->switchTargetPosTime)));
 	}
 	else {
 		followCamera_->SetTargetPosition(player_->GetWorldTF()->GetWorldPosition());
@@ -95,9 +98,9 @@ void InputCamera::ReturnRotate() {
 
 	returnRot_.t+=HitStopController::GetInstance()->GetDeltaTime();
 	
-	radian_.x = LerpF(returnRot_.start.x, returnRot_.end.x, LWP::Utility::Easing::OutCubic(returnRot_.t / 180.0f));
+	radian_.x = LerpF(returnRot_.start.x, returnRot_.end.x, LWP::Utility::Easing::OutCubic(returnRot_.t / followCamera_->returnRotateTime));
 
-	if (returnRot_.t >= 180.0f) {
+	if (returnRot_.t >= followCamera_->returnRotateTime) {
 		returnRot_.isActive = false;
 	}
 }

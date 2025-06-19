@@ -267,7 +267,7 @@ void SystemManager::CurrentSystemUpdate() {
 	// 現在稼働している機能
 	currentSystem_->Update();
 
-	// 速度
+	// 速度(攻撃時以外補間をかける)
 	if (systemState_ != SystemState::kAttack) {
 		velocity_ = LWP::Utility::Interpolation::Exponential(velocity_, currentSystem_->GetVelocity(), 0.4f);
 	}

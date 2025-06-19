@@ -172,6 +172,10 @@ public:// jsonで保存する値
 	// 追従対象とカメラの距離をもとに戻すまでの時間
 	float returnTargetDistTime = 20.0f;
 
+	float returnRotateTime = 240.0f;
+	// 注視点を変えたときにカメラを向けるまでの時間
+	float switchTargetPosTime = 15.0f;
+
 	// パリィ時のカメラのズーム時間
 	float zoomFinishTime = 55.0f;
 	float zoomHoldFinishTime = 33.0f;

@@ -153,13 +153,13 @@ void Move::InputUpdate() {
 	stickStrength_ = dir.Length();
 
 	// カメラが向いている方向に進む
-	// 自機とカメラY軸を除いた方向ベクトルを算出
-	Vector3 p2c = (player_->GetWorldTF()->GetWorldPosition() - player_->GetFollowCamera()->GetDefaultPos()).Normalize();
-	p2c.y = 0;
-	// 回転行列を求める
-	Matrix4x4 rotMatrix = LWP::Math::Matrix4x4::CreateRotateXYZMatrix(LWP::Math::Quaternion::ConvertDirection(p2c));
+	// 回転行列を求める(X成分は0にする)
+	Vector3 radian = player_->GetFollowCamera()->GetRadian();
+	radian.x = 0.0f;
+	Matrix4x4 rotMatrix = LWP::Math::Matrix4x4::CreateRotateXYZMatrix(radian);
 	// 方向ベクトルを求める
 	velocity_ = LWP::Utility::Interpolation::Exponential(velocity_, dir * moveMultiply_ * rotMatrix, jsonData_.moveSpeedRate) * hitStopController_->GetDeltaTime();
+	velocity_.y = 0.0f;
 
 	// 移動状態
 	state_->Update();

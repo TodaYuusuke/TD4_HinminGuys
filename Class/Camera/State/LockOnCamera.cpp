@@ -31,7 +31,7 @@ void LockOnCamera::RotateUpdate() {
 	// ロックオン対象との距離
 	float lockOnTargetDist = (followCamera_->GetLockOnData().targetTransform->translation - followCamera_->GetTargetPos()).Length();
 
-	if (lockOnTargetDist * 2.0f <= 1.5f) { return; }
+	if (lockOnTargetDist <= 1.0f) { return; }
 
 	lockOnTargetDist = std::clamp<float>(lockOnTargetDist, followCamera_->maxLength / 10.0f, followCamera_->maxLength);
 
@@ -66,9 +66,13 @@ void LockOnCamera::RotateUpdate() {
 		radian_.y += 2 * (float)std::numbers::pi;
 	}
 
-	if (isClampAngle == 1) {
+	// 角度上限下限に違反しているとき
+	if (isClampAngle == 0) {
+		radian_ = Exponential(radian_, Vector3{ radian_.x, dir.y, 0.0f }, rate_);
+	}
+	else {
 		radian_ = Exponential(radian_, Vector3{ dir.x, dir.y, 0.0f }, rate_);
 	}
-	radian_ = Exponential(radian_, radian_, rate_);
+
 	followCamera_->SetRadian(radian_);
 }

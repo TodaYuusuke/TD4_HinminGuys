@@ -15,7 +15,7 @@
             }
         },
         "Group :KnockBack": {
-            "float :FinishTime": 50.0,
+            "float :FinishTime": 70.0,
             "float :Movement": 6.0
         },
         "Group :SheathDecrement": {

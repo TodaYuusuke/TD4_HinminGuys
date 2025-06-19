@@ -21,6 +21,8 @@ void FollowCamera::Initialize() {
 		.AddValue<float>("MaxRotateX", &kMaxRotateX)
 		.AddValue<float>("Sensitivity", &sensitivity)
 		.AddValue<float>("ReturnTargetDist", &returnTargetDistTime)
+		.AddValue<float>("ReturnRotate", &returnRotateTime)
+		.AddValue<float>("SwitchTargetPosTime", &switchTargetPosTime)
 		.BeginGroup("Rate")
 		.AddValue<float>("InterTarget", &interTargetRate)
 		.AddValue<float>("TargetDist", &targetDistRate)
