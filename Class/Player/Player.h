@@ -50,7 +50,11 @@ public:
 	/// ダメージを与える
 	/// </summary>
 	void TakeDamage(const float& damageValue, const float& multiply = 1.0f);
-
+	/// <summary>
+	/// 鞘にダメージを与える
+	/// </summary>
+	/// <param name="damageValue"></param>
+	/// <param name="multiply"></param>
 	void TakeSheathDamage(const float& damageValue, const float& multiply = 1.0f);
 
 	/// <summary>

@@ -31,4 +31,8 @@ private:
 private:
 	LWP::Math::Vector3 lockOnOffset_;
 	LWP::Math::Vector3 radian_;
+
+	float rate_ = 0.05f;
+
+	float t_;
 };
