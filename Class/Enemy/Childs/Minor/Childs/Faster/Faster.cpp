@@ -1,24 +1,22 @@
-#include "Small.h"
-#include "../../../Player/Player.h"
+#include "Faster.h"
+#include "../../../../../Player/Player.h"
 #include "../../DirectXGame/Engine/primitive/model/Material.h"
-#include "../../../GameMask.h"
-#include "../../EnemyManager.h"
+#include "../../../../../GameMask.h"
+#include "../../../../EnemyManager.h"
 
 using namespace LWP::Primitive;
 using namespace GameMask;
+using namespace FasterState;
 
-Small::~Small()
+Faster::~Faster()
 {
-
-	
-
 }
 
-void Small::Initialize(Player* player, const Vector3& position, LWP::Object::Camera* camera,
-	EnemyManager* manager)
-{
+void Faster::Initialize(Player* player, const Vector3& position, LWP::Object::Camera* camera,
+	EnemyManager* manager) {
+
 	model_.LoadShortPath("player/Player_Simple.gltf");
-	type_ = EnemyType::kSmall;
+	type_ = EnemyType::kSaiji;
 	//アニメーションロード
 	animation_.LoadFullPath("resources/model/player/Player_Simple.gltf", &model_);
 	swordModel_.LoadShortPath("player/SimpleWeapon.gltf");
@@ -68,15 +66,15 @@ void Small::Initialize(Player* player, const Vector3& position, LWP::Object::Cam
 		TakeDamage(player_->GetSystemManager()->GetComboTree()->GetDamage());
 
 		};
-	
+
 	//名前設定
-	collider_.name = "Small" + std::to_string(ID_);
+	collider_.name = "Faster" + std::to_string(ID_);
 	//刀のコライダー生成
 	CreateSwordCollider();
 
 }
 
-void Small::Update()
+void Faster::Update()
 {
 
 	preIsStartParryEffect_ = isStartParryEffect_;
@@ -106,21 +104,14 @@ void Small::Update()
 	//プレイヤーとの距離を計算
 	Vector3 diff = GetPlayerPosition() - GetPosition();
 	distFromPlayer_ = diff.Length();
-}
-
-void Small::DebugGUI()
-{
-
-	if (ImGui::TreeNode(std::to_string(ID_).c_str())) {
-		state_.DebugGUI();
-		ImGui::Text(std::to_string(distFromPlayer_).c_str());
-		ImGui::TreePop();
-	}
 
 }
 
-void Small::AddStateFunc()
+void Faster::DebugGUI()
 {
+}
+
+void Faster::AddStateFunc() {
 
 	state_.init[int(States::kIdle)] = [this](const States& pre) {IdleInit(pre); };
 	state_.update[int(States::kIdle)] = [this](std::optional<States>& req, const States& pre) {IdleUpdate(req, pre); };

@@ -1,9 +1,10 @@
-#include "../Small.h"
-#include "../../../EnemyManager.h"
+#include "../Saiji.h"
+#include "../../../../../EnemyManager.h"
 
 using namespace LWP::Math;
+using namespace SaijiState;
 
-void Small::SpacingFinalize(const States& pre)
+void Saiji::SpacingFinalize(const States& pre)
 {
 
 	//移動ステートの時間セット
@@ -14,7 +15,7 @@ void Small::SpacingFinalize(const States& pre)
 
 }
 
-void Small::SpacingInit(const States& pre)
+void Saiji::SpacingInit(const States& pre)
 {
 	
 	SetAnimation("Run", true, 0.3f);
@@ -22,7 +23,7 @@ void Small::SpacingInit(const States& pre)
 
 }
 
-void Small::SpacingUpdate(std::optional<States>& req, const States& pre)
+void Saiji::SpacingUpdate(std::optional<States>& req, const States& pre)
 {
 
 	//カウントダウン
@@ -86,7 +87,8 @@ void Small::SpacingUpdate(std::optional<States>& req, const States& pre)
 
 		//プレイヤーとの間合いをあらかじめ決めておき、その範囲内に入ったら押し出しベクトルを加算するようにする
 		if (length < SpacingParameter::spaceDist && length > 0.0001f) {
-			AddRepulsiveForce(dist.Normalize() * -((SpacingParameter::spaceDist - length) * 2.0f / SpacingParameter::spaceDist));
+			AddRepulsiveForce(dist.Normalize() * 
+				-((SpacingParameter::spaceDist - length) * 2.0f / SpacingParameter::spaceDist));
 		}
 
 		result = result + dist.Normalize();

@@ -14,33 +14,33 @@ void EnemyManager::Initialize()
 	isDefeatedAllEnemy_ = false;
 	isStartWave_ = false;
 
-	json_.Init("NormalEnemyParameter.json");
+	jsonSaiji_.Init("SaijiParameter.json");
 
-	json_.BeginGroup("NormalEnemyParameter")
+	jsonSaiji_.BeginGroup("SaijiParameter")
 		.AddValue<float>("EnemyDist", &enemyDist_)
 		.AddValue<float>("EnemyDist", &attackEnemyDist_)
 		.BeginGroup("Idle")
-		.AddValue<float>("StandTime", &IdleParameter::standTime)
-		.AddValue<float>("FollowingDist", &IdleParameter::followingDist)
+		.AddValue<float>("StandTime", &SaijiState::IdleParameter::standTime)
+		.AddValue<float>("FollowingDist", &SaijiState::IdleParameter::followingDist)
 		.EndGroup()
 		.BeginGroup("Move")
-		.AddValue<float>("AttackDist", &MoveParameter::attackDist)
-		.AddValue<float>("RunTime", &MoveParameter::runTime)
-		.AddValue<float>("DefaultSpeed", &MoveParameter::defaultSpeed)
+		.AddValue<float>("AttackDist", &SaijiState::MoveParameter::attackDist)
+		.AddValue<float>("RunTime", &SaijiState::MoveParameter::runTime)
+		.AddValue<float>("DefaultSpeed", &SaijiState::MoveParameter::defaultSpeed)
 		.EndGroup()
 		.BeginGroup("Attack")
-		.AddValue<float>("StartAcceptTime", &AttackParameter::startAcceptTime)
-		.AddValue<float>("EndAcceptTime", &AttackParameter::endAcceptTime)
+		.AddValue<float>("StartAcceptTime", &SaijiState::AttackParameter::startAcceptTime)
+		.AddValue<float>("EndAcceptTime", &SaijiState::AttackParameter::endAcceptTime)
 		.EndGroup()
 		.BeginGroup("Spacing")
-		.AddValue<float>("SpacingTime", &SpacingParameter::spacingTime)
-		.AddValue<float>("SpacingDist", &SpacingParameter::spaceDist)
+		.AddValue<float>("SpacingTime", &SaijiState::SpacingParameter::spacingTime)
+		.AddValue<float>("SpacingDist", &SaijiState::SpacingParameter::spaceDist)
 		.EndGroup()
 		.BeginGroup("Following")
-		.AddValue<float>("IdleDist", &FollowingParameter::idleDist)
+		.AddValue<float>("IdleDist", &SaijiState::FollowingParameter::idleDist)
 		.EndGroup()
 		.BeginGroup("HitReaction")
-		.AddValue<float>("Decay", &HitReactionParameter::decay)
+		.AddValue<float>("Decay", &SaijiState::HitReactionParameter::decay)
 		.EndGroup()
 		.EndGroup()
 		.CheckJsonFile();
@@ -148,8 +148,8 @@ void EnemyManager::CreateEnemy(const Vector3& position, EnemyType type)
 	//タイプに応じて生成するものを変更
 	switch (type)
 	{
-	case EnemyType::kSmall:
-		enemies_.push_back(new Small());
+	case EnemyType::kSaiji:
+		enemies_.push_back(new Saiji());
 		break;
 	case EnemyType::kBoss:
 		enemies_.push_back(new Boss());
@@ -199,8 +199,8 @@ void EnemyManager::DebugGUI()
 		}
 
 		//ザコ召喚
-		if (ImGui::Button("Create Small")) {
-			CreateEnemy(spawnPoint_, EnemyType::kSmall);
+		if (ImGui::Button("Create Saiji")) {
+			CreateEnemy(spawnPoint_, EnemyType::kSaiji);
 		}
 
 	}
@@ -237,7 +237,7 @@ void EnemyManager::DebugGUI()
 		//敵の共通ステート変数をいじる
 		if (ImGui::BeginTabItem("State Parameter")) {
 
-			json_.DebugGUI();
+			jsonSaiji_.DebugGUI();
 
 			ImGui::EndTabItem();
 

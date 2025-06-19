@@ -1,7 +1,7 @@
 #pragma once
 #include "../Adapter/Adapter.h"
 #include "IEnemy.h"
-#include "Childs/Small/Small.h"
+#include "Childs/Minor/Childs/Saiji/Saiji.h"
 #include "Childs/Boss/Boss.h"
 #include <list>
 #include <memory>
@@ -85,7 +85,7 @@ private:
 	SpawnData spawnData_;
 
 	//json
-	LWP::Utility::JsonIO json_;
+	LWP::Utility::JsonIO jsonSaiji_;
 
 #pragma region デバッグ用
 

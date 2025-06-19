@@ -1,17 +1,18 @@
-#include "../../../../Player/Player.h"
-#include "../Small.h"
-#include "../../../EnemyManager.h"
+#include "../../../../../../Player/Player.h"
+#include "../Faster.h"
+#include "../../../../../EnemyManager.h"
 
 using namespace LWP::Math;
+using namespace FasterState;
 
-void Small::MoveFinalize(const States& pre) {
+void Faster::MoveFinalize(const States& pre) {
 
 	//待機ステートの待機時間セット
 	stateParameter_.idleParameter.countStandTime = IdleParameter::standTime;
 
 }
 
-void Small::MoveInit(const States& pre)
+void Faster::MoveInit(const States& pre)
 {
 	
 	SetAnimation("Run", true);
@@ -19,7 +20,7 @@ void Small::MoveInit(const States& pre)
 
 }
 
-void Small::MoveUpdate(std::optional<States>& req, const States& pre)
+void Faster::MoveUpdate(std::optional<States>& req, const States& pre)
 {
 
 	//プレイヤーが存在する場合

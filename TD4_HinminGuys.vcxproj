@@ -148,11 +148,22 @@
     </Manifest>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Class\Enemy\Childs\Small\SmallStateParameter.cpp" />
-    <ClCompile Include="Class\Enemy\Childs\Small\State\SmallAttack.cpp" />
-    <ClCompile Include="Class\Enemy\Childs\Small\State\HitReaction.cpp" />
-    <ClCompile Include="Class\Enemy\Childs\Small\State\SmallIdle.cpp" />
-    <ClCompile Include="Class\Enemy\Childs\Small\State\SmallMove.cpp" />
+    <ClCompile Include="Class\Enemy\Childs\Minor\Childs\Faster\Faster.cpp" />
+    <ClCompile Include="Class\Enemy\Childs\Minor\Childs\Faster\FasterStateParameter.cpp" />
+    <ClCompile Include="Class\Enemy\Childs\Minor\Childs\Faster\State\FasterEvasion.cpp" />
+    <ClCompile Include="Class\Enemy\Childs\Minor\Childs\Faster\State\FasterFollowing.cpp" />
+    <ClCompile Include="Class\Enemy\Childs\Minor\Childs\Faster\State\FasterHitReaction.cpp" />
+    <ClCompile Include="Class\Enemy\Childs\Minor\Childs\Faster\State\FasterAttack.cpp" />
+    <ClCompile Include="Class\Enemy\Childs\Minor\Childs\Faster\State\FasterIdle.cpp" />
+    <ClCompile Include="Class\Enemy\Childs\Minor\Childs\Faster\State\FasterMove.cpp" />
+    <ClCompile Include="Class\Enemy\Childs\Minor\Childs\Faster\State\FasterSpacing.cpp" />
+    <ClCompile Include="Class\Enemy\Childs\Minor\Childs\Faster\State\FasterWaitingForAttack.cpp" />
+    <ClCompile Include="Class\Enemy\Childs\Minor\Childs\Saiji\SaijiStateParameter.cpp" />
+    <ClCompile Include="Class\Enemy\Childs\Minor\Childs\Saiji\State\SaijiAttack.cpp" />
+    <ClCompile Include="Class\Enemy\Childs\Minor\Childs\Saiji\State\SaijiHitReaction.cpp" />
+    <ClCompile Include="Class\Enemy\Childs\Minor\Childs\Saiji\State\SaijiIdle.cpp" />
+    <ClCompile Include="Class\Enemy\Childs\Minor\Childs\Saiji\State\SaijiMove.cpp" />
+    <ClCompile Include="Class\Enemy\Childs\Minor\Minor.cpp" />
     <ClCompile Include="Class\Player\Systems\Children\Sheath\State\Break.cpp" />
     <ClCompile Include="Class\ComboEditor\ComboTree.cpp" />
     <ClCompile Include="Class\Condition\child\Input\ButtonCondition.cpp" />
@@ -162,12 +173,12 @@
     <ClCompile Include="Class\Scene\GameScene.cpp" />
     <ClCompile Include="Class\ComboEditor\Combo.cpp" />
     <ClCompile Include="Class\Enemy\Childs\Boss\Boss.cpp" />
-    <ClCompile Include="Class\Enemy\Childs\Small\State\Following.cpp" />
-    <ClCompile Include="Class\Enemy\Childs\Small\State\Spacing.cpp" />
-    <ClCompile Include="Class\Enemy\Childs\Small\State\WaitingForAttack.cpp" />
+    <ClCompile Include="Class\Enemy\Childs\Minor\Childs\Saiji\State\SaijiFollowing.cpp" />
+    <ClCompile Include="Class\Enemy\Childs\Minor\Childs\Saiji\State\SaijiSpacing.cpp" />
+    <ClCompile Include="Class\Enemy\Childs\Minor\Childs\Saiji\State\SaijiWaitingForAttack.cpp" />
     <ClCompile Include="Class\Enemy\EnemyManager.cpp" />
     <ClCompile Include="Class\Enemy\IEnemy.cpp" />
-    <ClCompile Include="Class\Enemy\Childs\Small\Small.cpp" />
+    <ClCompile Include="Class\Enemy\Childs\Minor\Childs\Saiji\Saiji.cpp" />
     <ClCompile Include="Class\Enemy\WaveData.cpp" />
     <ClCompile Include="Class\Player\Systems\Children\Attack\Attack.cpp" />
     <ClCompile Include="Class\Player\Systems\Children\LockOn\LockOn.cpp" />
@@ -206,7 +217,10 @@
     <ClCompile Include="Class\Player\Systems\Children\Sheath\State\SwordDrawn.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Class\Enemy\Childs\Small\SmallStateParameter.h" />
+    <ClInclude Include="Class\Enemy\Childs\Minor\Childs\Faster\Faster.h" />
+    <ClInclude Include="Class\Enemy\Childs\Minor\Childs\Faster\FasterStateParameter.h" />
+    <ClInclude Include="Class\Enemy\Childs\Minor\Childs\Saiji\SaijiStateParameter.h" />
+    <ClInclude Include="Class\Enemy\Childs\Minor\Minor.h" />
     <ClInclude Include="Class\Player\Systems\Children\Sheath\State\Break.h" />
     <ClInclude Include="Class\IParameter.h" />
     <ClInclude Include="Class\ComboEditor\ComboTree.h" />
@@ -227,7 +241,7 @@
     <ClInclude Include="Class\Enemy\WaveData.h" />
     <ClInclude Include="Class\Player\Command\BanInput.h" />
     <ClInclude Include="Class\Player\Command\InputConfig.h" />
-    <ClInclude Include="Class\Enemy\Childs\Small\Small.h" />
+    <ClInclude Include="Class\Enemy\Childs\Minor\Childs\Saiji\Saiji.h" />
     <ClInclude Include="Class\Player\ICharacter.h" />
     <ClInclude Include="Class\Player\Systems\Children\Attack\Attack.h" />
     <ClInclude Include="Class\Player\Systems\Children\Move\State\IMoveSystemState.h" />

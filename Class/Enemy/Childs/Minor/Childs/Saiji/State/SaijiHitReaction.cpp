@@ -1,23 +1,24 @@
-#include "../../../../Player/Player.h"
-#include "../Small.h"
-#include "../../../EnemyManager.h"
+#include "../../../../../../Player/Player.h"
+#include "../Saiji.h"
+#include "../../../../../EnemyManager.h"
 
 using namespace LWP::Math;
+using namespace SaijiState;
 
-void Small::HitReactionFinalize(const States& pre) {
+void Saiji::HitReactionFinalize(const States& pre) {
 
 
 
 }
 
-void Small::HitReactionInit(const States& pre)
+void Saiji::HitReactionInit(const States& pre)
 {
 	
 	SetAnimation("Damage", false);
 
 }
 
-void Small::HitReactionUpdate(std::optional<States>& req, const States& pre)
+void Saiji::HitReactionUpdate(std::optional<States>& req, const States& pre)
 {
 
 	SetPosition(GetPosition() + (GetKnockBackVelocity() + GetRepulsiveForce()) *

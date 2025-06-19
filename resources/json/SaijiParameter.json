@@ -1,5 +1,5 @@
 {
-    "Group :NormalEnemyParameter": {
+    "Group :SaijiParameter": {
         "Group :Attack": {
             "float :EndAcceptTime": 0.12999999523162842,
             "float :StartAcceptTime": 0.05999999865889549

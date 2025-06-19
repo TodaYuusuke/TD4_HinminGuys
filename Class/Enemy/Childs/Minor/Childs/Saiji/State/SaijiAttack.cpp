@@ -1,12 +1,13 @@
-#include "../../../../Player/Player.h"
-#include "../Small.h"
-#include "../../../EnemyManager.h"
-#include "../../../../GameMask.h"
+#include "../../../../../../Player/Player.h"
+#include "../Saiji.h"
+#include "../../../../../EnemyManager.h"
+#include "../../../../../../GameMask.h"
 
 using namespace GameMask;
 using namespace LWP::Math;
+using namespace SaijiState;
 
-void Small::AttackFinalize(const States& pre) {
+void Saiji::AttackFinalize(const States& pre) {
 
 	//待機状態に移行
 	EndAttack();
@@ -16,7 +17,7 @@ void Small::AttackFinalize(const States& pre) {
 
 }
 
-void Small::AttackInit(const States& pre)
+void Saiji::AttackInit(const States& pre)
 {
 	
 	preState_ = States::kAttack;
@@ -28,7 +29,7 @@ void Small::AttackInit(const States& pre)
 
 }
 
-void Small::AttackUpdate(std::optional<States>& req, const States& pre)
+void Saiji::AttackUpdate(std::optional<States>& req, const States& pre)
 {
 
 	//パリィエフェクト中ならアニメーションをゆっくりにして判定オフ

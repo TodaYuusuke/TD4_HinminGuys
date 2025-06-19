@@ -48,15 +48,26 @@
     <ClCompile Include="Class\Components\CoolTimer.cpp" />
     <ClCompile Include="Class\Components\HitStopController.cpp" />
     <ClCompile Include="Class\UI\DamageEffectEmitter.cpp" />
-    <ClCompile Include="Class\Enemy\Childs\Small\SmallStateParameter.cpp" />
-    <ClCompile Include="Class\Enemy\Childs\Small\State\HitReaction.cpp" />
-    <ClCompile Include="Class\Enemy\Childs\Small\State\Following.cpp" />
-    <ClCompile Include="Class\Enemy\Childs\Small\State\Spacing.cpp" />
-    <ClCompile Include="Class\Enemy\Childs\Small\State\WaitingForAttack.cpp" />
-    <ClCompile Include="Class\Enemy\Childs\Small\Small.cpp" />
-    <ClCompile Include="Class\Enemy\Childs\Small\State\SmallAttack.cpp" />
-    <ClCompile Include="Class\Enemy\Childs\Small\State\SmallIdle.cpp" />
-    <ClCompile Include="Class\Enemy\Childs\Small\State\SmallMove.cpp" />
+    <ClCompile Include="Class\Enemy\Childs\Minor\Childs\Saiji\SaijiStateParameter.cpp" />
+    <ClCompile Include="Class\Enemy\Childs\Minor\Childs\Saiji\State\SaijiHitReaction.cpp" />
+    <ClCompile Include="Class\Enemy\Childs\Minor\Childs\Saiji\State\SaijiFollowing.cpp" />
+    <ClCompile Include="Class\Enemy\Childs\Minor\Childs\Saiji\State\SaijiSpacing.cpp" />
+    <ClCompile Include="Class\Enemy\Childs\Minor\Childs\Saiji\State\SaijiWaitingForAttack.cpp" />
+    <ClCompile Include="Class\Enemy\Childs\Minor\Childs\Saiji\Saiji.cpp" />
+    <ClCompile Include="Class\Enemy\Childs\Minor\Childs\Saiji\State\SaijiAttack.cpp" />
+    <ClCompile Include="Class\Enemy\Childs\Minor\Childs\Saiji\State\SaijiIdle.cpp" />
+    <ClCompile Include="Class\Enemy\Childs\Minor\Childs\Saiji\State\SaijiMove.cpp" />
+    <ClCompile Include="Class\Enemy\Childs\Minor\Childs\Faster\Faster.cpp" />
+    <ClCompile Include="Class\Enemy\Childs\Minor\Childs\Faster\State\FasterFollowing.cpp" />
+    <ClCompile Include="Class\Enemy\Childs\Minor\Childs\Faster\State\FasterWaitingForAttack.cpp" />
+    <ClCompile Include="Class\Enemy\Childs\Minor\Childs\Faster\State\FasterMove.cpp" />
+    <ClCompile Include="Class\Enemy\Childs\Minor\Childs\Faster\State\FasterSpacing.cpp" />
+    <ClCompile Include="Class\Enemy\Childs\Minor\Childs\Faster\State\FasterIdle.cpp" />
+    <ClCompile Include="Class\Enemy\Childs\Minor\Childs\Faster\State\FasterAttack.cpp" />
+    <ClCompile Include="Class\Enemy\Childs\Minor\Childs\Faster\State\FasterHitReaction.cpp" />
+    <ClCompile Include="Class\Enemy\Childs\Minor\Childs\Faster\State\FasterEvasion.cpp" />
+    <ClCompile Include="Class\Enemy\Childs\Minor\Minor.cpp" />
+    <ClCompile Include="Class\Enemy\Childs\Minor\Childs\Faster\FasterStateParameter.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Class\ComboEditor\ComboTree.h" />
@@ -123,8 +134,11 @@
     <ClInclude Include="Class\Components\CoolTimer.h" />
     <ClInclude Include="Class\Components\HitStopController.h" />
     <ClInclude Include="Class\UI\DamageEffectEmitter.h" />
-    <ClInclude Include="Class\Enemy\Childs\Small\SmallStateParameter.h" />
-    <ClInclude Include="Class\Enemy\Childs\Small\Small.h" />
+    <ClInclude Include="Class\Enemy\Childs\Minor\Childs\Saiji\SaijiStateParameter.h" />
+    <ClInclude Include="Class\Enemy\Childs\Minor\Childs\Saiji\Saiji.h" />
+    <ClInclude Include="Class\Enemy\Childs\Minor\Childs\Faster\Faster.h" />
+    <ClInclude Include="Class\Enemy\Childs\Minor\Minor.h" />
+    <ClInclude Include="Class\Enemy\Childs\Minor\Childs\Faster\FasterStateParameter.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />

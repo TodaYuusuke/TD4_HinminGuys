@@ -1,13 +1,14 @@
-#include "../Small.h"
-#include "../../../EnemyManager.h"
+#include "../Saiji.h"
+#include "../../../../../EnemyManager.h"
 
 using namespace LWP::Math;
+using namespace SaijiState;
 
-void Small::FollowingFinalize(const States& pre)
+void Saiji::FollowingFinalize(const States& pre)
 {
 }
 
-void Small::FollowingInit(const States& pre)
+void Saiji::FollowingInit(const States& pre)
 {
 	
 	SetAnimation("Run", true);
@@ -15,7 +16,7 @@ void Small::FollowingInit(const States& pre)
 
 }
 
-void Small::FollowingUpdate(std::optional<States>& req, const States& pre)
+void Saiji::FollowingUpdate(std::optional<States>& req, const States& pre)
 {
 
 	//プレイヤーが存在する場合

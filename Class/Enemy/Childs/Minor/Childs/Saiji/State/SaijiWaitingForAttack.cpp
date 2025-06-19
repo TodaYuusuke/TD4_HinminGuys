@@ -1,9 +1,10 @@
-#include "../Small.h"
-#include "../../../EnemyManager.h"
+#include "../Saiji.h"
+#include "../../../../../EnemyManager.h"
 
 using namespace LWP::Math;
+using namespace SaijiState;
 
-void Small::WaitingForAttackFinalize(const States& pre)
+void Saiji::WaitingForAttackFinalize(const States& pre)
 {
 
 	//消えたときのIDが一致している場合
@@ -19,7 +20,7 @@ void Small::WaitingForAttackFinalize(const States& pre)
 
 }
 
-void Small::WaitingForAttackInit(const States& pre)
+void Saiji::WaitingForAttackInit(const States& pre)
 {
 
 	SetAnimation("Run", true);
@@ -38,7 +39,7 @@ void Small::WaitingForAttackInit(const States& pre)
 
 }
 
-void Small::WaitingForAttackUpdate(std::optional<States>& req, const States& pre)
+void Saiji::WaitingForAttackUpdate(std::optional<States>& req, const States& pre)
 {
 
 	//

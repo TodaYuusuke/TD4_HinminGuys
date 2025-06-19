@@ -1,10 +1,11 @@
-#include "../../../../Player/Player.h"
-#include "../Small.h"
-#include "../../../EnemyManager.h"
+#include "../../../../../../Player/Player.h"
+#include "../Saiji.h"
+#include "../../../../../EnemyManager.h"
 
 using namespace LWP::Math;
+using namespace SaijiState;
 
-void Small::IdleFinalize(const States& pre) {
+void Saiji::IdleFinalize(const States& pre) {
 
 	//時間セット
 	stateParameter_.spacingParameter.countSpacingTime = SpacingParameter::spacingTime;
@@ -15,7 +16,7 @@ void Small::IdleFinalize(const States& pre) {
 
 }
 
-void Small::IdleInit(const States& pre)
+void Saiji::IdleInit(const States& pre)
 {
 	
 	SetAnimation("Idle", true);
@@ -23,7 +24,7 @@ void Small::IdleInit(const States& pre)
 
 }
 
-void Small::IdleUpdate(std::optional<States>& req, const States& pre)
+void Saiji::IdleUpdate(std::optional<States>& req, const States& pre)
 {
 
 	//プレイヤーが存在する場合
