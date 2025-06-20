@@ -60,10 +60,10 @@ void DamageEffectEmitter::Update() {
 				//消える時の演出
 				if (effect.isVanish) {
 
-					sprite.material.color.A = LWP::Utility::Interpolation::LerpF(255.0f, 0.0f,
+					sprite.material.color.A = char(LWP::Utility::Interpolation::LerpF(255.0f, 0.0f,
 						LWP::Utility::Easing::Liner(std::clamp((DamageEffect::vanishThreshold -
 							(effect.remainingDisplayTime + (DamageEffect::maxDisplayTime / DamageEffect::divide) * i)) /
-							(DamageEffect::maxDisplayTime / DamageEffect::divide), 0.0f, 1.0f)));
+							(DamageEffect::maxDisplayTime / DamageEffect::divide), 0.0f, 1.0f))));
 					//時間を分割して1つずつ消すようにする
 					sprite.worldTF.scale = LWP::Utility::Interpolation::Lerp({ DamageEffect::maxScale * 0.5f,DamageEffect::maxScale * 0.5f,0.0f }, { 0.0f, 0.0f, 1.0f },
 						LWP::Utility::Easing::OutQuart(std::clamp((DamageEffect::vanishThreshold -
@@ -72,10 +72,10 @@ void DamageEffectEmitter::Update() {
 				}
 				//出現時のイージング
 				else {
-					sprite.material.color.A = LWP::Utility::Interpolation::LerpF(0.0f, 255.0f,
+					sprite.material.color.A = char(LWP::Utility::Interpolation::LerpF(0.0f, 255.0f,
 						LWP::Utility::Easing::Liner(std::clamp((DamageEffect::maxDisplayTime -
 							(effect.remainingDisplayTime + (DamageEffect::maxDisplayTime / DamageEffect::divide) * i)) /
-							(DamageEffect::maxDisplayTime / DamageEffect::divide), 0.0f, 1.0f)));
+							(DamageEffect::maxDisplayTime / DamageEffect::divide), 0.0f, 1.0f))));
 					//時間を分割して1つずつ表示するようにする
 					sprite.worldTF.scale = LWP::Utility::Interpolation::Lerp({ DamageEffect::maxScale,DamageEffect::maxScale,0.0f }, { DamageEffect::maxScale * 0.5f, DamageEffect::maxScale * 0.5f, 1.0f },
 						LWP::Utility::Easing::OutBounce(std::clamp((DamageEffect::maxDisplayTime -
@@ -118,7 +118,7 @@ void DamageEffectEmitter::AddEffect(const float& damage, const LWP::Math::Vector
 	effects_.push_back(DamageEffect());
 
 	//桁数を保持
-	effects_.back().digit = std::log10(int(damage)) + 1;
+	effects_.back().digit = int(std::log10(int(damage))) + 1;
 	//ポジションを保持
 	effects_.back().position = position;
 	effects_.back().damage = damage;
@@ -139,7 +139,7 @@ void DamageEffectEmitter::AddEffect(const float& damage, const LWP::Math::Vector
 		float shiftVal = 0.1f;
 
 		//割る数
-		int divisionNum = std::pow(10, effects_.back().digit - i - 1);
+		int divisionNum = (int)std::pow(10, effects_.back().digit - i - 1);
 
 		//割られる数を割る数で割り、数字を決める
 		int assignNum = dividedNum / divisionNum;
@@ -150,9 +150,9 @@ void DamageEffectEmitter::AddEffect(const float& damage, const LWP::Math::Vector
 		effects_.back().sprites.back().material.uvTransform.translation.x = shiftVal * float(assignNum);
 		effects_.back().sprites.back().worldTF.translation = effects_.back().position * viewProjectionViewport;
 		effects_.back().sprites.back().anchorPoint = { 0.5f,0.5f };
-		effects_.back().sprites.back().material.color.R = DamageEffect::color.x;
-		effects_.back().sprites.back().material.color.G = DamageEffect::color.y;
-		effects_.back().sprites.back().material.color.B = DamageEffect::color.z;
+		effects_.back().sprites.back().material.color.R = char(DamageEffect::color.x);
+		effects_.back().sprites.back().material.color.G = char(DamageEffect::color.y);
+		effects_.back().sprites.back().material.color.B = char(DamageEffect::color.z);
 		effects_.back().sprites.back().Init();
 
 		//次の桁に移行

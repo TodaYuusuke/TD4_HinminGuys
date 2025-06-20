@@ -11,10 +11,10 @@ class EnemyManager;
 /// 敵の種類
 /// </summary>
 enum class EnemyType {
-	kSaiji, //雑魚敵
+	kSaiji, //才二くぅ～ん
+	kOniHayha, //オニ・ヘイヘ
 	kBoss, //ボス敵
-
-	kMax
+	kMax, //最大数
 };
 
 /// <summary>
@@ -23,6 +23,16 @@ enum class EnemyType {
 struct EnemyAttackParameter {
 	float attackValue = 10.0f; //攻撃力
 	float knockbackValue = 0.5f; //ノックバック
+	//代入演算子
+	EnemyAttackParameter& operator=(const EnemyAttackParameter& other) {
+
+		attackValue = other.attackValue;
+		knockbackValue = other.knockbackValue;
+
+		return *this;
+
+	}
+
 };
 
 /// <summary>
@@ -30,7 +40,19 @@ struct EnemyAttackParameter {
 /// </summary>
 struct EnemyParameter {
 	float hp = 10.0f; //体力
+	float speed = 1.0f; //速度
 	EnemyAttackParameter attackParameter; //攻撃パラメータ
+	//代入演算子
+	EnemyParameter& operator=(const EnemyParameter& other) {
+
+		hp = other.hp;
+		speed = other.speed;
+		attackParameter = other.attackParameter;
+
+		return *this;
+
+	}
+
 };
 
 /// <summary>
@@ -54,6 +76,8 @@ public:
 	virtual void Update();
 	//プレイヤーをセットする関数
 	void SetPlayer(Player* player) { player_ = player; }
+	//パラメータをセット
+	void SetParameter(const EnemyParameter& parameter) { parameter_ = parameter; }
 	//死亡フラグ取得
 	bool GetIsDead() const { return isDead_; }
 	//座標取得

@@ -68,6 +68,14 @@
     <ClCompile Include="Class\Enemy\Childs\Minor\Childs\Faster\State\FasterEvasion.cpp" />
     <ClCompile Include="Class\Enemy\Childs\Minor\Minor.cpp" />
     <ClCompile Include="Class\Enemy\Childs\Minor\Childs\Faster\FasterStateParameter.cpp" />
+    <ClCompile Include="Class\Enemy\Childs\Minor\Childs\OniHayha\OniHayha.cpp" />
+    <ClCompile Include="Class\Enemy\Childs\Minor\Childs\OniHayha\OniHayhaStateParameter.cpp" />
+    <ClCompile Include="Class\Enemy\Childs\Minor\Childs\OniHayha\State\OniHayhaAttack.cpp" />
+    <ClCompile Include="Class\Enemy\Childs\Minor\Childs\OniHayha\State\OniHayhaHitReaction.cpp" />
+    <ClCompile Include="Class\Enemy\Childs\Minor\Childs\OniHayha\State\OniHayhaIdle.cpp" />
+    <ClCompile Include="Class\Enemy\Childs\Minor\Childs\OniHayha\State\OniHayhaWaitingForAttack.cpp" />
+    <ClCompile Include="Class\Enemy\Childs\Minor\Childs\OniHayha\State\OniHayhaRetreat.cpp" />
+    <ClCompile Include="Class\Enemy\ParameterEditor.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Class\ComboEditor\ComboTree.h" />
@@ -139,6 +147,9 @@
     <ClInclude Include="Class\Enemy\Childs\Minor\Childs\Faster\Faster.h" />
     <ClInclude Include="Class\Enemy\Childs\Minor\Minor.h" />
     <ClInclude Include="Class\Enemy\Childs\Minor\Childs\Faster\FasterStateParameter.h" />
+    <ClInclude Include="Class\Enemy\Childs\Minor\Childs\OniHayha\OniHayha.h" />
+    <ClInclude Include="Class\Enemy\Childs\Minor\Childs\OniHayha\OniHayhaStateParameter.h" />
+    <ClInclude Include="Class\Enemy\ParameterEditor.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />

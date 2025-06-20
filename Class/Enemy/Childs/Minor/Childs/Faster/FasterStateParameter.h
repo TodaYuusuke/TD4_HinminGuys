@@ -18,6 +18,8 @@ namespace FasterState {
 		kFollowing,
 		kWaitingForAttack,
 		kHitReaction,
+		kStep,
+		kEvasion,
 		kMax,
 	};
 
@@ -105,6 +107,13 @@ namespace FasterState {
 	struct HitReactionParameter {
 		//減衰
 		static float decay;
+	};
+
+	/// <summary>
+	/// 
+	/// </summary>
+	struct StepParameter {
+
 	};
 
 	/// <summary>

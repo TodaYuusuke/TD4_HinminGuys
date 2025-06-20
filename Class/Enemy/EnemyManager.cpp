@@ -45,6 +45,8 @@ void EnemyManager::Initialize()
 		.EndGroup()
 		.CheckJsonFile();
 
+	parameterEditor_.Initialize();
+
 }
 
 void EnemyManager::Finalize()
@@ -151,6 +153,9 @@ void EnemyManager::CreateEnemy(const Vector3& position, EnemyType type)
 	case EnemyType::kSaiji:
 		enemies_.push_back(new Saiji());
 		break;
+	case EnemyType::kOniHayha:
+		enemies_.push_back(new OniHayha());
+		break;
 	case EnemyType::kBoss:
 		enemies_.push_back(new Boss());
 		break;
@@ -160,7 +165,8 @@ void EnemyManager::CreateEnemy(const Vector3& position, EnemyType type)
 
 	//初期化してリストに追加
 	enemies_.back()->Initialize(player_, position, camera_, this);
-	
+	enemies_.back()->SetParameter(parameterEditor_.GetParameter(type));
+
 }
 
 
@@ -243,6 +249,15 @@ void EnemyManager::DebugGUI()
 
 		}
 
+		//敵の共通パラメータを設定する
+		if (ImGui::BeginTabItem("Default Parameter")) {
+
+			parameterEditor_.DebugGUI();
+
+			ImGui::EndTabItem();
+
+		}
+
 		//敵の共通ステート変数をいじる
 		if (ImGui::BeginTabItem("SpawnData")) {
 
@@ -282,7 +297,7 @@ const EnemyAttackParameter& EnemyManager::GetEnemyAttackParameter(const std::str
 	//存在しない場合はありえないのでassert
 	assert(false);
 
-	return EnemyAttackParameter();
+	return enemies_.back()->GetAttackParameter();
 
 }
 

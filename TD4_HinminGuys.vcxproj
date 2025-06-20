@@ -158,12 +158,20 @@
     <ClCompile Include="Class\Enemy\Childs\Minor\Childs\Faster\State\FasterMove.cpp" />
     <ClCompile Include="Class\Enemy\Childs\Minor\Childs\Faster\State\FasterSpacing.cpp" />
     <ClCompile Include="Class\Enemy\Childs\Minor\Childs\Faster\State\FasterWaitingForAttack.cpp" />
+    <ClCompile Include="Class\Enemy\Childs\Minor\Childs\OniHayha\OniHayha.cpp" />
+    <ClCompile Include="Class\Enemy\Childs\Minor\Childs\OniHayha\OniHayhaStateParameter.cpp" />
+    <ClCompile Include="Class\Enemy\Childs\Minor\Childs\OniHayha\State\OniHayhaAttack.cpp" />
+    <ClCompile Include="Class\Enemy\Childs\Minor\Childs\OniHayha\State\OniHayhaHitReaction.cpp" />
+    <ClCompile Include="Class\Enemy\Childs\Minor\Childs\OniHayha\State\OniHayhaIdle.cpp" />
+    <ClCompile Include="Class\Enemy\Childs\Minor\Childs\OniHayha\State\OniHayhaRetreat.cpp" />
+    <ClCompile Include="Class\Enemy\Childs\Minor\Childs\OniHayha\State\OniHayhaWaitingForAttack.cpp" />
     <ClCompile Include="Class\Enemy\Childs\Minor\Childs\Saiji\SaijiStateParameter.cpp" />
     <ClCompile Include="Class\Enemy\Childs\Minor\Childs\Saiji\State\SaijiAttack.cpp" />
     <ClCompile Include="Class\Enemy\Childs\Minor\Childs\Saiji\State\SaijiHitReaction.cpp" />
     <ClCompile Include="Class\Enemy\Childs\Minor\Childs\Saiji\State\SaijiIdle.cpp" />
     <ClCompile Include="Class\Enemy\Childs\Minor\Childs\Saiji\State\SaijiMove.cpp" />
     <ClCompile Include="Class\Enemy\Childs\Minor\Minor.cpp" />
+    <ClCompile Include="Class\Enemy\ParameterEditor.cpp" />
     <ClCompile Include="Class\Player\Systems\Children\Sheath\State\Break.cpp" />
     <ClCompile Include="Class\ComboEditor\ComboTree.cpp" />
     <ClCompile Include="Class\Condition\child\Input\ButtonCondition.cpp" />
@@ -219,8 +227,11 @@
   <ItemGroup>
     <ClInclude Include="Class\Enemy\Childs\Minor\Childs\Faster\Faster.h" />
     <ClInclude Include="Class\Enemy\Childs\Minor\Childs\Faster\FasterStateParameter.h" />
+    <ClInclude Include="Class\Enemy\Childs\Minor\Childs\OniHayha\OniHayha.h" />
+    <ClInclude Include="Class\Enemy\Childs\Minor\Childs\OniHayha\OniHayhaStateParameter.h" />
     <ClInclude Include="Class\Enemy\Childs\Minor\Childs\Saiji\SaijiStateParameter.h" />
     <ClInclude Include="Class\Enemy\Childs\Minor\Minor.h" />
+    <ClInclude Include="Class\Enemy\ParameterEditor.h" />
     <ClInclude Include="Class\Player\Systems\Children\Sheath\State\Break.h" />
     <ClInclude Include="Class\IParameter.h" />
     <ClInclude Include="Class\ComboEditor\ComboTree.h" />

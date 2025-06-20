@@ -5,7 +5,7 @@
 using namespace LWP::Math;
 using namespace SaijiState;
 
-void Saiji::IdleFinalize(const States& pre) {
+void Saiji::IdleFinalize([[maybe_unused]] const States& pre) {
 
 	//時間セット
 	stateParameter_.spacingParameter.countSpacingTime = SpacingParameter::spacingTime;
@@ -16,7 +16,7 @@ void Saiji::IdleFinalize(const States& pre) {
 
 }
 
-void Saiji::IdleInit(const States& pre)
+void Saiji::IdleInit([[maybe_unused]] const States& pre)
 {
 	
 	SetAnimation("Idle", true);
@@ -24,7 +24,7 @@ void Saiji::IdleInit(const States& pre)
 
 }
 
-void Saiji::IdleUpdate(std::optional<States>& req, const States& pre)
+void Saiji::IdleUpdate([[maybe_unused]] std::optional<States>& req, [[maybe_unused]] const States& pre)
 {
 
 	//プレイヤーが存在する場合

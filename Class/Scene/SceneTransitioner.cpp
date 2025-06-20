@@ -48,7 +48,7 @@ void SceneTransitioner::BeginTransitionEffect()
 	//1までカウントを増やす
 	if (sceneChangeCount_ < 1.0f) {
 
-		sceneChangeCount_ += transitionSpeed_ * LWP::Info::GetDeltaTime();
+		sceneChangeCount_ += transitionSpeed_ * LWP::Info::GetDeltaTimeF();
 		//1以上で終了
 		if (sceneChangeCount_ >= 1.0f) {
 			sceneChangeCount_ = 1.0f;
@@ -89,7 +89,7 @@ void SceneTransitioner::EndTransitionEffect()
 	//0までカウントを減らす
 	if (sceneChangeCount_ > 0.0f) {
 
-		sceneChangeCount_ -= transitionSpeed_ * LWP::Info::GetDeltaTime();
+		sceneChangeCount_ -= transitionSpeed_ * LWP::Info::GetDeltaTimeF();
 		//0以下で終了
 		if (sceneChangeCount_ <= 0.0f) {
 			sceneChangeCount_ = 0.0f;

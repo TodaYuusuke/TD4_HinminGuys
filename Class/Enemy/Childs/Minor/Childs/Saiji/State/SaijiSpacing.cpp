@@ -4,18 +4,17 @@
 using namespace LWP::Math;
 using namespace SaijiState;
 
-void Saiji::SpacingFinalize(const States& pre)
+void Saiji::SpacingFinalize([[maybe_unused]] const States& pre)
 {
 
 	//移動ステートの時間セット
 	stateParameter_.moveParameter.countRunTime = MoveParameter::runTime;
-	stateParameter_.moveParameter.speed = MoveParameter::defaultSpeed;
 	//待機ステートの待機時間セット
 	stateParameter_.idleParameter.countStandTime = IdleParameter::standTime;
 
 }
 
-void Saiji::SpacingInit(const States& pre)
+void Saiji::SpacingInit([[maybe_unused]] const States& pre)
 {
 	
 	SetAnimation("Run", true, 0.3f);
@@ -23,7 +22,7 @@ void Saiji::SpacingInit(const States& pre)
 
 }
 
-void Saiji::SpacingUpdate(std::optional<States>& req, const States& pre)
+void Saiji::SpacingUpdate([[maybe_unused]] std::optional<States>& req, [[maybe_unused]] const States& pre)
 {
 
 	//カウントダウン
@@ -75,14 +74,14 @@ void Saiji::SpacingUpdate(std::optional<States>& req, const States& pre)
 		}
 
 		//円周を沿うような移動ベクトルにする
-		Vector3 result{};
+		Vector3 velocity{};
 
-		result.x = -sinf(theta);
-		result.z = cosf(theta);
+		velocity.x = -sinf(theta);
+		velocity.z = cosf(theta);
 
 		//右回りならベクトルを逆にする
 		if (stateParameter_.spacingParameter.isClockwise) {
-			result *= -1.0f;
+			velocity *= -1.0f;
 		}
 
 		//プレイヤーとの間合いをあらかじめ決めておき、その範囲内に入ったら押し出しベクトルを加算するようにする
@@ -91,11 +90,12 @@ void Saiji::SpacingUpdate(std::optional<States>& req, const States& pre)
 				-((SpacingParameter::spaceDist - length) * 2.0f / SpacingParameter::spaceDist));
 		}
 
-		result = result + dist.Normalize();
+		velocity = velocity + dist.Normalize();
 
-		result = result.Normalize();
+		velocity = velocity.Normalize();
 
-		SetPosition(GetPosition() + result * LWP::Info::GetDeltaTime() + (GetRepulsiveForce() * LWP::Info::GetDeltaTime()));
+		SetPosition(GetPosition() + velocity * LWP::Info::GetDeltaTimeF() * parameter_.speed
+			+ (GetRepulsiveForce() * LWP::Info::GetDeltaTimeF()));
 		//プレイヤーの向きに回転
 		RotateTowardsPlayer();
 

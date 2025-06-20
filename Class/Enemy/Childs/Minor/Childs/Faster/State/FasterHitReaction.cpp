@@ -5,24 +5,24 @@
 using namespace LWP::Math;
 using namespace FasterState;
 
-void Faster::HitReactionFinalize(const States& pre) {
+void Faster::HitReactionFinalize([[maybe_unused]] const States& pre) {
 
 
 
 }
 
-void Faster::HitReactionInit(const States& pre)
+void Faster::HitReactionInit([[maybe_unused]] const States& pre)
 {
 	
 	SetAnimation("Damage", false);
 
 }
 
-void Faster::HitReactionUpdate(std::optional<States>& req, const States& pre)
+void Faster::HitReactionUpdate([[maybe_unused]] std::optional<States>& req, [[maybe_unused]] const States& pre)
 {
 
 	SetPosition(GetPosition() + (GetKnockBackVelocity() + GetRepulsiveForce()) *
-		LWP::Info::GetDeltaTime());
+		LWP::Info::GetDeltaTimeF());
 	//ノックバック減衰
 	SetKnockBackVelocity(GetKnockBackVelocity() * HitReactionParameter::decay);
 

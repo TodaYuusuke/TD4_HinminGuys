@@ -5,7 +5,7 @@
 using namespace LWP::Math;
 using namespace FasterState;
 
-void Faster::IdleFinalize(const States& pre) {
+void Faster::IdleFinalize([[maybe_unused]] const States& pre) {
 
 	//時間セット
 	stateParameter_.spacingParameter.countSpacingTime = SpacingParameter::spacingTime;
@@ -16,7 +16,7 @@ void Faster::IdleFinalize(const States& pre) {
 
 }
 
-void Faster::IdleInit(const States& pre)
+void Faster::IdleInit([[maybe_unused]] const States& pre)
 {
 	
 	SetAnimation("Idle", true);
@@ -24,7 +24,7 @@ void Faster::IdleInit(const States& pre)
 
 }
 
-void Faster::IdleUpdate(std::optional<States>& req, const States& pre)
+void Faster::IdleUpdate([[maybe_unused]] std::optional<States>& req, [[maybe_unused]] const States& pre)
 {
 
 	//プレイヤーが存在する場合

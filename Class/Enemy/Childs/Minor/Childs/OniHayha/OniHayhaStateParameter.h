@@ -5,17 +5,15 @@
 /// それぞれのステートで使用するパラメータをまとめたヘッダー
 /// 
 
-namespace SaijiState {
+namespace OniHayhaState {
 
 	/// <summary>
 	/// 状態一覧
 	/// </summary>
 	enum class States {
 		kIdle,
-		kMove,
 		kAttack,
-		kSpacing,
-		kFollowing,
+		kRetreat,
 		kWaitingForAttack,
 		kHitReaction,
 		kMax,
@@ -27,28 +25,10 @@ namespace SaijiState {
 	struct IdleParameter {
 		//待機時間
 		static float standTime;
-		//追従モーションに移行する距離
-		static float followingDist;
+		//退避モーションに移行する距離
+		static float retreatDist;
 		//カウント
 		float countStandTime;
-	};
-
-	/// <summary>
-	/// 移動パラメータ
-	/// </summary>
-	struct MoveParameter {
-		//移動時間
-		static float runTime;
-		//攻撃モーションに入る距離
-		static float attackDist;
-		//デフォのスピード
-		static float defaultSpeed;
-		//移動方向
-		LWP::Math::Vector3 direction;
-		//カウント
-		float countRunTime;
-		//プレイヤーに近づくかどうか
-		bool isApproach = true;
 	};
 
 	/// <summary>
@@ -62,17 +42,11 @@ namespace SaijiState {
 	};
 
 	/// <summary>
-	/// 間合い取りパラメータ
+	/// 退避パラメータ
 	/// </summary>
-	struct SpacingParameter {
-		//間合いを取る時間
-		static float spacingTime;
-		//間合い距離
-		static float spaceDist;
-		//カウント
-		float countSpacingTime;
-		//右回りかどうか
-		bool isClockwise = false;
+	struct RetreatParameter {
+		//待機状態に戻る距離
+		static float idleDist;
 	};
 
 	/// <summary>
@@ -90,14 +64,6 @@ namespace SaijiState {
 	};
 
 	/// <summary>
-	/// 追従パラメータ
-	/// </summary>
-	struct FollowingParameter {
-		//待機モーションに移行する距離
-		static float idleDist;
-	};
-
-	/// <summary>
 	/// ヒット演出パラメータ
 	/// </summary>
 	struct HitReactionParameter {
@@ -110,8 +76,6 @@ namespace SaijiState {
 	/// </summary>
 	struct StateParameter {
 		IdleParameter idleParameter;
-		MoveParameter moveParameter;
-		SpacingParameter spacingParameter;
 		WaitingForAttackParameter waitingForAttackParameter;
 
 	};

@@ -30,35 +30,38 @@ private:
 
 	//ここに各ステートに使う関数追加
 
-	virtual void IdleInit(const SaijiState::States& pre);
-	virtual void IdleUpdate(std::optional<SaijiState::States>& req, const SaijiState::States& pre);
-	virtual void IdleFinalize(const SaijiState::States& pre);
+	void IdleInit(const SaijiState::States& pre);
+	void IdleUpdate(std::optional<SaijiState::States>& req, const SaijiState::States& pre);
+	void IdleFinalize(const SaijiState::States& pre);
 
-	virtual void MoveInit(const SaijiState::States& pre);
-	virtual void MoveUpdate(std::optional<SaijiState::States>& req, const SaijiState::States& pre);
-	virtual void MoveFinalize(const SaijiState::States& pre);
+	void MoveInit(const SaijiState::States& pre);
+	void MoveUpdate(std::optional<SaijiState::States>& req, const SaijiState::States& pre);
+	void MoveFinalize(const SaijiState::States& pre);
 
-	virtual void AttackInit(const SaijiState::States& pre);
-	virtual void AttackUpdate(std::optional<SaijiState::States>& req, const SaijiState::States& pre);
-	virtual void AttackFinalize(const SaijiState::States& pre);
+	void AttackInit(const SaijiState::States& pre);
+	void AttackUpdate(std::optional<SaijiState::States>& req, const SaijiState::States& pre);
+	void AttackFinalize(const SaijiState::States& pre);
 
-	virtual void SpacingInit(const SaijiState::States& pre);
-	virtual void SpacingUpdate(std::optional<SaijiState::States>& req, const SaijiState::States& pre);
-	virtual void SpacingFinalize(const SaijiState::States& pre);
+	void SpacingInit(const SaijiState::States& pre);
+	void SpacingUpdate(std::optional<SaijiState::States>& req, const SaijiState::States& pre);
+	void SpacingFinalize(const SaijiState::States& pre);
 
-	virtual void FollowingInit(const SaijiState::States& pre);
-	virtual void FollowingUpdate(std::optional<SaijiState::States>& req, const SaijiState::States& pre);
-	virtual void FollowingFinalize(const SaijiState::States& pre);
+	void FollowingInit(const SaijiState::States& pre);
+	void FollowingUpdate(std::optional<SaijiState::States>& req, const SaijiState::States& pre);
+	void FollowingFinalize(const SaijiState::States& pre);
 
-	virtual void WaitingForAttackInit(const SaijiState::States& pre);
-	virtual void WaitingForAttackUpdate(std::optional<SaijiState::States>& req, const SaijiState::States& pre);
-	virtual void WaitingForAttackFinalize(const SaijiState::States& pre);
+	void WaitingForAttackInit(const SaijiState::States& pre);
+	void WaitingForAttackUpdate(std::optional<SaijiState::States>& req, const SaijiState::States& pre);
+	void WaitingForAttackFinalize(const SaijiState::States& pre);
 
-	virtual void HitReactionInit(const SaijiState::States& pre);
-	virtual void HitReactionUpdate(std::optional<SaijiState::States>& req, const SaijiState::States& pre);
-	virtual void HitReactionFinalize(const SaijiState::States& pre);
+	void HitReactionInit(const SaijiState::States& pre);
+	void HitReactionUpdate(std::optional<SaijiState::States>& req, const SaijiState::States& pre);
+	void HitReactionFinalize(const SaijiState::States& pre);
 
 private:
+
+	//才二君用のデフォパラメータ設定
+	static EnemyParameter configParameter_;
 
 	//雑魚敵パラメータ
 	SaijiState::StateParameter stateParameter_;

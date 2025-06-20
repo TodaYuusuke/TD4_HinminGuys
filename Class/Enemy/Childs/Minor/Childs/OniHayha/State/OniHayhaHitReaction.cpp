@@ -1,24 +1,24 @@
 #include "../../../../../../Player/Player.h"
-#include "../Saiji.h"
+#include "../OniHayha.h"
 #include "../../../../../EnemyManager.h"
 
 using namespace LWP::Math;
-using namespace SaijiState;
+using namespace OniHayhaState;
 
-void Saiji::HitReactionFinalize([[maybe_unused]] const States& pre) {
+void OniHayha::HitReactionFinalize([[maybe_unused]] const States& pre) {
 
 
 
 }
 
-void Saiji::HitReactionInit([[maybe_unused]] const States& pre)
+void OniHayha::HitReactionInit([[maybe_unused]] const States& pre)
 {
 	
 	SetAnimation("Damage", false);
 
 }
 
-void Saiji::HitReactionUpdate([[maybe_unused]] std::optional<States>& req, [[maybe_unused]] const States& pre)
+void OniHayha::HitReactionUpdate([[maybe_unused]] std::optional<States>& req, [[maybe_unused]] const States& pre)
 {
 
 	SetPosition(GetPosition() + (GetKnockBackVelocity() + GetRepulsiveForce()) *

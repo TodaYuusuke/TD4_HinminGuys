@@ -4,7 +4,7 @@
 using namespace LWP::Math;
 using namespace FasterState;
 
-void Faster::WaitingForAttackFinalize(const States& pre)
+void Faster::WaitingForAttackFinalize([[maybe_unused]]const States& pre)
 {
 
 	//消えたときのIDが一致している場合
@@ -20,7 +20,7 @@ void Faster::WaitingForAttackFinalize(const States& pre)
 
 }
 
-void Faster::WaitingForAttackInit(const States& pre)
+void Faster::WaitingForAttackInit([[maybe_unused]]const States& pre)
 {
 
 	SetAnimation("Run", true);
@@ -39,7 +39,7 @@ void Faster::WaitingForAttackInit(const States& pre)
 
 }
 
-void Faster::WaitingForAttackUpdate(std::optional<States>& req, const States& pre)
+void Faster::WaitingForAttackUpdate([[maybe_unused]] std::optional<States>& req, [[maybe_unused]] const States& pre)
 {
 
 	//
@@ -62,8 +62,6 @@ void Faster::WaitingForAttackUpdate(std::optional<States>& req, const States& pr
 
 		//y軸の移動ベクトルを消す
 		dist.y = 0.0f;
-		//距離
-		float length = dist.Length();
 		//正規化
 		dist = dist.Normalize();
 
@@ -88,7 +86,7 @@ void Faster::WaitingForAttackUpdate(std::optional<States>& req, const States& pr
 			result *= -1.0f;
 		}
 
-		SetPosition(GetPosition() + result * LWP::Info::GetDeltaTime() + (GetRepulsiveForce() * LWP::Info::GetDeltaTime()));
+		SetPosition(GetPosition() + result * LWP::Info::GetDeltaTimeF() + (GetRepulsiveForce() * LWP::Info::GetDeltaTimeF()));
 		//プレイヤーの向きに回転
 		RotateTowardsPlayer();
 

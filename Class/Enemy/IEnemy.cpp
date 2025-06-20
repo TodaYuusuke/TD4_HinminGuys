@@ -10,7 +10,7 @@ using namespace GameMask;
 uint16_t IEnemy::currentEnemyID_ = 0;
 uint16_t IEnemy::maxAttackCount_ = 3;
 std::array<const char*, int(EnemyType::kMax)> IEnemy::enemyTypeName =
-{ "Saiji", "Boss" };
+{ "Saiji",  "OniHayha", "Boss" };
 
 IEnemy::IEnemy()
 	: aabb_(collider_.SetBroadShape(LWP::Object::Collider::AABB())),

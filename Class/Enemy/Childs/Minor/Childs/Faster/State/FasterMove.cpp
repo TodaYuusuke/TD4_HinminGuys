@@ -5,14 +5,14 @@
 using namespace LWP::Math;
 using namespace FasterState;
 
-void Faster::MoveFinalize(const States& pre) {
+void Faster::MoveFinalize([[maybe_unused]] const States& pre) {
 
 	//待機ステートの待機時間セット
 	stateParameter_.idleParameter.countStandTime = IdleParameter::standTime;
 
 }
 
-void Faster::MoveInit(const States& pre)
+void Faster::MoveInit([[maybe_unused]] const States& pre)
 {
 	
 	SetAnimation("Run", true);
@@ -20,7 +20,7 @@ void Faster::MoveInit(const States& pre)
 
 }
 
-void Faster::MoveUpdate(std::optional<States>& req, const States& pre)
+void Faster::MoveUpdate([[maybe_unused]] std::optional<States>& req, [[maybe_unused]] const States& pre)
 {
 
 	//プレイヤーが存在する場合
@@ -65,10 +65,10 @@ void Faster::MoveUpdate(std::optional<States>& req, const States& pre)
 
 		stateParameter_.moveParameter.direction =
 			stateParameter_.moveParameter.direction.Normalize() *
-			stateParameter_.moveParameter.speed * LWP::Info::GetDeltaTime();
+			stateParameter_.moveParameter.speed * LWP::Info::GetDeltaTimeF();
 
 		SetPosition(GetPosition() + stateParameter_.moveParameter.direction +
-			(GetRepulsiveForce() * LWP::Info::GetDeltaTime()));
+			(GetRepulsiveForce() * LWP::Info::GetDeltaTimeF()));
 
 		//プレイヤーの向きに回転
 		RotateTowardsPlayer();

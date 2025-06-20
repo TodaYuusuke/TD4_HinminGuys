@@ -5,22 +5,26 @@
 using namespace LWP::Math;
 using namespace SaijiState;
 
-void Saiji::MoveFinalize(const States& pre) {
+void Saiji::MoveFinalize([[maybe_unused]] const States& pre) {
 
 	//待機ステートの待機時間セット
 	stateParameter_.idleParameter.countStandTime = IdleParameter::standTime;
+	//デフォの移動速度セット
+	parameter_.speed = 1.0f;
 
 }
 
-void Saiji::MoveInit(const States& pre)
+void Saiji::MoveInit([[maybe_unused]] const States& pre)
 {
 	
 	SetAnimation("Run", true);
 	preState_ = States::kMove;
+	//移動速度をセット
+	parameter_.speed = MoveParameter::defaultSpeed;
 
 }
 
-void Saiji::MoveUpdate(std::optional<States>& req, const States& pre)
+void Saiji::MoveUpdate([[maybe_unused]] std::optional<States>& req, [[maybe_unused]] const States& pre)
 {
 
 	//プレイヤーが存在する場合
@@ -65,10 +69,10 @@ void Saiji::MoveUpdate(std::optional<States>& req, const States& pre)
 
 		stateParameter_.moveParameter.direction =
 			stateParameter_.moveParameter.direction.Normalize() *
-			stateParameter_.moveParameter.speed * LWP::Info::GetDeltaTime();
+			parameter_.speed * LWP::Info::GetDeltaTimeF();
 
 		SetPosition(GetPosition() + stateParameter_.moveParameter.direction +
-			(GetRepulsiveForce() * LWP::Info::GetDeltaTime()));
+			(GetRepulsiveForce() * LWP::Info::GetDeltaTimeF()));
 
 		//プレイヤーの向きに回転
 		RotateTowardsPlayer();

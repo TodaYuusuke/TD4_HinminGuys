@@ -30,33 +30,33 @@ private:
 
 	//ここに各ステートに使う関数追加
 
-	virtual void IdleInit(const FasterState::States& pre);
-	virtual void IdleUpdate(std::optional<FasterState::States>& req, const FasterState::States& pre);
-	virtual void IdleFinalize(const FasterState::States& pre);
+	void IdleInit(const FasterState::States& pre);
+	void IdleUpdate(std::optional<FasterState::States>& req, const FasterState::States& pre);
+	void IdleFinalize(const FasterState::States& pre);
 
-	virtual void MoveInit(const FasterState::States& pre);
-	virtual void MoveUpdate(std::optional<FasterState::States>& req, const FasterState::States& pre);
-	virtual void MoveFinalize(const FasterState::States& pre);
+	void MoveInit(const FasterState::States& pre);
+	void MoveUpdate(std::optional<FasterState::States>& req, const FasterState::States& pre);
+	void MoveFinalize(const FasterState::States& pre);
 
-	virtual void AttackInit(const FasterState::States& pre);
-	virtual void AttackUpdate(std::optional<FasterState::States>& req, const FasterState::States& pre);
-	virtual void AttackFinalize(const FasterState::States& pre);
+	void AttackInit(const FasterState::States& pre);
+	void AttackUpdate(std::optional<FasterState::States>& req, const FasterState::States& pre);
+	void AttackFinalize(const FasterState::States& pre);
 
-	virtual void SpacingInit(const FasterState::States& pre);
-	virtual void SpacingUpdate(std::optional<FasterState::States>& req, const FasterState::States& pre);
-	virtual void SpacingFinalize(const FasterState::States& pre);
+	void SpacingInit(const FasterState::States& pre);
+	void SpacingUpdate(std::optional<FasterState::States>& req, const FasterState::States& pre);
+	void SpacingFinalize(const FasterState::States& pre);
 
-	virtual void FollowingInit(const FasterState::States& pre);
-	virtual void FollowingUpdate(std::optional<FasterState::States>& req, const FasterState::States& pre);
-	virtual void FollowingFinalize(const FasterState::States& pre);
+	void FollowingInit(const FasterState::States& pre);
+	void FollowingUpdate(std::optional<FasterState::States>& req, const FasterState::States& pre);
+	void FollowingFinalize(const FasterState::States& pre);
 
-	virtual void WaitingForAttackInit(const FasterState::States& pre);
-	virtual void WaitingForAttackUpdate(std::optional<FasterState::States>& req, const FasterState::States& pre);
-	virtual void WaitingForAttackFinalize(const FasterState::States& pre);
+	void WaitingForAttackInit(const FasterState::States& pre);
+	void WaitingForAttackUpdate(std::optional<FasterState::States>& req, const FasterState::States& pre);
+	void WaitingForAttackFinalize(const FasterState::States& pre);
 
-	virtual void HitReactionInit(const FasterState::States& pre);
-	virtual void HitReactionUpdate(std::optional<FasterState::States>& req, const FasterState::States& pre);
-	virtual void HitReactionFinalize(const FasterState::States& pre);
+	void HitReactionInit(const FasterState::States& pre);
+	void HitReactionUpdate(std::optional<FasterState::States>& req, const FasterState::States& pre);
+	void HitReactionFinalize(const FasterState::States& pre);
 
 private:
 

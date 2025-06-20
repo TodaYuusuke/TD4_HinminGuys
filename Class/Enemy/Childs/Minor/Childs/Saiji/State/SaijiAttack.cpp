@@ -7,7 +7,7 @@ using namespace GameMask;
 using namespace LWP::Math;
 using namespace SaijiState;
 
-void Saiji::AttackFinalize(const States& pre) {
+void Saiji::AttackFinalize([[maybe_unused]] const States& pre) {
 
 	//待機状態に移行
 	EndAttack();
@@ -17,7 +17,7 @@ void Saiji::AttackFinalize(const States& pre) {
 
 }
 
-void Saiji::AttackInit(const States& pre)
+void Saiji::AttackInit([[maybe_unused]] const States& pre)
 {
 	
 	preState_ = States::kAttack;
@@ -29,7 +29,7 @@ void Saiji::AttackInit(const States& pre)
 
 }
 
-void Saiji::AttackUpdate(std::optional<States>& req, const States& pre)
+void Saiji::AttackUpdate([[maybe_unused]] std::optional<States>& req, [[maybe_unused]] const States& pre)
 {
 
 	//パリィエフェクト中ならアニメーションをゆっくりにして判定オフ
@@ -65,7 +65,7 @@ void Saiji::AttackUpdate(std::optional<States>& req, const States& pre)
 
 	}
 
-	SetPosition(GetPosition() + (GetRepulsiveForce() * LWP::Info::GetDeltaTime()));
+	SetPosition(GetPosition() + (GetRepulsiveForce() * LWP::Info::GetDeltaTimeF()));
 
 }
 

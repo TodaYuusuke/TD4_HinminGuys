@@ -4,11 +4,11 @@
 using namespace LWP::Math;
 using namespace SaijiState;
 
-void Saiji::FollowingFinalize(const States& pre)
+void Saiji::FollowingFinalize([[maybe_unused]] const States& pre)
 {
 }
 
-void Saiji::FollowingInit(const States& pre)
+void Saiji::FollowingInit([[maybe_unused]] const States& pre)
 {
 	
 	SetAnimation("Run", true);
@@ -16,7 +16,7 @@ void Saiji::FollowingInit(const States& pre)
 
 }
 
-void Saiji::FollowingUpdate(std::optional<States>& req, const States& pre)
+void Saiji::FollowingUpdate([[maybe_unused]] std::optional<States>& req, [[maybe_unused]] const States& pre)
 {
 
 	//プレイヤーが存在する場合
@@ -28,15 +28,15 @@ void Saiji::FollowingUpdate(std::optional<States>& req, const States& pre)
 			return;
 		}
 
-		Vector3 result{};
+		Vector3 velocity{};
 
 		//移動
-		result = GetPlayerPosition() - GetPosition();
+		velocity = GetPlayerPosition() - GetPosition();
 		//y軸の移動ベクトルを消す
-		result.y = 0.0f;
-		result = result.Normalize() * LWP::Info::GetDeltaTime();
+		velocity.y = 0.0f;
+		velocity = velocity.Normalize() * LWP::Info::GetDeltaTimeF() * parameter_.speed;
 		
-		SetPosition(GetPosition() + result + (GetRepulsiveForce() * LWP::Info::GetDeltaTime()));
+		SetPosition(GetPosition() + velocity + (GetRepulsiveForce() * LWP::Info::GetDeltaTimeF()));
 
 		//プレイヤーの向きに回転
 		RotateTowardsPlayer();

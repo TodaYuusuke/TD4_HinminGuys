@@ -1,13 +1,13 @@
 #include "../../../../../../Player/Player.h"
-#include "../Faster.h"
+#include "../OniHayha.h"
 #include "../../../../../EnemyManager.h"
 #include "../../../../../../GameMask.h"
 
 using namespace GameMask;
 using namespace LWP::Math;
-using namespace FasterState;
+using namespace OniHayhaState;
 
-void Faster::AttackFinalize([[maybe_unused]] const States& pre) {
+void OniHayha::AttackFinalize([[maybe_unused]] const States& pre) {
 
 	//待機状態に移行
 	EndAttack();
@@ -17,7 +17,7 @@ void Faster::AttackFinalize([[maybe_unused]] const States& pre) {
 
 }
 
-void Faster::AttackInit([[maybe_unused]] const States& pre)
+void OniHayha::AttackInit([[maybe_unused]] const States& pre)
 {
 	
 	preState_ = States::kAttack;
@@ -29,7 +29,7 @@ void Faster::AttackInit([[maybe_unused]] const States& pre)
 
 }
 
-void Faster::AttackUpdate([[maybe_unused]] std::optional<States>& req, [[maybe_unused]] const States& pre)
+void OniHayha::AttackUpdate([[maybe_unused]] std::optional<States>& req, [[maybe_unused]] const States& pre)
 {
 
 	//パリィエフェクト中ならアニメーションをゆっくりにして判定オフ

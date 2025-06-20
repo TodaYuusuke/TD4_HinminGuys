@@ -2,11 +2,13 @@
 #include "../Adapter/Adapter.h"
 #include "IEnemy.h"
 #include "Childs/Minor/Childs/Saiji/Saiji.h"
+#include "Childs/Minor/Childs/OniHayha/OniHayha.h"
 #include "Childs/Boss/Boss.h"
 #include <list>
 #include <memory>
 #include "SpawnData.h"
 #include "../UI/DamageEffectEmitter.h"
+#include "ParameterEditor.h"
 
 class Player;
 
@@ -83,6 +85,8 @@ private:
 	std::list<IEnemy*> enemies_;
 	//出現管理データ
 	SpawnData spawnData_;
+	//パラメータ調整クラス
+	EnemyConfig::ParameterEditor parameterEditor_;
 
 	//json
 	LWP::Utility::JsonIO jsonSaiji_;

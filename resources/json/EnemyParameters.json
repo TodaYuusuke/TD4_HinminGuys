@@ -1,0 +1,22 @@
+{
+    "Group :EnemyParameters": {
+        "Group :Boss": {
+            "float :AttackValue": 10.0,
+            "float :HP": 10.0,
+            "float :KnockbackValue": 0.5,
+            "float :Speed": 1.0
+        },
+        "Group :OniHayha": {
+            "float :AttackValue": 10.0,
+            "float :HP": 10.0,
+            "float :KnockbackValue": 0.5,
+            "float :Speed": 1.0
+        },
+        "Group :Saiji": {
+            "float :AttackValue": 10.0,
+            "float :HP": 10.0,
+            "float :KnockbackValue": 0.5,
+            "float :Speed": 1.0
+        }
+    }
+}

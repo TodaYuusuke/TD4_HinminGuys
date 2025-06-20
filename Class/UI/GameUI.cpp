@@ -182,9 +182,9 @@ void GameUI::EasingUpdate(UIParameter& parameter)
 
 	//色更新
 	LWP::Math::Vector3 color = LWP::Math::Vector3::Lerp(parameter.startColor, parameter.endColor, t);
-	sprite_.material.color.R = color.x;
-	sprite_.material.color.G = color.y;
-	sprite_.material.color.B = color.z;
+	sprite_.material.color.R = char(color.x);
+	sprite_.material.color.G = char(color.y);
+	sprite_.material.color.B = char(color.z);
 
 }
 

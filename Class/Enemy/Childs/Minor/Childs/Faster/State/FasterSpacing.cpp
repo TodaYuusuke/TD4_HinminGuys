@@ -4,7 +4,7 @@
 using namespace LWP::Math;
 using namespace FasterState;
 
-void Faster::SpacingFinalize(const States& pre)
+void Faster::SpacingFinalize([[maybe_unused]] const States& pre)
 {
 
 	//移動ステートの時間セット
@@ -15,7 +15,7 @@ void Faster::SpacingFinalize(const States& pre)
 
 }
 
-void Faster::SpacingInit(const States& pre)
+void Faster::SpacingInit([[maybe_unused]] const States& pre)
 {
 	
 	SetAnimation("Run", true, 0.3f);
@@ -23,7 +23,7 @@ void Faster::SpacingInit(const States& pre)
 
 }
 
-void Faster::SpacingUpdate(std::optional<States>& req, const States& pre)
+void Faster::SpacingUpdate([[maybe_unused]] std::optional<States>& req, [[maybe_unused]] const States& pre)
 {
 
 	//カウントダウン
@@ -94,7 +94,7 @@ void Faster::SpacingUpdate(std::optional<States>& req, const States& pre)
 
 		result = result.Normalize();
 
-		SetPosition(GetPosition() + result * LWP::Info::GetDeltaTime() + (GetRepulsiveForce() * LWP::Info::GetDeltaTime()));
+		SetPosition(GetPosition() + result * LWP::Info::GetDeltaTimeF() + (GetRepulsiveForce() * LWP::Info::GetDeltaTimeF()));
 		//プレイヤーの向きに回転
 		RotateTowardsPlayer();
 

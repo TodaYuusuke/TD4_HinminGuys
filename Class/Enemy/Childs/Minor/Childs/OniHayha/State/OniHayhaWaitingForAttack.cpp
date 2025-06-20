@@ -1,10 +1,10 @@
-#include "../Saiji.h"
+#include "../OniHayha.h"
 #include "../../../../../EnemyManager.h"
 
 using namespace LWP::Math;
-using namespace SaijiState;
+using namespace OniHayhaState;
 
-void Saiji::WaitingForAttackFinalize([[maybe_unused]] const States& pre)
+void OniHayha::WaitingForAttackFinalize([[maybe_unused]] const States& pre)
 {
 
 	//消えたときのIDが一致している場合
@@ -20,7 +20,7 @@ void Saiji::WaitingForAttackFinalize([[maybe_unused]] const States& pre)
 
 }
 
-void Saiji::WaitingForAttackInit([[maybe_unused]] const States& pre)
+void OniHayha::WaitingForAttackInit([[maybe_unused]] const States& pre)
 {
 
 	SetAnimation("Run", true);
@@ -39,7 +39,7 @@ void Saiji::WaitingForAttackInit([[maybe_unused]] const States& pre)
 
 }
 
-void Saiji::WaitingForAttackUpdate([[maybe_unused]] std::optional<States>& req, [[maybe_unused]] const States& pre)
+void OniHayha::WaitingForAttackUpdate([[maybe_unused]] std::optional<States>& req, [[maybe_unused]] const States& pre)
 {
 
 	//
@@ -57,39 +57,7 @@ void Saiji::WaitingForAttackUpdate([[maybe_unused]] std::optional<States>& req, 
 	//プレイヤーが存在する場合
 	if (player_) {
 
-		//移動
-		Vector3 dist = GetPlayerPosition() - GetPosition();
-
-		//y軸の移動ベクトルを消す
-		dist.y = 0.0f;
-		//正規化
-		dist = dist.Normalize();
-
-		//方向ベクトル
-		Vector3 direction = dist * -1.0f;
-
-		//角度を求める
-		float theta = std::acosf(Vector3::Dot({ 1.0f,0.0f,0.0f }, direction));
-		//外積を求めて正負判定(direction.zの値がそのまま正負になる)
-		if (direction.z < 0.0f) {
-			theta *= -1.0f;
-		}
-
-		//円周を沿うような移動ベクトルにする
-		Vector3 result{};
-
-		result.x = -sinf(theta);
-		result.z = cosf(theta);
-
-		//右回りならベクトルを逆にする
-		if (stateParameter_.waitingForAttackParameter.isClockwise) {
-			result *= -1.0f;
-		}
-
-		SetPosition(GetPosition() + result * LWP::Info::GetDeltaTimeF() * parameter_.speed
-			+ (GetRepulsiveForce() * LWP::Info::GetDeltaTimeF()));
-		//プレイヤーの向きに回転
-		RotateTowardsPlayer();
+		
 
 	}
 
