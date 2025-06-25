@@ -8,7 +8,7 @@
             "float :IdleDist": 4.0
         },
         "Group :HitReaction": {
-            "float :Decay": 0.8999999761581421
+            "float :Decay": 0.949999988079071
         },
         "Group :Idle": {
             "float :FollowingDist": 6.0,
@@ -22,7 +22,6 @@
         "Group :Spacing": {
             "float :SpacingDist": 3.0,
             "float :SpacingTime": 2.0
-        },
-        "float :EnemyDist": 1.5
+        }
     }
 }

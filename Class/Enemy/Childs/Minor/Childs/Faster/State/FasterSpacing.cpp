@@ -38,7 +38,7 @@ void Faster::SpacingUpdate([[maybe_unused]] std::optional<States>& req, [[maybe_
 		if (enemyManager_->GetAttackPhaseCount() < IEnemy::GetMaxAttackCount() and
 			GetClosenessCount() < IEnemy::GetMaxAttackCount()) {
 			//接近状態に移行
-			SetIsAttackPhase(true);
+			isAttackPhase_ = true;
 			state_.request = States::kMove;
 			return;
 		}

@@ -16,7 +16,7 @@ void Boss::Initialize(Player* player, const Vector3& position, LWP::Object::Came
 	// 大きさを一時的に調整
 	model_.worldTF.scale = { 0.8f, 0.8f, 0.8f };
 	// 刀モデルをプレイヤーの手に追従させる
-	swordModel_.GetJoint("Grip")->localTF.Parent(&model_, "WeaponAnchor");
+	/*swordModel_.GetJoint("Grip")->localTF.Parent(&model_, "WeaponAnchor");*/
 	//名前設定
 	collider_.name = "Boss" + std::to_string(ID_);
 

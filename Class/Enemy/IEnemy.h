@@ -18,6 +18,15 @@ enum class EnemyType {
 };
 
 /// <summary>
+/// 敵の攻撃タイプ
+/// </summary>
+enum class AttackType {
+	kShort, //近距離
+	kLong, //遠距離
+	kMax,
+};
+
+/// <summary>
 /// 敵の攻撃パラメータ
 /// </summary>
 struct EnemyAttackParameter {
@@ -88,10 +97,6 @@ public:
 	const Quaternion& GetRotation() const { return model_.worldTF.rotation; }
 	//回転セット
 	void SetRotation(const Quaternion& rotation) { model_.worldTF.rotation = rotation; }
-	//プレイヤー取得
-	Player* GetPlayerPtr() { return player_; }
-	//マネージャー取得
-	EnemyManager* GetManagerPtr() { return enemyManager_; }
 	//プレイヤーの座標取得
 	Vector3 GetPlayerPosition();
 	//アニメーション切り替え
@@ -114,18 +119,10 @@ public:
 	float GetDistFromPlayer() const { return distFromPlayer_; }
 	//プレイヤーの方向に回転
 	void RotateTowardsPlayer();
-	//攻撃開始
-	void BeginAttack() { isAttack_ = true; }
-	//攻撃終了
-	void EndAttack() { isAttack_ = false; }
 	//攻撃中フラグ取得
 	bool GetIsAttack() const { return isAttack_; }
-	//攻撃フラグを強制終了(外部からの呼び出し用)
-	void ResetAttack() { isAttack_ = false; }
 	//攻撃態勢状態取得
 	bool GetIsAttackPhase() const { return isAttackPhase_; }
-	//攻撃態勢状態セット
-	void SetIsAttackPhase(bool flag) { isAttackPhase_ = flag; }
 	//最大攻撃態勢人数取得
 	static uint16_t GetMaxAttackCount() { return maxAttackCount_; }
 	//近接カウントセット
@@ -139,24 +136,21 @@ public:
 	const std::string& GetColliderName() const { return collider_.name; }
 	//攻撃パラメータ取得
 	const EnemyAttackParameter& GetAttackParameter() const { return parameter_.attackParameter; }
-	//刀モデル取得
-	SkinningModel& GetModel() { return model_; }
-	//刀モデル取得
-	SkinningModel& GetSwordModel() { return swordModel_; }
-	//刀当たり判定取得
-	LWP::Object::Collision& GetSwordCollider() { return swordCollider_; }
-	//パリィエフェクト開始
-	void StartParryEffect();
-	//パリィエフェクト中かどうか
-	bool GetIsStartParryEffect() const { return isStartParryEffect_; }
 	//ノックバック取得
 	Vector3& GetKnockBackVelocity() { return knockBackVelocity_; }
 	//ノックバックセット
 	void SetKnockBackVelocity(const Vector3& velocity) { knockBackVelocity_ = velocity; }
 	//パリィエフェクトが終わった瞬間だけ取得
 	bool IsExitParryEffect() { return not isStartParryEffect_ and preIsStartParryEffect_; }
+	//攻撃タイプ取得
+	const AttackType& GetAttackType() const { return attackType_; }
 
 protected:
+
+	//パリィエフェクト開始
+	void StartParryEffect(const Vector3& position);
+	//パリィエフェクト更新
+	void UpdateParryEffect();
 
 	//ダメージを与える
 	void TakeDamage(const float& damageValue, const float& multiply = 1.0f) {
@@ -166,10 +160,6 @@ protected:
 	//ノックバックの力をセットする
 	void SetKnockBackValue(const float& knockBackValue);
 
-	//刀のコライダー生成
-	void CreateSwordCollider();
-	//パリィエフェクト更新
-	void UpdateParryEffect();
 	//座標変換
 	LWP::Math::Vector3 CoordTransform(const LWP::Math::Vector3& vector, const LWP::Math::Matrix4x4& matrix);
 
@@ -181,16 +171,11 @@ protected:
 	LWP::Object::Camera* camera_ = nullptr;
 	//モデル
 	SkinningModel model_;
-	// 刀モデル
-	SkinningModel swordModel_;
 	//アニメーション
 	Animation animation_;
 	//本体当たり判定
 	LWP::Object::Collision collider_;
 	LWP::Object::Collider::AABB& aabb_;
-	// 刀コライダー
-	LWP::Object::Collision swordCollider_;
-	LWP::Object::Collider::Capsule& capsule_;
 	//パリィエフェクト画像
 	std::array<LWP::Primitive::Sprite, kMaxParryEffect_> parryEffectSprite_;
 	
@@ -204,8 +189,12 @@ protected:
 	Vector3 repulsiveForce_{};
 	//ノックバック力
 	Vector3 knockBackVelocity_{};
+	//攻撃エフェクトのポジション
+	Vector3 parryEffectPosition_{};
 	//種類
 	EnemyType type_;
+	//攻撃タイプ
+	AttackType attackType_;
 	//プレイヤーからの距離
 	float distFromPlayer_ = 0.0f;
 	//パリィエフェクトの現在の時間

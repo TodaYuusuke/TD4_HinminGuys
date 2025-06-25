@@ -19,3 +19,37 @@ uint16_t SaijiState::WaitingForAttackParameter::nextAttackCount = 0;
 float SaijiState::FollowingParameter::idleDist = 4.0f;
 
 float SaijiState::HitReactionParameter::decay = 0.9f;
+
+void SaijiState::ParameterConfig::InitJson()
+{
+
+	json.Init("SaijiParameter.json");
+
+	json.BeginGroup("SaijiParameter")
+		.BeginGroup("Idle")
+		.AddValue<float>("StandTime", &SaijiState::IdleParameter::standTime)
+		.AddValue<float>("FollowingDist", &SaijiState::IdleParameter::followingDist)
+		.EndGroup()
+		.BeginGroup("Move")
+		.AddValue<float>("AttackDist", &SaijiState::MoveParameter::attackDist)
+		.AddValue<float>("RunTime", &SaijiState::MoveParameter::runTime)
+		.AddValue<float>("DefaultSpeed", &SaijiState::MoveParameter::defaultSpeed)
+		.EndGroup()
+		.BeginGroup("Attack")
+		.AddValue<float>("StartAcceptTime", &SaijiState::AttackParameter::startAcceptTime)
+		.AddValue<float>("EndAcceptTime", &SaijiState::AttackParameter::endAcceptTime)
+		.EndGroup()
+		.BeginGroup("Spacing")
+		.AddValue<float>("SpacingTime", &SaijiState::SpacingParameter::spacingTime)
+		.AddValue<float>("SpacingDist", &SaijiState::SpacingParameter::spaceDist)
+		.EndGroup()
+		.BeginGroup("Following")
+		.AddValue<float>("IdleDist", &SaijiState::FollowingParameter::idleDist)
+		.EndGroup()
+		.BeginGroup("HitReaction")
+		.AddValue<float>("Decay", &SaijiState::HitReactionParameter::decay)
+		.EndGroup()
+		.EndGroup()
+		.CheckJsonFile();
+
+}

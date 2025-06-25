@@ -14,36 +14,8 @@ void EnemyManager::Initialize()
 	isDefeatedAllEnemy_ = false;
 	isStartWave_ = false;
 
-	jsonSaiji_.Init("SaijiParameter.json");
-
-	jsonSaiji_.BeginGroup("SaijiParameter")
-		.AddValue<float>("EnemyDist", &enemyDist_)
-		.AddValue<float>("EnemyDist", &attackEnemyDist_)
-		.BeginGroup("Idle")
-		.AddValue<float>("StandTime", &SaijiState::IdleParameter::standTime)
-		.AddValue<float>("FollowingDist", &SaijiState::IdleParameter::followingDist)
-		.EndGroup()
-		.BeginGroup("Move")
-		.AddValue<float>("AttackDist", &SaijiState::MoveParameter::attackDist)
-		.AddValue<float>("RunTime", &SaijiState::MoveParameter::runTime)
-		.AddValue<float>("DefaultSpeed", &SaijiState::MoveParameter::defaultSpeed)
-		.EndGroup()
-		.BeginGroup("Attack")
-		.AddValue<float>("StartAcceptTime", &SaijiState::AttackParameter::startAcceptTime)
-		.AddValue<float>("EndAcceptTime", &SaijiState::AttackParameter::endAcceptTime)
-		.EndGroup()
-		.BeginGroup("Spacing")
-		.AddValue<float>("SpacingTime", &SaijiState::SpacingParameter::spacingTime)
-		.AddValue<float>("SpacingDist", &SaijiState::SpacingParameter::spaceDist)
-		.EndGroup()
-		.BeginGroup("Following")
-		.AddValue<float>("IdleDist", &SaijiState::FollowingParameter::idleDist)
-		.EndGroup()
-		.BeginGroup("HitReaction")
-		.AddValue<float>("Decay", &SaijiState::HitReactionParameter::decay)
-		.EndGroup()
-		.EndGroup()
-		.CheckJsonFile();
+	saijiParameter_.InitJson();
+	oniHayhaParameter_.InitJson();
 
 	parameterEditor_.Initialize();
 
@@ -204,9 +176,14 @@ void EnemyManager::DebugGUI()
 			CreateEnemy(spawnPoint_, EnemyType::kBoss);
 		}
 
-		//ザコ召喚
+		//才二君召喚
 		if (ImGui::Button("Create Saiji")) {
 			CreateEnemy(spawnPoint_, EnemyType::kSaiji);
+		}
+
+		//ヘイヘ召喚
+		if (ImGui::Button("Create OniHayha")) {
+			CreateEnemy(spawnPoint_, EnemyType::kOniHayha);
 		}
 
 	}
@@ -243,7 +220,15 @@ void EnemyManager::DebugGUI()
 		//敵の共通ステート変数をいじる
 		if (ImGui::BeginTabItem("State Parameter")) {
 
-			jsonSaiji_.DebugGUI();
+			if (ImGui::TreeNode("Saiji")) {
+				saijiParameter_.json.DebugGUI();
+				ImGui::TreePop();
+			}
+
+			if (ImGui::TreeNode("OniHayha")) {
+				oniHayhaParameter_.json.DebugGUI();
+				ImGui::TreePop();
+			}
 
 			ImGui::EndTabItem();
 
@@ -357,6 +342,21 @@ bool EnemyManager::IsAnyAttack()
 	for (auto enemy = enemies_.begin(); enemy != enemies_.end(); enemy++) {
 
 		if ((*enemy)->GetIsAttack()) {
+			return true;
+		}
+
+	}
+
+	return false;
+}
+
+bool EnemyManager::IsAnyAttackWithinType(AttackType type)
+{
+
+	//同一タイプの誰かが攻撃していたらtrueを返す
+	for (auto enemy = enemies_.begin(); enemy != enemies_.end(); enemy++) {
+
+		if ((*enemy)->GetIsAttack() and (*enemy)->GetAttackType() == type) {
 			return true;
 		}
 

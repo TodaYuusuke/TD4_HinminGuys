@@ -8,7 +8,7 @@
 class Faster : public Minor
 {
 public:
-	Faster() = default;
+	Faster();
 	~Faster() override;
 
 	void Initialize(Player* player, const Vector3& position, LWP::Object::Camera* camera,
@@ -59,6 +59,12 @@ private:
 	void HitReactionFinalize(const FasterState::States& pre);
 
 private:
+
+	// 刀モデル
+	SkinningModel swordModel_;
+	// 刀コライダー
+	LWP::Object::Collision swordCollider_;
+	LWP::Object::Collider::Capsule& capsule_;
 
 	//雑魚敵パラメータ
 	FasterState::StateParameter stateParameter_;

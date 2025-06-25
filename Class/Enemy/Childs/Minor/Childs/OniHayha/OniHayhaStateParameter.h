@@ -7,6 +7,17 @@
 
 namespace OniHayhaState {
 
+	//才二君のパラメータ調整項目
+	class ParameterConfig {
+	public:
+
+		LWP::Utility::JsonIO json;
+
+		//JSON初期化
+		void InitJson();
+
+	};
+
 	/// <summary>
 	/// 状態一覧
 	/// </summary>
@@ -16,6 +27,7 @@ namespace OniHayhaState {
 		kRetreat,
 		kWaitingForAttack,
 		kHitReaction,
+		kAiming,
 		kMax,
 	};
 
@@ -28,7 +40,7 @@ namespace OniHayhaState {
 		//退避モーションに移行する距離
 		static float retreatDist;
 		//カウント
-		float countStandTime;
+		float countStandTime = 1.0f;
 	};
 
 	/// <summary>
@@ -39,6 +51,8 @@ namespace OniHayhaState {
 		static float startAcceptTime;
 		//攻撃判定受付終了時間
 		static float endAcceptTime;
+		//弾の速度
+		static float bulletSpeed;
 	};
 
 	/// <summary>
@@ -59,8 +73,6 @@ namespace OniHayhaState {
 		static uint16_t nextAttackCount;
 		//自身の攻撃する順番
 		uint16_t attackID;
-		//右回りかどうか
-		bool isClockwise = false;
 	};
 
 	/// <summary>
@@ -72,10 +84,27 @@ namespace OniHayhaState {
 	};
 
 	/// <summary>
+	/// エイム中のパラメータ
+	/// </summary>
+	struct AimingParameter {
+		//狙う時間
+		static float aimingTime;
+		//レーザーがチカチカし始める時間
+		static float flickeringTime;
+		//チカチカ間隔
+		static int32_t flickeringInterval;
+		//残り時間カウント
+		float countAimingTime;
+		//チカチカカウント
+		int32_t flickeringCounter;
+	};
+
+	/// <summary>
 	/// 雑魚敵の全てのパラメータ
 	/// </summary>
 	struct StateParameter {
 		IdleParameter idleParameter;
+		AimingParameter aimingParameter;
 		WaitingForAttackParameter waitingForAttackParameter;
 
 	};

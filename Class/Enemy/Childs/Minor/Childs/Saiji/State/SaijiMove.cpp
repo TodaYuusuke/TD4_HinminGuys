@@ -39,7 +39,7 @@ void Saiji::MoveUpdate([[maybe_unused]] std::optional<States>& req, [[maybe_unus
 		if (Vector3::Distance(GetPlayerPosition(), GetPosition()) < MoveParameter::attackDist) {
 
 			//誰も攻撃していない状態で、攻撃待機中の敵もいない場合、攻撃にそのまま移行
-			if (not enemyManager_->IsAnyAttack() and
+			if (not enemyManager_->IsAnyAttackWithinType(attackType_) and
 				WaitingForAttackParameter::attackCount == WaitingForAttackParameter::nextAttackCount) {
 				//攻撃状態に移行
 				state_.request = States::kAttack;
@@ -56,7 +56,7 @@ void Saiji::MoveUpdate([[maybe_unused]] std::optional<States>& req, [[maybe_unus
 		if (stateParameter_.moveParameter.countRunTime <= 0) {
 
 			//待機状態に移行
-			SetIsAttackPhase(false);
+			isAttackPhase_ = false;
 			state_.request = States::kIdle;
 			return;
 

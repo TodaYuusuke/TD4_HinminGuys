@@ -157,6 +157,9 @@ void WaveData::SetType()
 		if (enemyData.typeStr == IEnemy::enemyTypeName[int(EnemyType::kSaiji)]) {
 			enemyData.type = EnemyType::kSaiji;
 		}
+		else if (enemyData.typeStr == IEnemy::enemyTypeName[int(EnemyType::kOniHayha)]) {
+			enemyData.type = EnemyType::kOniHayha;
+		}
 		else if (enemyData.typeStr == IEnemy::enemyTypeName[int(EnemyType::kBoss)]) {
 			enemyData.type = EnemyType::kBoss;
 		}

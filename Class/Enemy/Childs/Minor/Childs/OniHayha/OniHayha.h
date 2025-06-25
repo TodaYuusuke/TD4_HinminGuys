@@ -8,7 +8,7 @@
 class OniHayha : public Minor
 {
 public:
-	OniHayha() = default;
+	OniHayha();
 	~OniHayha() override;
 
 	void Initialize(Player* player, const Vector3& position, LWP::Object::Camera* camera,
@@ -23,12 +23,16 @@ public:
 
 private:
 
+	//弾のコライダー生成
+	void CreateBulletCollider();
+
 	/// <summary>
 	/// ステートパターンに使用する関数群追加
 	/// </summary>
 	void AddStateFunc();
 
 	//ここに各ステートに使う関数追加
+#pragma region ステートパターン関数追加
 
 	void IdleInit(const OniHayhaState::States& pre);
 	void IdleUpdate(std::optional<OniHayhaState::States>& req, const OniHayhaState::States& pre);
@@ -50,7 +54,22 @@ private:
 	void HitReactionUpdate(std::optional<OniHayhaState::States>& req, const OniHayhaState::States& pre);
 	void HitReactionFinalize(const OniHayhaState::States& pre);
 
+	void AimingInit(const OniHayhaState::States& pre);
+	void AimingUpdate(std::optional<OniHayhaState::States>& req, const OniHayhaState::States& pre);
+	void AimingFinalize(const OniHayhaState::States& pre);
+
+#pragma endregion
+
 private:
+
+	//警告用のレーザー
+	LWP::Resource::RigidModel laserModel_;
+
+	// 刀コライダー
+	LWP::Object::Collision bulletCollider_;
+	LWP::Object::Collider::Sphere& sphere_;
+	//弾の攻撃方向
+	Vector3 bulletDirection_{};
 
 	//雑魚敵パラメータ
 	OniHayhaState::StateParameter stateParameter_;

@@ -8,7 +8,7 @@
 class Saiji : public Minor
 {
 public:
-	Saiji() = default;
+	Saiji();
 	~Saiji() override;
 
 	void Initialize(Player* player, const Vector3& position, LWP::Object::Camera* camera,
@@ -23,12 +23,16 @@ public:
 
 private:
 
+	//刀のコライダー生成
+	void CreateSwordCollider();
+
 	/// <summary>
 	/// ステートパターンに使用する関数群追加
 	/// </summary>
 	void AddStateFunc();
 
-	//ここに各ステートに使う関数追加
+	//ステートパターン関数群
+#pragma region ステートパターン用関数追加
 
 	void IdleInit(const SaijiState::States& pre);
 	void IdleUpdate(std::optional<SaijiState::States>& req, const SaijiState::States& pre);
@@ -58,10 +62,18 @@ private:
 	void HitReactionUpdate(std::optional<SaijiState::States>& req, const SaijiState::States& pre);
 	void HitReactionFinalize(const SaijiState::States& pre);
 
+#pragma endregion
+
 private:
 
 	//才二君用のデフォパラメータ設定
 	static EnemyParameter configParameter_;
+
+	// 刀モデル
+	SkinningModel swordModel_;
+	// 刀コライダー
+	LWP::Object::Collision swordCollider_;
+	LWP::Object::Collider::Capsule& capsule_;
 
 	//雑魚敵パラメータ
 	SaijiState::StateParameter stateParameter_;

@@ -18,47 +18,41 @@ void OniHayha::WaitingForAttackFinalize([[maybe_unused]] const States& pre)
 		WaitingForAttackParameter::attackCount--;
 	}
 
+	laserModel_.isActive = false;
+
 }
 
 void OniHayha::WaitingForAttackInit([[maybe_unused]] const States& pre)
 {
 
-	SetAnimation("Run", true);
+	SetAnimation("Idle", true);
 
 	//現在の攻撃カウントから順番を決める
 	stateParameter_.waitingForAttackParameter.attackID = WaitingForAttackParameter::attackCount;
 	//攻撃の順番を決める数字を上昇させる
 	WaitingForAttackParameter::attackCount++;
 
-	//ランダムな数字を利用して右回りかどうかを決める
-	if (LWP::Utility::GenerateRandamNum(0, 1) == 0) {
-		stateParameter_.waitingForAttackParameter.isClockwise = true;
-	}
-
-	preState_ = States::kWaitingForAttack;
+	laserModel_.isActive = true;
 
 }
 
 void OniHayha::WaitingForAttackUpdate([[maybe_unused]] std::optional<States>& req, [[maybe_unused]] const States& pre)
 {
 
-	//
-	//一部間合いを取るクラスのコピペをしているので後々修正する
-	//
 
 	//誰も攻撃しておらず、順番が回ってきたら攻撃に移行
 	if (not enemyManager_->IsAnyAttack() and 
 		stateParameter_.waitingForAttackParameter.attackID == WaitingForAttackParameter::nextAttackCount) {
-		//攻撃状態に移行
-		state_.request = States::kAttack;
+		//狙い撃ちの待機時間セット
+		stateParameter_.aimingParameter.countAimingTime = AimingParameter::aimingTime;
+		//狙い状態に移行
+		state_.request = States::kAiming;
 		return;
 	}
 
-	//プレイヤーが存在する場合
 	if (player_) {
-
-		
-
+		//プレイヤーの向きに回転
+		RotateTowardsPlayer();
 	}
 
 }

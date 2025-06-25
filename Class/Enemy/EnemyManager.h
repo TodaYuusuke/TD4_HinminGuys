@@ -57,6 +57,8 @@ public:
 	void StartWave();
 	//誰か一人でも攻撃しているかどうか
 	bool IsAnyAttack();
+	//同一攻撃タイプの中で誰かが攻撃しているか
+	bool IsAnyAttackWithinType(AttackType type);
 	//攻撃態勢人数取得
 	uint16_t GetAttackPhaseCount();
 	//ウェーブ開始フラグ取得
@@ -89,7 +91,8 @@ private:
 	EnemyConfig::ParameterEditor parameterEditor_;
 
 	//json
-	LWP::Utility::JsonIO jsonSaiji_;
+	SaijiState::ParameterConfig saijiParameter_;
+	OniHayhaState::ParameterConfig oniHayhaParameter_;
 
 #pragma region デバッグ用
 

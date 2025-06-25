@@ -7,8 +7,6 @@ using namespace OniHayhaState;
 
 void OniHayha::IdleFinalize([[maybe_unused]] const States& pre) {
 
-	
-
 }
 
 void OniHayha::IdleInit([[maybe_unused]] const States& pre)
@@ -16,6 +14,8 @@ void OniHayha::IdleInit([[maybe_unused]] const States& pre)
 	
 	SetAnimation("Idle", true);
 	preState_ = States::kIdle;
+	//攻撃状態解除
+	isAttack_ = false;
 
 }
 
@@ -38,8 +38,20 @@ void OniHayha::IdleUpdate([[maybe_unused]] std::optional<States>& req, [[maybe_u
 
 		//0になったら状態切り替え
 		if (stateParameter_.idleParameter.countStandTime <= 0) {
-			//攻撃状態に移行
-			state_.request = States::kAttack;
+
+			//誰も攻撃していない状態で、攻撃待機中の敵もいない場合、狙い撃ちにそのまま移行
+			if (not enemyManager_->IsAnyAttackWithinType(attackType_) and
+				WaitingForAttackParameter::attackCount == WaitingForAttackParameter::nextAttackCount) {
+				//狙い撃ち状態の時間セット
+				stateParameter_.aimingParameter.countAimingTime = AimingParameter::aimingTime;
+				//狙い撃ち状態に移行
+				state_.request = States::kAiming;
+			}
+			else {
+				//攻撃待機状態に移行
+				state_.request = States::kWaitingForAttack;
+			}
+
 			return;
 		}
 

@@ -7,6 +7,17 @@
 
 namespace SaijiState {
 
+	//才二君のパラメータ調整項目
+	class ParameterConfig {
+	public:
+
+		LWP::Utility::JsonIO json;
+
+		//JSON初期化
+		void InitJson();
+
+	};
+
 	/// <summary>
 	/// 状態一覧
 	/// </summary>
@@ -30,7 +41,7 @@ namespace SaijiState {
 		//追従モーションに移行する距離
 		static float followingDist;
 		//カウント
-		float countStandTime;
+		float countStandTime = 1.0f;
 	};
 
 	/// <summary>

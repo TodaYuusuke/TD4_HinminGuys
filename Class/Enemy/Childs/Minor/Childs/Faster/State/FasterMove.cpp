@@ -52,7 +52,7 @@ void Faster::MoveUpdate([[maybe_unused]] std::optional<States>& req, [[maybe_unu
 		if (stateParameter_.moveParameter.countRunTime <= 0) {
 
 			//待機状態に移行
-			SetIsAttackPhase(false);
+			isAttackPhase_ = false;
 			state_.request = States::kIdle;
 			return;
 

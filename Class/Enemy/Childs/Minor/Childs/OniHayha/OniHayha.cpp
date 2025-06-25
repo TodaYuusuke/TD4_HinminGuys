@@ -8,6 +8,14 @@ using namespace LWP::Primitive;
 using namespace GameMask;
 using namespace OniHayhaState;
 
+OniHayha::OniHayha()
+	: sphere_(bulletCollider_.SetBroadShape(LWP::Object::Collider::Sphere()))
+{
+
+
+
+}
+
 OniHayha::~OniHayha()
 {
 
@@ -20,10 +28,17 @@ void OniHayha::Initialize(Player* player, const Vector3& position, LWP::Object::
 {
 	model_.LoadShortPath("player/Player_Simple.gltf");
 	type_ = EnemyType::kOniHayha;
+	attackType_ = AttackType::kLong;
 	//アニメーションロード
 	animation_.LoadFullPath("resources/model/player/Player_Simple.gltf", &model_);
-	swordModel_.LoadShortPath("player/SimpleWeapon.gltf");
 	model_.materials["Material"].color = { 1.0f,0.0f,0.0f,1.0f };
+	laserModel_.LoadShortPath("effect/laser.obj");
+	laserModel_.worldTF.Parent(&model_.worldTF);
+	laserModel_.worldTF.scale = {0.01f,0.01f,50.0f};
+	laserModel_.worldTF.translation = { 0.0f,1.0f,0.0f };
+	laserModel_.materials["Laser"].color.R = (unsigned char)255;
+	laserModel_.isActive = false;
+	laserModel_.materials["Laser"].enableLighting = false;
 	SetPlayer(player);
 	camera_ = camera;
 	enemyManager_ = manager;
@@ -34,8 +49,6 @@ void OniHayha::Initialize(Player* player, const Vector3& position, LWP::Object::
 	AddStateFunc();
 	state_.request = States::kIdle;
 
-	// 刀モデルをプレイヤーの手に追従させる
-	swordModel_.GetJoint("Grip")->localTF.Parent(&model_, "WeaponAnchor");
 	// 体の判定生成
 	collider_.SetFollow(&model_.worldTF);
 	collider_.isActive = true;
@@ -51,7 +64,8 @@ void OniHayha::Initialize(Player* player, const Vector3& position, LWP::Object::
 
 		//ステートをセット(攻撃中はリアクションしない)
 		if (state_.GetCurrentBehavior() != States::kAttack) {
-			SetPreState(state_.GetCurrentBehavior());
+			//ノックバックしたら待機に戻る
+			preState_ = States::kIdle;
 			state_.request = States::kHitReaction;
 			//今後プレイヤーから取得する
 			SetKnockBackValue(1.0f);
@@ -73,13 +87,13 @@ void OniHayha::Initialize(Player* player, const Vector3& position, LWP::Object::
 	//名前設定
 	collider_.name = "OniHayha" + std::to_string(ID_);
 	//刀のコライダー生成
-	CreateSwordCollider();
+	CreateBulletCollider();
 
 }
 
 void OniHayha::Update()
 {
-
+	//1フレーム前のパリィエフェクトフラグ更新
 	preIsStartParryEffect_ = isStartParryEffect_;
 
 	//死亡時、更新しない(別途ステートを作成する予定)
@@ -120,6 +134,23 @@ void OniHayha::DebugGUI()
 
 }
 
+void OniHayha::CreateBulletCollider()
+{
+
+	// 弾の判定生成
+	bulletCollider_.isActive = false;
+	// 自機の所属しているマスクを設定
+	bulletCollider_.mask.SetBelongFrag(GetAttack());
+	// 当たり判定をとる対象のマスクを設定
+	bulletCollider_.mask.SetHitFrag(GetPlayer());
+	bulletCollider_.enterLambda = [this](LWP::Object::Collision* hitTarget) {
+		hitTarget;
+		player_->TakeDamage(parameter_.attackParameter.attackValue);
+		};
+	sphere_.radius = 0.1f;
+
+}
+
 void OniHayha::AddStateFunc()
 {
 
@@ -142,5 +173,9 @@ void OniHayha::AddStateFunc()
 	state_.init[int(States::kHitReaction)] = [this](const States& pre) {HitReactionInit(pre); };
 	state_.update[int(States::kHitReaction)] = [this](std::optional<States>& req, const States& pre) {HitReactionUpdate(req, pre); };
 	state_.finalize[int(States::kHitReaction)] = [this](const States& pre) {HitReactionFinalize(pre); };
+
+	state_.init[int(States::kAiming)] = [this](const States& pre) {AimingInit(pre); };
+	state_.update[int(States::kAiming)] = [this](std::optional<States>& req, const States& pre) {AimingUpdate(req, pre); };
+	state_.finalize[int(States::kAiming)] = [this](const States& pre) {AimingFinalize(pre); };
 
 }

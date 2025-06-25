@@ -10,8 +10,8 @@ using namespace SaijiState;
 void Saiji::AttackFinalize([[maybe_unused]] const States& pre) {
 
 	//待機状態に移行
-	EndAttack();
-	SetIsAttackPhase(false);
+	isAttack_ = false;
+	isAttackPhase_ = false;
 	//待機ステートの待機時間セット
 	stateParameter_.idleParameter.countStandTime = IdleParameter::standTime;
 
@@ -23,9 +23,9 @@ void Saiji::AttackInit([[maybe_unused]] const States& pre)
 	preState_ = States::kAttack;
 	SetAnimation("LightAttack2", false, 0.1f);
 	swordCollider_.isActive = false;
-	BeginAttack();
+	isAttack_ = true;
 	//パリィエフェクト開始
-	StartParryEffect();
+	StartParryEffect(swordModel_.GetJointWorldPosition("Grip"));
 
 }
 
@@ -44,7 +44,7 @@ void Saiji::AttackUpdate([[maybe_unused]] std::optional<States>& req, [[maybe_un
 
 	//攻撃受付時間を超過したら判定オフ
 	if (animation_.GetProgress() > AttackParameter::endAcceptTime and swordCollider_.isActive) {
-		EndAttack();
+		isAttack_ = false;
 		swordCollider_.isActive = false;
 	}
 	//開始と終了時間の間だけ判定を付ける
@@ -59,7 +59,7 @@ void Saiji::AttackUpdate([[maybe_unused]] std::optional<States>& req, [[maybe_un
 
 	//攻撃が終了した時
 	if (not animation_.GetPlaying()) {
-		EndAttack();
+		isAttack_ = false;
 		state_.request = States::kIdle;
 		return;
 

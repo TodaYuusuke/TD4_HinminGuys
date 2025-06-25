@@ -8,6 +8,11 @@ using namespace LWP::Primitive;
 using namespace GameMask;
 using namespace FasterState;
 
+Faster::Faster() :
+	capsule_(swordCollider_.SetBroadShape(LWP::Object::Collider::Capsule()))
+{
+}
+
 Faster::~Faster()
 {
 }
@@ -69,8 +74,6 @@ void Faster::Initialize(Player* player, const Vector3& position, LWP::Object::Ca
 
 	//名前設定
 	collider_.name = "Faster" + std::to_string(ID_);
-	//刀のコライダー生成
-	CreateSwordCollider();
 
 }
 
