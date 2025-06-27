@@ -30,7 +30,7 @@ void GameScene::Initialize() {
 	hitStopController_ = HitStopController::GetInstance();
 	hitStopController_->Initialize();
 
-	//レベルロード
+	//レベルロードッツ！！
 	levelData.LoadShortPath("gameScene.json");
 
 	// UIの管理クラスを生成
