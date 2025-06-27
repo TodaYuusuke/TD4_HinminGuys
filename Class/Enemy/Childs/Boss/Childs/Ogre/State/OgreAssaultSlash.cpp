@@ -12,7 +12,7 @@ void Ogre::AssaultSlashFinalize([[maybe_unused]] const States& pre) {
 void Ogre::AssaultSlashInit([[maybe_unused]] const States& pre)
 {
 
-	SetAnimation("LightAttack2", false);
+	SetAnimation("LightAttack1", false);
 
 }
 

@@ -45,7 +45,7 @@ void Ogre::MoveUpdate([[maybe_unused]] std::optional<States>& req, [[maybe_unuse
 				stateParameter_.moveParameter.lightAttackCount = 0;
 
 				//抽選して、0の場合中攻撃
-				if (LWP::Utility::GenerateRandamNum(0, 1) == 0) {
+				if (LWP::Utility::Random::GenerateInt(0, 1) == 0) {
 					//中攻撃カウント増加
 					stateParameter_.moveParameter.mediumAttackCount++;
 					//落下攻撃に移行する
@@ -56,7 +56,7 @@ void Ogre::MoveUpdate([[maybe_unused]] std::optional<States>& req, [[maybe_unuse
 				else {
 
 					//強攻撃の2つの中で抽選し、0なら連続突撃
-					if (LWP::Utility::GenerateRandamNum(0, 1) == 0) {
+					if (LWP::Utility::Random::GenerateInt(0, 1) == 0) {
 						state_.request = States::kAssaultSlash;
 						return;
 					}
@@ -76,7 +76,7 @@ void Ogre::MoveUpdate([[maybe_unused]] std::optional<States>& req, [[maybe_unuse
 				stateParameter_.moveParameter.mediumAttackCount = 0;
 
 				//強攻撃の2つの中で抽選し、0なら連続突撃
-				if (LWP::Utility::GenerateRandamNum(0, 1) == 0) {
+				if (LWP::Utility::Random::GenerateInt(0, 1) == 0) {
 					state_.request = States::kAssaultSlash;
 					return;
 				}
@@ -94,7 +94,7 @@ void Ogre::MoveUpdate([[maybe_unused]] std::optional<States>& req, [[maybe_unuse
 				stateParameter_.moveParameter.lightAttackCount++;
 
 				//弱攻撃の2つの中で抽選し、0ならふり降ろし
-				if (LWP::Utility::GenerateRandamNum(0, 1) == 0) {
+				if (LWP::Utility::Random::GenerateInt(0, 1) == 0) {
 					state_.request = States::kSwingDownAttack;
 					return;
 				}

@@ -72,7 +72,7 @@ void OniHayha::Initialize(Player* player, const Vector3& position, LWP::Object::
 		}
 
 		//ダメージの加算値(テスト用)
-		int plusDamage = LWP::Utility::GenerateRandamNum(0, 1000);
+		int plusDamage = LWP::Utility::Random::GenerateInt(0, 1000);
 
 		//ダメージエフェクト追加
 		//今後プレイヤーから取得する
