@@ -148,6 +148,16 @@
     </Manifest>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Class\Enemy\Childs\Boss\Childs\Ogre\Ogre.cpp" />
+    <ClCompile Include="Class\Enemy\Childs\Boss\Childs\Ogre\OgreStateParameter.cpp" />
+    <ClCompile Include="Class\Enemy\Childs\Boss\Childs\Ogre\State\OgreAssaultSlash.cpp" />
+    <ClCompile Include="Class\Enemy\Childs\Boss\Childs\Ogre\State\OgreFallingThrust.cpp" />
+    <ClCompile Include="Class\Enemy\Childs\Boss\Childs\Ogre\State\OgreHitReaction.cpp" />
+    <ClCompile Include="Class\Enemy\Childs\Boss\Childs\Ogre\State\OgreIdle.cpp" />
+    <ClCompile Include="Class\Enemy\Childs\Boss\Childs\Ogre\State\OgreMove.cpp" />
+    <ClCompile Include="Class\Enemy\Childs\Boss\Childs\Ogre\State\OgreQuadrupleAttack.cpp" />
+    <ClCompile Include="Class\Enemy\Childs\Boss\Childs\Ogre\State\OgreRotatingSlash.cpp" />
+    <ClCompile Include="Class\Enemy\Childs\Boss\Childs\Ogre\State\OgreSwingDownAttack.cpp" />
     <ClCompile Include="Class\Enemy\Childs\Minor\Childs\Faster\Faster.cpp" />
     <ClCompile Include="Class\Enemy\Childs\Minor\Childs\Faster\FasterStateParameter.cpp" />
     <ClCompile Include="Class\Enemy\Childs\Minor\Childs\Faster\State\FasterEvasion.cpp" />
@@ -171,7 +181,6 @@
     <ClCompile Include="Class\Enemy\Childs\Minor\Childs\Saiji\State\SaijiHitReaction.cpp" />
     <ClCompile Include="Class\Enemy\Childs\Minor\Childs\Saiji\State\SaijiIdle.cpp" />
     <ClCompile Include="Class\Enemy\Childs\Minor\Childs\Saiji\State\SaijiMove.cpp" />
-    <ClCompile Include="Class\Enemy\Childs\Minor\Minor.cpp" />
     <ClCompile Include="Class\Enemy\ParameterEditor.cpp" />
     <ClCompile Include="Class\Player\Systems\Children\Sheath\State\Break.cpp" />
     <ClCompile Include="Class\ComboEditor\ComboTree.cpp" />
@@ -181,7 +190,6 @@
     <ClCompile Include="Class\Scene\GameOver.cpp" />
     <ClCompile Include="Class\Scene\GameScene.cpp" />
     <ClCompile Include="Class\ComboEditor\Combo.cpp" />
-    <ClCompile Include="Class\Enemy\Childs\Boss\Boss.cpp" />
     <ClCompile Include="Class\Enemy\Childs\Minor\Childs\Saiji\State\SaijiFollowing.cpp" />
     <ClCompile Include="Class\Enemy\Childs\Minor\Childs\Saiji\State\SaijiSpacing.cpp" />
     <ClCompile Include="Class\Enemy\Childs\Minor\Childs\Saiji\State\SaijiWaitingForAttack.cpp" />
@@ -226,6 +234,8 @@
     <ClCompile Include="Class\Player\Systems\Children\Sheath\State\SwordDrawn.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Class\Enemy\Childs\Boss\Childs\Ogre\Ogre.h" />
+    <ClInclude Include="Class\Enemy\Childs\Boss\Childs\Ogre\OgreStateParameter.h" />
     <ClInclude Include="Class\Enemy\Childs\Minor\Childs\Faster\Faster.h" />
     <ClInclude Include="Class\Enemy\Childs\Minor\Childs\Faster\FasterStateParameter.h" />
     <ClInclude Include="Class\Enemy\Childs\Minor\Childs\OniHayha\OniHayha.h" />

@@ -128,8 +128,8 @@ void EnemyManager::CreateEnemy(const Vector3& position, EnemyType type)
 	case EnemyType::kOniHayha:
 		enemies_.push_back(new OniHayha());
 		break;
-	case EnemyType::kBoss:
-		enemies_.push_back(new Boss());
+	case EnemyType::kOgre:
+		enemies_.push_back(new Ogre());
 		break;
 	default:
 		break;
@@ -171,9 +171,9 @@ void EnemyManager::DebugGUI()
 	//敵の数が最大数になるまで召喚可能
 	if (enemies_.size() < kMaxEnemyCount_) {
 
-		//ボス召喚
-		if (ImGui::Button("Create Boss")) {
-			CreateEnemy(spawnPoint_, EnemyType::kBoss);
+		//翁雅召喚
+		if (ImGui::Button("Create Ogre")) {
+			CreateEnemy(spawnPoint_, EnemyType::kOgre);
 		}
 
 		//才二君召喚

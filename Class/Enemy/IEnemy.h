@@ -13,7 +13,7 @@ class EnemyManager;
 enum class EnemyType {
 	kSaiji, //才二くぅ～ん
 	kOniHayha, //オニ・ヘイヘ
-	kBoss, //ボス敵
+	kOgre, //ボス敵
 	kMax, //最大数
 };
 

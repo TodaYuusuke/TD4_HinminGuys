@@ -7,7 +7,6 @@
     <ClCompile Include="Class\Scene\GameScene.cpp" />
     <ClCompile Include="Class\ComboEditor\Combo.cpp" />
     <ClCompile Include="Class\Enemy\SpawnData.cpp" />
-    <ClCompile Include="Class\Enemy\Childs\Boss\Boss.cpp" />
     <ClCompile Include="Class\Enemy\EnemyManager.cpp" />
     <ClCompile Include="Class\Enemy\IEnemy.cpp" />
     <ClCompile Include="Class\Enemy\WaveData.cpp" />
@@ -66,7 +65,6 @@
     <ClCompile Include="Class\Enemy\Childs\Minor\Childs\Faster\State\FasterAttack.cpp" />
     <ClCompile Include="Class\Enemy\Childs\Minor\Childs\Faster\State\FasterHitReaction.cpp" />
     <ClCompile Include="Class\Enemy\Childs\Minor\Childs\Faster\State\FasterEvasion.cpp" />
-    <ClCompile Include="Class\Enemy\Childs\Minor\Minor.cpp" />
     <ClCompile Include="Class\Enemy\Childs\Minor\Childs\Faster\FasterStateParameter.cpp" />
     <ClCompile Include="Class\Enemy\Childs\Minor\Childs\OniHayha\OniHayha.cpp" />
     <ClCompile Include="Class\Enemy\Childs\Minor\Childs\OniHayha\OniHayhaStateParameter.cpp" />
@@ -77,6 +75,16 @@
     <ClCompile Include="Class\Enemy\Childs\Minor\Childs\OniHayha\State\OniHayhaRetreat.cpp" />
     <ClCompile Include="Class\Enemy\ParameterEditor.cpp" />
     <ClCompile Include="Class\Enemy\Childs\Minor\Childs\OniHayha\State\OniHayhaAiming.cpp" />
+    <ClCompile Include="Class\Enemy\Childs\Boss\Childs\Ogre\Ogre.cpp" />
+    <ClCompile Include="Class\Enemy\Childs\Boss\Childs\Ogre\OgreStateParameter.cpp" />
+    <ClCompile Include="Class\Enemy\Childs\Boss\Childs\Ogre\State\OgreIdle.cpp" />
+    <ClCompile Include="Class\Enemy\Childs\Boss\Childs\Ogre\State\OgreMove.cpp" />
+    <ClCompile Include="Class\Enemy\Childs\Boss\Childs\Ogre\State\OgreSwingDownAttack.cpp" />
+    <ClCompile Include="Class\Enemy\Childs\Boss\Childs\Ogre\State\OgreRotatingSlash.cpp" />
+    <ClCompile Include="Class\Enemy\Childs\Boss\Childs\Ogre\State\OgreFallingThrust.cpp" />
+    <ClCompile Include="Class\Enemy\Childs\Boss\Childs\Ogre\State\OgreAssaultSlash.cpp" />
+    <ClCompile Include="Class\Enemy\Childs\Boss\Childs\Ogre\State\OgreQuadrupleAttack.cpp" />
+    <ClCompile Include="Class\Enemy\Childs\Boss\Childs\Ogre\State\OgreHitReaction.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Class\ComboEditor\ComboTree.h" />
@@ -151,6 +159,8 @@
     <ClInclude Include="Class\Enemy\Childs\Minor\Childs\OniHayha\OniHayha.h" />
     <ClInclude Include="Class\Enemy\Childs\Minor\Childs\OniHayha\OniHayhaStateParameter.h" />
     <ClInclude Include="Class\Enemy\ParameterEditor.h" />
+    <ClInclude Include="Class\Enemy\Childs\Boss\Childs\Ogre\Ogre.h" />
+    <ClInclude Include="Class\Enemy\Childs\Boss\Childs\Ogre\OgreStateParameter.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />

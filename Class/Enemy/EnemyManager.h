@@ -3,7 +3,7 @@
 #include "IEnemy.h"
 #include "Childs/Minor/Childs/Saiji/Saiji.h"
 #include "Childs/Minor/Childs/OniHayha/OniHayha.h"
-#include "Childs/Boss/Boss.h"
+#include "Childs/Boss/Childs/Ogre/Ogre.h"
 #include <list>
 #include <memory>
 #include "SpawnData.h"

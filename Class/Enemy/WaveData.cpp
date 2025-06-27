@@ -160,8 +160,8 @@ void WaveData::SetType()
 		else if (enemyData.typeStr == IEnemy::enemyTypeName[int(EnemyType::kOniHayha)]) {
 			enemyData.type = EnemyType::kOniHayha;
 		}
-		else if (enemyData.typeStr == IEnemy::enemyTypeName[int(EnemyType::kBoss)]) {
-			enemyData.type = EnemyType::kBoss;
+		else if (enemyData.typeStr == IEnemy::enemyTypeName[int(EnemyType::kOgre)]) {
+			enemyData.type = EnemyType::kOgre;
 		}
 
 	}

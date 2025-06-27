@@ -1,0 +1,29 @@
+#include "../../../../../../Player/Player.h"
+#include "../Ogre.h"
+#include "../../../../../EnemyManager.h"
+
+using namespace LWP::Math;
+using namespace OgreState;
+
+void Ogre::FallingThrustFinalize([[maybe_unused]] const States& pre) {
+
+}
+
+void Ogre::FallingThrustInit([[maybe_unused]] const States& pre)
+{
+
+	SetAnimation("Damage", false);
+
+}
+
+void Ogre::FallingThrustUpdate([[maybe_unused]] std::optional<States>& req, [[maybe_unused]] const States& pre)
+{
+
+	//攻撃が終了した時
+	if (not animation_.GetPlaying()) {
+		isAttack_ = false;
+		state_.request = States::kIdle;
+		return;
+	}
+
+}
