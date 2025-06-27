@@ -176,6 +176,11 @@ void GameScene::DebugGUI() {
 		// FPSカウンターの表示
 		if (ImGui::BeginTabItem("Other")) {
 			ImGui::Text("Frame rate: %6.2f fps", ImGui::GetIO().Framerate);
+
+			if (ImGui::Button("Level Reload")) {
+				levelData.HotReload();
+			}
+
 			ImGui::EndTabItem();
 		}
 

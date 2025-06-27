@@ -12,7 +12,7 @@ void Ogre::SwingDownAttackFinalize([[maybe_unused]] const States& pre) {
 void Ogre::SwingDownAttackInit([[maybe_unused]] const States& pre)
 {
 
-	SetAnimation("LightAttack3", false);
+	SetAnimation("LightAttack2", false);
 
 }
 

@@ -31,7 +31,7 @@ void Saiji::WaitingForAttackInit([[maybe_unused]] const States& pre)
 	WaitingForAttackParameter::attackCount++;
 
 	//ランダムな数字を利用して右回りかどうかを決める
-	if (LWP::Utility::GenerateRandamNum(0, 1) == 0) {
+	if (LWP::Utility::Random::GenerateInt(0, 1) == 0) {
 		stateParameter_.waitingForAttackParameter.isClockwise = true;
 	}
 

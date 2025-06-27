@@ -10,7 +10,7 @@ void Faster::IdleFinalize([[maybe_unused]] const States& pre) {
 	//時間セット
 	stateParameter_.spacingParameter.countSpacingTime = SpacingParameter::spacingTime;
 	//ランダムな数字を利用して右回りかどうかを決める
-	if (LWP::Utility::GenerateRandamNum(0, 1) == 0) {
+	if (LWP::Utility::Random::GenerateInt(0, 1) == 0) {
 		stateParameter_.spacingParameter.isClockwise = true;
 	}
 

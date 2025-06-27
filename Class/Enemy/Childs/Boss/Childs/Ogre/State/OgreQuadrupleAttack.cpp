@@ -12,7 +12,7 @@ void Ogre::QuadrupleAttackFinalize([[maybe_unused]] const States& pre) {
 void Ogre::QuadrupleAttackInit([[maybe_unused]] const States& pre)
 {
 
-	SetAnimation("LightAttack1", false);
+	SetAnimation("LightAttack3", false);
 
 }
 
