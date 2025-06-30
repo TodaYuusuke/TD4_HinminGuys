@@ -7,17 +7,6 @@
 
 namespace OgreState {
 
-	//翁雅のパラメータ調整項目
-	class ParameterConfig {
-	public:
-
-		LWP::Utility::JsonIO json;
-
-		//JSON初期化
-		void InitJson();
-
-	};
-
 	/// <summary>
 	/// 状態一覧
 	/// </summary>
@@ -48,9 +37,9 @@ namespace OgreState {
 	/// </summary>
 	struct IdleParameter {
 		//待機時間
-		static float standTime;
+		float standTime;
 		//追従モーションに移行する距離
-		static float followingDist;
+		float followingDist;
 		//カウント
 		float countStandTime;
 	};
@@ -60,15 +49,15 @@ namespace OgreState {
 	/// </summary>
 	struct MoveParameter {
 		//移動時間
-		static float runTime;
+		float runTime;
 		//攻撃モーションに入る距離
-		static float attackDist;
+		float attackDist;
 		//デフォのスピード
-		static float defaultSpeed;
+		float defaultSpeed;
 		//弱攻撃からの遷移に必要なカウント
-		static int32_t lightTransitionCount;
+		int32_t lightTransitionCount;
 		//中攻撃からの遷移に必要なカウント
-		static int32_t mediumTransitionCount;
+		int32_t mediumTransitionCount;
 		//移動方向
 		LWP::Math::Vector3 direction;
 		//速度
@@ -88,9 +77,9 @@ namespace OgreState {
 	/// </summary>
 	struct SwingDownAttack {
 		//攻撃判定受付開始時間
-		static float startAcceptTime;
+		float startAcceptTime;
 		//攻撃判定受付終了時間
-		static float endAcceptTime;
+		float endAcceptTime;
 		//攻撃の強さ
 		AttackStrength attackStrength = AttackStrength::kLight;
 	};
@@ -100,9 +89,9 @@ namespace OgreState {
 	/// </summary>
 	struct RotatingSlash {
 		//攻撃判定受付開始時間
-		static float startAcceptTime;
+		float startAcceptTime;
 		//攻撃判定受付終了時間
-		static float endAcceptTime;
+		float endAcceptTime;
 		//攻撃の強さ
 		AttackStrength attackStrength = AttackStrength::kLight;
 	};
@@ -112,9 +101,9 @@ namespace OgreState {
 	/// </summary>
 	struct FallingThrust {
 		//攻撃判定受付開始時間
-		static float startAcceptTime;
+		float startAcceptTime;
 		//攻撃判定受付終了時間
-		static float endAcceptTime;
+		float endAcceptTime;
 		//攻撃の強さ
 		AttackStrength attackStrength = AttackStrength::kMedium;
 	};
@@ -124,9 +113,11 @@ namespace OgreState {
 	/// </summary>
 	struct AssaultSlash {
 		//攻撃判定受付開始時間
-		static float startAcceptTime;
+		float startAcceptTime;
 		//攻撃判定受付終了時間
-		static float endAcceptTime;
+		float endAcceptTime;
+		//攻撃回数
+		int32_t maxAttackCount;
 		//攻撃の強さ
 		AttackStrength attackStrength = AttackStrength::kHeavy;
 	};
@@ -136,9 +127,9 @@ namespace OgreState {
 	/// </summary>
 	struct QuadrupleAttack {
 		//攻撃判定受付開始時間
-		static float startAcceptTime;
+		float startAcceptTime;
 		//攻撃判定受付終了時間
-		static float endAcceptTime;
+		float endAcceptTime;
 		//攻撃の強さ
 		AttackStrength attackStrength = AttackStrength::kHeavy;
 	};
@@ -148,15 +139,38 @@ namespace OgreState {
 	/// </summary>
 	struct HitReactionParameter {
 		//減衰
-		static float decay;
+		float decay;
 	};
 
 	/// <summary>
-	/// 雑魚敵の全てのパラメータ
+	/// 全てのパラメータ
 	/// </summary>
 	struct StateParameter {
 		IdleParameter idleParameter;
 		MoveParameter moveParameter;
+		SwingDownAttack swingDownAttack;
+		RotatingSlash rotatingSlash;
+		FallingThrust fallingThrust;
+		AssaultSlash assaultSlash;
+		QuadrupleAttack quadrupleAttack;
+		HitReactionParameter hitReactionParameter;
+
+	};
+
+	//翁雅のパラメータ調整項目
+	class ParameterConfig {
+	public:
+
+		LWP::Utility::JsonIO json;
+
+		//JSON初期化
+		void InitJson();
+		//パラメータ取得
+		const StateParameter& GetStateParameter() const { return stateParameter_; }
+
+	private:
+		//編集用パラメータ
+		StateParameter stateParameter_{};
 
 	};
 

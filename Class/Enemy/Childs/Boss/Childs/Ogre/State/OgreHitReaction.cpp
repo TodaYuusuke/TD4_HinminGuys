@@ -24,7 +24,7 @@ void Ogre::HitReactionUpdate([[maybe_unused]] std::optional<States>& req, [[mayb
 	SetPosition(GetPosition() + (GetKnockBackVelocity() + GetRepulsiveForce()) *
 		LWP::Info::GetDeltaTimeF());
 	//ノックバック減衰
-	SetKnockBackVelocity(GetKnockBackVelocity() * HitReactionParameter::decay);
+	SetKnockBackVelocity(GetKnockBackVelocity() * stateParameter_.hitReactionParameter.decay);
 
 	//ノックバックが終了した時
 	if (not animation_.GetPlaying()) {

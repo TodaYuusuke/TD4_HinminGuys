@@ -8,11 +8,11 @@ using namespace LWP::Primitive;
 using namespace GameMask;
 using namespace OniHayhaState;
 
-OniHayha::OniHayha()
+OniHayha::OniHayha(const OniHayhaState::StateParameter& stateParameter)
 	: sphere_(bulletCollider_.SetBroadShape(LWP::Object::Collider::Sphere()))
 {
 
-
+	stateParameter_ = stateParameter;
 
 }
 

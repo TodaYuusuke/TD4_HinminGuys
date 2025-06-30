@@ -8,9 +8,9 @@ void Saiji::SpacingFinalize([[maybe_unused]] const States& pre)
 {
 
 	//移動ステートの時間セット
-	stateParameter_.moveParameter.countRunTime = MoveParameter::runTime;
+	stateParameter_.moveParameter.countRunTime = stateParameter_.moveParameter.runTime;
 	//待機ステートの待機時間セット
-	stateParameter_.idleParameter.countStandTime = IdleParameter::standTime;
+	stateParameter_.idleParameter.countStandTime = stateParameter_.idleParameter.standTime;
 
 }
 
@@ -85,9 +85,9 @@ void Saiji::SpacingUpdate([[maybe_unused]] std::optional<States>& req, [[maybe_u
 		}
 
 		//プレイヤーとの間合いをあらかじめ決めておき、その範囲内に入ったら押し出しベクトルを加算するようにする
-		if (length < SpacingParameter::spaceDist && length > 0.0001f) {
+		if (length < stateParameter_.spacingParameter.spaceDist && length > 0.0001f) {
 			AddRepulsiveForce(dist.Normalize() * 
-				-((SpacingParameter::spaceDist - length) * 2.0f / SpacingParameter::spaceDist));
+				-((stateParameter_.spacingParameter.spaceDist - length) * 2.0f / stateParameter_.spacingParameter.spaceDist));
 		}
 
 		velocity = velocity + dist.Normalize();

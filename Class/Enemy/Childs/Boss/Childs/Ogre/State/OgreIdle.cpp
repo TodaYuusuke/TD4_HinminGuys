@@ -8,7 +8,7 @@ using namespace OgreState;
 void Ogre::IdleFinalize([[maybe_unused]] const States& pre) {
 
 	//移動ステートの時間セット
-	stateParameter_.moveParameter.countRunTime = MoveParameter::runTime;
+	stateParameter_.moveParameter.countRunTime = stateParameter_.moveParameter.runTime;
 
 }
 

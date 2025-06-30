@@ -8,10 +8,11 @@ using namespace LWP::Primitive;
 using namespace GameMask;
 using namespace SaijiState;
 
-Saiji::Saiji() : 
+Saiji::Saiji(const SaijiState::StateParameter& stateParameter) :
 	capsule_(swordCollider_.SetBroadShape(LWP::Object::Collider::Capsule()))
 {
 
+	stateParameter_ = stateParameter;
 
 }
 

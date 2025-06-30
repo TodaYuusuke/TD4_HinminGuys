@@ -13,7 +13,7 @@ void OniHayha::AimingInit(const OniHayhaState::States& pre) {
 
 	laserModel_.isActive = true;
 	isAttack_ = true;
-	stateParameter_.aimingParameter.flickeringCounter = AimingParameter::flickeringInterval;
+	stateParameter_.aimingParameter.flickeringCounter = stateParameter_.aimingParameter.flickeringInterval;
 
 }
 
@@ -41,7 +41,7 @@ void OniHayha::AimingUpdate(std::optional<OniHayhaState::States>& req, const Oni
 		//0になったらアクティブ切り替え
 		if (stateParameter_.aimingParameter.flickeringCounter <= 0) {
 			laserModel_.isActive = not laserModel_.isActive;
-			stateParameter_.aimingParameter.flickeringCounter = AimingParameter::flickeringInterval;
+			stateParameter_.aimingParameter.flickeringCounter = stateParameter_.aimingParameter.flickeringInterval;
 		}
 
 	}

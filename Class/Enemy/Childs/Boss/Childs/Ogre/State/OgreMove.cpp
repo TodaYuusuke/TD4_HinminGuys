@@ -8,7 +8,7 @@ using namespace OgreState;
 void Ogre::MoveFinalize([[maybe_unused]] const States& pre) {
 
 	//待機ステートの待機時間セット
-	stateParameter_.idleParameter.countStandTime = IdleParameter::standTime;
+	stateParameter_.idleParameter.countStandTime = stateParameter_.idleParameter.standTime;
 	//デフォの移動速度セット
 	parameter_.speed = 1.0f;
 
@@ -20,7 +20,7 @@ void Ogre::MoveInit([[maybe_unused]] const States& pre)
 	SetAnimation("Run", true);
 	preState_ = States::kMove;
 	//移動速度をセット
-	parameter_.speed = MoveParameter::defaultSpeed;
+	parameter_.speed = stateParameter_.moveParameter.defaultSpeed;
 
 }
 
@@ -36,10 +36,10 @@ void Ogre::MoveUpdate([[maybe_unused]] std::optional<States>& req, [[maybe_unuse
 		}
 
 		//プレイヤーとの距離が近い場合
-		if (Vector3::Distance(GetPlayerPosition(), GetPosition()) < MoveParameter::attackDist) {
+		if (Vector3::Distance(GetPlayerPosition(), GetPosition()) < stateParameter_.moveParameter.attackDist) {
 
 			//弱攻撃カウントが規定数に達した場合、中攻撃もしくは強攻撃に移行
-			if (stateParameter_.moveParameter.lightAttackCount >= MoveParameter::lightTransitionCount) {
+			if (stateParameter_.moveParameter.lightAttackCount >= stateParameter_.moveParameter.lightTransitionCount) {
 
 				//カウントリセット
 				stateParameter_.moveParameter.lightAttackCount = 0;
@@ -70,7 +70,7 @@ void Ogre::MoveUpdate([[maybe_unused]] std::optional<States>& req, [[maybe_unuse
 
 			}
 			//中攻撃カウントが規定数に達した場合、強攻撃に移行
-			else if (stateParameter_.moveParameter.mediumAttackCount >= MoveParameter::mediumTransitionCount) {
+			else if (stateParameter_.moveParameter.mediumAttackCount >= stateParameter_.moveParameter.mediumTransitionCount) {
 
 				//カウントリセット
 				stateParameter_.moveParameter.mediumAttackCount = 0;

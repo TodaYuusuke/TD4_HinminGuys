@@ -8,10 +8,11 @@ using namespace LWP::Primitive;
 using namespace GameMask;
 using namespace OgreState;
 
-Ogre::Ogre() :
+Ogre::Ogre(const OgreState::StateParameter& stateParameter) :
 	capsule_(swordCollider_.SetBroadShape(LWP::Object::Collider::Capsule()))
 {
 
+	stateParameter_ = stateParameter;
 
 }
 

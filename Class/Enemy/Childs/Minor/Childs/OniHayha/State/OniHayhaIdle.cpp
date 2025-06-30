@@ -30,7 +30,7 @@ void OniHayha::IdleUpdate([[maybe_unused]] std::optional<States>& req, [[maybe_u
 		}
 
 		//プレイヤーが近づいてきたらゆっくり後ずさりして距離を取る
-		if (distFromPlayer_ < IdleParameter::retreatDist) {
+		if (distFromPlayer_ < stateParameter_.idleParameter.retreatDist) {
 			//退避状態に移行
 			state_.request = States::kRetreat;
 			return;
@@ -41,9 +41,9 @@ void OniHayha::IdleUpdate([[maybe_unused]] std::optional<States>& req, [[maybe_u
 
 			//誰も攻撃していない状態で、攻撃待機中の敵もいない場合、狙い撃ちにそのまま移行
 			if (not enemyManager_->IsAnyAttackWithinType(attackType_) and
-				WaitingForAttackParameter::attackCount == WaitingForAttackParameter::nextAttackCount) {
+				enemyManager_->longAssignAttackID == enemyManager_->longNextAttackID) {
 				//狙い撃ち状態の時間セット
-				stateParameter_.aimingParameter.countAimingTime = AimingParameter::aimingTime;
+				stateParameter_.aimingParameter.countAimingTime = stateParameter_.aimingParameter.aimingTime;
 				//狙い撃ち状態に移行
 				state_.request = States::kAiming;
 			}

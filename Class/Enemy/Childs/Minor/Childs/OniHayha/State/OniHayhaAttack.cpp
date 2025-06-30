@@ -13,7 +13,7 @@ void OniHayha::AttackFinalize([[maybe_unused]] const States& pre) {
 	isAttack_ = false;
 	isAttackPhase_ = false;
 	//待機ステートの待機時間セット
-	stateParameter_.idleParameter.countStandTime = IdleParameter::standTime;
+	stateParameter_.idleParameter.countStandTime = stateParameter_.idleParameter.standTime;
 
 }
 
@@ -51,18 +51,18 @@ void OniHayha::AttackUpdate([[maybe_unused]] std::optional<States>& req, [[maybe
 	}
 
 	//攻撃受付時間を超過したら判定オフ
-	if (animation_.GetProgress() > AttackParameter::endAcceptTime and bulletCollider_.isActive) {
+	if (animation_.GetProgress() > stateParameter_.attackParameter.endAcceptTime and bulletCollider_.isActive) {
 		bulletCollider_.isActive = false;
 	}
 	//開始と終了時間の間だけ判定を付ける
-	else if (animation_.GetProgress() >= AttackParameter::startAcceptTime and
-		animation_.GetProgress() <= AttackParameter::endAcceptTime) {
+	else if (animation_.GetProgress() >= stateParameter_.attackParameter.startAcceptTime and
+		animation_.GetProgress() <= stateParameter_.attackParameter.endAcceptTime) {
 		bulletCollider_.isActive = true;
 
 		//弾を放ったら攻撃フラグをオフにする
 		isAttack_ = false;
 		//攻撃受付中は決めたベクトルに向かって移動
-		sphere_.position += bulletDirection_ * AttackParameter::bulletSpeed * LWP::Info::GetDeltaTimeF();
+		sphere_.position += bulletDirection_ * stateParameter_.attackParameter.bulletSpeed * LWP::Info::GetDeltaTimeF();
 
 
 	}

@@ -1,0 +1,38 @@
+{
+    "Group :OgreParameter": {
+        "Group :AssaultSlash": {
+            "float :EndAcceptTime": 0.18000000715255737,
+            "float :StartAcceptTime": 0.05999999865889549
+        },
+        "Group :FallingThrust": {
+            "float :EndAcceptTime": 0.1899999976158142,
+            "float :StartAcceptTime": 0.07999999821186066
+        },
+        "Group :HitReaction": {
+            "float :Decay": 0.8999999761581421
+        },
+        "Group :Idle": {
+            "float :FollowingDist": 4.0,
+            "float :StandTime": 1.0
+        },
+        "Group :Move": {
+            "float :AttackDist": 1.0,
+            "float :DefaultSpeed": 2.0,
+            "float :RunTime": 4.0,
+            "int32_t :LightTransitionCount": 2,
+            "int32_t :MediumTransitionCount": 1
+        },
+        "Group :QuadrupleAttack": {
+            "float :EndAcceptTime": 0.12999999523162842,
+            "float :StartAcceptTime": 0.05000000074505806
+        },
+        "Group :RotatingSlash": {
+            "float :EndAcceptTime": 0.14000000059604645,
+            "float :StartAcceptTime": 0.07000000029802322
+        },
+        "Group :SwingDownAttack": {
+            "float :EndAcceptTime": 0.15000000596046448,
+            "float :StartAcceptTime": 0.05000000074505806
+        }
+    }
+}

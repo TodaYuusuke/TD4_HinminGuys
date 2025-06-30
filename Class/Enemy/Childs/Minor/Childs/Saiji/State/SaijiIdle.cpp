@@ -8,7 +8,7 @@ using namespace SaijiState;
 void Saiji::IdleFinalize([[maybe_unused]] const States& pre) {
 
 	//時間セット
-	stateParameter_.spacingParameter.countSpacingTime = SpacingParameter::spacingTime;
+	stateParameter_.spacingParameter.countSpacingTime = stateParameter_.spacingParameter.spacingTime;
 	//ランダムな数字を利用して右回りかどうかを決める
 	if (LWP::Utility::Random::GenerateInt(0, 1) == 0) {
 		stateParameter_.spacingParameter.isClockwise = true;
@@ -35,7 +35,7 @@ void Saiji::IdleUpdate([[maybe_unused]] std::optional<States>& req, [[maybe_unus
 		}
 
 		//プレイヤーから一定以上の距離離れたら追従モーションに移行
-		if (distFromPlayer_ > IdleParameter::followingDist) {
+		if (distFromPlayer_ > stateParameter_.idleParameter.followingDist) {
 			state_.request = States::kFollowing;
 			return;
 		}

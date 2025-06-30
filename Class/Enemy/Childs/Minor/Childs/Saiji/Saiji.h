@@ -8,7 +8,7 @@
 class Saiji : public Minor
 {
 public:
-	Saiji();
+	Saiji(const SaijiState::StateParameter& stateParameter);
 	~Saiji() override;
 
 	void Initialize(Player* player, const Vector3& position, LWP::Object::Camera* camera,

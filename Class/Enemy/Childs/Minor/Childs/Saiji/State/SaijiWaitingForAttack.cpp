@@ -8,14 +8,14 @@ void Saiji::WaitingForAttackFinalize([[maybe_unused]] const States& pre)
 {
 
 	//消えたときのIDが一致している場合
-	if (stateParameter_.waitingForAttackParameter.attackID == WaitingForAttackParameter::nextAttackCount) {
+	if (stateParameter_.waitingForAttackParameter.attackID == enemyManager_->shortNextAttackID) {
 		//次攻撃する番号を上昇させる
-		WaitingForAttackParameter::nextAttackCount++;
+		enemyManager_->shortNextAttackID++;
 	}
 	//違う場合
 	else {
 		//攻撃の順番を決める数字を減少させる
-		WaitingForAttackParameter::attackCount--;
+		enemyManager_->shortAssignAttackID--;
 	}
 
 }
@@ -26,9 +26,9 @@ void Saiji::WaitingForAttackInit([[maybe_unused]] const States& pre)
 	SetAnimation("Run", true);
 
 	//現在の攻撃カウントから順番を決める
-	stateParameter_.waitingForAttackParameter.attackID = WaitingForAttackParameter::attackCount;
+	stateParameter_.waitingForAttackParameter.attackID = enemyManager_->shortAssignAttackID;
 	//攻撃の順番を決める数字を上昇させる
-	WaitingForAttackParameter::attackCount++;
+	enemyManager_->shortAssignAttackID++;
 
 	//ランダムな数字を利用して右回りかどうかを決める
 	if (LWP::Utility::Random::GenerateInt(0, 1) == 0) {
@@ -48,7 +48,7 @@ void Saiji::WaitingForAttackUpdate([[maybe_unused]] std::optional<States>& req, 
 
 	//誰も攻撃しておらず、順番が回ってきたら攻撃に移行
 	if (not enemyManager_->IsAnyAttack() and 
-		stateParameter_.waitingForAttackParameter.attackID == WaitingForAttackParameter::nextAttackCount) {
+		stateParameter_.waitingForAttackParameter.attackID == enemyManager_->shortNextAttackID) {
 		//攻撃状態に移行
 		state_.request = States::kAttack;
 		return;

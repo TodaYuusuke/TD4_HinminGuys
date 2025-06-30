@@ -13,7 +13,7 @@ void Saiji::AttackFinalize([[maybe_unused]] const States& pre) {
 	isAttack_ = false;
 	isAttackPhase_ = false;
 	//待機ステートの待機時間セット
-	stateParameter_.idleParameter.countStandTime = IdleParameter::standTime;
+	stateParameter_.idleParameter.countStandTime = stateParameter_.idleParameter.standTime;
 
 }
 
@@ -43,13 +43,13 @@ void Saiji::AttackUpdate([[maybe_unused]] std::optional<States>& req, [[maybe_un
 	}
 
 	//攻撃受付時間を超過したら判定オフ
-	if (animation_.GetProgress() > AttackParameter::endAcceptTime and swordCollider_.isActive) {
+	if (animation_.GetProgress() > stateParameter_.attackParameter.endAcceptTime and swordCollider_.isActive) {
 		isAttack_ = false;
 		swordCollider_.isActive = false;
 	}
 	//開始と終了時間の間だけ判定を付ける
-	else if (animation_.GetProgress() >= AttackParameter::startAcceptTime and
-		animation_.GetProgress() <= AttackParameter::endAcceptTime) {
+	else if (animation_.GetProgress() >= stateParameter_.attackParameter.startAcceptTime and
+		animation_.GetProgress() <= stateParameter_.attackParameter.endAcceptTime) {
 		swordCollider_.isActive = true;
 	}
 	//開始時間未満も判定を付けない

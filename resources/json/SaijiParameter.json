@@ -12,7 +12,8 @@
         },
         "Group :Idle": {
             "float :FollowingDist": 6.0,
-            "float :StandTime": 1.0
+            "float :StandTime": 1.0,
+            "float :StartStandTime": 1.0
         },
         "Group :Move": {
             "float :AttackDist": 0.5,

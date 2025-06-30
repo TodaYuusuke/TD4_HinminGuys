@@ -8,7 +8,7 @@
 class Ogre : public Boss
 {
 public:
-	Ogre();
+	Ogre(const OgreState::StateParameter& stateParameter);
 	~Ogre() override;
 
 	void Initialize(Player* player, const Vector3& position, LWP::Object::Camera* camera,

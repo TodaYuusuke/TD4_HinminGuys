@@ -66,6 +66,15 @@ public:
 	//スポーンデータ表示非表示切り替え
 	void SetIsShowSpawnDataModel(bool flag){ spawnData_.SetIsShowModel(flag); }
 
+	//次の近距離敵攻撃ID
+	uint16_t shortNextAttackID = 0;
+	//近距離敵攻撃に割り当てるID
+	uint16_t shortAssignAttackID = 0;
+	//次の遠距離敵攻撃ID
+	uint16_t longNextAttackID = 0;
+	//遠距離敵攻撃に割り当てるID
+	uint16_t longAssignAttackID = 0;
+
 private:
 
 	//ウェーブデータから敵をスポーンさせる
@@ -93,6 +102,7 @@ private:
 	//json
 	SaijiState::ParameterConfig saijiParameter_;
 	OniHayhaState::ParameterConfig oniHayhaParameter_;
+	OgreState::ParameterConfig ogreParameter_;
 
 #pragma region デバッグ用
 
@@ -100,6 +110,7 @@ private:
 	Vector3 spawnPoint_;
 
 #pragma endregion
+
 
 	//敵が互いに取る距離
 	float enemyDist_ = 3.0f;

@@ -23,7 +23,7 @@ void Saiji::FollowingUpdate([[maybe_unused]] std::optional<States>& req, [[maybe
 	if (player_) {
 
 		//待機状態に移行する距離になるまでプレイヤーに向かう
-		if (distFromPlayer_ < FollowingParameter::idleDist) {
+		if (distFromPlayer_ < stateParameter_.followingParameter.idleDist) {
 			state_.request = States::kIdle;
 			return;
 		}

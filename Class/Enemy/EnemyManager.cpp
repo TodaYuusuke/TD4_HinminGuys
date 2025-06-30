@@ -16,6 +16,7 @@ void EnemyManager::Initialize()
 
 	saijiParameter_.InitJson();
 	oniHayhaParameter_.InitJson();
+	ogreParameter_.InitJson();
 
 	parameterEditor_.Initialize();
 
@@ -123,13 +124,13 @@ void EnemyManager::CreateEnemy(const Vector3& position, EnemyType type)
 	switch (type)
 	{
 	case EnemyType::kSaiji:
-		enemies_.push_back(new Saiji());
+		enemies_.push_back(new Saiji(saijiParameter_.GetStateParameter()));
 		break;
 	case EnemyType::kOniHayha:
-		enemies_.push_back(new OniHayha());
+		enemies_.push_back(new OniHayha(oniHayhaParameter_.GetStateParameter()));
 		break;
 	case EnemyType::kOgre:
-		enemies_.push_back(new Ogre());
+		enemies_.push_back(new Ogre(ogreParameter_.GetStateParameter()));
 		break;
 	default:
 		break;
@@ -227,6 +228,11 @@ void EnemyManager::DebugGUI()
 
 			if (ImGui::TreeNode("OniHayha")) {
 				oniHayhaParameter_.json.DebugGUI();
+				ImGui::TreePop();
+			}
+
+			if (ImGui::TreeNode("Ogre")) {
+				ogreParameter_.json.DebugGUI();
 				ImGui::TreePop();
 			}
 

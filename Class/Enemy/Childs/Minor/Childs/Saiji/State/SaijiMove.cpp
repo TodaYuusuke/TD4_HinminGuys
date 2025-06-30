@@ -8,7 +8,7 @@ using namespace SaijiState;
 void Saiji::MoveFinalize([[maybe_unused]] const States& pre) {
 
 	//待機ステートの待機時間セット
-	stateParameter_.idleParameter.countStandTime = IdleParameter::standTime;
+	stateParameter_.idleParameter.countStandTime = stateParameter_.idleParameter.standTime;
 	//デフォの移動速度セット
 	parameter_.speed = 1.0f;
 
@@ -20,7 +20,7 @@ void Saiji::MoveInit([[maybe_unused]] const States& pre)
 	SetAnimation("Run", true);
 	preState_ = States::kMove;
 	//移動速度をセット
-	parameter_.speed = MoveParameter::defaultSpeed;
+	parameter_.speed = stateParameter_.moveParameter.defaultSpeed;
 
 }
 
@@ -36,11 +36,11 @@ void Saiji::MoveUpdate([[maybe_unused]] std::optional<States>& req, [[maybe_unus
 		}
 
 		//プレイヤーとの距離が近く、誰も攻撃していなかったら攻撃
-		if (Vector3::Distance(GetPlayerPosition(), GetPosition()) < MoveParameter::attackDist) {
+		if (Vector3::Distance(GetPlayerPosition(), GetPosition()) < stateParameter_.moveParameter.attackDist) {
 
 			//誰も攻撃していない状態で、攻撃待機中の敵もいない場合、攻撃にそのまま移行
 			if (not enemyManager_->IsAnyAttackWithinType(attackType_) and
-				WaitingForAttackParameter::attackCount == WaitingForAttackParameter::nextAttackCount) {
+				enemyManager_->shortAssignAttackID == enemyManager_->shortNextAttackID) {
 				//攻撃状態に移行
 				state_.request = States::kAttack;
 			}

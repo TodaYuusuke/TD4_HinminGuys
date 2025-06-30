@@ -52,6 +52,9 @@ private: // ** これより先に必要な処理や変数を記述 ** //
 	// UIの管理クラス
 	UIManager uiManager_;
 
+	// オーディオ
+	Audio audio;
+
 	// 平面(一時的に作っているので要修正)
 	LWP::Resource::RigidModel plane;
 	// 天球(一時的に作っているので要修正)
