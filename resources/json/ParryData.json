@@ -18,9 +18,9 @@
             "float :FinishTime": 70.0,
             "float :Movement": 6.0
         },
-        "Group :SheathDecrement": {
-            "float :GoodParry": 10.0,
-            "float :JustParry": 50.0
+        "Group :SheathDecrementPercent": {
+            "float :GoodParry": 5.0,
+            "float :JustParry": 25.0
         }
     }
 }

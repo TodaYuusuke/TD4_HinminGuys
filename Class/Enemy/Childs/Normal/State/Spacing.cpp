@@ -24,7 +24,7 @@ void Spacing::Initialize()
 	//時間セット
 	enemy_->GetStateParameter().spacingParameter.countSpacingTime = spacingTime_;
 	//ランダムな数字を利用して右回りかどうかを決める
-	if (LWP::Utility::GenerateRandamNum(0, 1) == 0) {
+	if (LWP::Utility::Random::GenerateInt(0, 1) == 0) {
 		enemy_->GetStateParameter().spacingParameter.isClockwise = true;
 	}
 

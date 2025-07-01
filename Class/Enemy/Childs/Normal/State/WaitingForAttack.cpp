@@ -32,7 +32,7 @@ void WaitingForAttack::Initialize()
 {
 
 	//ランダムな数字を利用して右回りかどうかを決める
-	if (LWP::Utility::GenerateRandamNum(0, 1) == 0) {
+	if (LWP::Utility::Random::GenerateInt(0, 1) == 0) {
 		enemy_->GetStateParameter().waitingForAttackParameter.isClockwise = true;
 	}
 

@@ -158,7 +158,7 @@ void Move::InputUpdate() {
 	radian.x = 0.0f;
 	Matrix4x4 rotMatrix = LWP::Math::Matrix4x4::CreateRotateXYZMatrix(radian);
 	// 方向ベクトルを求める
-	velocity_ = LWP::Utility::Interpolation::Exponential(velocity_, dir * moveMultiply_ * rotMatrix, jsonData_.moveSpeedRate) * hitStopController_->GetDeltaTime();
+	velocity_ = LWP::Utility::Interpolation::Exponential(velocity_, dir * moveMultiply_ * rotMatrix * player_->GetParameter()->moveSpeedMultiply_, jsonData_.moveSpeedRate) * hitStopController_->GetDeltaTime();
 	velocity_.y = 0.0f;
 
 	// 移動状態

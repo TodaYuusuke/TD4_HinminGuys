@@ -2,7 +2,7 @@
     "Group :Gauge": {
         "Group :WorldTransform": {
             "Vector3 :Scale": [
-                1.0,
+                0.9750000238418579,
                 1.0,
                 1.0
             ],
@@ -35,8 +35,8 @@
             0.0
         ]
     },
-    "float :DeltaValue": -10.0,
+    "float :DeltaValue": 50.0,
     "float :IncreaseTime": 6.0,
-    "float :MaxHpValue": 100.0,
+    "float :MaxHpValue": 10000.0,
     "float :Multiply": 1.0
 }

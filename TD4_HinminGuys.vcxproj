@@ -109,6 +109,7 @@
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <AdditionalOptions>/source-charset:utf-8 %(AdditionalOptions)</AdditionalOptions>
+      <TreatWarningAsError>false</TreatWarningAsError>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -134,6 +135,7 @@
       <Optimization>MinSpace</Optimization>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <AdditionalOptions>/source-charset:utf-8 %(AdditionalOptions)</AdditionalOptions>
+      <TreatWarningAsError>false</TreatWarningAsError>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -188,6 +190,7 @@
     <ClCompile Include="Class\UI\GameUI.cpp" />
     <ClCompile Include="Class\Components\CoolTimer.cpp" />
     <ClCompile Include="Class\Components\HitStopController.cpp" />
+    <ClCompile Include="Class\Player\Systems\Children\Evasion\Effect\EvasionEffect.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Class\Player\Player.cpp" />
     <ClCompile Include="Class\Player\Systems\Children\Move\Move.cpp" />
@@ -203,11 +206,14 @@
     <ClCompile Include="Class\Components\Shake.cpp" />
     <ClCompile Include="Class\Player\Systems\Children\Sheath\State\SwordDrawn.cpp" />
     <ClCompile Include="Class\Player\Systems\Children\Parry\Effect\ParryEffect.cpp" />
+    <ClCompile Include="Class\Player\Particles\Particles.cpp" />
+    <ClCompile Include="Class\Player\PlayerParameter.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Class\Enemy\Childs\Normal\INormalEnemyState.h" />
     <ClInclude Include="Class\Enemy\Childs\Normal\State\HitReaction.h" />
     <ClInclude Include="Class\Enemy\Childs\Normal\NormalStateParameter.h" />
+    <ClInclude Include="Class\Player\Particles\ParticleJsonDataStructs.h" />
     <ClInclude Include="Class\Player\Systems\Children\Sheath\State\Break.h" />
     <ClInclude Include="Class\IParameter.h" />
     <ClInclude Include="Class\ComboEditor\ComboTree.h" />
@@ -280,6 +286,9 @@
     <ClInclude Include="Class\Components\CoolTimer.h" />
     <ClInclude Include="Class\Components\HitStopController.h" />
     <ClInclude Include="Class\Player\Systems\Children\Parry\Effect\ParryEffect.h" />
+    <ClInclude Include="Class\Player\Particles\Particles.h" />
+    <ClInclude Include="Class\Player\Systems\Children\Evasion\Effect\EvasionEffect.h" />
+    <ClInclude Include="Class\Player\PlayerParameter.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />

@@ -9,6 +9,9 @@
 #include "Gauge/HP/HP.h"
 #include "Gauge/Sheath/SheathGauge.h"
 #include "Command/InputHandler.h"
+#include "PlayerParameter.h"
+#include "Systems/Children/Parry/Effect/ParryEffect.h"
+#include "Particles/Particles.h"
 #include "../Components/HitStopController.h"
 #include "../UI/UIManager.h"
 #include <memory>
@@ -49,7 +52,7 @@ public:
 	/// <summary>
 	/// ダメージを与える
 	/// </summary>
-	void TakeDamage(const float& damageValue, const float& multiply = 1.0f);
+	void TakeDamage(const float& damageValue);
 	/// <summary>
 	/// 鞘にダメージを与える
 	/// </summary>
@@ -82,6 +85,18 @@ private:
 	/// 移動制限
 	/// </summary>
 	void LimitMoveArea();
+
+public:
+	/// <summary>
+	/// パリィ時のパーティクル生成
+	/// </summary>
+	/// <param name="pos"></param>
+	void CreateParryParticle(const LWP::Math::Vector3& pos);
+	/// <summary>
+	/// 回避時のパーティクル生成
+	/// </summary>
+	/// <param name="pos"></param>
+	void CreateEvasionParticle(const LWP::Math::Vector3& pos);
 
 public:// Getter,Setter
 #pragma region Getter
@@ -116,6 +131,11 @@ public:// Getter,Setter
 	/// <returns></returns>
 	LWP::Resource::SkinningModel* GetModel() { return &model_; }
 	/// <summary>
+	/// パラメータ情報を取得
+	/// </summary>
+	/// <returns></returns>
+	PlayerParameter* GetParameter() { return playerParameter_.get(); }
+	/// <summary>
 	/// 自機の座標を取得
 	/// </summary>
 	/// <returns></returns>
@@ -149,7 +169,11 @@ public:// Getter,Setter
 	/// </summary>
 	/// <param name="enemyManager">敵の管理クラスのポインタ</param>
 	void SetEnemyManager(EnemyManager* enemyManager) { enemyManager_ = enemyManager; }
-
+	/// <summary>
+	/// 向いている方向を設定
+	/// </summary>
+	/// <param name="quat">向かせる方向(クォータニオン)</param>
+	void SetRotate(const LWP::Math::Quaternion& quat) { pCamera_->worldTF.rotation = quat; }
 #pragma region アニメーション
 	/// <summary>
 	/// アニメーションを開始
@@ -221,6 +245,12 @@ private:
 
 	// 機能まとめ
 	std::unique_ptr<SystemManager> systemManager_;
+
+	// パラメータ
+	std::unique_ptr<PlayerParameter> playerParameter_;
+
+	// パーティクルの管理クラス
+	std::unique_ptr<Particles> particles_;
 
 	// いきているか
 	bool isAlive_ = true;

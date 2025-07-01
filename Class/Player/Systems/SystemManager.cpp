@@ -7,7 +7,8 @@ using namespace LWP::Math;
 
 SystemManager::SystemManager(Player* player, EnemyManager* enemyManager, FollowCamera* followCamera, LWP::Object::Camera* camera)
 	: parryAABB_(parryCollision_.SetBroadShape(LWP::Object::Collider::AABB())),
-	sheathAttackCapsule_(sheathCollision_.SetBroadShape(LWP::Object::Collider::Capsule()))
+	sheathAABB_(sheathCollision_.SetBroadShape(LWP::Object::Collider::AABB())),
+	sheathAttackCapsule_(sheathAttackCollision_.SetBroadShape(LWP::Object::Collider::Capsule()))
 {
 	player_ = player;
 	enemyManager_ = enemyManager;
@@ -51,7 +52,11 @@ void SystemManager::Initialize() {
 		// 鞘が外れている状態だと減らさない
 		if (player_->GetSystemManager()->GetSheathSystem()->GetSheathState()->GetStateName() != "Throw") { return; }
 
-		player_->TakeSheathDamage(comboTree_->GetSheathDurabityLoss());
+		// 攻撃力
+		player_->GetParameter()->attackStrength_ = comboTree_->GetDamage();
+		// 鞘ゲージ減少量
+		player_->GetParameter()->sheathDamegeStrength_ = comboTree_->GetSheathDurabityLoss();
+		player_->TakeSheathDamage(player_->GetParameter()->GetCurrentSheathDamageStrength());
 		};
 	comboTree_->AddCollisionLamda(LWP::Utility::ComboEnum::ENTER, attackOnHitFunc_);
 
@@ -63,13 +68,20 @@ void SystemManager::Initialize() {
 	parryCollision_.worldTF.translation = { 0.0f, 1.0f, 0.0f };
 	parryCollision_.mask.SetBelongFrag(GameMask::GetParry());
 	parryCollision_.mask.SetHitFrag(GameMask::GetAttack());
-
-	// 攻撃判定生成
-	sheathCollision_.SetFollow(player_->GetWorldTF());
+	// 鞘判定生成
+	sheathAABB_.min = { -1.0f, -1.0f, -1.0f };
+	sheathAABB_.max = { 1.0f, 1.0f, 1.0f };
+	sheathCollision_.SetFollow(sheathSystem_->GetSheathWorldTF());
 	sheathCollision_.isActive = false;
-	sheathCollision_.worldTF.translation = { 0.0f, 1.0f, 0.0f };
+	sheathCollision_.worldTF.translation = { 0.0f, 0.0f, 0.0f };
 	sheathCollision_.mask.SetBelongFrag(GameMask::GetAttack());
 	sheathCollision_.mask.SetHitFrag(GameMask::GetEnemy());
+	// 鞘攻撃判定生成
+	sheathAttackCollision_.SetFollow(player_->GetWorldTF());
+	sheathAttackCollision_.worldTF.translation = { 0.0f, 1.0f, 0.0f };
+	sheathAttackCollision_.isActive = false;
+	sheathAttackCollision_.mask.SetBelongFrag(GameMask::GetAttack());
+	sheathAttackCollision_.mask.SetHitFrag(GameMask::GetEnemy());
 
 #pragma region json用
 	// 被弾機能
@@ -161,9 +173,19 @@ void SystemManager::DebugGUI() {
 			ImGui::TreePop();
 		}
 		if (ImGui::TreeNode("SheathAttack")) {
-			sheathCollision_.DebugGUI();
+			sheathAttackCollision_.DebugGUI();
 			ImGui::TreePop();
 		}
+
+		if (ImGui::Button("ON: WireFrame")) {
+			parryAABB_.isShowWireFrame = true;
+			sheathAttackCapsule_.isShowWireFrame = true;
+		}
+		if (ImGui::Button("OFF: WireFrame")) {
+			parryAABB_.isShowWireFrame = false;
+			sheathAttackCapsule_.isShowWireFrame = false;
+		}
+
 		ImGui::TreePop();
 	}
 
@@ -269,7 +291,7 @@ void SystemManager::CurrentSystemUpdate() {
 
 	// 速度(攻撃時以外補間をかける)
 	if (systemState_ != SystemState::kAttack) {
-		velocity_ = LWP::Utility::Interpolation::Exponential(velocity_, currentSystem_->GetVelocity(), 0.4f);
+		velocity_ = LWP::Utility::Interpolation::Exponential(velocity_, currentSystem_->GetVelocity(), 0.3f);
 	}
 	else {
 		velocity_ = currentSystem_->GetVelocity();

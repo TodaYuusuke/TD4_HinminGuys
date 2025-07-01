@@ -115,7 +115,6 @@ void GameScene::Update() {
 	DebugGUI();
 
 	sceneTransitioner_.Update();
-
 }
 
 void GameScene::DebugGUI() {

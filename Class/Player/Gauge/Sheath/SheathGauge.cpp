@@ -92,7 +92,8 @@ void SheathGauge::IncreaseGauge() {
 
 	if (!isIncrease_) { 
 		sprite_["SheathBar"].material.color.A = 255.0f;
-		return; }
+		return; 
+	}
 
 	t_++;
 	t_ = std::clamp<float>(t_, 0.0f, increaseTime * 60.0f);

@@ -11,6 +11,10 @@ Collect::Collect(Sheath* sheathSystem, Player* player, std::map<int, EventOrder>
 	inputHandler_ = InputHandler::GetInstance();
 
 	eventOrders_ = eventOrders;
+	sheathSystem_->CreateCollectEventOrder();
+
+	// 攻撃に当たった相手の名前リストをクリア
+	sheathSystem_->ClearHitTargetNames();
 
 	// 状態の名前
 	stateName_ = "Collect";
@@ -57,6 +61,9 @@ void Collect::Update() {
 		sheathSystem_->SetIsBreak(false);
 		sheathSystem_->SetIsSheathing(true);
 
+		// 攻撃に当たった相手の名前リストをクリア
+		sheathSystem_->ClearHitTargetNames();
+
 		// リストクリア
 		sheathSystem_->ClearNextSystems();
 		// 投げ可能状態に変更
@@ -79,6 +86,12 @@ void Collect::Command() {
 		isActive_ = true;
 		sheathSystem_->SetIsActive(true);
 
+		// 鞘ゲージの減少量設定
+		float decrementValue = sheathSystem_->jsonData_.collectAttackSheathDecrementPercent / 100.0f * player_->GetUIManager()->GetSheathGauge().GetMaxValue();
+		player_->GetParameter()->sheathDamegeStrength_ = decrementValue;
+		// 攻撃力設定
+		player_->GetParameter()->attackStrength_ = sheathSystem_->jsonData_.collectAttackValue;
+
 		// 無敵開始
 		(*eventOrders_)[(int)Sheath::SheathState::kInvinsible].Start();
 		// アクションイベント開始
@@ -86,7 +99,7 @@ void Collect::Command() {
 
 		// イージングの始点終点を設定
 		start_ = player_->GetWorldTF()->GetWorldPosition();
-		end_ = sheathSystem_->GetSheathWorldTF().GetWorldPosition();
+		end_ = sheathSystem_->GetSheathWorldTF()->GetWorldPosition();
 
 		// イージングの始点終点から角度を求める
 		radian_.y = LWP::Utility::GetRadian(LWP::Math::Vector3{ 0,0,1 }, (end_ - start_).Normalize(), LWP::Math::Vector3{ 0,1,0 });
@@ -144,5 +157,8 @@ void Collect::CollectMove() {
 	else {
 		// 鞘攻撃の当たり判定をなくす
 		player_->GetSystemManager()->GetSheathAttackCollision().isActive = false;
+
+		velocity_ = { 0,0,0 };
+		sheathSystem_->SetVelocity(velocity_);
 	}
 }

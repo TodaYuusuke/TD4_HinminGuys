@@ -132,6 +132,9 @@ void Evasion::Command() {
 
 		// アニメーション再生
 		AnimCommand();
+
+		// パーティクル生成
+		player_->CreateEvasionParticle(player_->GetWorldTF()->GetWorldPosition());
 	}
 	eventOrder_.Start();
 }

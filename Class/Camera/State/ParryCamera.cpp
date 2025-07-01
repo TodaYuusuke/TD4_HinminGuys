@@ -59,10 +59,10 @@ ParryCamera::ParryCamera(Player* player, FollowCamera* followCamera) {
 	}
 
 	// ラジアルブラー
-	followCamera_->camera_->pp.use = true;
-	followCamera_->camera_->pp.radialBlur.use = true;
-	followCamera_->camera_->pp.radialBlur.blurWidth = followCamera_->parryBlurWidth;
-	followCamera_->camera_->pp.CreateShaderFile();
+	//followCamera_->camera_->pp.use = true;
+	//followCamera_->camera_->pp.radialBlur.use = true;
+	//followCamera_->camera_->pp.radialBlur.blurWidth = followCamera_->parryBlurWidth;
+	//followCamera_->camera_->pp.CreateShaderFile();
 
 	// ヒットストップ
 	HitStopController::GetInstance()->Start(followCamera_->parryHitStopTime, timeScale_);

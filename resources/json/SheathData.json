@@ -1,10 +1,16 @@
 {
+    "Group :AttackValue": {
+        "float :Collect": 50.0,
+        "float :Dash": 50.0,
+        "float :Sheath": 50.0
+    },
     "Group :Collect": {
         "Group :GraceTime": {
             "float :CollectFinishTime": 0.5,
-            "float :RecoveryTime": 0.10000000149011612,
+            "float :RecoveryTime": 0.25,
             "float :SwingTime": 0.20000000298023224
-        }
+        },
+        "float :SheathDecrementPercent": 10.0
     },
     "Group :Collider": {
         "Vector3 :Length": [
@@ -46,5 +52,5 @@
         ]
     },
     "float :CoolTime": 1.0,
-    "float :MoveRange": 10.0
+    "float :MoveRange": 6.0
 }

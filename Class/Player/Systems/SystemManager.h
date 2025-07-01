@@ -136,10 +136,15 @@ public:// Getter, Setter
 	/// <returns></returns>
 	LWP::Object::Collision& GetParryCollision() { return parryCollision_; }
 	/// <summary>
+	/// 鞘の当たり判定を取得
+	/// </summary>
+	/// <returns></returns>
+	LWP::Object::Collision& GetSheathCollision() { return sheathCollision_; }
+	/// <summary>
 	/// 鞘攻撃の当たり判定を取得
 	/// </summary>
 	/// <returns></returns>
-	LWP::Object::Collision& GetSheathAttackCollision() { return sheathCollision_; }
+	LWP::Object::Collision& GetSheathAttackCollision() { return sheathAttackCollision_; }
 	/// <summary>
 	/// 鞘攻撃のカプセル情報を取得
 	/// </summary>
@@ -192,9 +197,13 @@ public:// Getter, Setter
 	/// </summary>
 	void SetParryOnHitFunc(LWP::Object::Collision::OnHitFunction parryOnHitFunc) { parryCollision_.stayLambda = parryOnHitFunc; }
 	/// <summary>
+	/// 鞘に当たった時の処理の関数ポインタを設定
+	/// </summary>
+	void SetSheathOnHitFunc(LWP::Object::Collision::OnHitFunction sheathOnHitFunc) { sheathCollision_.stayLambda = sheathOnHitFunc; }
+	/// <summary>
 	/// 鞘攻撃に当たった時の処理の関数ポインタを設定
 	/// </summary>
-	void SetSheathAttackOnHitFunc(LWP::Object::Collision::OnHitFunction sheathAttackOnHitFunc) { sheathCollision_.stayLambda = sheathAttackOnHitFunc; }
+	void SetSheathAttackOnHitFunc(LWP::Object::Collision::OnHitFunction sheathAttackOnHitFunc) { sheathAttackCollision_.stayLambda = sheathAttackOnHitFunc; }
 
 	/// <summary>
 	/// 移動速度を設定
@@ -248,6 +257,7 @@ public:// Getter, Setter
 #pragma endregion
 
 private:// 外部からポインタをもらう変数
+	// 自機
 	Player* player_;
 	// 敵の管理クラス
 	EnemyManager* enemyManager_;
@@ -299,8 +309,12 @@ private:
 	// パリィ判定
 	LWP::Object::Collision parryCollision_;
 	LWP::Object::Collider::AABB& parryAABB_;
-	// ダッシュ攻撃判定
+
+	// 鞘
 	LWP::Object::Collision sheathCollision_;
+	LWP::Object::Collider::AABB& sheathAABB_;
+	// ダッシュ攻撃判定
+	LWP::Object::Collision sheathAttackCollision_;
 	LWP::Object::Collider::Capsule& sheathAttackCapsule_;
 #pragma endregion
 

@@ -174,9 +174,9 @@ void Parry::CreateJsonFIle() {
 		.EndGroup()
 
 		// 鞘ゲージの減少量
-		.BeginGroup("SheathDecrement")
-		.AddValue<float>("JustParry", &jsonData_.justParryDecrement)
-		.AddValue<float>("GoodParry", &jsonData_.goodParryDecrement)
+		.BeginGroup("SheathDecrementPercent")
+		.AddValue<float>("JustParry", &jsonData_.justParry_DecrementSheathPercent)
+		.AddValue<float>("GoodParry", &jsonData_.goodParry_DecrementSheathPercent)
 		.EndGroup()
 
 		.BeginGroup("KnockBack")
@@ -237,7 +237,9 @@ void Parry::CreateCollision() {
 				player_->GetSystemManager()->SetInvisibleTime(jsonData_.successJustParryInvinsible);
 
 				// 鞘のゲージを減少
-				player_->GetUIManager()->ChangeSheathGauge(jsonData_.justParryDecrement);
+				float decrementValue = jsonData_.justParry_DecrementSheathPercent / 100.0f * player_->GetUIManager()->GetSheathGauge().GetMaxValue();
+				player_->GetParameter()->sheathDamegeStrength_ = decrementValue;
+				player_->TakeSheathDamage(player_->GetParameter()->GetCurrentSheathDamageStrength());
 
 				// 相手の座標を代入
 				parryTargetPos_ = hitTarget->GetWorldPosition();
@@ -249,6 +251,13 @@ void Parry::CreateCollision() {
 
 				radian_.y = LWP::Utility::GetRadian(LWP::Math::Vector3{ 0,0,1 }, p2t, LWP::Math::Vector3{ 0,1,0 });
 				quat_ = LWP::Math::Quaternion::CreateFromAxisAngle(LWP::Math::Vector3{ 0, 1, 0 }, radian_.y);
+				player_->SetRotate(quat_);
+
+				Vector3 pos = (parryTargetPos_ - player_->GetWorldTF()->GetWorldPosition()) / 2.0f;
+				pos += player_->GetWorldTF()->GetWorldPosition();
+
+				player_->CreateParryParticle(pos);
+
 			}
 			// 甘めパリィ
 			else if (eventOrder_.GetCurrentTimeEvent().name == "GoodParry") {
@@ -267,13 +276,16 @@ void Parry::CreateCollision() {
 				player_->GetSystemManager()->SetInvisibleTime(jsonData_.successGoodParryInvinsible);
 
 				// 鞘のゲージを減少
-				player_->GetUIManager()->ChangeSheathGauge(jsonData_.goodParryDecrement);
+				float decrementValue = jsonData_.goodParry_DecrementSheathPercent / 100.0f * player_->GetUIManager()->GetSheathGauge().GetMaxValue();
+				player_->GetParameter()->sheathDamegeStrength_ = decrementValue;
+				player_->TakeSheathDamage(player_->GetParameter()->GetCurrentSheathDamageStrength());
 
 				// 相手の座標を代入
 				parryTargetPos_ = hitTarget->GetWorldPosition();
 
 				radian_.y = LWP::Utility::GetRadian(LWP::Math::Vector3{ 0,0,1 }, p2t, LWP::Math::Vector3{ 0,1,0 });
 				quat_ = LWP::Math::Quaternion::CreateFromAxisAngle(LWP::Math::Vector3{ 0, 1, 0 }, radian_.y);
+				player_->SetRotate(quat_);
 			}
 		}
 	);

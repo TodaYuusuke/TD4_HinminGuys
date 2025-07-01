@@ -55,7 +55,7 @@ void Normal::Initialize(Player* player, const Vector3& position, LWP::Object::Ca
 		}
 
 		//ダメージを受ける
-		TakeDamage(player_->GetSystemManager()->GetComboTree()->GetDamage());
+		TakeDamage(player_->GetParameter()->GetCurrentAttackStrength());
 
 		};
 	
