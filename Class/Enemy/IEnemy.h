@@ -83,12 +83,17 @@ public:
 		EnemyManager* manager) = 0;
 	//更新
 	virtual void Update();
+	//最新のパラメータを適用
+	virtual void ApplyLatestParameter() = 0;
+
 	//プレイヤーをセットする関数
 	void SetPlayer(Player* player) { player_ = player; }
 	//パラメータをセット
 	void SetParameter(const EnemyParameter& parameter) { parameter_ = parameter; }
 	//死亡フラグ取得
 	bool GetIsDead() const { return isDead_; }
+	//死亡フラグセット
+	void SetIsDead(bool flag) { isDead_ = flag; }
 	//座標取得
 	const Vector3& GetPosition() const { return model_.worldTF.translation; }
 	//座標セット
@@ -175,7 +180,7 @@ protected:
 	Animation animation_;
 	//本体当たり判定
 	LWP::Object::Collision collider_;
-	LWP::Object::Collider::AABB& aabb_;
+	LWP::Object::Collider::AABB& aabbBody_;
 	//パリィエフェクト画像
 	std::array<LWP::Primitive::Sprite, kMaxParryEffect_> parryEffectSprite_;
 	
@@ -221,5 +226,7 @@ protected:
 	bool isStartParryEffect_ = false;
 	//前フレームのパリィエフェクトフラグ
 	bool preIsStartParryEffect_ = false;
+	//パリィエフェクトが発動済かどうか
+	bool isActivationParryEffect_ = false;
 
 };

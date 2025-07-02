@@ -24,8 +24,8 @@ void OniHayha::AttackInit([[maybe_unused]] const States& pre)
 	SetAnimation("LightAttack3", false, 1.0f);
 	bulletCollider_.isActive = false;
 	isAttack_ = true;
-	//パリィエフェクト開始
-	StartParryEffect(model_.GetJointWorldPosition("Hips"));
+	//パリィエフェクトフラグリセット
+	isActivationParryEffect_ = false;
 	//弾のポジションセット
 	sphere_.position = laserModel_.worldTF.GetWorldPosition();
 	//弾の方向を決める
@@ -37,6 +37,14 @@ void OniHayha::AttackInit([[maybe_unused]] const States& pre)
 
 void OniHayha::AttackUpdate([[maybe_unused]] std::optional<States>& req, [[maybe_unused]] const States& pre)
 {
+
+	//パリィエフェクトが発生していないかつ、エフェクトの発生時間を超過したらパリィエフェクト発動
+	if (not isActivationParryEffect_ and
+		animation_.GetProgress() > stateParameter_.attackParameter.startAcceptTime - enemyManager_->GetParryEffectOccurTime()) {
+		//パリィエフェクト開始
+		StartParryEffect(model_.GetJointWorldPosition("Hips"));
+		isActivationParryEffect_ = true;
+	}
 
 	//パリィエフェクト中ならアニメーションをゆっくりにして判定オフ
 	if (isStartParryEffect_) {

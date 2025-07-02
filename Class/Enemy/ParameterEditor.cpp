@@ -18,7 +18,7 @@ void ParameterEditor::Initialize() {
 			.EndGroup();
 
 	}
-
+	parameterJson_.AddValue<float>("ParryEffectOccurTime", &parryEffectOccurTime_);
 	parameterJson_.EndGroup();
 
 }

@@ -1,8 +1,8 @@
 {
     "Group :EnemyParameters": {
-        "Group :Boss": {
+        "Group :Ogre": {
             "float :AttackValue": 10.0,
-            "float :HP": 10.0,
+            "float :HP": 5000.0,
             "float :KnockbackValue": 0.5,
             "float :Speed": 1.0
         },
@@ -17,6 +17,7 @@
             "float :HP": 10.0,
             "float :KnockbackValue": 0.5,
             "float :Speed": 1.0
-        }
+        },
+        "float :ParryEffectOccurTime": 0.10000000149011612
     }
 }

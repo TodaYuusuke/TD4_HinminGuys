@@ -221,6 +221,10 @@ void EnemyManager::DebugGUI()
 		//敵の共通ステート変数をいじる
 		if (ImGui::BeginTabItem("State Parameter")) {
 
+			if (ImGui::Button("Apply")) {
+				ApplyLatestParameter();
+			}
+
 			if (ImGui::TreeNode("Saiji")) {
 				saijiParameter_.json.DebugGUI();
 				ImGui::TreePop();
@@ -261,6 +265,14 @@ void EnemyManager::DebugGUI()
 		}
 
 		ImGui::EndTabBar();
+	}
+
+}
+
+void EnemyManager::ApplyLatestParameter() {
+
+	for (auto enemy = enemies_.begin(); enemy != enemies_.end(); enemy++) {
+		(*enemy)->ApplyLatestParameter();
 	}
 
 }

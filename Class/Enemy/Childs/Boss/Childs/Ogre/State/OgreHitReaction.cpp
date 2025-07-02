@@ -2,6 +2,10 @@
 #include "../Ogre.h"
 #include "../../../../../EnemyManager.h"
 
+/// <summary>
+/// ノックバックの実装
+/// </summary>
+
 using namespace LWP::Math;
 using namespace OgreState;
 

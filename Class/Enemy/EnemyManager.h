@@ -65,6 +65,8 @@ public:
 	bool GetIsStartWave() const { return isStartWave_; }
 	//スポーンデータ表示非表示切り替え
 	void SetIsShowSpawnDataModel(bool flag){ spawnData_.SetIsShowModel(flag); }
+	//パリィエフェクトの発生タイミング取得
+	float GetParryEffectOccurTime() const { return parameterEditor_.GetParryEffectOccurTime(); }
 
 	//次の近距離敵攻撃ID
 	uint16_t shortNextAttackID = 0;
@@ -83,6 +85,8 @@ private:
 	void CheckIsSpawn();
 	//全ウェーブ終了時の処理
 	void EndGame();
+	//最新のパラメータを適用させる
+	void ApplyLatestParameter();
 
 private:
 	//プレイヤーのポインタ

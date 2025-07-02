@@ -24,13 +24,21 @@ void Saiji::AttackInit([[maybe_unused]] const States& pre)
 	SetAnimation("LightAttack2", false, 0.1f);
 	swordCollider_.isActive = false;
 	isAttack_ = true;
-	//パリィエフェクト開始
-	StartParryEffect(swordModel_.GetJointWorldPosition("Grip"));
+	//パリィエフェクトフラグリセット
+	isActivationParryEffect_ = false;
 
 }
 
 void Saiji::AttackUpdate([[maybe_unused]] std::optional<States>& req, [[maybe_unused]] const States& pre)
 {
+
+	//パリィエフェクトが発生していないかつ、エフェクトの発生時間を超過したらパリィエフェクト発動
+	if (not isActivationParryEffect_ and
+		animation_.GetProgress() > stateParameter_.attackParameter.startAcceptTime - enemyManager_->GetParryEffectOccurTime()) {
+		//パリィエフェクト開始
+		StartParryEffect(swordModel_.GetJointWorldPosition("Grip"));
+		isActivationParryEffect_ = true;
+	}
 
 	//パリィエフェクト中ならアニメーションをゆっくりにして判定オフ
 	if (isStartParryEffect_) {

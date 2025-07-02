@@ -2,6 +2,10 @@
 #include "../Ogre.h"
 #include "../../../../../EnemyManager.h"
 
+/// <summary>
+/// 回転攻撃の実装
+/// </summary>
+
 using namespace LWP::Math;
 using namespace OgreState;
 
@@ -13,11 +17,17 @@ void Ogre::RotatingSlashInit([[maybe_unused]] const States& pre)
 {
 
 	SetAnimation("LightAttack4", false);
+	//もしノックバックしたら待機に戻る
+	preState_ = States::kIdle;
+
+	//球で攻撃判定実装
 
 }
 
 void Ogre::RotatingSlashUpdate([[maybe_unused]] std::optional<States>& req, [[maybe_unused]] const States& pre)
 {
+
+
 
 	//攻撃が終了した時
 	if (not animation_.GetPlaying()) {

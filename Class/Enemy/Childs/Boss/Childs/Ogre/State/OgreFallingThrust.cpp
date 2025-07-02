@@ -2,6 +2,10 @@
 #include "../Ogre.h"
 #include "../../../../../EnemyManager.h"
 
+/// <summary>
+/// 落下攻撃の実装
+/// </summary>
+
 using namespace LWP::Math;
 using namespace OgreState;
 
@@ -13,6 +17,9 @@ void Ogre::FallingThrustInit([[maybe_unused]] const States& pre)
 {
 
 	SetAnimation("Damage", false);
+	//もしノックバックしたら待機に戻る
+	preState_ = States::kIdle;
+	//球で実装
 
 }
 

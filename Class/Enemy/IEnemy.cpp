@@ -13,7 +13,7 @@ std::array<const char*, int(EnemyType::kMax)> IEnemy::enemyTypeName =
 { "Saiji",  "OniHayha", "Ogre" };
 
 IEnemy::IEnemy()
-	: aabb_(collider_.SetBroadShape(LWP::Object::Collider::AABB()))
+	: aabbBody_(collider_.SetBroadShape(LWP::Object::Collider::AABB()))
 {
 	//IDをセット
 	ID_ = currentEnemyID_;
@@ -39,6 +39,8 @@ IEnemy::IEnemy()
 
 		parryEffectSprite_[i].Init();
 	}
+
+	aabbBody_.isShowWireFrame = false;
 
 }
 

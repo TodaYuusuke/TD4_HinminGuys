@@ -8,7 +8,7 @@
 class Ogre : public Boss
 {
 public:
-	Ogre(const OgreState::StateParameter& stateParameter);
+	Ogre(OgreState::StateParameter& stateParameter);
 	~Ogre() override;
 
 	void Initialize(Player* player, const Vector3& position, LWP::Object::Camera* camera,
@@ -17,6 +17,11 @@ public:
 	void Update() override;
 
 	void DebugGUI() override;
+	//適用後、強制的に待機状態にさせる
+	void ApplyLatestParameter() override { 
+		stateParameter_ = configParameter_;
+		state_.request = OgreState::States::kIdle;
+	}
 
 	//直前のステートをセット(HitReactionは除外)
 	void SetPreState(OgreState::States state) { if (state != OgreState::States::kHitReaction) { preState_ = state; } }
@@ -24,7 +29,7 @@ public:
 private:
 
 	//刀のコライダー生成
-	void CreateSwordCollider();
+	void CreateColliders();
 
 	/// <summary>
 	/// ステートパターンに使用する関数群追加
@@ -66,15 +71,33 @@ private:
 	void HitReactionUpdate(std::optional<OgreState::States>& req, const OgreState::States& pre);
 	void HitReactionFinalize(const OgreState::States& pre);
 
+	//各パラメータを個別に取得
+	OgreState::IdleParameter& GetIdleParameter() { return stateParameter_.idleParameter; }
+	OgreState::MoveParameter& GetMoveParameter() { return stateParameter_.moveParameter; }
+	OgreState::HitReactionParameter& GetHitReactionParameter() { return stateParameter_.hitReactionParameter; }
+	OgreState::SwingDownAttack& GetSwingDownAttack() { return stateParameter_.swingDownAttack; }
+	OgreState::RotatingSlash& GetRotatingSlash() { return stateParameter_.rotatingSlash; }
+	OgreState::FallingThrust& GetFallingThrust() { return stateParameter_.fallingThrust; }
+	OgreState::AssaultSlash& GetAssaultSlash() { return stateParameter_.assaultSlash; }
+	OgreState::QuadrupleAttack& GetQuadrupleAttack() { return stateParameter_.quadrupleAttack; }
+
 #pragma endregion
+	//攻撃ステートかどうか取得
+	bool IsAttackState();
 
 private:
 
+	//翁雅用のデフォパラメータ設定
+	OgreState::StateParameter& configParameter_;
+
 	// 刀モデル
 	SkinningModel swordModel_;
-	// 刀コライダー
-	LWP::Object::Collision swordCollider_;
-	LWP::Object::Collider::Capsule& capsule_;
+	//攻撃コライダー(球)
+	LWP::Object::Collision sphereCollider_;
+	LWP::Object::Collider::Sphere& sphere_;
+	//攻撃コライダー(AABB)
+	LWP::Object::Collision aabbAttackCollider_;
+	LWP::Object::Collider::AABB& aabbAttack_;
 	//弾の攻撃方向
 	Vector3 bulletDirection_{};
 

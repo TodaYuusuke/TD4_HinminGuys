@@ -25,9 +25,9 @@ namespace OniHayhaState {
 	/// </summary>
 	struct IdleParameter {
 		//待機時間
-		float standTime;
+		float standTime = 2.0f;
 		//退避モーションに移行する距離
-		float retreatDist;
+		float retreatDist = 3.0f;
 		//カウント
 		float countStandTime = 1.0f;
 	};
@@ -37,11 +37,11 @@ namespace OniHayhaState {
 	/// </summary>
 	struct AttackParameter {
 		//攻撃判定受付開始時間
-		float startAcceptTime;
+		float startAcceptTime = 0.05f;
 		//攻撃判定受付終了時間
-		float endAcceptTime;
+		float endAcceptTime = 0.99f;
 		//弾の速度
-		float bulletSpeed;
+		float bulletSpeed = 50.0f;
 	};
 
 	/// <summary>
@@ -49,7 +49,7 @@ namespace OniHayhaState {
 	/// </summary>
 	struct RetreatParameter {
 		//待機状態に戻る距離
-		float idleDist;
+		float idleDist = 5.0f;
 	};
 
 	/// <summary>
@@ -57,7 +57,7 @@ namespace OniHayhaState {
 	/// </summary>
 	struct WaitingForAttackParameter {
 		//自身の攻撃する順番
-		uint16_t attackID;
+		uint16_t attackID = 0;
 	};
 
 	/// <summary>
@@ -65,7 +65,7 @@ namespace OniHayhaState {
 	/// </summary>
 	struct HitReactionParameter {
 		//減衰
-		float decay;
+		float decay = 0.99f;
 	};
 
 	/// <summary>
@@ -73,15 +73,15 @@ namespace OniHayhaState {
 	/// </summary>
 	struct AimingParameter {
 		//狙う時間
-		float aimingTime;
+		float aimingTime = 1.5f;
 		//レーザーがチカチカし始める時間
-		float flickeringTime;
+		float flickeringTime = 1.0f;
 		//チカチカ間隔
-		int32_t flickeringInterval;
+		int32_t flickeringInterval = 3;
 		//残り時間カウント
-		float countAimingTime;
+		float countAimingTime = 0.0f;
 		//チカチカカウント
-		int32_t flickeringCounter;
+		int32_t flickeringCounter = 0;
 	};
 
 	/// <summary>
@@ -106,7 +106,7 @@ namespace OniHayhaState {
 		//JSON初期化
 		void InitJson();
 		//パラメータ取得
-		const StateParameter& GetStateParameter() const { return stateParameter_; }
+		StateParameter& GetStateParameter() { return stateParameter_; }
 
 	private:
 		//編集用パラメータ

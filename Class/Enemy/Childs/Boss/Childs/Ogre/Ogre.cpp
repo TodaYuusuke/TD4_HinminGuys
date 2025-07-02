@@ -8,8 +8,10 @@ using namespace LWP::Primitive;
 using namespace GameMask;
 using namespace OgreState;
 
-Ogre::Ogre(const OgreState::StateParameter& stateParameter) :
-	capsule_(swordCollider_.SetBroadShape(LWP::Object::Collider::Capsule()))
+Ogre::Ogre(OgreState::StateParameter& stateParameter) :
+	configParameter_(stateParameter),
+	sphere_(sphereCollider_.SetBroadShape(LWP::Object::Collider::Sphere())),
+	aabbAttack_(aabbAttackCollider_.SetBroadShape(LWP::Object::Collider::AABB()))
 {
 
 	stateParameter_ = stateParameter;
@@ -49,8 +51,8 @@ void Ogre::Initialize(Player* player, const Vector3& position, LWP::Object::Came
 	collider_.SetFollow(&model_.worldTF);
 	collider_.isActive = true;
 	collider_.worldTF.translation = { 0.0f, 1.0f, 0.0f };
-	aabb_.min = { -0.4f,-0.5f,-0.4f };
-	aabb_.max = { 0.4f,0.5f,0.4f };
+	aabbBody_.min = { -0.4f,-0.5f,-0.4f };
+	aabbBody_.max = { 0.4f,0.5f,0.4f };
 	// 自機の所属しているマスクを設定
 	collider_.mask.SetBelongFrag(GetEnemy());
 	// 当たり判定をとる対象のマスクを設定
@@ -59,7 +61,7 @@ void Ogre::Initialize(Player* player, const Vector3& position, LWP::Object::Came
 		hitTarget;
 
 		//ステートをセット(攻撃中はリアクションしない)
-		if (state_.GetCurrentBehavior() != States::kAssaultSlash) {
+		if (not IsAttackState()) {
 			SetPreState(state_.GetCurrentBehavior());
 			state_.request = States::kHitReaction;
 			//今後プレイヤーから取得する
@@ -82,7 +84,7 @@ void Ogre::Initialize(Player* player, const Vector3& position, LWP::Object::Came
 	//名前設定
 	collider_.name = "Ogre" + std::to_string(ID_);
 	//刀のコライダー生成
-	CreateSwordCollider();
+	CreateColliders();
 
 }
 
@@ -129,22 +131,52 @@ void Ogre::DebugGUI()
 
 }
 
-void Ogre::CreateSwordCollider()
+bool Ogre::IsAttackState()
 {
-	// 刀の判定生成
-	swordCollider_.SetFollow(&model_, "WeaponAnchor");
-	swordCollider_.isActive = false;
+
+	if (state_.GetCurrentBehavior() == States::kSwingDownAttack or
+		state_.GetCurrentBehavior() == States::kRotatingSlash or
+		state_.GetCurrentBehavior() == States::kFallingThrust or
+		state_.GetCurrentBehavior() == States::kAssaultSlash or
+		state_.GetCurrentBehavior() == States::kQuadrupleAttack) {
+		return true;
+	}
+
+	return false;
+}
+
+void Ogre::CreateColliders()
+{
+	
+	// 球の判定生成
+	sphereCollider_.SetFollow(&model_, "Hips");
+	sphereCollider_.isActive = false;
 	// 自機の所属しているマスクを設定
-	swordCollider_.mask.SetBelongFrag(GetAttack());
+	sphereCollider_.mask.SetBelongFrag(GetAttack());
 	// 当たり判定をとる対象のマスクを設定
-	swordCollider_.mask.SetHitFrag(GetPlayer() | GetParry());
-	swordCollider_.enterLambda = [this](LWP::Object::Collision* hitTarget) {
+	sphereCollider_.mask.SetHitFrag(GetPlayer() | GetParry());
+	sphere_.isShowWireFrame = false;
+	sphereCollider_.enterLambda = [this](LWP::Object::Collision* hitTarget) {
 		hitTarget;
 		player_->TakeDamage(parameter_.attackParameter.attackValue);
 		//判定をオフにする
 		//swordCollider_.isActive = false;
 		};
-	capsule_.radius = 0.1f;
+	// AABBの判定生成
+	aabbAttackCollider_.SetFollow(&model_, "Hips");
+	aabbAttackCollider_.isActive = false;
+	// 自機の所属しているマスクを設定
+	aabbAttackCollider_.mask.SetBelongFrag(GetAttack());
+	// 当たり判定をとる対象のマスクを設定
+	aabbAttackCollider_.mask.SetHitFrag(GetPlayer() | GetParry());
+	aabbAttack_.isShowWireFrame = false;
+	aabbAttackCollider_.enterLambda = [this](LWP::Object::Collision* hitTarget) {
+		hitTarget;
+		player_->TakeDamage(parameter_.attackParameter.attackValue);
+		//判定をオフにする
+		//swordCollider_.isActive = false;
+		};
+
 }
 
 void Ogre::AddStateFunc()

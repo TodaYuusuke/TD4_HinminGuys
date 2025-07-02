@@ -8,7 +8,8 @@ using namespace LWP::Primitive;
 using namespace GameMask;
 using namespace SaijiState;
 
-Saiji::Saiji(const SaijiState::StateParameter& stateParameter) :
+Saiji::Saiji(SaijiState::StateParameter& stateParameter) :
+	configParameter_(stateParameter),
 	capsule_(swordCollider_.SetBroadShape(LWP::Object::Collider::Capsule()))
 {
 
@@ -49,8 +50,8 @@ void Saiji::Initialize(Player* player, const Vector3& position, LWP::Object::Cam
 	collider_.SetFollow(&model_.worldTF);
 	collider_.isActive = true;
 	collider_.worldTF.translation = { 0.0f, 1.0f, 0.0f };
-	aabb_.min = { -0.25f,-0.5f,-0.25f };
-	aabb_.max = { 0.25f,0.5f,0.25f };
+	aabbBody_.min = { -0.25f,-0.5f,-0.25f };
+	aabbBody_.max = { 0.25f,0.5f,0.25f };
 	// 自機の所属しているマスクを設定
 	collider_.mask.SetBelongFrag(GetEnemy());
 	// 当たり判定をとる対象のマスクを設定

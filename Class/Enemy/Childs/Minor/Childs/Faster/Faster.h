@@ -18,6 +18,8 @@ public:
 
 	void DebugGUI() override;
 
+	void ApplyLatestParameter() override {}
+
 	//直前のステートをセット(HitReactionは除外)
 	void SetPreState(FasterState::States state) { if (state != FasterState::States::kHitReaction) { preState_ = state; } }
 
