@@ -48,8 +48,11 @@ void Particles::DebugGui() {
 
 	ImGui::DragFloat3("EmitterPos(Debug)", &debugEmitterPos_.x, 0.01f);
 	// パリィ時のパーティクル生成
-	if (ImGui::Button("Create Parry Particle")) {
-		CreateParryParticle(debugEmitterPos_);
+	if (ImGui::Button("Create JustParry Particle")) {
+		CreateJustParryParticle(debugEmitterPos_);
+	}
+	if (ImGui::Button("Create GoodParry Particle")) {
+		CreateGoodParryParticle(debugEmitterPos_);
 	}
 	// 回避時のパーティクル生成
 	if (ImGui::Button("Create Evasion Particle")) {
@@ -72,9 +75,23 @@ void Particles::DebugGui() {
 	}
 }
 
+void Particles::CreateJustParryParticle(const LWP::Math::Vector3& pos) {
+	parryEffect_->CreateJustParticles(pos);
+}
+
+void Particles::CreateGoodParryParticle(const LWP::Math::Vector3& pos) {
+	parryEffect_->CreateGoodParticles(pos);
+}
+
 void Particles::CreateParryParticle(const LWP::Math::Vector3& pos) {
-	//parryEffect_->Add(parryEffect_->GetParticleJsonData().count, pos);
-	parryEffect_->Create(pos);
+	// ジャストパリィ
+	if (player_->GetSystemManager()->GetIsJustParry()) {
+		parryEffect_->CreateJustParticles(pos);
+	}
+	// 弱パリィ
+	if (player_->GetSystemManager()->GetIsGoodParry()) {
+		parryEffect_->CreateGoodParticles(pos);
+	}
 }
 
 void Particles::CreateEvasionParticle(const LWP::Math::Vector3& pos) {

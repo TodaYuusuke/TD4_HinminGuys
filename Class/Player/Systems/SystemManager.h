@@ -189,6 +189,14 @@ public:// Getter, Setter
 	/// パリィが成功したかを取得
 	/// </summary>
 	bool GetIsSuccessParry() { return successParryData_.isActive; }
+	/// <summary>
+	/// ジャストパリィが成功したかを取得
+	/// </summary>
+	bool GetIsJustParry() { return isJustParry_; }
+	/// <summary>
+	/// 弱パリィが成功したかを取得
+	/// </summary>
+	bool GetIsGoodParry() { return isGoodParry_; }
 #pragma endregion
 
 #pragma region Setter
@@ -254,6 +262,16 @@ public:// Getter, Setter
 	/// </summary>
 	/// <param name="isSuccessParry"></param>
 	void SetIsSuccessParry(const bool& isSuccessParry) { successParryData_.isActive = isSuccessParry; }
+	/// <summary>
+	/// ジャストパリィが成功したかを設定
+	/// </summary>
+	/// <param name="isSuccessParry"></param>
+	void SetIsJustParry(const bool& isJustParry) { isJustParry_ = isJustParry; }
+	/// <summary>
+	/// 弱パリィが成功したかを設定
+	/// </summary>
+	/// <param name="isSuccessParry"></param>
+	void SetIsGoodParry(const bool& isGoodParry) { isGoodParry_ = isGoodParry; }
 #pragma endregion
 
 private:// 外部からポインタをもらう変数
@@ -338,4 +356,7 @@ private:
 	bool isNoneSheathGauge_;
 	// ダッシュ可能か
 	bool isEnableDash_;
+
+	bool isJustParry_;
+	bool isGoodParry_;
 };

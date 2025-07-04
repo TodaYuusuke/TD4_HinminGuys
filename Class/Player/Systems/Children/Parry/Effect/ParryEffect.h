@@ -8,17 +8,22 @@ class ParryEffect {
 public:
 	enum class ParticleType {
 		kLine,
-		kCircle
+		kCircle,
+		kLargeFlash,
+		kShortFlash,
+		kRing
 	};
 
 	struct ParticleData {
 		LWP::Primitive::Billboard2D billboard;
 		LWP::Resource::RigidModel plane;		// 平面
 		LWP::Math::Vector3 vel;					// 速度
+		LWP::Math::Vector3 euler;				// オイラー角
 		float multiply;
 		float lifeTime;							// 生存時間
 		float currentTime = 0;					// 経過フレーム
 		ParticleType type;
+		std::function<void(ParticleData&)> updateFunc;
 	};
 	// Particleを発生させる
 	struct Emitter {
@@ -55,24 +60,85 @@ private:
 	/// 線パーティクル単体を生成
 	/// </summary>
 	/// <param name="pos"></param>
-	/// <param name="randomEngine"></param>
 	/// <returns></returns>
 	ParticleData MakeLineParticle(LWP::Math::Vector3 pos);
 	/// <summary>
 	/// 円パーティクル単体を生成
 	/// </summary>
 	/// <param name="pos"></param>
-	/// <param name="randomEngine"></param>
 	/// <returns></returns>
 	ParticleData MakeCircleParticle(LWP::Math::Vector3 pos);
 	/// <summary>
-	/// 指定されている数のパーティクルを生成
+	/// 大きい光パーティクル単体を生成
+	/// </summary>
+	/// <param name="pos"></param>
+	/// <returns></returns>
+	ParticleData MakeLargeFlashParticle(LWP::Math::Vector3 pos);
+	/// <summary>
+	/// 小さい光パーティクル単体を生成
+	/// </summary>
+	/// <param name="pos"></param>
+	/// <returns></returns>
+	ParticleData MakeShortFlashParticle(LWP::Math::Vector3 pos);
+	/// <summary>
+	/// リングを生成
+	/// </summary>
+	/// <param name="pos"></param>
+	/// <returns></returns>
+	ParticleData MakeRingParticle(LWP::Math::Vector3 pos);
+	/// <summary>
+	/// 指定されている数のジャストパリィパーティクルを生成
 	/// </summary>
 	/// <param name="pos"></param>
 	/// <param name="randomEngine"></param>
 	/// <returns></returns>
-	std::list<ParticleData> Emission(LWP::Math::Vector3 pos);
+	std::list<ParticleData> JustEmission(LWP::Math::Vector3 pos);
+	/// <summary>
+	/// 指定されている数の弱パリィパーティクルを生成
+	/// </summary>
+	/// <param name="pos"></param>
+	/// <param name="randomEngine"></param>
+	/// <returns></returns>
+	std::list<ParticleData> GoodEmission(LWP::Math::Vector3 pos);
 
+public:
+	/// <summary>
+	/// ジャストパリィパーティクル生成開始
+	/// </summary>
+	void CreateJustParticles(LWP::Math::Vector3 pos);
+	/// <summary>
+	/// 弱パリィパーティクル生成開始
+	/// </summary>
+	void CreateGoodParticles(LWP::Math::Vector3 pos);
+
+private:
+	/// <summary>
+	/// 線パーティクルの更新処理
+	/// </summary>
+	/// <param name="data"></param>
+	void LineParticleUpdate(ParticleData& data);
+	/// <summary>
+	/// 円パーティクルの更新処理
+	/// </summary>
+	/// <param name="data"></param>
+	void CircleParticleUpdate(ParticleData& data);
+	/// <summary>
+	/// 大きい閃光の更新処理
+	/// </summary>
+	/// <param name="data"></param>
+	void LargeFlashUpdate(ParticleData& data);
+	/// <summary>
+	/// 小さい閃光の更新処理
+	/// </summary>
+	/// <param name="data"></param>
+	void ShortFlashUpdate(ParticleData& data);
+	/// <summary>
+	/// リングの更新処理
+	/// </summary>
+	/// <param name="data"></param>
+	void RingParticleUpdate(ParticleData& data);
+
+#pragma region 数学関数
 	/// <summary>
 	/// 方向ベクトルからクォータニオンを算出
 	/// </summary>
@@ -91,13 +157,9 @@ private:
 	float GetRotationAngleFromMatrix(const LWP::Math::Matrix4x4& m);
 
 	LWP::Math::Quaternion QuaternionFromMatrix(const LWP::Math::Matrix4x4& m);
+#pragma endregion
 
 public:
-	/// <summary>
-	/// パーティクル生成開始
-	/// </summary>
-	void Create(LWP::Math::Vector3 pos);
-
 #pragma region Getter
 	/// <summary>
 	/// JSONに保存している値を取得
@@ -121,10 +183,26 @@ private:// 外部から受け取る変数
 private:
 	ParticleJsonData lineParticleData_;
 	ParticleJsonData circleParticleData_;
+	ParticleJsonData largeFlashData_;
+	ParticleJsonData shortFlashData_;
+	ParticleJsonData ringData_;
+
+	// ケルビン値
 	LimitF lineParticleKelvin = { 1000.0f, 3000.0f };
 	LimitF circleParticleKelvin = { 1000.0f, 3000.0f };
+
+	// 大きい閃光の最大サイズ
+	LWP::Math::Vector3 maxLargeFlashScale = { 1.0f,1.0f,1.0f };
+	// 小さい閃光の最大サイズ
+	LWP::Math::Vector3 maxShortFlashScale = { 1.0f,1.0f,1.0f };
+	// リングの最大サイズ
+	LWP::Math::Vector3 maxRingScale = { 1.0f,1.0f,1.0f };
+
+	// イージング終了時間
 	float circleParticleEasingEndTime = 1.0f;
 
 private:
 	std::list<ParticleData> particles_;
+
+	LWP::Math::Vector3 emitterPos_;
 };

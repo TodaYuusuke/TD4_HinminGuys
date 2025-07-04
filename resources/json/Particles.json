@@ -84,7 +84,16 @@
             "float :ElapseTime": 3.0,
             "float :Multiply": 1.0,
             "float :VelocityEaseEndTime": 0.5,
-            "int32_t :Count": 16
+            "int32_t :Count": 0
+        },
+        "Group :LargeFlash": {
+            "Vector3 :MaxScale": [
+                0.5,
+                0.5,
+                6.0
+            ],
+            "float :ElapseTime": 0.6000000238418579,
+            "int32_t :Count": 3
         },
         "Group :Line": {
             "Group :Kelvin": {
@@ -94,9 +103,9 @@
             "Group :RandomValueMinMax": {
                 "Group :Scale": {
                     "Vector3 :Max": [
-                        0.15000000596046448,
-                        0.30000001192092896,
-                        0.30000001192092896
+                        0.5,
+                        1.0,
+                        1.0
                     ],
                     "Vector3 :Min": [
                         0.10000000149011612,
@@ -106,30 +115,48 @@
                 },
                 "Group :Velocity": {
                     "Vector3 :Max": [
-                        0.10000000149011612,
-                        0.0,
-                        0.10000000149011612
+                        0.5,
+                        0.20000000298023224,
+                        0.5
                     ],
                     "Vector3 :Min": [
-                        -0.10000000149011612,
-                        -0.07000000029802322,
-                        -0.10000000149011612
+                        -0.5,
+                        -0.20000000298023224,
+                        -0.5
                     ]
                 }
             },
             "Vector3 :Acceleration": [
                 0.0,
-                -0.0020000000949949026,
+                0.0,
                 0.0
             ],
             "Vector3 :First": [
                 0.0,
-                0.07999999821186066,
+                0.0,
                 0.0
             ],
             "float :ElapseTime": 2.0,
             "float :Multiply": 1.0,
-            "int32_t :Count": 32
+            "int32_t :Count": 100
+        },
+        "Group :Ring": {
+            "Vector3 :MaxScale": [
+                7.0,
+                7.0,
+                7.0
+            ],
+            "float :ElapseTime": 1.0,
+            "int32_t :Count": 1
+        },
+        "Group :ShortFlash": {
+            "Vector3 :MaxScale": [
+                0.10000000149011612,
+                0.10000000149011612,
+                1.0
+            ],
+            "float :ElapseTime": 0.5,
+            "int32_t :Count": 12
         }
     }
 }

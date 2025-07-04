@@ -73,7 +73,7 @@ void Player::Update() {
 	playerParameter_->Update();
 
 	// 速度を加算
-	model_.worldTF.translation += systemManager_->GetVelocity();
+	model_.worldTF.translation += systemManager_->GetVelocity() * LWP::Info::GetDeltaTimeF() * 60.0f;
 	// 角度を代入S
 	model_.worldTF.rotation = LWP::Utility::Interpolation::SlerpQuaternion(model_.worldTF.rotation, systemManager_->GetQuat(), 0.25f);
 

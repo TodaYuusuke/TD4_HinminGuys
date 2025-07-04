@@ -18,7 +18,8 @@ Parry::Parry(LWP::Object::Camera* camera, Player* player) {
 }
 
 Parry::~Parry() {
-
+	player_->GetSystemManager()->SetIsGoodParry(false);
+	player_->GetSystemManager()->SetIsJustParry(false);
 }
 
 void Parry::Initialize() {
@@ -56,8 +57,9 @@ void Parry::Update() {
 		}
 
 		// パリィ成功フラグをfalseにする
-		player_->GetSystemManager()->SetIsSuccessParry(false);
 		isJustParry_ = false;
+		player_->GetSystemManager()->SetIsJustParry(false);
+		player_->GetSystemManager()->SetIsSuccessParry(false);
 		velocity_ = { 0,0,0 };
 		t_ = 0.0f;
 	}
@@ -72,8 +74,11 @@ void Parry::Update() {
 		}
 
 		// パリィ成功フラグをfalseにする
-		player_->GetSystemManager()->SetIsSuccessParry(false);
-		isGoodParry_ = false;
+		if (isGoodParry_) {
+			isGoodParry_ = false;
+			player_->GetSystemManager()->SetIsGoodParry(false);
+			player_->GetSystemManager()->SetIsSuccessParry(false);
+		}
 	}
 
 	// frameごとに起きるイベント
@@ -102,7 +107,8 @@ void Parry::Update() {
 
 void Parry::Reset() {
 	player_->GetSystemManager()->GetParryCollision().isActive = false;
-
+	player_->GetSystemManager()->SetIsGoodParry(false);
+	player_->GetSystemManager()->SetIsJustParry(false);
 	// クールタイム設定
 	if (!isJustParry_ || !isGoodParry_) {
 		player_->GetSystemManager()->SetParryCoolTime(jsonData_.coolTime);
@@ -231,6 +237,7 @@ void Parry::CreateCollision() {
 
 				isJustParry_ = true;
 				isGoodParry_ = false;
+				player_->GetSystemManager()->SetIsJustParry(isJustParry_);
 				eventOrders_[(int)ParryInvinsibleState::kJust].Start();
 
 				// 無敵時間を設定
@@ -266,6 +273,7 @@ void Parry::CreateCollision() {
 				player_->GetSystemManager()->SetIsSuccessParry(true);
 				isGoodParry_ = true;
 				isJustParry_ = false;
+				player_->GetSystemManager()->SetIsGoodParry(isGoodParry_);
 				eventOrders_[(int)ParryInvinsibleState::kGood].Start();
 
 				// ガードアニメーション開始

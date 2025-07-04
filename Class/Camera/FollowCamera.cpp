@@ -74,9 +74,9 @@ void FollowCamera::Update() {
 	// 座標の補間をしていない座標を算出
 	defaultPos_ = (targetPosition_) + kTargetDist * LWP::Math::Matrix4x4::CreateRotateXYZMatrix(camera_->worldTF.rotation);
 	// カメラの後追い
-	interTarget_ = LWP::Utility::Interpolation::Lerp(interTarget_, (targetPosition_), interTargetRate);
+	interTarget_ = LWP::Utility::Interpolation::Lerp(interTarget_, targetPosition_, interTargetRate);
 	// カメラの座標を決定
-	camera_->worldTF.translation = shakeOffset_ + interTarget_ + kTargetDist * LWP::Math::Matrix4x4::CreateRotateXYZMatrix(camera_->worldTF.rotation);
+	camera_->worldTF.translation = shakeOffset_ + interTarget_ + (kTargetDist * LWP::Math::Matrix4x4::CreateRotateXYZMatrix(camera_->worldTF.rotation));
 }
 
 void FollowCamera::DebugGUI() {

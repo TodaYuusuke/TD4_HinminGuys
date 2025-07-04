@@ -34,6 +34,16 @@ public:
 
 public:// パーティクル生成
 	/// <summary>
+	/// ジャストパリィ時のパーティクル生成
+	/// </summary>
+	/// <param name="pos"></param>
+	void CreateJustParryParticle(const LWP::Math::Vector3& pos);
+	/// <summary>
+	/// 弱パリィ時のパーティクル生成
+	/// </summary>
+	/// <param name="pos"></param>
+	void CreateGoodParryParticle(const LWP::Math::Vector3& pos);
+	/// <summary>
 	/// パリィ時のパーティクル生成
 	/// </summary>
 	/// <param name="pos"></param>
