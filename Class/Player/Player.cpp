@@ -14,11 +14,11 @@ Player::Player(LWP::Object::Camera* camera, EnemyManager* enemyManager, FollowCa
 	uiManager_ = uiManager;
 
 	// モデルを読み込む
-	model_.LoadShortPath("player/Player_Simple.gltf");
-	animation_.LoadFullPath("resources/model/player/Player_Simple.gltf", &model_);
+	model_.LoadShortPath("player/Player.gltf");
+	animation_.LoadFullPath("resources/model/player/Player.gltf", &model_);
 	animation_.Play("Idle");
 	// 刀
-	swordModel_.LoadShortPath("player/SimpleWeapon.gltf");
+	swordModel_.LoadShortPath("player/Katana.gltf");
 	// 鞘
 	sheathModel_.LoadShortPath("player/Sheath.gltf");
 
@@ -30,6 +30,14 @@ void Player::Initialize() {
 	inputHandler_ = InputHandler::GetInstance();
 	// ヒットストップの管理クラス
 	hitStopController_ = HitStopController::GetInstance();
+
+	// パーティクルの管理クラス
+	particles_ = std::make_unique<Particles>(this, followCamera_);
+	particles_->Initialize();
+
+	// パラメータ管理クラス生成
+	playerParameter_ = std::make_unique<PlayerParameter>(this);
+	playerParameter_->Initialize();
 
 	// 自機機能を生成
 	CreateSystems();
@@ -61,16 +69,22 @@ void Player::Update() {
 	// 各機能
 	systemManager_->Update();
 
+	// パラメータ
+	playerParameter_->Update();
+
 	// 速度を加算
 	model_.worldTF.translation += systemManager_->GetVelocity();
 	// 角度を代入S
-	model_.worldTF.rotation = systemManager_->GetQuat();
+	model_.worldTF.rotation = LWP::Utility::Interpolation::SlerpQuaternion(model_.worldTF.rotation, systemManager_->GetQuat(), 0.25f);
 
 	// 移動制限
 	LimitMoveArea();
 
 	// 無敵時間
 	InvinsibleUpdate();
+
+	// パーティクル管理クラス
+	particles_->Update();
 }
 
 void Player::Reset() {
@@ -97,7 +111,39 @@ void Player::DebugGUI() {
 		animation_.DebugGUI();
 		ImGui::TreePop();
 	}
+	if (ImGui::TreeNode("Particles")) {
+		particles_->DebugGui();
+		ImGui::TreePop();
+	}
+	// パラメータ
+	if (ImGui::TreeNode("Parameter")) {
+		playerParameter_->DebugGui();
+		ImGui::TreePop();
+	}
+
+	if (ImGui::Button("Take Damage")) {
+		TakeDamage(10.0f);
+	}
 #endif // DEBUG
+}
+
+void Player::TakeDamage(const float& damageValue) {
+	// 自機が無敵中ならダメージ判定をとらない
+	if (!collider_.isActive) { return; }
+	// 全ての機能をリセット
+	Reset();
+	// HPゲージ変動
+	uiManager_->ChangeHPGauge(damageValue, playerParameter_->defenseMultiply_);
+	// ダメージ機能を生成しすべての行動キャンセル
+	systemManager_->StartDamageResponse();
+}
+
+void Player::TakeSheathDamage(const float& damageValue, const float& multiply) {
+	// 鞘破壊中ならゲージ減少はなし
+	if (systemManager_->GetSheathSystem()->GetIsBreak()) { return; }
+
+	// 鞘ゲージ変動
+	uiManager_->ChangeSheathGauge(damageValue, multiply);
 }
 
 void Player::ResetSystems() {
@@ -125,7 +171,7 @@ void Player::CreateCollision() {
 }
 
 void Player::InvinsibleUpdate() {
-	if (systemManager_->GetInvisibleTime() != 0.0f) {
+	if (systemManager_->GetInvisibleTime() >= 0.0f) {
 		collider_.isActive = false;
 	}
 	else {
@@ -138,4 +184,12 @@ void Player::LimitMoveArea() {
 	if (systemManager_->GetSheathSystem()->GetSheathState()->GetStateName() == "SwordDrawn") {
 		systemManager_->GetSheathSystem()->ClampToCircle(model_.worldTF.translation);
 	}
+}
+
+void Player::CreateParryParticle(const LWP::Math::Vector3& pos) {
+	particles_->CreateParryParticle(pos);
+}
+
+void Player::CreateEvasionParticle(const LWP::Math::Vector3& pos) {
+	particles_->CreateEvasionParticle(pos);
 }

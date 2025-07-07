@@ -17,13 +17,13 @@
 			"name":"Sheath",
 			"translation":[
 				0,
-				0.17415793240070343,
+				0.11761239171028137,
 				0
 			]
 		},
 		{
 			"mesh":0,
-			"name":"M_Sheath",
+			"name":"Sheath",
 			"skin":0
 		},
 		{
@@ -31,12 +31,25 @@
 				1,
 				0
 			],
-			"name":"Sheath"
+			"name":"Sheath_Armature"
+		}
+	],
+	"materials":[
+		{
+			"doubleSided":true,
+			"name":"SheathMaterial",
+			"pbrMetallicRoughness":{
+				"baseColorTexture":{
+					"index":0
+				},
+				"metallicFactor":0,
+				"roughnessFactor":0.5
+			}
 		}
 	],
 	"meshes":[
 		{
-			"name":"\u7acb\u65b9\u4f53",
+			"name":"Plane.001",
 			"primitives":[
 				{
 					"attributes":{
@@ -46,9 +59,23 @@
 						"JOINTS_0":3,
 						"WEIGHTS_0":4
 					},
-					"indices":5
+					"indices":5,
+					"material":0
 				}
 			]
+		}
+	],
+	"textures":[
+		{
+			"sampler":0,
+			"source":0
+		}
+	],
+	"images":[
+		{
+			"mimeType":"image/png",
+			"name":"SheathTex",
+			"uri":"SheathTex.png"
 		}
 	],
 	"skins":[
@@ -57,54 +84,54 @@
 			"joints":[
 				0
 			],
-			"name":"Sheath"
+			"name":"Sheath_Armature"
 		}
 	],
 	"accessors":[
 		{
 			"bufferView":0,
 			"componentType":5126,
-			"count":48,
+			"count":554,
 			"max":[
-				0.02460700087249279,
-				0.800000011920929,
-				0.018000001087784767
+				0.136042058467865,
+				0.8923239707946777,
+				0.030202774330973625
 			],
 			"min":[
-				-0.02460700087249279,
-				0.0820000171661377,
-				-0.017215998843312263
+				-0.027767937630414963,
+				0.09982804954051971,
+				-0.015246464870870113
 			],
 			"type":"VEC3"
 		},
 		{
 			"bufferView":1,
 			"componentType":5126,
-			"count":48,
+			"count":554,
 			"type":"VEC3"
 		},
 		{
 			"bufferView":2,
 			"componentType":5126,
-			"count":48,
+			"count":554,
 			"type":"VEC2"
 		},
 		{
 			"bufferView":3,
 			"componentType":5121,
-			"count":48,
+			"count":554,
 			"type":"VEC4"
 		},
 		{
 			"bufferView":4,
 			"componentType":5126,
-			"count":48,
+			"count":554,
 			"type":"VEC4"
 		},
 		{
 			"bufferView":5,
 			"componentType":5123,
-			"count":84,
+			"count":2208,
 			"type":"SCALAR"
 		},
 		{
@@ -117,49 +144,55 @@
 	"bufferViews":[
 		{
 			"buffer":0,
-			"byteLength":576,
+			"byteLength":6648,
 			"byteOffset":0,
 			"target":34962
 		},
 		{
 			"buffer":0,
-			"byteLength":576,
-			"byteOffset":576,
+			"byteLength":6648,
+			"byteOffset":6648,
 			"target":34962
 		},
 		{
 			"buffer":0,
-			"byteLength":384,
-			"byteOffset":1152,
+			"byteLength":4432,
+			"byteOffset":13296,
 			"target":34962
 		},
 		{
 			"buffer":0,
-			"byteLength":192,
-			"byteOffset":1536,
+			"byteLength":2216,
+			"byteOffset":17728,
 			"target":34962
 		},
 		{
 			"buffer":0,
-			"byteLength":768,
-			"byteOffset":1728,
+			"byteLength":8864,
+			"byteOffset":19944,
 			"target":34962
 		},
 		{
 			"buffer":0,
-			"byteLength":168,
-			"byteOffset":2496,
+			"byteLength":4416,
+			"byteOffset":28808,
 			"target":34963
 		},
 		{
 			"buffer":0,
 			"byteLength":64,
-			"byteOffset":2664
+			"byteOffset":33224
+		}
+	],
+	"samplers":[
+		{
+			"magFilter":9729,
+			"minFilter":9987
 		}
 	],
 	"buffers":[
 		{
-			"byteLength":2728,
+			"byteLength":33288,
 			"uri":"Sheath.bin"
 		}
 	]

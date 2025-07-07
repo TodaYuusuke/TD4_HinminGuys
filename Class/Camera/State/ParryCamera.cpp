@@ -2,6 +2,7 @@
 #include "../FollowCamera.h"
 #include "../../Player/Command/InputHandler.h"
 #include "../../Player/Player.h"
+#include "../../Components/HitStopController.h"
 #include "InputCamera.h"
 
 using namespace LWP;
@@ -15,7 +16,7 @@ ParryCamera::ParryCamera(Player* player, FollowCamera* followCamera) {
 
 	stateName_ = "Parry";
 
-	shakeRange_ = { 0.1f, 0.1f,0.0f };
+	shakeRange_ = followCamera_->parryShakeRange;
 	// カメラの揺れ
 	shake_.SetEndFrame(followCamera_->parryShakeTime);
 	shake_.SetRange(shakeRange_);
@@ -26,7 +27,8 @@ ParryCamera::ParryCamera(Player* player, FollowCamera* followCamera) {
 	CreateEventOrder();
 	targetDistOrder_.Start();
 
-	Vector3 dist = (player_->GetSystemManager()->GetSuccessParryData().targetPos - player_->GetWorldTF()->GetWorldPosition()).Normalize();
+	// パリィした座標にカメラを向ける
+	Vector3 dist = (player_->GetSystemManager()->GetSuccessParryData().targetPos - player_->GetWorldTF()->GetWorldPosition());
 	Vector3 p2c = (player_->GetWorldTF()->GetWorldPosition() - followCamera_->GetCamera()->worldTF.GetWorldPosition()).Normalize();
 	float yaw = atan2(dist.x, dist.z);
 
@@ -58,13 +60,20 @@ ParryCamera::ParryCamera(Player* player, FollowCamera* followCamera) {
 	}
 
 	// ラジアルブラー
-	followCamera_->camera_->pp.use = true;
-	followCamera_->camera_->pp.radialBlur.use = true;
+	//followCamera_->camera_->pp.use = true;
+	//followCamera_->camera_->pp.radialBlur.use = true;
+	//followCamera_->camera_->pp.radialBlur.blurWidth = followCamera_->parryBlurWidth;
+	//followCamera_->camera_->pp.CreateShaderFile();
+
+	// ヒットストップ
+	HitStopController::GetInstance()->Start(followCamera_->parryHitStopTime, timeScale_);
 }
 
 ParryCamera::~ParryCamera() {
 	followCamera_->camera_->pp.use = false;
 	followCamera_->camera_->pp.radialBlur.use = false;
+	timeScale_ = 1.0f;
+	HitStopController::GetInstance()->SetTimeMultiply(timeScale_);
 }
 
 void ParryCamera::Initialize() {
@@ -72,14 +81,15 @@ void ParryCamera::Initialize() {
 }
 
 void ParryCamera::Update() {
+	targetPos_ = player_->GetWorldTF()->GetWorldPosition();
+	followCamera_->SetTargetPosition(targetPos_);
+
 	// カメラの揺れ
 	shake_.Update();
 	// 揺れを適用
 	followCamera_->SetShakeOffset(shake_.GetValue());
-	shakeRange_ = LWP::Utility::Interpolation::Exponential(shakeRange_, Vector3{ 0.0f,0.0f,0.0f }, 0.05f);
+	shakeRange_ = LWP::Utility::Interpolation::Exponential(shakeRange_, Vector3{ 0.0f,0.0f,0.0f }, 0.3f);
 	shake_.SetRange(shakeRange_);
-
-	t_++;
 
 	// ロックオン対象とカメラの距離を算出
 	TargetDistUpdate();
@@ -87,24 +97,21 @@ void ParryCamera::Update() {
 	// カメラの角度を算出
 	RotateUpdate();
 
+	t_++;
+
 	// カメラの演出が終わったら状態変更(この処理以降何も書かないこと。Stateが解放されるのでアクセスエラーになりますよ)
 	if (targetDistOrder_.GetIsEnd()) {
 		player_->GetSystemManager()->SetIsSuccessParry(false);
-		followCamera_->ChangeState(new InputCamera(followCamera_));
+		InputCamera* pState = new InputCamera(player_, followCamera_);
+		pState->StartReturnRotate();
+		followCamera_->ChangeState(pState);
 		return;
 	}
 }
 
 void ParryCamera::RotateUpdate() {
 	radian_ = Lerp(start_, end_, Utility::Easing::OutExpo(t_ / followCamera_->zoomFinishTime));
-
 	followCamera_->SetRadian(radian_);
-
-	// x軸回転
-	followCamera_->SetCameraRotate(LWP::Math::Quaternion::CreateFromAxisAngle(LWP::Math::Vector3{ 0, 0, 1 }, radian_.z) * LWP::Math::Quaternion::CreateFromAxisAngle(LWP::Math::Vector3{ 1, 0, 0 }, radian_.x));
-
-	// y軸は常に上を向くように固定
-	followCamera_->SetCameraRotate(LWP::Math::Quaternion::CreateFromAxisAngle(LWP::Math::Vector3{ 0, 1, 0 }, radian_.y) * followCamera_->GetCamera()->worldTF.rotation);
 }
 
 void ParryCamera::TargetDistUpdate() {
@@ -112,7 +119,18 @@ void ParryCamera::TargetDistUpdate() {
 
 	// カメラを近づける
 	if (targetDistOrder_.GetCurrentTimeEvent().name == "Zoom") {
+		// 追従対象の座標
 		followCamera_->kTargetDist = Lerp(followCamera_->defaultTargetDist_, followCamera_->defaultTargetDist_ + followCamera_->parryDist, Easing::OutExpo(targetDistOrder_.GetCurrentFrame() / followCamera_->zoomFinishTime));
+
+		//// 追従対象とカメラとの距離
+		//Vector3 dist = (player_->GetSystemManager()->GetSuccessParryData().targetPos - player_->GetWorldTF()->GetWorldPosition()) / 2.0f;
+		//targetPos_ = player_->GetWorldTF()->GetWorldPosition() + dist;
+		//followCamera_->SetTargetPosition(targetPos_);
+		//startTargetPos_ = targetPos_;
+	}
+	// ヒットストップ終了したら追従対象とカメラの距離を戻す
+	else if (targetDistOrder_.GetCurrentTimeEvent().name == "Wait") {
+
 	}
 }
 

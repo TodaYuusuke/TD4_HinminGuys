@@ -1,10 +1,19 @@
 #include "LockOnCamera.h"
 #include "../FollowCamera.h"
+#include "../../Player/Player.h"
 
-LockOnCamera::LockOnCamera(FollowCamera* followCamera) {
+using namespace LWP;
+using namespace LWP::Utility;
+using namespace LWP::Utility::Interpolation;
+
+LockOnCamera::LockOnCamera(Player* player, FollowCamera* followCamera) {
+	player_ = player;
 	followCamera_ = followCamera;
 
 	stateName_ = "LockOn";
+
+	rate_ = 0.05f;
+	radian_ = followCamera_->GetRadian();
 }
 
 void LockOnCamera::Initialize() {
@@ -12,6 +21,8 @@ void LockOnCamera::Initialize() {
 }
 
 void LockOnCamera::Update() {
+	followCamera_->SetTargetPosition(player_->GetWorldTF()->GetWorldPosition());
+
 	// カメラの角度を算出
 	RotateUpdate();
 }
@@ -20,7 +31,7 @@ void LockOnCamera::RotateUpdate() {
 	// ロックオン対象との距離
 	float lockOnTargetDist = (followCamera_->GetLockOnData().targetTransform->translation - followCamera_->GetTargetPos()).Length();
 
-	if (lockOnTargetDist * 2.0f <= 1.5f) { return; }
+	if (lockOnTargetDist <= 1.0f) { return; }
 
 	lockOnTargetDist = std::clamp<float>(lockOnTargetDist, followCamera_->maxLength / 10.0f, followCamera_->maxLength);
 
@@ -38,29 +49,30 @@ void LockOnCamera::RotateUpdate() {
 	dir.y = atan2(dist.x, dist.z);                        // Y軸（左右）
 	dir.x = atan2(-dist.y, sqrt(dist.x * dist.x + dist.z * dist.z)); // X軸（上下
 
+	// ロックオンした瞬間なめらかに角度を補間
+	t_++;
+	rate_ = LerpF(0.05f, 1.0f, t_ / 60.0f);
+
 	// 数値が1なら角度制限を行わない
 	float isClampAngle = 1;
 	// 角度制限
 	followCamera_->ClampAngle(isClampAngle, ((followCamera_->GetLockOnData().targetTransform->GetWorldPosition()) - followCamera_->GetCamera()->worldTF.translation).Normalize(), LWP::Utility::DegreeToRadian(followCamera_->kOriginRotateX + 0.0f), LWP::Utility::DegreeToRadian(followCamera_->kOriginRotateX + 20.0f));
 
+	// 角度が-2πor2π以上以下にならないようにする
 	if (radian_.y >= 2 * (float)std::numbers::pi) {
 		radian_.y -= 2 * (float)std::numbers::pi;
 	}
 	if (radian_.y <= -2 * (float)std::numbers::pi) {
 		radian_.y += 2 * (float)std::numbers::pi;
 	}
-	followCamera_->SetRadian(radian_);
 
-	if (isClampAngle == 1) {
-		radian_ = { dir.x, dir.y, 0.0f };
-		// x軸回転
-		followCamera_->SetCameraRotate(LWP::Math::Quaternion::CreateFromAxisAngle(LWP::Math::Vector3{ 0, 0, 1 }, 0.0f) * LWP::Math::Quaternion::CreateFromAxisAngle(LWP::Math::Vector3{ 1, 0, 0 }, dir.x));
+	// 角度上限下限に違反しているとき
+	if (isClampAngle == 0) {
+		radian_ = Exponential(radian_, Vector3{ radian_.x, dir.y, 0.0f }, rate_);
 	}
 	else {
-		// x軸回転
-		followCamera_->SetCameraRotate(LWP::Math::Quaternion::CreateFromAxisAngle(LWP::Math::Vector3{ 0, 0, 1 }, 0.0f) * LWP::Math::Quaternion::CreateFromAxisAngle(LWP::Math::Vector3{ 1, 0, 0 }, radian_.x));
+		radian_ = Exponential(radian_, Vector3{ dir.x, dir.y, 0.0f }, rate_);
 	}
 
-	// y軸は常に上を向くように固定
-	followCamera_->SetCameraRotate(LWP::Math::Quaternion::CreateFromAxisAngle(LWP::Math::Vector3{ 0, 1, 0 }, dir.y) * followCamera_->GetCamera()->worldTF.rotation);
+	followCamera_->SetRadian(radian_);
 }

@@ -186,4 +186,7 @@ private:// プライベートな変数
 
 	// 回避ボタンを押した時間
 	float pressTime_;
+	
+	// バックステップするか
+	bool isBackStep_;
 };

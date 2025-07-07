@@ -31,7 +31,7 @@ public:// Getter, Setter
 	/// <param name="multiply"></param>
 	void Start(const float& time, const float& multiply = 0.2f) {
 		SetHitStopTime(time);
-		SetTimeMultiply(multiply);
+		LWP::Info::SetDeltaTimeMultiply(multiply);
 	}
 #pragma region Getter
 	/// <summary>
@@ -46,7 +46,7 @@ public:// Getter, Setter
 	/// 経過時間を取得(既存のΔタイムだと数値のばらつきがありジッターが起きてしまうので固定値にする)
 	/// </summary>
 	/// <returns></returns>
-	float GetDeltaTime() { return 1.0f * multiply_; }
+	float GetDeltaTime() { return LWP::Info::GetDeltaTimeF() * fps; }
 	/// <summary>
 	/// ヒットストップが終了しているかを取得
 	/// </summary>
@@ -69,7 +69,6 @@ public:// Getter, Setter
 	/// <param name="multiply"></param>
 	void SetTimeMultiply(const float& multiply) { 
 		LWP::Information::SetDeltaTimeMultiply(multiply); 
-		multiply_ = multiply;
 	}
 #pragma endregion
 
@@ -81,8 +80,6 @@ private:
 	float hitStopTime_;
 	// 経過時間
 	float currentFrame_;
-
-	float multiply_ = 1.0f;
 
 	// 終了しているかを取得
 	bool isFinish_;

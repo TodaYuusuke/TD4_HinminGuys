@@ -1,35 +1,49 @@
 {
     "Group :Parry": {
         "Vector3 :Angle": [
-            -0.05000000074505806,
-            0.20000000298023224,
+            -0.07999999821186066,
+            0.07000000029802322,
             0.10000000149011612
         ],
         "Vector3 :Distance": [
             0.0,
-            0.0,
-            3.5
+            -0.1599999964237213,
+            3.0
         ],
-        "float :HoldTime": 11.0,
-        "float :ShakeTime": 10.0,
-        "float :ZoomTime": 22.0
+        "Vector3 :ShakeRange": [
+            0.30000001192092896,
+            0.30000001192092896,
+            0.0
+        ],
+        "float :HitStopTime": 0.23000000417232513,
+        "float :HoldTime": 0.0,
+        "float :ShakeTime": 15.0,
+        "float :ZoomTime": 30.0
     },
     "Group :Rate": {
-        "float :InterTarget": 0.6000000238418579,
+        "float :InterTarget": 0.800000011920929,
         "float :Rotate": 0.23000000417232513,
-        "float :TargetDist": 0.05000000074505806
+        "float :TargetDist": 0.00800000037997961
     },
     "Vector3 :GameStartAngle": [
         20.0,
         0.0,
         0.0
     ],
+    "Vector3 :ReturnAngle": [
+        10.0,
+        0.0,
+        0.0
+    ],
     "Vector3 :TargetDistance": [
         0.0,
-        0.4399999976158142,
+        0.6000000238418579,
         -6.420000076293945
     ],
     "float :MaxRotateX": 70.0,
     "float :MinRotateX": 4.0,
-    "float :Sensitivity": 0.05999999865889549
+    "float :ReturnRotate": 240.0,
+    "float :ReturnTargetDist": 60.0,
+    "float :Sensitivity": 1.600000023841858,
+    "float :SwitchTargetPosTime": 15.0
 }

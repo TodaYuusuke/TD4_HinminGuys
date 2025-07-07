@@ -110,12 +110,13 @@ void GameScene::Update() {
 	//敵全て
 	enemyManager_.Update();
 
-	// 追従カメラ
-	followCamera_.Update();
-
 	// 自機
 	player_.Update();
 
+	// 追従カメラ
+	followCamera_.Update();
+
+	
 	//ダメージエフェクトエミッター
 	damageEffectEmitter_.Update();
 
@@ -126,7 +127,6 @@ void GameScene::Update() {
 	DebugGUI();
 
 	sceneTransitioner_.Update();
-
 }
 
 void GameScene::DebugGUI() {

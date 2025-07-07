@@ -16,10 +16,10 @@ struct ParryJsonData {
 	// 弱パリィ成功時の無敵時間
 	float successGoodParryInvinsible = 1.0f;
 
-	// ジャストパリィ時の鞘ゲージの減少量
-	float justParryDecrement = 50.0f;
-	// 甘パリィ時の鞘ゲージの減少量
-	float goodParryDecrement = 10.0f;
+	// ジャストパリィ時の鞘ゲージの減少量[%]
+	float justParry_DecrementSheathPercent = 25.0f;
+	// 甘パリィ時の鞘ゲージの減少量[%]
+	float goodParry_DecrementSheathPercent = 5.0f;
 
 	// ジャストパリィ時のノックバック量
 	float justParryKnockBackMovement = 6.0f;

@@ -33,10 +33,8 @@ void HitStopController::Update() {
 		// デルタタイムの係数初期化
 		if (!isFinish_) {
 			SetDeltaTimeMultiply(1.0f);
-			multiply_ = 1.0f;
 		}
 		isFinish_ = true;
-
 	}
 	else {
 		isFinish_ = false;

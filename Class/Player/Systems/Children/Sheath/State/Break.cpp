@@ -71,6 +71,9 @@ void Break::Command() {
 		player_->ResetAnimation();
 		player_->StartAnimation("SheathDash", 0.15f, 0.0f);
 
+		// 攻撃力設定
+		player_->GetParameter()->attackStrength_ = sheathSystem_->jsonData_.dashAttackValue;
+
 		(*eventOrders_)[(int)Sheath::SheathState::kBreak].Start();
 		isActive_ = true;
 		sheathSystem_->SetIsActive(true);

@@ -40,6 +40,8 @@ void Throw::Update() {
 	// 全ての移動処理終了
 	if ((*eventOrders_)[(int)Sheath::SheathState::kThrow].GetIsEnd()) {
 		(*eventOrders_)[(int)Sheath::SheathState::kThrow].Reset();
+		// 鞘判定をとらない
+		player_->GetSystemManager()->GetSheathCollision().isActive = false;
 		// 鞘なし状態に移行
 		sheathSystem_->ChangeState(new SwordDrawn(sheathSystem_, player_, eventOrders_));
 		return;
@@ -57,6 +59,11 @@ void Throw::Command() {
 		player_->StartAnimation("SheathThrow", 0.15f, 0.0f);
 		isActive_ = true;
 		sheathSystem_->SetIsActive(true);
+
+		// 鞘ゲージの減少量設定(鞘自体の攻撃力参照)
+		player_->GetParameter()->sheathDamegeStrength_ = sheathSystem_->jsonData_.sheathAttackValue;
+		// 攻撃力設定
+		player_->GetParameter()->attackStrength_ = sheathSystem_->jsonData_.sheathAttackValue;
 
 		// アクションイベント開始
 		(*eventOrders_)[(int)Sheath::SheathState::kThrow].Start();
@@ -103,6 +110,8 @@ void Throw::CheckThrowState() {
 	}
 	// 鞘回収するために自機が動いているときの処理
 	else if ((*eventOrders_)[(int)Sheath::SheathState::kThrow].GetCurrentTimeEvent().name == "ThrowFinishTime") {
+		// 鞘判定をとれるようにする
+		player_->GetSystemManager()->GetSheathCollision().isActive = true;
 		sheathSystem_->SetIsSheathModelActive(true);
 		// 本体のモデルも非表示
 		player_->SetIsSheathModelActive(false);
@@ -114,5 +123,9 @@ void Throw::CheckThrowState() {
 		quat_ = LWP::Math::Quaternion::CreateFromAxisAngle(LWP::Math::Vector3{ 0, 1, 0 }, radian_.y);
 
 		sheathSystem_->SetSheathPos(velocity_);
+	}
+	else {
+		// 鞘判定をとらない
+		player_->GetSystemManager()->GetSheathCollision().isActive = false;
 	}
 }
