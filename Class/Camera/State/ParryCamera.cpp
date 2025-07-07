@@ -27,6 +27,7 @@ ParryCamera::ParryCamera(Player* player, FollowCamera* followCamera) {
 	CreateEventOrder();
 	targetDistOrder_.Start();
 
+	// パリィした座標にカメラを向ける
 	Vector3 dist = (player_->GetSystemManager()->GetSuccessParryData().targetPos - player_->GetWorldTF()->GetWorldPosition());
 	Vector3 p2c = (player_->GetWorldTF()->GetWorldPosition() - followCamera_->GetCamera()->worldTF.GetWorldPosition()).Normalize();
 	float yaw = atan2(dist.x, dist.z);
