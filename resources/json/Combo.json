@@ -13,7 +13,7 @@
                         "Vector3 :AttackAssistMoveAmount": [
                             0.0,
                             0.0,
-                            0.10000000149011612
+                            0.15000000596046448
                         ],
                         "Vector3 :AttackColliderLengthOffset": [
                             0.0,
@@ -22,16 +22,16 @@
                         ],
                         "bool :IsLoop": false,
                         "float :AnimPlaySpeed": 1.0,
-                        "float :AttackAssistEnableTime": 0.20000000298023224,
+                        "float :AttackAssistEnableTime": 0.17499999701976776,
                         "float :AttackAssistStartTime": 0.0,
                         "float :AttackColliderRadius": 0.10000000149011612,
                         "float :AttackEndTime": 1.0,
                         "float :AttackStartTime": 0.25,
                         "float :Damage": 2.0,
                         "float :NockbackStrength": 0.10000000149011612,
-                        "float :ReceptTime": 4.0,
+                        "float :ReceptTime": 3.0,
                         "float :SheathDurabityLoss": 25.0,
-                        "float :StifnessTime": 1.25,
+                        "float :StifnessTime": 0.75,
                         "float :TransitionTime": 0.10000000149011612,
                         "int32_t :derivationPriority": 0,
                         "string :AnimName": "LightAttack4",
@@ -64,8 +64,8 @@
                     "float :NockbackStrength": 0.10000000149011612,
                     "float :ReceptTime": 1.5,
                     "float :SheathDurabityLoss": 10.0,
-                    "float :StifnessTime": 0.800000011920929,
-                    "float :TransitionTime": 0.10000000149011612,
+                    "float :StifnessTime": 0.5,
+                    "float :TransitionTime": 0.05000000074505806,
                     "int32_t :derivationPriority": 0,
                     "string :AnimName": "LightAttack3",
                     "string :FollowJointName": "WeaponAnchor"
@@ -88,7 +88,7 @@
                 ],
                 "bool :IsLoop": false,
                 "float :AnimPlaySpeed": 1.0,
-                "float :AttackAssistEnableTime": 0.10000000149011612,
+                "float :AttackAssistEnableTime": 0.15000000596046448,
                 "float :AttackAssistStartTime": 0.0,
                 "float :AttackColliderRadius": 0.10000000149011612,
                 "float :AttackEndTime": 1.0,
@@ -121,7 +121,7 @@
             ],
             "bool :IsLoop": false,
             "float :AnimPlaySpeed": 1.0,
-            "float :AttackAssistEnableTime": 0.10000000149011612,
+            "float :AttackAssistEnableTime": 0.05000000074505806,
             "float :AttackAssistStartTime": 0.0,
             "float :AttackColliderRadius": 0.10000000149011612,
             "float :AttackEndTime": 1.0,
@@ -130,8 +130,8 @@
             "float :NockbackStrength": 0.10000000149011612,
             "float :ReceptTime": 1.25,
             "float :SheathDurabityLoss": 10.0,
-            "float :StifnessTime": 0.5,
-            "float :TransitionTime": 0.10000000149011612,
+            "float :StifnessTime": 0.4000000059604645,
+            "float :TransitionTime": 0.0,
             "int32_t :derivationPriority": 1,
             "string :AnimName": "LightAttack1",
             "string :FollowJointName": "WeaponAnchor"
@@ -241,7 +241,7 @@
         "Vector3 :AttackAssistMoveAmount": [
             0.0,
             0.0,
-            0.10000000149011612
+            0.0
         ],
         "Vector3 :AttackColliderLengthOffset": [
             0.0,
