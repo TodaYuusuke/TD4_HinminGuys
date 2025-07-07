@@ -14,11 +14,11 @@ Player::Player(LWP::Object::Camera* camera, EnemyManager* enemyManager, FollowCa
 	uiManager_ = uiManager;
 
 	// モデルを読み込む
-	model_.LoadShortPath("player/Player_Simple.gltf");
-	animation_.LoadFullPath("resources/model/player/Player_Simple.gltf", &model_);
+	model_.LoadShortPath("player/Player.gltf");
+	animation_.LoadFullPath("resources/model/player/Player.gltf", &model_);
 	animation_.Play("Idle");
 	// 刀
-	swordModel_.LoadShortPath("player/SimpleWeapon.gltf");
+	swordModel_.LoadShortPath("player/Katana.gltf");
 	// 鞘
 	sheathModel_.LoadShortPath("player/Sheath.gltf");
 
