@@ -86,6 +86,15 @@ void Ogre::Initialize(Player* player, const Vector3& position, LWP::Object::Came
 	//刀のコライダー生成
 	CreateColliders();
 
+	//弱攻撃の2つの中で抽選し、0ならふり降ろし
+	if (LWP::Utility::Random::GenerateInt(0, 1) == 0) {
+		nextAttackState_ = States::kSwingDownAttack;
+	}
+	//1なら回転切り
+	else {
+		nextAttackState_ = States::kRotatingSlash;
+	}
+
 }
 
 void Ogre::Update()
@@ -213,5 +222,104 @@ void Ogre::AddStateFunc()
 	state_.init[int(States::kHitReaction)] = [this](const States& pre) {HitReactionInit(pre); };
 	state_.update[int(States::kHitReaction)] = [this](std::optional<States>& req, const States& pre) {HitReactionUpdate(req, pre); };
 	state_.finalize[int(States::kHitReaction)] = [this](const States& pre) {HitReactionFinalize(pre); };
+
+}
+
+void Ogre::EndLightAttack()
+{
+
+	//カウント加算
+	stateParameter_.moveParameter.lightAttackCount++;
+
+	//カウントが設定数以上になったら、次の攻撃抽選を変更
+	if (stateParameter_.moveParameter.lightAttackCount >= stateParameter_.moveParameter.lightTransitionCount) {
+
+		//カウントリセット
+		stateParameter_.moveParameter.lightAttackCount = 0;
+
+		//抽選して、0の場合中攻撃
+		if (LWP::Utility::Random::GenerateInt(0, 1) == 0) {
+			//落下攻撃に移行する
+			nextAttackState_ = States::kFallingThrust;
+		}
+		//強攻撃
+		else {
+
+			//強攻撃の2つの中で抽選し、0なら連続突撃
+			if (LWP::Utility::Random::GenerateInt(0, 1) == 0) {
+				nextAttackState_ = States::kAssaultSlash;
+			}
+			//1なら四連撃
+			else {
+				nextAttackState_ = States::kQuadrupleAttack;
+			}
+
+		}
+
+	}
+	//弱攻撃抽選
+	else {
+
+		//弱攻撃の2つの中で抽選し、0ならふり降ろし
+		if (LWP::Utility::Random::GenerateInt(0, 1) == 0) {
+			nextAttackState_ = States::kSwingDownAttack;
+		}
+		//1なら回転切り
+		else {
+			nextAttackState_ = States::kRotatingSlash;
+		}
+
+	}
+
+}
+
+void Ogre::EndMediumAttack()
+{
+
+	//中攻撃カウント増加
+	stateParameter_.moveParameter.mediumAttackCount++;
+	//カウントが設定数以上になったら、次の攻撃抽選を変更
+	if (stateParameter_.moveParameter.mediumAttackCount >= stateParameter_.moveParameter.mediumTransitionCount) {
+
+		//カウントリセット
+		stateParameter_.moveParameter.mediumAttackCount = 0;
+
+		//強攻撃の2つの中で抽選し、0なら連続突撃
+		if (LWP::Utility::Random::GenerateInt(0, 1) == 0) {
+			nextAttackState_ = States::kAssaultSlash;
+		}
+		//1なら四連撃
+		else {
+			nextAttackState_ = States::kQuadrupleAttack;
+		}
+
+	}
+	//弱攻撃抽選
+	else {
+
+		//弱攻撃の2つの中で抽選し、0ならふり降ろし
+		if (LWP::Utility::Random::GenerateInt(0, 1) == 0) {
+			nextAttackState_ = States::kSwingDownAttack;
+		}
+		//1なら回転切り
+		else {
+			nextAttackState_ = States::kRotatingSlash;
+		}
+
+	}
+
+}
+
+void Ogre::EndHeavyAttack()
+{
+
+	//弱攻撃の2つの中で抽選し、0ならふり降ろし
+	if (LWP::Utility::Random::GenerateInt(0, 1) == 0) {
+		nextAttackState_ = States::kSwingDownAttack;
+	}
+	//1なら回転切り
+	else {
+		nextAttackState_ = States::kRotatingSlash;
+	}
 
 }

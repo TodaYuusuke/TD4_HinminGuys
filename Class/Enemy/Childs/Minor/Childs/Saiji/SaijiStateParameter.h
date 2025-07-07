@@ -59,6 +59,10 @@ namespace SaijiState {
 		float startAcceptTime = 0.05f;
 		//攻撃判定受付終了時間
 		float endAcceptTime = 0.13f;
+		//攻撃発生座標
+		LWP::Math::Vector3 attackPosition{0.0f,0.0f,1.0f};
+		//攻撃判定の大きさ
+		float attackScale = 0.5f;
 	};
 
 	/// <summary>

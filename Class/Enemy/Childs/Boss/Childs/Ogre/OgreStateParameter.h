@@ -55,6 +55,8 @@ namespace OgreState {
 		float attackDist = 1.0f;
 		//デフォのスピード
 		float defaultSpeed = 3.0f;
+		//一定時間を超えたときのスピード
+		float boostSpeed = 6.0f;
 		//弱攻撃からの遷移に必要なカウント
 		int32_t lightTransitionCount = 2;
 		//中攻撃からの遷移に必要なカウント

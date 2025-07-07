@@ -12,6 +12,10 @@ using namespace OgreState;
 void Ogre::FallingThrustFinalize([[maybe_unused]] const States& pre) {
 	//スピードをリセット
 	currentMotionSpeed_ = 1.0f;
+	isAttack_ = false;
+	isAttackPhase_ = false;
+	//中攻撃終了時の抽選処理
+	EndMediumAttack();
 }
 
 void Ogre::FallingThrustInit([[maybe_unused]] const States& pre)

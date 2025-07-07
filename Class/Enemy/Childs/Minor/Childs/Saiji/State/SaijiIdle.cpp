@@ -8,10 +8,14 @@ using namespace SaijiState;
 void Saiji::IdleFinalize([[maybe_unused]] const States& pre) {
 
 	//時間セット
-	stateParameter_.spacingParameter.countSpacingTime = stateParameter_.spacingParameter.spacingTime;
+	stateParameter_.spacingParameter.countSpacingTime = stateParameter_.spacingParameter.spacingTime + 
+		LWP::Utility::Random::GenerateFloat(-0.3f, 0.3f);
 	//ランダムな数字を利用して右回りかどうかを決める
 	if (LWP::Utility::Random::GenerateInt(0, 1) == 0) {
 		stateParameter_.spacingParameter.isClockwise = true;
+	}
+	else {
+		stateParameter_.spacingParameter.isClockwise = false;
 	}
 
 }

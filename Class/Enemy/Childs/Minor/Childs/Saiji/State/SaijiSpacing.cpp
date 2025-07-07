@@ -8,9 +8,11 @@ void Saiji::SpacingFinalize([[maybe_unused]] const States& pre)
 {
 
 	//移動ステートの時間セット
-	stateParameter_.moveParameter.countRunTime = stateParameter_.moveParameter.runTime;
+	stateParameter_.moveParameter.countRunTime = stateParameter_.moveParameter.runTime +
+		LWP::Utility::Random::GenerateFloat(0.0f, 1.0f);
 	//待機ステートの待機時間セット
-	stateParameter_.idleParameter.countStandTime = stateParameter_.idleParameter.standTime;
+	stateParameter_.idleParameter.countStandTime = stateParameter_.idleParameter.standTime +
+		LWP::Utility::Random::GenerateFloat(0.0f, 1.0f);
 
 }
 

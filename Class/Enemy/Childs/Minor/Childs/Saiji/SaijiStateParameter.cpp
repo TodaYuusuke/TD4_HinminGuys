@@ -1,5 +1,7 @@
 #include "SaijiStateParameter.h"
 
+using namespace LWP::Math;
+
 void SaijiState::ParameterConfig::InitJson()
 {
 
@@ -19,6 +21,8 @@ void SaijiState::ParameterConfig::InitJson()
 		.BeginGroup("Attack")
 		.AddValue<float>("StartAcceptTime", &stateParameter_.attackParameter.startAcceptTime)
 		.AddValue<float>("EndAcceptTime", &stateParameter_.attackParameter.endAcceptTime)
+		.AddValue<Vector3>("AttackPosition", &stateParameter_.attackParameter.attackPosition)
+		.AddValue<float>("AttackScale", &stateParameter_.attackParameter.attackScale)
 		.EndGroup()
 		.BeginGroup("Spacing")
 		.AddValue<float>("SpacingTime", &stateParameter_.spacingParameter.spacingTime)

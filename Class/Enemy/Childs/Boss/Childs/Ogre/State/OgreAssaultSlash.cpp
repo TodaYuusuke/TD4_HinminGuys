@@ -12,6 +12,10 @@ using namespace OgreState;
 void Ogre::AssaultSlashFinalize([[maybe_unused]] const States& pre) {
 	//スピードをリセット
 	currentMotionSpeed_ = 1.0f;
+	isAttack_ = false;
+	isAttackPhase_ = false;
+	//強攻撃終了時の抽選処理
+	EndHeavyAttack();
 }
 
 void Ogre::AssaultSlashInit([[maybe_unused]] const States& pre)
@@ -127,6 +131,9 @@ void Ogre::AssaultSlashUpdate([[maybe_unused]] std::optional<States>& req, [[may
 			}
 			//攻撃が終わったら後隙の時間に移行
 			else {
+				//当たり判定オフ
+				aabbAttackCollider_.isActive = false;
+				aabbAttack_.isShowWireFrame = false;
 				//ポジションを終わりにセット
 				SetPosition(GetAssaultSlash().attackEndPosition);
 				//ラッシュフラグオフ

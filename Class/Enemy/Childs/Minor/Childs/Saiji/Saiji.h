@@ -76,9 +76,9 @@ private:
 
 	// 刀モデル
 	SkinningModel swordModel_;
-	// 刀コライダー
-	LWP::Object::Collision swordCollider_;
-	LWP::Object::Collider::Capsule& capsule_;
+	//攻撃コライダー(AABB)
+	LWP::Object::Collision aabbAttackCollider_;
+	LWP::Object::Collider::AABB& aabbAttack_;
 
 	//雑魚敵パラメータ
 	SaijiState::StateParameter stateParameter_;

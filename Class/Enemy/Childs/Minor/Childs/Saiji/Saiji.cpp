@@ -10,7 +10,7 @@ using namespace SaijiState;
 
 Saiji::Saiji(SaijiState::StateParameter& stateParameter) :
 	configParameter_(stateParameter),
-	capsule_(swordCollider_.SetBroadShape(LWP::Object::Collider::Capsule()))
+	aabbAttack_(aabbAttackCollider_.SetBroadShape(LWP::Object::Collider::AABB()))
 {
 
 	stateParameter_ = stateParameter;
@@ -133,19 +133,18 @@ void Saiji::DebugGUI()
 void Saiji::CreateSwordCollider()
 {
 	// 刀の判定生成
-	swordCollider_.SetFollow(&model_, "WeaponAnchor");
-	swordCollider_.isActive = false;
+	aabbAttackCollider_.SetFollow(&model_, "Hips");
+	aabbAttackCollider_.isActive = false;
 	// 自機の所属しているマスクを設定
-	swordCollider_.mask.SetBelongFrag(GetAttack());
+	aabbAttackCollider_.mask.SetBelongFrag(GetAttack());
 	// 当たり判定をとる対象のマスクを設定
-	swordCollider_.mask.SetHitFrag(GetPlayer() | GetParry());
-	swordCollider_.enterLambda = [this](LWP::Object::Collision* hitTarget) {
+	aabbAttackCollider_.mask.SetHitFrag(GetPlayer() | GetParry());
+	aabbAttackCollider_.enterLambda = [this](LWP::Object::Collision* hitTarget) {
 		hitTarget;
 		player_->TakeDamage(parameter_.attackParameter.attackValue);
 		//判定をオフにする
 		//swordCollider_.isActive = false;
 		};
-	capsule_.radius = 0.1f;
 }
 
 void Saiji::AddStateFunc()

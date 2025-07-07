@@ -27,6 +27,9 @@ void Ogre::MoveInit([[maybe_unused]] const States& pre)
 	//移動速度をセット
 	parameter_.speed = stateParameter_.moveParameter.defaultSpeed;
 
+	//次の攻撃ステートが存在しない場合
+	
+
 }
 
 void Ogre::MoveUpdate([[maybe_unused]] std::optional<States>& req, [[maybe_unused]] const States& pre)
@@ -40,88 +43,26 @@ void Ogre::MoveUpdate([[maybe_unused]] std::optional<States>& req, [[maybe_unuse
 			stateParameter_.moveParameter.countRunTime -= 1.0f * LWP::Info::GetDeltaTimeF();
 		}
 
+		//次の攻撃ステートが連続突撃の場合、そのまま移行
+		if (nextAttackState_ == States::kAssaultSlash) {
+			state_.request = nextAttackState_;
+		}
+
+		//カウントが0以上の場合、通常スピード
+		if (stateParameter_.moveParameter.countRunTime > 0.0f) {
+			parameter_.speed = stateParameter_.moveParameter.defaultSpeed;
+		}
+		//0以下ならブースト
+		else {
+			parameter_.speed = stateParameter_.moveParameter.boostSpeed;
+		}
+
 		//プレイヤーとの距離が近い場合
 		if (Vector3::Distance(GetPlayerPosition(), GetPosition()) < stateParameter_.moveParameter.attackDist) {
 
-			//弱攻撃カウントが規定数に達した場合、中攻撃もしくは強攻撃に移行
-			if (stateParameter_.moveParameter.lightAttackCount >= stateParameter_.moveParameter.lightTransitionCount) {
-
-				//カウントリセット
-				stateParameter_.moveParameter.lightAttackCount = 0;
-
-				//抽選して、0の場合中攻撃
-				if (LWP::Utility::Random::GenerateInt(0, 1) == 0) {
-					//中攻撃カウント増加
-					stateParameter_.moveParameter.mediumAttackCount++;
-					//落下攻撃に移行する
-					state_.request = States::kFallingThrust;
-					return;
-				}
-				//強攻撃
-				else {
-
-					//強攻撃の2つの中で抽選し、0なら連続突撃
-					if (LWP::Utility::Random::GenerateInt(0, 1) == 0) {
-						state_.request = States::kAssaultSlash;
-						return;
-					}
-					//1なら四連撃
-					else {
-						state_.request = States::kQuadrupleAttack;
-						return;
-					}
-
-				}
-
-			}
-			//中攻撃カウントが規定数に達した場合、強攻撃に移行
-			else if (stateParameter_.moveParameter.mediumAttackCount >= stateParameter_.moveParameter.mediumTransitionCount) {
-
-				//カウントリセット
-				stateParameter_.moveParameter.mediumAttackCount = 0;
-
-				//強攻撃の2つの中で抽選し、0なら連続突撃
-				if (LWP::Utility::Random::GenerateInt(0, 1) == 0) {
-					state_.request = States::kAssaultSlash;
-					return;
-				}
-				//1なら四連撃
-				else {
-					state_.request = States::kQuadrupleAttack;
-					return;
-				}
-
-			}
-			//どちらのカウントも達していない場合、2つの弱攻撃のどちらかに移行
-			else {
-
-				//弱攻撃カウント増加
-				stateParameter_.moveParameter.lightAttackCount++;
-
-				//弱攻撃の2つの中で抽選し、0ならふり降ろし
-				if (LWP::Utility::Random::GenerateInt(0, 1) == 0) {
-					state_.request = States::kSwingDownAttack;
-					return;
-				}
-				//1なら回転切り
-				else {
-					state_.request = States::kRotatingSlash;
-					return;
-				}
-
-			}
+			state_.request = nextAttackState_;
 
 			return;
-		}
-
-		//0になったら行動を切り替える
-		if (stateParameter_.moveParameter.countRunTime <= 0) {
-
-			//待機状態に移行
-			isAttackPhase_ = false;
-			state_.request = States::kIdle;
-			return;
-
 		}
 
 		//移動

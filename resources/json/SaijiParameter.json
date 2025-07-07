@@ -1,8 +1,14 @@
 {
     "Group :SaijiParameter": {
         "Group :Attack": {
-            "float :EndAcceptTime": 0.12999999523162842,
-            "float :StartAcceptTime": 0.05999999865889549
+            "Vector3 :AttackPosition": [
+                -0.699999988079071,
+                0.0,
+                0.6000000238418579
+            ],
+            "float :AttackScale": 0.4000000059604645,
+            "float :EndAcceptTime": 0.15000000596046448,
+            "float :StartAcceptTime": 0.10000000149011612
         },
         "Group :Following": {
             "float :IdleDist": 4.0

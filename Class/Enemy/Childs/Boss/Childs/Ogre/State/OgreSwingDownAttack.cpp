@@ -12,6 +12,10 @@ using namespace OgreState;
 void Ogre::SwingDownAttackFinalize([[maybe_unused]] const States& pre) {
 	//スピードをリセット
 	currentMotionSpeed_ = 1.0f;
+	isAttack_ = false;
+	isAttackPhase_ = false;
+	//弱攻撃終了時の抽選処理
+	EndLightAttack();
 }
 
 void Ogre::SwingDownAttackInit([[maybe_unused]] const States& pre)

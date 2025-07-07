@@ -86,6 +86,12 @@ private:
 	bool IsAttackState();
 	//連続突撃時のワープ先指定関数
 	void SetAssaultSlashWarpPosition();
+	//弱攻撃終了時の攻撃抽選
+	void EndLightAttack();
+	//中攻撃終了時のの攻撃抽選
+	void EndMediumAttack();
+	//強攻撃終了時の攻撃抽選
+	void EndHeavyAttack();
 
 private:
 
@@ -107,7 +113,8 @@ private:
 
 	//雑魚敵パラメータ
 	OgreState::StateParameter stateParameter_;
-
+	//移動後の次のステート格納
+	OgreState::States nextAttackState_;
 	//直前のステート保存
 	OgreState::States preState_;
 

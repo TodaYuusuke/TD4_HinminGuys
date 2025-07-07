@@ -15,6 +15,11 @@ void Ogre::QuadrupleAttackFinalize([[maybe_unused]] const States& pre) {
 	//カウントリセット
 	GetQuadrupleAttack().currentAttackCount = 0;
 	isAttack_ = false;
+	isAttackPhase_ = false;
+
+	//強攻撃終了時の抽選処理
+	EndHeavyAttack();
+
 
 }
 
