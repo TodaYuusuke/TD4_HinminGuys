@@ -10,7 +10,8 @@ using namespace LWP::Math;
 using namespace OgreState;
 
 void Ogre::FallingThrustFinalize([[maybe_unused]] const States& pre) {
-
+	//スピードをリセット
+	currentMotionSpeed_ = 1.0f;
 }
 
 void Ogre::FallingThrustInit([[maybe_unused]] const States& pre)

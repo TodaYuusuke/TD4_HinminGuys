@@ -10,7 +10,8 @@ using namespace LWP::Math;
 using namespace OgreState;
 
 void Ogre::QuadrupleAttackFinalize([[maybe_unused]] const States& pre) {
-
+	//スピードをリセット
+	currentMotionSpeed_ = 1.0f;
 	//カウントリセット
 	GetQuadrupleAttack().currentAttackCount = 0;
 	isAttack_ = false;
@@ -59,13 +60,15 @@ void Ogre::QuadrupleAttackUpdate([[maybe_unused]] std::optional<States>& req, [[
 
 		//パリィエフェクト中ならアニメーションをゆっくりにして判定オフ
 		if (isStartParryEffect_) {
-			animation_.GetPlayBackSpeed() = 0.1f;
+			currentMotionSpeed_ = 0.1f;
+			animation_.GetPlayBackSpeed() = currentMotionSpeed_;
 			aabbAttackCollider_.isActive = false;
 			aabbAttack_.isShowWireFrame = false;
 		}
 		//パリィエフェクトが終わったら通常スピードで判定をオンにする
 		else if (IsExitParryEffect()) {
-			animation_.GetPlayBackSpeed() = 1.0f;
+			currentMotionSpeed_ = 1.0f;
+			animation_.GetPlayBackSpeed() = currentMotionSpeed_;
 		}
 
 		//攻撃受付時間を超過したら判定オフ

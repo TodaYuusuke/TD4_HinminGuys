@@ -10,7 +10,8 @@ using namespace LWP::Math;
 using namespace OgreState;
 
 void Ogre::RotatingSlashFinalize([[maybe_unused]] const States& pre) {
-
+	//スピードをリセット
+	currentMotionSpeed_ = 1.0f;
 }
 
 void Ogre::RotatingSlashInit([[maybe_unused]] const States& pre)

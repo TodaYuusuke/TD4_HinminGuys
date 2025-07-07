@@ -84,12 +84,16 @@ private:
 #pragma endregion
 	//攻撃ステートかどうか取得
 	bool IsAttackState();
+	//連続突撃時のワープ先指定関数
+	void SetAssaultSlashWarpPosition();
 
 private:
 
 	//翁雅用のデフォパラメータ設定
 	OgreState::StateParameter& configParameter_;
 
+	//警告用のプレーンテクスチャ
+	LWP::Resource::RigidModel cautionPlane_;
 	// 刀モデル
 	SkinningModel swordModel_;
 	//攻撃コライダー(球)

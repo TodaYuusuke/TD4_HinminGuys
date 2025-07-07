@@ -206,6 +206,8 @@ protected:
 	float parryEffectTime_ = 0.0f;
 	//パリィエフェクトの最大時間
 	float maxParryEffectTime_ = 0.5f;
+	//敵の現在のモーションスピード
+	float currentMotionSpeed_ = 1.0f;
 	//全体のID管理
 	static uint16_t currentEnemyID_;
 	//攻撃態勢最大人数

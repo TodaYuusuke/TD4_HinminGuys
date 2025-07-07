@@ -10,7 +10,8 @@ using namespace LWP::Math;
 using namespace OgreState;
 
 void Ogre::IdleFinalize([[maybe_unused]] const States& pre) {
-
+	//スピードをリセット
+	currentMotionSpeed_ = 1.0f;
 	//移動ステートの時間セット
 	stateParameter_.moveParameter.countRunTime = stateParameter_.moveParameter.runTime;
 

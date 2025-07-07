@@ -11,7 +11,8 @@ using namespace OgreState;
 
 void Ogre::HitReactionFinalize([[maybe_unused]] const States& pre) {
 
-
+	//スピードをリセット
+	currentMotionSpeed_ = 1.0f;
 
 }
 

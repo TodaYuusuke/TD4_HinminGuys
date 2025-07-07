@@ -42,7 +42,7 @@ namespace OgreState {
 		//追従モーションに移行する距離
 		float followingDist = 4.0f;
 		//カウント
-		float countStandTime = 0.0f;
+		float countStandTime = 1.0f;
 	};
 
 	/// <summary>
@@ -131,6 +131,36 @@ namespace OgreState {
 		AttackData attackData{};
 		//攻撃回数
 		int32_t maxAttackCount = 5;
+		//現在の攻撃回数
+		int32_t currentAttackCount = 0;
+		//ダイブ開始地点
+		LWP::Math::Vector3 diveStartPosition{};
+		//ダイブ終了地点
+		LWP::Math::Vector3 diveEndPosition{};
+		//攻撃開始地点
+		LWP::Math::Vector3 attackStartPosition{};
+		//攻撃目標地点
+		LWP::Math::Vector3 attackEndPosition{};
+		//プレイヤーから離れる量
+		float leaveDistance = 5.0f;
+		//プレイヤーを切り捨てる時の超過距離
+		float overDistance = 2.0f;
+		//地面に隠れる時間
+		float divingTime = 2.0f;
+		//隠れた後の待機時間
+		float stealthWaitingTime = 1.0f;
+		//攻撃中の待機時間
+		float waitingTime = 1.0f;
+		//突撃時間
+		float assaultTime = 0.5f;
+		//後隙の時間
+		float gapTime = 3.0f;
+		//現在の時間カウント
+		float currentTime = 0.0f;
+		//待機中かどうか
+		bool isWaiting = false;
+		//突撃中かどうか
+		bool isRush = false;
 		//攻撃の強さ
 		AttackStrength attackStrength = AttackStrength::kHeavy;
 	};
