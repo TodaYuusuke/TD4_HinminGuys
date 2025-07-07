@@ -12,7 +12,6 @@ void ParameterEditor::Initialize() {
 
 		parameterJson_.BeginGroup(IEnemy::enemyTypeName[i])
 			.AddValue("HP", &parameters_[i].hp)
-			.AddValue("Speed", &parameters_[i].speed)
 			.AddValue("AttackValue", &parameters_[i].attackParameter.attackValue)
 			.AddValue("KnockbackValue", &parameters_[i].attackParameter.knockbackValue)
 			.EndGroup();
