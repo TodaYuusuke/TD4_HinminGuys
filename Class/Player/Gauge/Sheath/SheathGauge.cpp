@@ -2,12 +2,12 @@
 
 SheathGauge::SheathGauge() {
 	// 鞘ゲージ画像の背景作成(BackGroundは長すぎるのでBGにしてます)
-	sprite_["SheathBarBG"].LoadTexture("UI/Gauge/SheathBarBase.png");
+	sprite_["SheathBarBG"].LoadTexture("UI/Gauge/SheathBar/SheathBarBase.png");
 	sprite_["SheathBarBG"].Init();
 	sprite_["SheathBarBG"].isUI = true;
 	sprite_["SheathBarBG"].isActive = true;
 	// 鞘ゲージ画像を作成
-	sprite_["SheathBar"].LoadTexture("UI/Gauge/SheathBarGauge.png");
+	sprite_["SheathBar"].LoadTexture("UI/Gauge/SheathBar/SheathBarGauge.png");
 	sprite_["SheathBar"].Init();
 	sprite_["SheathBar"].isUI = true;
 	sprite_["SheathBar"].isActive = true;
