@@ -2,13 +2,13 @@
     "Group :Gauge": {
         "Group :WorldTransform": {
             "Vector3 :Scale": [
-                0.9750000238418579,
+                1.0,
                 1.0,
                 1.0
             ],
             "Vector3 :Translation": [
-                56.0,
-                136.0,
+                36.0,
+                120.0,
                 0.0
             ]
         },
