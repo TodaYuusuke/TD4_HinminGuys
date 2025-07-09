@@ -15,6 +15,9 @@ Particles::Particles(Player* player, FollowCamera* followCamera) {
 	evasionEffect_ = std::make_unique<EvasionEffect>(player_);
 	evasionEffect_->Initialize();
 	evasionEffect_->model.LoadCube();
+	// 移動
+	moveEffect_ = std::make_unique<MoveEffect>(player_, followCamera_);
+	moveEffect_->Initialize();
 }
 
 void Particles::Initialize() {
@@ -24,6 +27,7 @@ void Particles::Initialize() {
 
 void Particles::Update() {
 	parryEffect_->Update();
+	moveEffect_->Update();
 }
 
 void Particles::CreateJsonData() {
@@ -37,6 +41,11 @@ void Particles::CreateJsonData() {
 	// 回避時のパーティクル
 	json_.BeginGroup("Evasion");
 	evasionEffect_->SetJsonData(json_);
+	json_.EndGroup();
+
+	// パリィ時のパーティクル
+	json_.BeginGroup("Move");
+	moveEffect_->SetJsonData(json_);
 	json_.EndGroup();
 
 	json_.CheckJsonFile();
@@ -58,6 +67,10 @@ void Particles::DebugGui() {
 	if (ImGui::Button("Create Evasion Particle")) {
 		CreateEvasionParticle(debugEmitterPos_);
 	}
+	// 移動時のパーティクル生成
+	if (ImGui::Button("Create Move Particle")) {
+		CreateMoveParticle(debugEmitterPos_);
+	}
 
 	// パーティクルの詳細
 	if (ImGui::TreeNode("Detail")) {
@@ -69,6 +82,11 @@ void Particles::DebugGui() {
 		// 回避
 		if (ImGui::TreeNode("Evasion")) {
 			evasionEffect_->DebugGui();
+			ImGui::TreePop();
+		}
+		// 移動
+		if (ImGui::TreeNode("Move")) {
+			moveEffect_->DebugGui();
 			ImGui::TreePop();
 		}
 		ImGui::TreePop();
@@ -96,4 +114,8 @@ void Particles::CreateParryParticle(const LWP::Math::Vector3& pos) {
 
 void Particles::CreateEvasionParticle(const LWP::Math::Vector3& pos) {
 	evasionEffect_->Add(evasionEffect_->GetParticleJsonData().count, pos);
+}
+
+void Particles::CreateMoveParticle(const LWP::Math::Vector3& pos) {
+	moveEffect_->CreateDustClouds(pos);
 }

@@ -59,6 +59,9 @@
     <ClCompile Include="Class\Player\Particles\Particles.cpp" />
     <ClCompile Include="Class\Player\Systems\Children\Evasion\Effect\EvasionEffect.cpp" />
     <ClCompile Include="Class\Player\PlayerParameter.cpp" />
+    <ClCompile Include="Class\Player\Systems\Children\Move\Effect\MoveEffect.cpp" />
+    <ClCompile Include="Class\Player\Particles\IEffect.cpp" />
+    <ClCompile Include="Class\Player\Math\MathFunctions.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Class\ComboEditor\ComboTree.h" />
@@ -140,6 +143,9 @@
     <ClInclude Include="Class\Player\Particles\ParticleJsonDataStructs.h" />
     <ClInclude Include="Class\Player\Systems\Children\Evasion\Effect\EvasionEffect.h" />
     <ClInclude Include="Class\Player\PlayerParameter.h" />
+    <ClInclude Include="Class\Player\Systems\Children\Move\Effect\MoveEffect.h" />
+    <ClInclude Include="Class\Player\Particles\IEffect.h" />
+    <ClInclude Include="Class\Player\Math\MathFunctions.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />

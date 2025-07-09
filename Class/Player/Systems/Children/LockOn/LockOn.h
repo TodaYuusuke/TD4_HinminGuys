@@ -144,7 +144,10 @@ private:
 	// 現在ロックオンされている敵の情報
 	IEnemy* lockOnEnemy_;
 
+	// ロックオンしたときのUI
 	LockOnUI lockOnUI_;
+	// ロックオンされる敵にUI表示
+	LWP::Primitive::Billboard3D guideLockOnUI_;
 
 	// ロックオン可能数
 	int lockOnNum_;

@@ -39,6 +39,49 @@
         "float :ElapseTime": 2.0,
         "int32_t :Count": 16
     },
+    "Group :Move": {
+        "Group :Circle": {
+            "Group :RandomValueMinMax": {
+                "Group :Scale": {
+                    "Vector3 :Max": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "Vector3 :Min": [
+                        -1.0,
+                        -1.0,
+                        -1.0
+                    ]
+                },
+                "Group :Velocity": {
+                    "Vector3 :Max": [
+                        0.0010000000474974513,
+                        0.0010000000474974513,
+                        0.0010000000474974513
+                    ],
+                    "Vector3 :Min": [
+                        -0.0010000000474974513,
+                        0.0,
+                        -0.0010000000474974513
+                    ]
+                }
+            },
+            "Vector3 :Acceleration": [
+                0.0,
+                -0.0010000000474974513,
+                0.0
+            ],
+            "Vector3 :First": [
+                0.0,
+                0.019999999552965164,
+                0.0
+            ],
+            "float :ElapseTime": 0.699999988079071,
+            "float :Multiply": 0.009999999776482582,
+            "int32_t :Count": 10
+        }
+    },
     "Group :Parry": {
         "Group :Circle": {
             "Group :Kelvin": {

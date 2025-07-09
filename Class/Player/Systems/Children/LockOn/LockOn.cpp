@@ -32,6 +32,11 @@ void LockOn::Initialize() {
 	lockOnUI_.enableLockOnObj.isUI = true;
 	lockOnUI_.enableLockOnObj.Init();
 
+	guideLockOnUI_.LoadTexture("UI/ButtonUI/LockOn.png");
+	guideLockOnUI_.anchorPoint = lockOnUI_.defaultAnchorPoint;
+	guideLockOnUI_.worldTF.scale = { 0.25f,0.25f,0.25f };
+	guideLockOnUI_.isActive = false;
+	guideLockOnUI_.Init();
 	// jsonで保存している値
 	//CreateJsonFIle();
 }
@@ -53,6 +58,28 @@ void LockOn::Update() {
 
 	// ロックオン対象の変更処理
 	ChangeLockOnTarget();
+
+	// ロックオンされる敵にUI表示
+	for (IEnemy* enemy : *enemies_) {
+		// ロックオン可能状態の敵じゃないならスキップ
+		if (!enemy->GetIsLocked()) { continue; }
+
+		// ロックオン中ではないなら消す
+		if (!lockOnEnemy_) {
+			guideLockOnUI_.isActive = true;
+		}
+		else {
+			guideLockOnUI_.isActive = false;
+		}
+
+		// 座標
+		guideLockOnUI_.worldTF.translation = enemy->GetWorldTF()->GetWorldPosition() + Vector3{ 0.15f,1.3f,0.0f };
+		break;
+	}
+	// 敵がいないなら消す
+	if (enemies_->empty()) {
+		guideLockOnUI_.isActive = false;
+	}
 
 	isPreActive_ = isActive_;
 }
@@ -229,16 +256,6 @@ void LockOn::SearchNearEnemy() {
 			// ロックオン可能状態の敵じゃないならスキップ
 			if (!enemy->GetIsLocked()) { continue; }
 
-			// 一度でもロックオンしたことがあるならスキップ
-			/*bool isLockedEnemy = false;
-			for (int i = 0; i < lockedEnemyIDs_.size(); i++) {
-				if (enemy->GetID() == lockedEnemyIDs_[i]) {
-					isLockedEnemy = true;
-					break;
-				}
-			}
-			if (isLockedEnemy) { continue; }*/
-
 			// 入力した方向に敵がいるならロックオン対象を変更
 			if (inputCameraRotateY_ != 0.0f && !lockedEnemyIDs_.empty()) {
 				// 自機の右方向を基準とする
@@ -313,7 +330,6 @@ void LockOn::LockOnReticleUpdate() {
 		// 敵がロックオン可能状態でないならスキップ
 		if (!lockOnEnemy.enemyData->GetIsLocked()) { continue; }
 
-
 		// 敵の座標をスクリーン座標に変換
 		Vector2 screenPos = ConvertWorld2Screen(lockOnEnemy.enemyData->GetPosition() + Vector3{ 0, 1, 0 });
 		// レティクルスプライトの座標を更新
@@ -324,7 +340,7 @@ void LockOn::LockOnReticleUpdate() {
 		};
 		lockOnEnemy.ui.sprite.isActive = false;
 		lockOnEnemy.ui.enableLockOnObj.worldTF.Parent(lockOnEnemy.enemyData->GetWorldTF());
-		lockOnEnemy.ui.enableLockOnObj.worldTF.translation = Vector3{0.0f, 1.0f, 0.0f};
+		lockOnEnemy.ui.enableLockOnObj.worldTF.translation = Vector3{ 0.0f, 1.0f, 0.0f };
 		lockOnEnemy.ui.enableLockOnObj.isActive = true;
 	}
 }

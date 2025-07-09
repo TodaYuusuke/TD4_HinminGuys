@@ -2,6 +2,7 @@
 #include "Adapter.h"
 #include "../Systems/Children/Parry/Effect/ParryEffect.h"
 #include "../Systems/Children/Evasion/Effect/EvasionEffect.h"
+#include "../Systems/Children/Move/Effect/MoveEffect.h"
 
 class FollowCamera;
 /// <summary>
@@ -53,6 +54,11 @@ public:// パーティクル生成
 	/// </summary>
 	/// <param name="pos"></param>
 	void CreateEvasionParticle(const LWP::Math::Vector3& pos);
+	/// <summary>
+	/// 移動時のパーティクル生成
+	/// </summary>
+	/// <param name="pos"></param>
+	void CreateMoveParticle(const LWP::Math::Vector3& pos);
 
 private:
 	Player* player_;
@@ -65,6 +71,8 @@ private:
 	std::unique_ptr<ParryEffect> parryEffect_;
 	// 回避
 	std::unique_ptr<EvasionEffect> evasionEffect_;
+	// 移動
+	std::unique_ptr<MoveEffect> moveEffect_;
 
 	// パーティクル生成座標(デバッグ用)
 	LWP::Math::Vector3 debugEmitterPos_;

@@ -1,10 +1,9 @@
 #pragma once
 #include "Adapter.h"
+#include "../../../../Particles/IEffect.h"
 #include "../../../../Particles/ParticleJsonDataStructs.h"
 
-class Player;
-class FollowCamera;
-class ParryEffect {
+class ParryEffect : public IEffect {
 public:
 	enum class ParticleType {
 		kLine,
@@ -14,37 +13,16 @@ public:
 		kRing
 	};
 
-	struct ParticleData {
-		LWP::Primitive::Billboard2D billboard;
-		LWP::Resource::RigidModel plane;		// 平面
-		LWP::Math::Vector3 vel;					// 速度
-		LWP::Math::Vector3 euler;				// オイラー角
-		float multiply;
-		float lifeTime;							// 生存時間
-		float currentTime = 0;					// 経過フレーム
-		ParticleType type;
-		std::function<void(ParticleData&)> updateFunc;
-	};
-	// Particleを発生させる
-	struct Emitter {
-		LWP::Math::Vector3 pos;
-		int32_t count;
-		int32_t spawnCount;
-		int32_t spawnLeft = 1;	// 発生の残り回数 
-		float frequency;
-		float frequencyTime;
-	};
-
 public:
 	// コンストラクタ
 	ParryEffect(Player* player, FollowCamera* followCamera);
 	// デストラクタ
-	~ParryEffect() = default;
+	~ParryEffect() override = default;
 
 	/// <summary>
 	/// 初期化
 	/// </summary>
-	void Initialize();
+	void Initialize() override;
 	/// <summary>
 	/// 更新処理
 	/// </summary>
@@ -55,7 +33,7 @@ public:
 	/// </summary>
 	void DebugGui();
 
-private:
+private:// 各パーティクル単体を生成
 	/// <summary>
 	/// 線パーティクル単体を生成
 	/// </summary>
@@ -101,7 +79,7 @@ private:
 	/// <returns></returns>
 	std::list<ParticleData> GoodEmission(LWP::Math::Vector3 pos);
 
-public:
+public:// 演出開始
 	/// <summary>
 	/// ジャストパリィパーティクル生成開始
 	/// </summary>
@@ -111,7 +89,7 @@ public:
 	/// </summary>
 	void CreateGoodParticles(LWP::Math::Vector3 pos);
 
-private:
+private:// パーティクルの更新処理
 	/// <summary>
 	/// 線パーティクルの更新処理
 	/// </summary>
@@ -138,28 +116,7 @@ private:
 	/// <param name="data"></param>
 	void RingParticleUpdate(ParticleData& data);
 
-#pragma region 数学関数
-	/// <summary>
-	/// 方向ベクトルからクォータニオンを算出
-	/// </summary>
-	/// <param name="dirVec"></param>
-	/// <returns></returns>
-	LWP::Math::Quaternion LookRotation(const LWP::Math::Vector3& dirVec);
-
-	LWP::Math::Quaternion HorizontalBillboard(const LWP::Math::Vector3& targetPos);
-
-	LWP::Math::Quaternion StretchedBillboard(const LWP::Math::Vector3& targetPos, const LWP::Math::Vector3& vel, const LWP::Math::Vector3& cameraPos);
-
-	LWP::Math::Quaternion QuaternionRotateMatrix(const LWP::Math::Matrix4x4& m);
-
-	float ExponentialInterpolateF(const float& current, const float& target, float damping);
-
-	float GetRotationAngleFromMatrix(const LWP::Math::Matrix4x4& m);
-
-	LWP::Math::Quaternion QuaternionFromMatrix(const LWP::Math::Matrix4x4& m);
-#pragma endregion
-
-public:
+public:// Getter, Setter
 #pragma region Getter
 	/// <summary>
 	/// JSONに保存している値を取得
@@ -175,10 +132,6 @@ public:
 	/// <param name="jsonData"></param>
 	void SetJsonData(LWP::Utility::JsonIO& json);
 #pragma endregion
-
-private:// 外部から受け取る変数
-	Player* player_;
-	FollowCamera* followCamera_;
 
 private:
 	ParticleJsonData lineParticleData_;
@@ -200,9 +153,4 @@ private:
 
 	// イージング終了時間
 	float circleParticleEasingEndTime = 1.0f;
-
-private:
-	std::list<ParticleData> particles_;
-
-	LWP::Math::Vector3 emitterPos_;
 };

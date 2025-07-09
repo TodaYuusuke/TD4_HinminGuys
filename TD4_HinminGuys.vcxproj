@@ -191,6 +191,7 @@
     <ClCompile Include="Class\Components\CoolTimer.cpp" />
     <ClCompile Include="Class\Components\HitStopController.cpp" />
     <ClCompile Include="Class\Player\Systems\Children\Evasion\Effect\EvasionEffect.cpp" />
+    <ClCompile Include="Class\Player\Particles\IEffect.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Class\Player\Player.cpp" />
     <ClCompile Include="Class\Player\Systems\Children\Move\Move.cpp" />
@@ -208,6 +209,8 @@
     <ClCompile Include="Class\Player\Systems\Children\Parry\Effect\ParryEffect.cpp" />
     <ClCompile Include="Class\Player\Particles\Particles.cpp" />
     <ClCompile Include="Class\Player\PlayerParameter.cpp" />
+    <ClCompile Include="Class\Player\Systems\Children\Move\Effect\MoveEffect.cpp" />
+    <ClCompile Include="Class\Player\Math\MathFunctions.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Class\Enemy\Childs\Normal\INormalEnemyState.h" />
@@ -289,6 +292,9 @@
     <ClInclude Include="Class\Player\Particles\Particles.h" />
     <ClInclude Include="Class\Player\Systems\Children\Evasion\Effect\EvasionEffect.h" />
     <ClInclude Include="Class\Player\PlayerParameter.h" />
+    <ClInclude Include="Class\Player\Particles\IEffect.h" />
+    <ClInclude Include="Class\Player\Systems\Children\Move\Effect\MoveEffect.h" />
+    <ClInclude Include="Class\Player\Math\MathFunctions.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />
