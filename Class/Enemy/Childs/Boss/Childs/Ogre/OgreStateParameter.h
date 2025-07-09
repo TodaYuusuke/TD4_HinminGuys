@@ -121,6 +121,26 @@ namespace OgreState {
 	struct FallingThrust {
 		//攻撃発生時間に関するデータ
 		AttackData attackData{};
+		//ジャンプ時間
+		float jumpingTime = 0.5f;
+		//ジャンプ後待機時間
+		float fallWaitingTime = 0.5f;
+		//落下時間
+		float fallingTime = 0.3f;
+		//落下後攻撃発生時間
+		float attackTime = 0.1f;
+		//後隙の時間
+		float gapTime = 1.0f;
+		//現在の時間カウント
+		float currentTime = 0.0f;
+		//ジャンプの高さ
+		float jumpingHeight = 1.0f;
+		//イージング開始座標
+		LWP::Math::Vector3 startPosition{};
+		//イージング終了座標
+		LWP::Math::Vector3 endPosition{};
+		//ジャンプ先の座標
+		LWP::Math::Vector3 jumpingPosition{};
 		//攻撃の強さ
 		AttackStrength attackStrength = AttackStrength::kMedium;
 	};

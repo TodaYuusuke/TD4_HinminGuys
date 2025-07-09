@@ -60,6 +60,7 @@ void LockOn::Update() {
 void LockOn::Reset() {
 	followCamera_->FinishLockOn();
 	lockedEnemyIDs_.clear();
+	lockOnEnableEnemies_.clear();
 	lockOnEnemy_ = nullptr;
 	isActive_ = false;
 	isChangeLockOn_ = false;

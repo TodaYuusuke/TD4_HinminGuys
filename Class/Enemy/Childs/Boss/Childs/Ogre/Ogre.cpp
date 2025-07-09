@@ -29,6 +29,16 @@ void Ogre::Initialize(Player* player, const Vector3& position, LWP::Object::Came
 	EnemyManager* manager)
 {
 	model_.LoadShortPath("player/Player_Simple.gltf");
+	cautionQuad_.LoadShortPath("BothPlane.obj");
+	cautionCircle_.LoadShortPath("BothPlane.obj");
+	cautionQuad_.materials["Texturematerial"].texture = LWP::Resource::LoadTexture("caution_square.png");
+	cautionCircle_.materials["Texturematerial"].texture = LWP::Resource::LoadTexture("caution_circle.png");
+	cautionQuad_.worldTF.translation.y = 0.5f;
+	cautionQuad_.materials["Texturematerial"].enableLighting = false;
+	cautionQuad_.isActive = false;
+	cautionCircle_.worldTF.translation.y = 1.0f;
+	cautionCircle_.materials["Texturematerial"].enableLighting = false;
+	cautionCircle_.isActive = false;
 	type_ = EnemyType::kOgre;
 	attackType_ = AttackType::kShort;
 	//アニメーションロード

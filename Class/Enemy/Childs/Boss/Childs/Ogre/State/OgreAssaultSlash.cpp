@@ -16,6 +16,7 @@ void Ogre::AssaultSlashFinalize([[maybe_unused]] const States& pre) {
 	isAttackPhase_ = false;
 	//強攻撃終了時の抽選処理
 	EndHeavyAttack();
+	SetPosition({ GetPosition().x, 0.0f, GetPosition().z });
 }
 
 void Ogre::AssaultSlashInit([[maybe_unused]] const States& pre)

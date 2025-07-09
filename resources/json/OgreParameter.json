@@ -16,7 +16,20 @@
             "float :WaitingTime": 0.699999988079071
         },
         "Group :FallingThrust": {
+            "Vector3 :AttackPosition": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "float :AttackScale": 1.0,
+            "float :AttackTime": 0.10000000149011612,
             "float :EndAcceptTime": 0.1899999976158142,
+            "float :EndMotionTime": 0.5,
+            "float :FallWaitingTime": 0.5,
+            "float :FallingTime": 0.30000001192092896,
+            "float :GapTime": 1.0,
+            "float :JumpingHeight": 10.0,
+            "float :JumpingTime": 0.5,
             "float :StartAcceptTime": 0.07999999821186066
         },
         "Group :HitReaction": {
@@ -80,11 +93,29 @@
             "float :StartAcceptTime4": 0.05000000074505806
         },
         "Group :RotatingSlash": {
+            "Vector3 :AttackPosition": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "float :AttackDistance": 1.0,
+            "float :AttackScale": 1.0,
             "float :EndAcceptTime": 0.14000000059604645,
+            "float :EndMotionTime": 0.5,
+            "float :MoveSpeed": 1.0,
             "float :StartAcceptTime": 0.07000000029802322
         },
         "Group :SwingDownAttack": {
+            "Vector3 :AttackPosition": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "float :AttackDistance": 1.0,
+            "float :AttackScale": 1.0,
             "float :EndAcceptTime": 0.15000000596046448,
+            "float :EndMotionTime": 0.5,
+            "float :MoveSpeed": 1.0,
             "float :StartAcceptTime": 0.05000000074505806
         }
     }
