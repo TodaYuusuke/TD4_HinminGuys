@@ -55,7 +55,7 @@ public:
 	// コンストラクタ
 	Evasion(LWP::Object::Camera* camera, Player* player);
 	// デストラクタ
-	~Evasion() override = default;
+	~Evasion() override;
 
 	/// <summary>
 	/// 初期化

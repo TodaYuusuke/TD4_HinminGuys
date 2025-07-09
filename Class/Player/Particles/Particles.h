@@ -10,6 +10,13 @@ class FollowCamera;
 /// </summary>
 class Particles {
 public:
+	enum class MoveEffectType {
+		kNone,
+		kLeft,
+		kRight
+	};
+
+public:
 	// コンストラクタ
 	Particles(Player* player, FollowCamera* followCamera);
 	// デストラクタ
@@ -61,6 +68,12 @@ public:// パーティクル生成
 	void CreateMoveParticle(const LWP::Math::Vector3& pos);
 
 private:
+	/// <summary>
+	/// 移動時のパーティクル発生のタイミング
+	/// </summary>
+	void CreateMoveParticleTiming();
+
+private:
 	Player* player_;
 	FollowCamera* followCamera_;
 
@@ -74,7 +87,12 @@ private:
 	// 移動
 	std::unique_ptr<MoveEffect> moveEffect_;
 
+	MoveEffectType moveEffectType_;
+
 	// パーティクル生成座標(デバッグ用)
 	LWP::Math::Vector3 debugEmitterPos_;
+
+	bool isPreJustParry_ = false;
+	bool isPreGoodParry_ = false;
 };
 

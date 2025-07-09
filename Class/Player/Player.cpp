@@ -15,6 +15,7 @@ Player::Player(LWP::Object::Camera* camera, EnemyManager* enemyManager, FollowCa
 
 	// モデルを読み込む
 	model_.LoadShortPath("player/Player.gltf");
+	model_.materials["SuitMaterial"].color.A = 100;
 	animation_.LoadFullPath("resources/model/player/Player.gltf", &model_);
 	animation_.Play("Idle");
 	// 刀
@@ -100,6 +101,7 @@ void Player::DebugGUI() {
 		ImGui::TreePop();
 	}
 	// WorldTransform
+	model_.DebugGUI();
 	model_.worldTF.DebugGUI();
 	// 当たり判定
 	if (ImGui::TreeNode("Collider")) {

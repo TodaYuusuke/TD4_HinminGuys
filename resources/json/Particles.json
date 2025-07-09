@@ -77,9 +77,9 @@
                 0.019999999552965164,
                 0.0
             ],
-            "float :ElapseTime": 0.699999988079071,
+            "float :ElapseTime": 0.5,
             "float :Multiply": 0.009999999776482582,
-            "int32_t :Count": 10
+            "int32_t :Count": 3
         }
     },
     "Group :Parry": {

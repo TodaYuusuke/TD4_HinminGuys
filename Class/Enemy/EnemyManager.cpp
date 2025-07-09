@@ -163,6 +163,7 @@ void EnemyManager::DebugGUI()
 	//敵リセット
 	if (ImGui::Button("Clear")) {
 		ClearList();
+		player_->GetSystemManager()->GetLockOnSystem()->Reset();
 	}
 
 	//敵の総数

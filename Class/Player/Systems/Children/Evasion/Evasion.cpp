@@ -16,6 +16,11 @@ Evasion::Evasion(LWP::Object::Camera* camera, Player* player) {
 	hitStopController_ = HitStopController::GetInstance();
 }
 
+Evasion::~Evasion() {
+	isActive_ = false;
+	isPreActive_ = false;
+}
+
 void Evasion::Initialize() {
 	isActive_ = false;
 	isPreActive_ = false;
@@ -251,6 +256,10 @@ void Evasion::CheckEvasionState() {
 
 	}
 
+	velocity_.x = std::clamp<float>(velocity_.x, -2.0f, 2.0f);
+	velocity_.y = std::clamp<float>(velocity_.y, -2.0f, 2.0f);
+	velocity_.z = std::clamp<float>(velocity_.z, -2.0f, 2.0f);
+
 	// 無敵時間
 	if (eventOrders_[(int)EventOrderState::kInvincible].GetCurrentTimeEvent().name == "InvinsibleTime") {
 		if (GetTrigger()) {
@@ -279,7 +288,7 @@ void Evasion::Move() {
 	}
 	// 徐々に減速
 	else {
-		velocity_ = LWP::Utility::Interpolation::Exponential(velocity_, Vector3{ 0,0,0 }, 0.1f) * hitStopController_->GetDeltaTime();
+		velocity_ = LWP::Utility::Interpolation::Exponential(velocity_, Vector3{ 0,0,0 }, 0.9f) * hitStopController_->GetDeltaTime();
 	}
 
 	// 移動ベクトルから体の向きを算出
