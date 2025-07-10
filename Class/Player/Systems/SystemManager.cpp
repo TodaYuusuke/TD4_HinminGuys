@@ -290,7 +290,7 @@ void SystemManager::CurrentSystemUpdate() {
 	currentSystem_->Update();
 
 	// 速度(攻撃時以外補間をかける)
-	if (systemState_ != SystemState::kAttack) {
+	if (systemState_ != SystemState::kAttack || systemState_ != SystemState::kEvasion) {
 		velocity_ = LWP::Utility::Interpolation::Exponential(velocity_, currentSystem_->GetVelocity(), 0.3f);
 	}
 	else {

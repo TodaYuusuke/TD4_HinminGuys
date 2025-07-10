@@ -260,11 +260,10 @@ void Parry::CreateCollision() {
 				quat_ = LWP::Math::Quaternion::CreateFromAxisAngle(LWP::Math::Vector3{ 0, 1, 0 }, radian_.y);
 				player_->SetRotate(quat_);
 
+				// パーティクル生成
 				Vector3 pos = (parryTargetPos_ - player_->GetWorldTF()->GetWorldPosition()) / 2.0f;
 				pos += player_->GetWorldTF()->GetWorldPosition();
-
 				player_->CreateParryParticle(pos);
-
 			}
 			// 甘めパリィ
 			else if (eventOrder_.GetCurrentTimeEvent().name == "GoodParry") {
@@ -294,6 +293,10 @@ void Parry::CreateCollision() {
 				radian_.y = LWP::Utility::GetRadian(LWP::Math::Vector3{ 0,0,1 }, p2t, LWP::Math::Vector3{ 0,1,0 });
 				quat_ = LWP::Math::Quaternion::CreateFromAxisAngle(LWP::Math::Vector3{ 0, 1, 0 }, radian_.y);
 				player_->SetRotate(quat_);
+
+				Vector3 pos = (parryTargetPos_ - player_->GetWorldTF()->GetWorldPosition()) / 2.0f;
+				pos += player_->GetWorldTF()->GetWorldPosition();
+				player_->CreateParryParticle(pos);
 			}
 		}
 	);

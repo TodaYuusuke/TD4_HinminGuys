@@ -12,30 +12,36 @@ UIManager::UIManager(Player* player) {
 	// 鞘ゲージ
 	sheathGauge_.Initialize();
 
-	guideOperation_.resize(6);
-	guideOperation_[0].LoadTexture("UI/UI_Button.png");
+	guideOperation_.resize(7);
+	//攻撃
+	guideOperation_[0].LoadTexture("UI/ButtonUI/ButtonUI_Attack.png");
 	guideOperation_[0].anchorPoint = { 1,0 };
 	guideOperation_[0].Init();
-
-	guideOperation_[1].LoadTexture("UI/LRButton0.png");
+	// 走り(回避)
+	guideOperation_[1].LoadTexture("UI/ButtonUI/ButtonUI_Run.png");
 	guideOperation_[1].anchorPoint = { 1,0 };
 	guideOperation_[1].Init();
-
-	guideOperation_[2].LoadTexture("UI/LRButton1.png");
+	// 
+	guideOperation_[2].LoadTexture("UI/ButtonUI/LRButton1.png");
 	guideOperation_[2].anchorPoint = { 1,0 };
+	guideOperation_[2].isActive = false;
 	guideOperation_[2].Init();
-
-	guideOperation_[3].LoadTexture("UI/UI_LTrigger.png");
+	// ロックオン
+	guideOperation_[3].LoadTexture("UI/ButtonUI/UI_LTrigger.png");
 	guideOperation_[3].anchorPoint = { 1,0 };
 	guideOperation_[3].Init();
-
-	guideOperation_[4].LoadTexture("UI/UI_RTrigger.png");
+	// パリィ
+	guideOperation_[4].LoadTexture("UI/ButtonUI/ButtonUI_Parry.png");
 	guideOperation_[4].anchorPoint = { 1,0 };
 	guideOperation_[4].Init();
-
-	guideOperation_[5].LoadTexture("UI/UI_Move.png");
+	// 移動
+	guideOperation_[5].LoadTexture("UI/ButtonUI/UI_Move.png");
 	guideOperation_[5].anchorPoint = { 1,0 };
 	guideOperation_[5].Init();
+	// 鞘
+	guideOperation_[6].LoadTexture("UI/ButtonUI/ButtonUI_Throw.png");
+	guideOperation_[6].anchorPoint = { 1,0 };
+	guideOperation_[6].Init();
 
 	// jsonの値を保存
 	json_.Init("UI_Config");
@@ -58,6 +64,9 @@ UIManager::UIManager(Player* player) {
 		.EndGroup()
 		.BeginGroup("Move")
 		.AddValue<Vector3>("Translation", &guideOperation_[5].worldTF.translation)
+		.EndGroup()
+		.BeginGroup("Sheath")
+		.AddValue<Vector3>("Translation", &guideOperation_[6].worldTF.translation)
 		.EndGroup()
 
 		.EndGroup()
