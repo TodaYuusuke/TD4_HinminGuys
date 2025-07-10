@@ -101,6 +101,8 @@ namespace OgreState {
 	struct SwingDownAttack {
 		//攻撃発生時間に関するデータ
 		AttackData attackData{};
+		//移動方向
+		LWP::Math::Vector3 attackDirection{};
 		//攻撃の強さ
 		AttackStrength attackStrength = AttackStrength::kLight;
 	};

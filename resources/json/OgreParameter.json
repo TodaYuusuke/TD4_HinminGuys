@@ -107,16 +107,16 @@
         },
         "Group :SwingDownAttack": {
             "Vector3 :AttackPosition": [
+                -0.5,
                 0.0,
-                0.0,
-                0.0
+                0.5
             ],
-            "float :AttackDistance": 1.0,
-            "float :AttackScale": 1.0,
+            "float :AttackDistance": 0.800000011920929,
+            "float :AttackScale": 0.5,
             "float :EndAcceptTime": 0.15000000596046448,
             "float :EndMotionTime": 0.5,
-            "float :MoveSpeed": 1.0,
-            "float :StartAcceptTime": 0.05000000074505806
+            "float :MoveSpeed": 5.0,
+            "float :StartAcceptTime": 0.09000000357627869
         }
     }
 }
