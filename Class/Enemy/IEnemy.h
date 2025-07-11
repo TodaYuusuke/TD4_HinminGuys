@@ -6,6 +6,7 @@ using namespace LWP::Resource;
 
 class Player;
 class EnemyManager;
+class SEPlayer;
 
 /// <summary>
 /// 敵の種類
@@ -88,6 +89,8 @@ public:
 
 	//プレイヤーをセットする関数
 	void SetPlayer(Player* player) { player_ = player; }
+	//SEPlayerセット
+	void SetSEPlayer(SEPlayer* sePlayer) { sePlayer_ = sePlayer; }
 	//パラメータをセット
 	void SetParameter(const EnemyParameter& parameter) { parameter_ = parameter; }
 	//死亡フラグ取得
@@ -188,6 +191,8 @@ protected:
 	Player* player_;
 	//敵全体から情報を取るためのポインタ
 	EnemyManager* enemyManager_;
+	//SEを再生するクラスのポインタ
+	SEPlayer* sePlayer_;
 	//敵個別のパラメータ
 	EnemyParameter parameter_;
 	//互いに距離を取るときの反発力

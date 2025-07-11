@@ -42,6 +42,7 @@ void GameScene::Initialize() {
 	enemyManager_.SetDamageEffectEmitter(&damageEffectEmitter_);
 	enemyManager_.SetCamera(followCamera_.GetCamera());
 	enemyManager_.SetIsShowSpawnDataModel(false);
+	enemyManager_.SetSEPlayer(&sePlayer_);
 
 	// 追従カメラの動作確認のため生成
 	followCamera_.Initialize();
@@ -122,6 +123,11 @@ void GameScene::Update() {
 
 	// uiの管理クラス
 	uiManager_.Update();
+
+	//SE管理
+	sePlayer_.Update();
+	//BGM管理
+	bgmPlayer_.Update();
 
 	// デバッグ用のウィンドウ
 	DebugGUI();

@@ -3,6 +3,7 @@
 #include "../../DirectXGame/Engine/primitive/model/Material.h"
 #include "../../../../../GameMask.h"
 #include "../../../../EnemyManager.h"
+#include "../../../../../Audio/SEPlayer.h"
 
 using namespace LWP::Primitive;
 using namespace GameMask;
@@ -62,6 +63,9 @@ void OniHayha::Initialize(Player* player, const Vector3& position, LWP::Object::
 	collider_.mask.SetHitFrag(GetAttack());
 	collider_.enterLambda = [this](LWP::Object::Collision* hitTarget) {
 		hitTarget;
+
+		//SE鳴らす
+		sePlayer_->PlaySE("attack_5.mp3", "hit", 1.0f);
 
 		//ステートをセット(攻撃中はリアクションしない)
 		if (state_.GetCurrentBehavior() != States::kAttack) {

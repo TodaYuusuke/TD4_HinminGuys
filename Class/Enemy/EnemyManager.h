@@ -11,6 +11,7 @@
 #include "ParameterEditor.h"
 
 class Player;
+class SEPlayer;
 
 /// <summary>
 /// 全ての敵を管理するクラス
@@ -29,6 +30,8 @@ public:
 	void Update();
 	//プレイヤーをセット
 	void SetPlayer(Player* player) { player_ = player; }
+	//SEPlayerセット
+	void SetSEPlayer(SEPlayer* sePlayer) { sePlayer_ = sePlayer; }
 	//カメラセット
 	void SetCamera(LWP::Object::Camera* camera) { camera_ = camera; }
 	//ダメージエフェクトエミッターのセット
@@ -91,6 +94,8 @@ private:
 private:
 	//プレイヤーのポインタ
 	Player* player_;
+	//SEPlayerのポインタ
+	SEPlayer* sePlayer_;
 	//ダメージエフェクトエミッターのポインタ
 	DamageEffectEmitter* damageEffectEmitter_;
 	//カメラのポインタ
