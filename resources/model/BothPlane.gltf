@@ -1,6 +1,6 @@
 {
 	"asset":{
-		"generator":"Khronos glTF Blender I/O v4.0.43",
+		"generator":"Khronos glTF Blender I/O v4.3.47",
 		"version":"2.0"
 	},
 	"scene":0,
@@ -8,137 +8,38 @@
 		{
 			"name":"Scene",
 			"nodes":[
-				3
+				2
 			]
 		}
 	],
 	"nodes":[
 		{
-			"name":"Node_1",
-			"rotation":[
-				-8.557136332854043e-09,
-				1.7114272665708086e-08,
-				-2.928983286277023e-16,
-				1
-			]
-		},
-		{
-			"name":"Node_2",
-			"rotation":[
-				-8.557136332854043e-09,
-				1.7114272665708086e-08,
-				-2.928983286277023e-16,
-				1
-			],
-			"translation":[
-				0,
-				0.9999998807907104,
-				-3.4228538225988814e-08
-			]
+			"name":"Bone"
 		},
 		{
 			"mesh":0,
-			"name":"Mesh_0",
+			"name":"Plane",
 			"skin":0
 		},
 		{
 			"children":[
-				2,
-				0,
-				1
+				1,
+				0
 			],
 			"name":"Armature"
-		}
-	],
-	"animations":[
-		{
-			"channels":[
-				{
-					"sampler":0,
-					"target":{
-						"node":0,
-						"path":"translation"
-					}
-				},
-				{
-					"sampler":1,
-					"target":{
-						"node":0,
-						"path":"rotation"
-					}
-				},
-				{
-					"sampler":2,
-					"target":{
-						"node":0,
-						"path":"scale"
-					}
-				},
-				{
-					"sampler":3,
-					"target":{
-						"node":1,
-						"path":"translation"
-					}
-				},
-				{
-					"sampler":4,
-					"target":{
-						"node":1,
-						"path":"rotation"
-					}
-				},
-				{
-					"sampler":5,
-					"target":{
-						"node":1,
-						"path":"scale"
-					}
-				}
-			],
-			"name":"Anim_0",
-			"samplers":[
-				{
-					"input":7,
-					"interpolation":"STEP",
-					"output":8
-				},
-				{
-					"input":7,
-					"interpolation":"STEP",
-					"output":9
-				},
-				{
-					"input":7,
-					"interpolation":"STEP",
-					"output":10
-				},
-				{
-					"input":7,
-					"interpolation":"STEP",
-					"output":11
-				},
-				{
-					"input":12,
-					"interpolation":"LINEAR",
-					"output":13
-				},
-				{
-					"input":7,
-					"interpolation":"STEP",
-					"output":14
-				}
-			]
 		}
 	],
 	"materials":[
 		{
 			"doubleSided":true,
-			"name":"Material",
+			"name":"Texturematerial",
 			"pbrMetallicRoughness":{
-				"baseColorTexture":{
-					"index":0
-				},
+				"baseColorFactor":[
+					0.800000011920929,
+					0.800000011920929,
+					0.800000011920929,
+					1
+				],
 				"metallicFactor":0,
 				"roughnessFactor":0.5
 			}
@@ -146,7 +47,7 @@
 	],
 	"meshes":[
 		{
-			"name":"Mesh_0",
+			"name":"Plane",
 			"primitives":[
 				{
 					"attributes":{
@@ -162,25 +63,11 @@
 			]
 		}
 	],
-	"textures":[
-		{
-			"sampler":0,
-			"source":0
-		}
-	],
-	"images":[
-		{
-			"mimeType":"image/png",
-			"name":"Particle.png",
-			"uri":"Particle.png"
-		}
-	],
 	"skins":[
 		{
 			"inverseBindMatrices":6,
 			"joints":[
-				0,
-				1
+				0
 			],
 			"name":"Armature"
 		}
@@ -189,209 +76,103 @@
 		{
 			"bufferView":0,
 			"componentType":5126,
-			"count":10,
+			"count":8,
 			"max":[
-				0.5,
-				2,
-				0
+				1,
+				0.0007499245111830533,
+				0.999750018119812
 			],
 			"min":[
-				-0.5,
-				0,
-				0
+				-1,
+				-0.0007499245111830533,
+				-1.000249981880188
 			],
 			"type":"VEC3"
 		},
 		{
 			"bufferView":1,
 			"componentType":5126,
-			"count":10,
+			"count":8,
 			"type":"VEC3"
 		},
 		{
 			"bufferView":2,
 			"componentType":5126,
-			"count":10,
+			"count":8,
 			"type":"VEC2"
 		},
 		{
 			"bufferView":3,
 			"componentType":5121,
-			"count":10,
+			"count":8,
 			"type":"VEC4"
 		},
 		{
 			"bufferView":4,
 			"componentType":5126,
-			"count":10,
+			"count":8,
 			"type":"VEC4"
 		},
 		{
 			"bufferView":5,
 			"componentType":5123,
-			"count":24,
+			"count":12,
 			"type":"SCALAR"
 		},
 		{
 			"bufferView":6,
 			"componentType":5126,
-			"count":2,
+			"count":1,
 			"type":"MAT4"
-		},
-		{
-			"bufferView":7,
-			"componentType":5126,
-			"count":2,
-			"max":[
-				5.5
-			],
-			"min":[
-				0
-			],
-			"type":"SCALAR"
-		},
-		{
-			"bufferView":8,
-			"componentType":5126,
-			"count":2,
-			"type":"VEC3"
-		},
-		{
-			"bufferView":9,
-			"componentType":5126,
-			"count":2,
-			"type":"VEC4"
-		},
-		{
-			"bufferView":10,
-			"componentType":5126,
-			"count":2,
-			"type":"VEC3"
-		},
-		{
-			"bufferView":11,
-			"componentType":5126,
-			"count":2,
-			"type":"VEC3"
-		},
-		{
-			"bufferView":12,
-			"componentType":5126,
-			"count":133,
-			"max":[
-				5.5
-			],
-			"min":[
-				0
-			],
-			"type":"SCALAR"
-		},
-		{
-			"bufferView":13,
-			"componentType":5126,
-			"count":133,
-			"type":"VEC4"
-		},
-		{
-			"bufferView":14,
-			"componentType":5126,
-			"count":2,
-			"type":"VEC3"
 		}
 	],
 	"bufferViews":[
 		{
 			"buffer":0,
-			"byteLength":120,
+			"byteLength":96,
 			"byteOffset":0,
 			"target":34962
 		},
 		{
 			"buffer":0,
-			"byteLength":120,
-			"byteOffset":120,
+			"byteLength":96,
+			"byteOffset":96,
 			"target":34962
 		},
 		{
 			"buffer":0,
-			"byteLength":80,
-			"byteOffset":240,
+			"byteLength":64,
+			"byteOffset":192,
 			"target":34962
-		},
-		{
-			"buffer":0,
-			"byteLength":40,
-			"byteOffset":320,
-			"target":34962
-		},
-		{
-			"buffer":0,
-			"byteLength":160,
-			"byteOffset":360,
-			"target":34962
-		},
-		{
-			"buffer":0,
-			"byteLength":48,
-			"byteOffset":520,
-			"target":34963
-		},
-		{
-			"buffer":0,
-			"byteLength":128,
-			"byteOffset":568
-		},
-		{
-			"buffer":0,
-			"byteLength":8,
-			"byteOffset":696
-		},
-		{
-			"buffer":0,
-			"byteLength":24,
-			"byteOffset":704
 		},
 		{
 			"buffer":0,
 			"byteLength":32,
-			"byteOffset":728
+			"byteOffset":256,
+			"target":34962
+		},
+		{
+			"buffer":0,
+			"byteLength":128,
+			"byteOffset":288,
+			"target":34962
 		},
 		{
 			"buffer":0,
 			"byteLength":24,
-			"byteOffset":760
+			"byteOffset":416,
+			"target":34963
 		},
 		{
 			"buffer":0,
-			"byteLength":24,
-			"byteOffset":784
-		},
-		{
-			"buffer":0,
-			"byteLength":532,
-			"byteOffset":808
-		},
-		{
-			"buffer":0,
-			"byteLength":2128,
-			"byteOffset":1340
-		},
-		{
-			"buffer":0,
-			"byteLength":24,
-			"byteOffset":3468
-		}
-	],
-	"samplers":[
-		{
-			"magFilter":9729,
-			"minFilter":9987
+			"byteLength":64,
+			"byteOffset":440
 		}
 	],
 	"buffers":[
 		{
-			"byteLength":3492,
-			"uri":"simpleSkin.bin"
+			"byteLength":504,
+			"uri":"BothPlane.bin"
 		}
 	]
 }

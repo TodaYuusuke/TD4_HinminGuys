@@ -14,6 +14,7 @@
 #include "Particles/Particles.h"
 #include "../Components/HitStopController.h"
 #include "../UI/UIManager.h"
+#include "Systems/Children/Sheath/Effect/Chain.h"
 #include <memory>
 
 class IEnemy;
@@ -121,6 +122,16 @@ public:// Getter,Setter
 	/// <returns></returns>
 	LWP::Object::TransformQuat* GetWorldTF() { return &model_.worldTF; }
 	/// <summary>
+	/// 刀のTransformQuatを取得
+	/// </summary>
+	/// <returns></returns>
+	LWP::Object::TransformQuat* GetSwordModelWorldTF() { return &swordModel_.worldTF; }
+	/// <summary>
+	/// 鞘のTransformQuatを取得
+	/// </summary>
+	/// <returns></returns>
+	LWP::Object::TransformQuat* GetSheathModelWorldTF() { return &sheathModel_.worldTF; }
+	/// <summary>
 	/// アニメーション情報を取得
 	/// </summary>
 	/// <returns></returns>
@@ -130,6 +141,16 @@ public:// Getter,Setter
 	/// </summary>
 	/// <returns></returns>
 	LWP::Resource::SkinningModel* GetModel() { return &model_; }
+	/// <summary>
+	/// 刀モデルを取得
+	/// </summary>
+	/// <returns></returns>
+	LWP::Resource::SkinningModel* GetSwordModel() { return &swordModel_; }
+	/// <summary>
+	/// 鞘モデルを取得
+	/// </summary>
+	/// <returns></returns>
+	LWP::Resource::SkinningModel* GetSheathModel() { return &sheathModel_; }
 	/// <summary>
 	/// パラメータ情報を取得
 	/// </summary>
@@ -251,6 +272,8 @@ private:
 
 	// パーティクルの管理クラス
 	std::unique_ptr<Particles> particles_;
+
+	std::unique_ptr<Chain> chain_;
 
 	// いきているか
 	bool isAlive_ = true;

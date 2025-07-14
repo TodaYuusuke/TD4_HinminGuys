@@ -150,6 +150,8 @@
     </Manifest>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Class\Player\Systems\Children\Sheath\Effect\Chain.cpp" />
+    <ClCompile Include="Class\Player\Systems\Children\Sheath\Effect\ChainNode.cpp" />
     <ClCompile Include="Class\Enemy\Childs\Normal\State\HitReaction.cpp" />
     <ClCompile Include="Class\Player\Systems\Children\Sheath\State\Break.cpp" />
     <ClCompile Include="Class\ComboEditor\ComboTree.cpp" />
@@ -213,6 +215,8 @@
     <ClCompile Include="Class\Player\Math\MathFunctions.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Class\Player\Systems\Children\Sheath\Effect\Chain.h" />
+    <ClInclude Include="Class\Player\Systems\Children\Sheath\Effect\ChainNode.h" />
     <ClInclude Include="Class\Enemy\Childs\Normal\INormalEnemyState.h" />
     <ClInclude Include="Class\Enemy\Childs\Normal\State\HitReaction.h" />
     <ClInclude Include="Class\Enemy\Childs\Normal\NormalStateParameter.h" />

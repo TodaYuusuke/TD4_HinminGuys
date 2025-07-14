@@ -15,7 +15,6 @@ Player::Player(LWP::Object::Camera* camera, EnemyManager* enemyManager, FollowCa
 
 	// モデルを読み込む
 	model_.LoadShortPath("player/Player.gltf");
-	model_.materials["SuitMaterial"].color.A = 100;
 	animation_.LoadFullPath("resources/model/player/Player.gltf", &model_);
 	animation_.Play("Idle");
 	// 刀
@@ -31,6 +30,13 @@ void Player::Initialize() {
 	inputHandler_ = InputHandler::GetInstance();
 	// ヒットストップの管理クラス
 	hitStopController_ = HitStopController::GetInstance();
+
+
+
+	//chain_ = std::make_unique<Chain>();
+	//chain_->Initialize();
+
+
 
 	// パーティクルの管理クラス
 	particles_ = std::make_unique<Particles>(this, followCamera_);
@@ -61,6 +67,9 @@ void Player::Initialize() {
 }
 
 void Player::Update() {
+	//chain_->Update();
+
+
 	// 体力がないなら自機は死亡
 	if (uiManager_->GetHPGauge().GetIsBelowPercent(0.0f)) {
 		isAlive_ = false;
@@ -102,7 +111,6 @@ void Player::DebugGUI() {
 	}
 	// WorldTransform
 	model_.DebugGUI();
-	model_.worldTF.DebugGUI();
 	// 当たり判定
 	if (ImGui::TreeNode("Collider")) {
 		json_.DebugGUI();

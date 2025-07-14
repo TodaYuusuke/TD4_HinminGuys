@@ -62,6 +62,8 @@
     <ClCompile Include="Class\Player\Systems\Children\Move\Effect\MoveEffect.cpp" />
     <ClCompile Include="Class\Player\Particles\IEffect.cpp" />
     <ClCompile Include="Class\Player\Math\MathFunctions.cpp" />
+    <ClCompile Include="Class\Player\Systems\Children\Sheath\Effect\Chain.cpp" />
+    <ClCompile Include="Class\Player\Systems\Children\Sheath\Effect\ChainNode.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Class\ComboEditor\ComboTree.h" />
@@ -146,6 +148,8 @@
     <ClInclude Include="Class\Player\Systems\Children\Move\Effect\MoveEffect.h" />
     <ClInclude Include="Class\Player\Particles\IEffect.h" />
     <ClInclude Include="Class\Player\Math\MathFunctions.h" />
+    <ClInclude Include="Class\Player\Systems\Children\Sheath\Effect\Chain.h" />
+    <ClInclude Include="Class\Player\Systems\Children\Sheath\Effect\ChainNode.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />

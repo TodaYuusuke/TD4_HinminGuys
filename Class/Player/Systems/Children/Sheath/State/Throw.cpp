@@ -110,6 +110,13 @@ void Throw::CheckThrowState() {
 	}
 	// 鞘回収するために自機が動いているときの処理
 	else if ((*eventOrders_)[(int)Sheath::SheathState::kThrow].GetCurrentTimeEvent().name == "ThrowFinishTime") {
+		// 鎖生成
+		if (!sheathSystem_->GetIsSheathModelActive()) {
+			sheathSystem_->chain_->SetIsActive(isActive_);
+			sheathSystem_->chain_->Reset();
+			sheathSystem_->chain_->Initialize();
+		}
+
 		// 鞘判定をとれるようにする
 		player_->GetSystemManager()->GetSheathCollision().isActive = true;
 		sheathSystem_->SetIsSheathModelActive(true);

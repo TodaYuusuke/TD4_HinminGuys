@@ -1,0 +1,15 @@
+{
+    "Group :Chain": {
+        "Vector3 :Acceleration": [
+            0.0,
+            -0.004000000189989805,
+            0.0
+        ],
+        "int32_t :Count": 29
+    },
+    "Group :Spring": {
+        "float :Damping": 0.10000000149011612,
+        "float :RestLength": 0.20000000298023224,
+        "float :Stiffness": 1.0
+    }
+}
