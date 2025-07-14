@@ -12,6 +12,7 @@ class CoolTimer {
 public:
 	struct CoolTimeData {
 		float coolTime;			// クールタイム
+		float maxCoolTime;		// クールタイムの最大時間
 		bool isFinish = true;	// 終了しているか
 	};
 
@@ -51,17 +52,26 @@ public:// Getter, Setter
 	/// パリィのクールタイムを設定
 	/// </summary>
 	/// <param name="coolTime">クールタイム[秒]</param>
-	void SetParryCoolTime(const float& coolTime){ coolTimes_[CoolTimeTarget::kParry].coolTime = coolTime * 60.0f; }
+	void SetParryCoolTime(const float& coolTime){ 
+		coolTimes_[CoolTimeTarget::kParry].coolTime = coolTime * 60.0f; 
+		coolTimes_[CoolTimeTarget::kParry].maxCoolTime = coolTime * 60.0f;
+	}
 	/// <summary>
 	/// 回避のクールタイムを設定
 	/// </summary>
 	/// <param name="coolTime">クールタイム[秒]</param>
-	void SetEvasionCoolTime(const float& coolTime){ coolTimes_[CoolTimeTarget::kEvasion].coolTime = coolTime * 60.0f; }
+	void SetEvasionCoolTime(const float& coolTime){ 
+		coolTimes_[CoolTimeTarget::kEvasion].coolTime = coolTime * 60.0f;
+		coolTimes_[CoolTimeTarget::kEvasion].maxCoolTime = coolTime * 60.0f;
+	}
 	/// <summary>
 	/// 鞘のクールタイムを設定
 	/// </summary>
 	/// <param name="coolTime">クールタイム[秒]</param>
-	void SetSheathCoolTime(const float& coolTime){ coolTimes_[CoolTimeTarget::kSheath].coolTime = coolTime * 60.0f; }
+	void SetSheathCoolTime(const float& coolTime){ 
+		coolTimes_[CoolTimeTarget::kSheath].coolTime = coolTime * 60.0f; 
+		coolTimes_[CoolTimeTarget::kSheath].maxCoolTime = coolTime * 60.0f;
+	}
 #pragma endregion
 
 private:

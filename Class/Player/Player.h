@@ -14,7 +14,6 @@
 #include "Particles/Particles.h"
 #include "../Components/HitStopController.h"
 #include "../UI/UIManager.h"
-#include "Systems/Children/Sheath/Effect/Chain.h"
 #include <memory>
 
 class IEnemy;
@@ -272,8 +271,6 @@ private:
 
 	// パーティクルの管理クラス
 	std::unique_ptr<Particles> particles_;
-
-	std::unique_ptr<Chain> chain_;
 
 	// いきているか
 	bool isAlive_ = true;

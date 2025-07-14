@@ -31,13 +31,6 @@ void Player::Initialize() {
 	// ヒットストップの管理クラス
 	hitStopController_ = HitStopController::GetInstance();
 
-
-
-	//chain_ = std::make_unique<Chain>();
-	//chain_->Initialize();
-
-
-
 	// パーティクルの管理クラス
 	particles_ = std::make_unique<Particles>(this, followCamera_);
 	particles_->Initialize();
@@ -67,9 +60,6 @@ void Player::Initialize() {
 }
 
 void Player::Update() {
-	//chain_->Update();
-
-
 	// 体力がないなら自機は死亡
 	if (uiManager_->GetHPGauge().GetIsBelowPercent(0.0f)) {
 		isAlive_ = false;
