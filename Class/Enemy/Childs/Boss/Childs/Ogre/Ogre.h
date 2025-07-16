@@ -3,7 +3,7 @@
 #include "OgreStateParameter.h"
 
 /// <summary>
-/// オニ・ヘイヘ~青い死神~
+/// 翁雅、降臨
 /// </summary>
 class Ogre : public Boss
 {
