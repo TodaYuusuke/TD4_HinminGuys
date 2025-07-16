@@ -64,6 +64,7 @@
     <ClCompile Include="Class\Player\Math\MathFunctions.cpp" />
     <ClCompile Include="Class\Player\Systems\Children\Sheath\Effect\Chain.cpp" />
     <ClCompile Include="Class\Player\Systems\Children\Sheath\Effect\ChainNode.cpp" />
+    <ClCompile Include="Class\UI\UIMotions.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Class\ComboEditor\ComboTree.h" />
@@ -150,6 +151,7 @@
     <ClInclude Include="Class\Player\Math\MathFunctions.h" />
     <ClInclude Include="Class\Player\Systems\Children\Sheath\Effect\Chain.h" />
     <ClInclude Include="Class\Player\Systems\Children\Sheath\Effect\ChainNode.h" />
+    <ClInclude Include="Class\UI\UIMotions.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />

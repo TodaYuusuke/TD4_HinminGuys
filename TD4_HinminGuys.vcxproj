@@ -213,6 +213,7 @@
     <ClCompile Include="Class\Player\PlayerParameter.cpp" />
     <ClCompile Include="Class\Player\Systems\Children\Move\Effect\MoveEffect.cpp" />
     <ClCompile Include="Class\Player\Math\MathFunctions.cpp" />
+    <ClCompile Include="Class\UI\UIMotions.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Class\Player\Systems\Children\Sheath\Effect\Chain.h" />
@@ -299,6 +300,7 @@
     <ClInclude Include="Class\Player\Particles\IEffect.h" />
     <ClInclude Include="Class\Player\Systems\Children\Move\Effect\MoveEffect.h" />
     <ClInclude Include="Class\Player\Math\MathFunctions.h" />
+    <ClInclude Include="Class\UI\UIMotions.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />
