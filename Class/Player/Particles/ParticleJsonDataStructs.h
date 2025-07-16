@@ -22,7 +22,7 @@ struct ParticleJsonData {
 
 // 各パーティクルの情報
 struct ParticleData {
-	LWP::Primitive::Billboard2D billboard;
+	LWP::Primitive::NormalBillboard2D billboard;
 	LWP::Resource::RigidModel plane;		// 平面
 	LWP::Math::Vector3 vel;					// 速度
 	LWP::Math::Vector3 euler;				// オイラー角

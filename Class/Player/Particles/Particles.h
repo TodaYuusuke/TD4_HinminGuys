@@ -87,10 +87,13 @@ private:
 	// 移動
 	std::unique_ptr<MoveEffect> moveEffect_;
 
-	MoveEffectType moveEffectType_;
-
 	// パーティクル生成座標(デバッグ用)
 	LWP::Math::Vector3 debugEmitterPos_;
+
+	MoveEffectType moveEffectType_;
+	MoveEffectType preMoveEffectType_;
+	// 移動アニメーションの経過フレーム
+	float currentMoveFrame_;
 
 	bool isPreJustParry_ = false;
 	bool isPreGoodParry_ = false;

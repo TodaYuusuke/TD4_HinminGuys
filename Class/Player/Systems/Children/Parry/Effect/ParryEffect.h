@@ -39,31 +39,31 @@ private:// 各パーティクル単体を生成
 	/// </summary>
 	/// <param name="pos"></param>
 	/// <returns></returns>
-	ParticleData MakeLineParticle(LWP::Math::Vector3 pos);
+	void MakeLineParticle(ParticleData& particle, LWP::Math::Vector3 pos);
 	/// <summary>
 	/// 円パーティクル単体を生成
 	/// </summary>
 	/// <param name="pos"></param>
 	/// <returns></returns>
-	ParticleData MakeCircleParticle(LWP::Math::Vector3 pos);
+	void MakeCircleParticle(ParticleData& particle, LWP::Math::Vector3 pos);
 	/// <summary>
 	/// 大きい光パーティクル単体を生成
 	/// </summary>
 	/// <param name="pos"></param>
 	/// <returns></returns>
-	ParticleData MakeLargeFlashParticle(LWP::Math::Vector3 pos);
+	void MakeLargeFlashParticle(ParticleData& particle, LWP::Math::Vector3 pos);
 	/// <summary>
 	/// 小さい光パーティクル単体を生成
 	/// </summary>
 	/// <param name="pos"></param>
 	/// <returns></returns>
-	ParticleData MakeShortFlashParticle(LWP::Math::Vector3 pos);
+	void MakeShortFlashParticle(ParticleData& particle, LWP::Math::Vector3 pos);
 	/// <summary>
 	/// リングを生成
 	/// </summary>
 	/// <param name="pos"></param>
 	/// <returns></returns>
-	ParticleData MakeRingParticle(LWP::Math::Vector3 pos);
+	void MakeRingParticle(ParticleData& particle, LWP::Math::Vector3 pos);
 	/// <summary>
 	/// 指定されている数のジャストパリィパーティクルを生成
 	/// </summary>

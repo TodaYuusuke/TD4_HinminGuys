@@ -63,7 +63,7 @@ private:
 private:
 
 	//画像
-	LWP::Primitive::Sprite sprite_;
+	LWP::Primitive::NormalSprite sprite_;
 	//名前
 	std::string name_;
 	//json

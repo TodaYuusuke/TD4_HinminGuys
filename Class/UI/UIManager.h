@@ -89,8 +89,8 @@ private:
 	SheathGauge sheathGauge_;
 
 	// 操作ガイド
-	std::vector<LWP::Primitive::Sprite> guideOperation_;
+	std::vector<LWP::Primitive::NormalSprite> guideOperation_;
 	// クールタイムのフィルタ
-	std::vector<LWP::Primitive::Sprite> coolTimeFilter_;
+	std::vector<LWP::Primitive::ClipSprite> coolTimeFilter_;
 	std::vector<LWP::Math::Vector2> coolTimeFilterSplitSize_;
 };

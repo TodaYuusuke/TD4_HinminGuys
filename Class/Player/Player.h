@@ -14,12 +14,20 @@
 #include "Particles/Particles.h"
 #include "../Components/HitStopController.h"
 #include "../UI/UIManager.h"
+#include "../Audio/SEPlayer.h"
 #include <memory>
 
 class IEnemy;
 class EnemyManager;
 class FollowCamera;
 class Player : public ICharacter {
+public:
+	enum class MoveEffectType {
+		kNone,
+		kLeft,
+		kRight
+	};
+
 public:
 	// コンストラクタ
 	Player(LWP::Object::Camera* camera, EnemyManager* enemyManager, FollowCamera* followCamera, UIManager* uiManager);
@@ -85,6 +93,15 @@ private:
 	/// 移動制限
 	/// </summary>
 	void LimitMoveArea();
+
+	/// <summary>
+	/// SEの鳴らす条件などの更新処理
+	/// </summary>
+	void SEUpdate();
+	/// <summary>
+	/// 移動時のSEを鳴らす
+	/// </summary>
+	void MoveSE();
 
 public:
 	/// <summary>
@@ -180,15 +197,20 @@ public:// Getter,Setter
 
 #pragma region Setter
 	/// <summary>
-	/// シーンで使用しているカメラのポインタを設定
+	/// シーンで使用しているカメラのアドレスを設定
 	/// </summary>
 	/// <param name="camera">カメラのアドレス</param>
 	void SetCamera(LWP::Object::Camera* camera) { pCamera_ = camera; }
 	/// <summary>
-	/// 敵の管理クラスを設定
+	/// 敵の管理クラスのアドレスを設定
 	/// </summary>
 	/// <param name="enemyManager">敵の管理クラスのポインタ</param>
 	void SetEnemyManager(EnemyManager* enemyManager) { enemyManager_ = enemyManager; }
+	/// <summary>
+	/// 効果音を管理するクラスのアドレスを設定
+	/// </summary>
+	/// <param name="SEPlayer"></param>
+	void SetSEPlayer(SEPlayer* SEPlayer) { SEPlayer_ = SEPlayer; }
 	/// <summary>
 	/// 向いている方向を設定
 	/// </summary>
@@ -250,9 +272,12 @@ private:// 外部からポインタをもらう変数
 	UIManager* uiManager_;
 	// ヒットストップ
 	HitStopController* hitStopController_;
+	// 効果音
+	SEPlayer* SEPlayer_;
 
 private:
 	LWP::Utility::JsonIO json_;
+
 
 	// 刀モデル
 	LWP::Resource::SkinningModel swordModel_;
@@ -271,6 +296,12 @@ private:
 
 	// パーティクルの管理クラス
 	std::unique_ptr<Particles> particles_;
+
+	// どちらの足が出ているか
+	MoveEffectType moveEffectType_;
+	MoveEffectType preMoveEffectType_;
+	// 移動アニメーションの経過フレーム
+	float currentMoveFrame_;
 
 	// いきているか
 	bool isAlive_ = true;

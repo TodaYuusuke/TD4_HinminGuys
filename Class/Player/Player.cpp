@@ -1,6 +1,7 @@
 #include "Player.h"
 #include "../Enemy/EnemyManager.h"
 #include "../GameMask.h"
+#include "PlayerAudioNames.h"
 
 using namespace LWP::Utility;
 using namespace GameMask;
@@ -85,6 +86,9 @@ void Player::Update() {
 
 	// パーティクル管理クラス
 	particles_->Update();
+
+	// 効果音
+	SEUpdate();
 }
 
 void Player::Reset() {
@@ -184,6 +188,51 @@ void Player::LimitMoveArea() {
 	if (systemManager_->GetSheathSystem()->GetSheathState()->GetStateName() == "SwordDrawn") {
 		systemManager_->GetSheathSystem()->ClampToCircle(model_.worldTF.translation);
 	}
+}
+
+void Player::SEUpdate() {
+	MoveSE();
+	// 効果音
+	SEPlayer_->Update();
+}
+
+void Player::MoveSE() {
+	if (!animation_.GetPlaying("Dash", LWP::Resource::Animation::TrackType::Main) && 
+		!animation_.GetPlaying("Walk", LWP::Resource::Animation::TrackType::Main) && 
+		!animation_.GetPlaying("Run", LWP::Resource::Animation::TrackType::Blend)) {
+		moveEffectType_ = MoveEffectType::kNone;
+		currentMoveFrame_ = 0.0f;
+		return;
+	}
+
+	float t = 0.0f;
+	currentMoveFrame_ += hitStopController_->GetDeltaTime();
+	if (animation_.GetPlaying("Dash", LWP::Resource::Animation::TrackType::Main) || animation_.GetPlaying("Walk", LWP::Resource::Animation::TrackType::Main)) {
+		t = animation_.GetTotalSeconds(LWP::Resource::Animation::TrackType::Main) / animation_.GetPlayBackSpeed(LWP::Resource::Animation::TrackType::Main) * 60.0f;
+	}
+	else if (animation_.GetPlaying("Run", LWP::Resource::Animation::TrackType::Blend)) {
+		t = animation_.GetTotalSeconds(LWP::Resource::Animation::TrackType::Blend) / animation_.GetPlayBackSpeed(LWP::Resource::Animation::TrackType::Blend) * 60.0f;
+	}
+
+	// 地面につく足は左足
+	if (t / 1.05f <= currentMoveFrame_) {
+		currentMoveFrame_ += -t;
+		moveEffectType_ = MoveEffectType::kLeft;
+	}
+	// 地面につく足は右足
+	else if (t / 2.0f <= currentMoveFrame_) {
+		moveEffectType_ = MoveEffectType::kRight;
+	}
+
+	// 効果音を再生
+	if (moveEffectType_ == MoveEffectType::kLeft && preMoveEffectType_ != MoveEffectType::kLeft) {
+		SEPlayer_->PlaySE(PlayerAudio::SE::move[0].fileName, PlayerAudio::SE::move[0].name, PlayerAudio::SE::move[0].volume);
+	}
+	else if (moveEffectType_ == MoveEffectType::kRight && preMoveEffectType_ != MoveEffectType::kRight) {
+		SEPlayer_->PlaySE(PlayerAudio::SE::move[0].fileName, PlayerAudio::SE::move[0].name, PlayerAudio::SE::move[0].volume);
+	}
+
+	preMoveEffectType_ = moveEffectType_;
 }
 
 void Player::CreateParryParticle(const LWP::Math::Vector3& pos) {

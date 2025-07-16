@@ -261,6 +261,7 @@
     <ClInclude Include="Class\Enemy\Childs\Minor\Childs\Saiji\SaijiStateParameter.h" />
     <ClInclude Include="Class\Enemy\Childs\Minor\Minor.h" />
     <ClInclude Include="Class\Enemy\ParameterEditor.h" />
+    <ClInclude Include="Class\Player\PlayerAudioNames.h" />
     <ClInclude Include="Class\Player\Systems\Children\Sheath\Effect\Chain.h" />
     <ClInclude Include="Class\Player\Systems\Children\Sheath\Effect\ChainNode.h" />
     <ClInclude Include="Class\Player\Particles\ParticleJsonDataStructs.h" />

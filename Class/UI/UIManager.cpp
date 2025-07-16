@@ -136,15 +136,15 @@ void UIManager::Update() {
 	// 鞘ゲージ
 	sheathGauge_.Update();
 }
-Vector2 aaaa{};
+
 void UIManager::DebugGUI() {
 	json_.DebugGUI();
-	ImGui::DragFloat2("size", &aaaa.x, 0.1f,0.0f);
+
 	sheathGauge_.DebugGUI();
 
+	coolTimeFilter_[6].DebugGUI();
+
 	hp_.DebugGUI();
-//	coolTimeFilter_[6].SetSplitSize(aaaa);
-//	coolTimeFilter_[6].Init();
 }
 
 void UIManager::CoolTimeFilterUpdate() {
@@ -155,13 +155,13 @@ void UIManager::CoolTimeFilterUpdate() {
 	if (!player_->GetSystemManager()->GetCoolTimer()->GetSheathCoolTimeData().isFinish) {
 		coolTimeFilter_[6].isActive = true;
 		coolTimeFilterSplitSize_[6].y = 150.0f * player_->GetSystemManager()->GetCoolTimer()->GetSheathCoolTimeData().coolTime / player_->GetSystemManager()->GetCoolTimer()->GetSheathCoolTimeData().maxCoolTime;
-		coolTimeFilter_[6].SetSplitSize(coolTimeFilterSplitSize_[6]);
-		coolTimeFilter_[6].Init();
+		//coolTimeFilter_[6].clipRect.SetSplitSize(coolTimeFilterSplitSize_[6]);
+		//coolTimeFilter_[6].Init();
 	}
 	else {
-		coolTimeFilter_[6].isActive = false;
+		coolTimeFilter_[6].isActive = true;
 		coolTimeFilterSplitSize_[6].y = 150.0f;
-		coolTimeFilter_[6].SetSplitSize(coolTimeFilterSplitSize_[6]);
-		coolTimeFilter_[6].Init();
+		//coolTimeFilter_[6].SetSplitSize(coolTimeFilterSplitSize_[6]);
+		//coolTimeFilter_[6].Init();
 	}
 }

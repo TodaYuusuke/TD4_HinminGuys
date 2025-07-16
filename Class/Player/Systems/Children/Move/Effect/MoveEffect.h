@@ -39,7 +39,7 @@ public:// 各パーティクルの生成
 	/// 土煙のパーティクル単体を生成
 	/// </summary>
 	/// <param name="pos"></param>
-	ParticleData CreateDustCloud(LWP::Math::Vector3 pos);
+	void CreateDustCloud(ParticleData&, LWP::Math::Vector3 pos);
 
 public:// 演出開始
 	/// <summary>

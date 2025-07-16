@@ -29,7 +29,6 @@ void LockOn::Initialize() {
 	lockOnUI_.enableLockOnObj.LoadTexture("lockOnReticle.png");
 	lockOnUI_.enableLockOnObj.anchorPoint = lockOnUI_.defaultAnchorPoint;
 	lockOnUI_.enableLockOnObj.isActive = false;
-	lockOnUI_.enableLockOnObj.isUI = true;
 	lockOnUI_.enableLockOnObj.Init();
 
 	guideLockOnUI_.LoadTexture("UI/ButtonUI/LockOn.png");
@@ -190,7 +189,6 @@ void LockOn::SearchLockOnEnemy() {
 		lockOnData.ui.enableLockOnObj.name = "billbard";
 		lockOnData.ui.enableLockOnObj.anchorPoint = { 0.5f, 0.5f };
 		lockOnData.ui.enableLockOnObj.isActive = false;
-		lockOnData.ui.enableLockOnObj.isUI = true;
 		lockOnData.ui.enableLockOnObj.Init();
 		lockOnEnableEnemies_.push_back(lockOnData);
 	}
