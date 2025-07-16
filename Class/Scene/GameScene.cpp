@@ -30,20 +30,29 @@ void GameScene::Initialize() {
 	hitStopController_ = HitStopController::GetInstance();
 	hitStopController_->Initialize();
 
+	//レベルロード
+	levelData.LoadShortPath("gameScene.json");
+
 	// UIの管理クラスを生成
 	uiManager_.Initialize();
 
 	// 敵管理クラス
 	enemyManager_.Initialize();
 	enemyManager_.SetPlayer(&player_);
+	enemyManager_.SetDamageEffectEmitter(&damageEffectEmitter_);
 	enemyManager_.SetCamera(followCamera_.GetCamera());
 	enemyManager_.SetIsShowSpawnDataModel(false);
+	enemyManager_.SetSEPlayer(&sePlayer_);
 
 	// 追従カメラの動作確認のため生成
 	followCamera_.Initialize();
 
 	// 自機の動作確認のため生成
 	player_.Initialize();
+
+	//ダメージエフェクトエミッターを生成
+	damageEffectEmitter_.Initialize();
+	damageEffectEmitter_.SetCamera(followCamera_.GetCamera());
 
 #pragma region フィールドを一時的に生成
 	// 一時的に平面を生成
@@ -108,8 +117,17 @@ void GameScene::Update() {
 	// 追従カメラ
 	followCamera_.Update();
 
+	
+	//ダメージエフェクトエミッター
+	damageEffectEmitter_.Update();
+
 	// uiの管理クラス
 	uiManager_.Update();
+
+	//SE管理
+	sePlayer_.Update();
+	//BGM管理
+	bgmPlayer_.Update();
 
 	// デバッグ用のウィンドウ
 	DebugGUI();
@@ -141,6 +159,11 @@ void GameScene::DebugGUI() {
 			enemyManager_.DebugGUI();
 			ImGui::EndTabItem();
 		}
+		//ダメージエフェクトエミッター
+		if (ImGui::BeginTabItem("DamageEffectEmitter")) {
+			damageEffectEmitter_.DebugGUI();
+			ImGui::EndTabItem();
+		}
 		// 地面
 		if (ImGui::BeginTabItem("Ground")) {
 			plane.DebugGUI();
@@ -159,6 +182,11 @@ void GameScene::DebugGUI() {
 		// FPSカウンターの表示
 		if (ImGui::BeginTabItem("Other")) {
 			ImGui::Text("Frame rate: %6.2f fps", ImGui::GetIO().Framerate);
+
+			if (ImGui::Button("Level Reload")) {
+				levelData.HotReload();
+			}
+
 			ImGui::EndTabItem();
 		}
 

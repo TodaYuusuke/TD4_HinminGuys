@@ -9,6 +9,9 @@
 #include "../Components/HitStopController.h"
 #include <set>
 #include "SceneTransitioner.h"
+#include "../UI/DamageEffectEmitter.h"
+#include "../Audio/BGMPlayer.h"
+#include "../Audio/SEPlayer.h"
 
 class GameScene final
 	: public IScene {
@@ -39,6 +42,9 @@ private: // ** これより先に必要な処理や変数を記述 ** //
 	// 自機
 	Player player_;
 
+	//ダメージエフェクトエミッター
+	DamageEffectEmitter damageEffectEmitter_;
+
 	// 追従カメラ
 	FollowCamera followCamera_;
 
@@ -47,6 +53,9 @@ private: // ** これより先に必要な処理や変数を記述 ** //
 
 	// UIの管理クラス
 	UIManager uiManager_;
+
+	// オーディオ
+	Audio audio;
 
 	// 平面(一時的に作っているので要修正)
 	LWP::Resource::RigidModel plane;
@@ -58,5 +67,8 @@ private: // ** これより先に必要な処理や変数を記述 ** //
 
 	//シーン切り替え
 	SceneTransitioner sceneTransitioner_;
+	//オーディオ再生クラス
+	BGMPlayer bgmPlayer_;
+	SEPlayer sePlayer_;
 
 };

@@ -1,6 +1,5 @@
 #include "EnemyManager.h"
 #include "../Player/Player.h"
-#include "Childs/Normal/State/States.h"
 
 EnemyManager::~EnemyManager()
 {
@@ -14,6 +13,13 @@ void EnemyManager::Initialize()
 	spawnPoint_ = { 0.0f,0.0f,0.0f };
 	isDefeatedAllEnemy_ = false;
 	isStartWave_ = false;
+
+	saijiParameter_.InitJson();
+	oniHayhaParameter_.InitJson();
+	ogreParameter_.InitJson();
+
+	parameterEditor_.Initialize();
+
 }
 
 void EnemyManager::Finalize()
@@ -45,6 +51,26 @@ void EnemyManager::Update()
 
 	//全ての敵の更新
 	for (auto enemyA = enemies_.begin(); enemyA != enemies_.end(); enemyA++) {
+
+		//プレイヤーとの押し出し処理
+		{
+
+			//二人の距離を測る
+			Vector3 diff = (*enemyA)->GetPosition() - *player_->GetModelPos();
+			//Y軸移動は考えない
+			diff.y = 0.0f;
+			//距離
+			float dist = diff.Length();
+			//押し出し判定距離
+			float judgeDist = playerDist_;
+
+			//距離が一定以上近い場合、押し出しベクトルを加算する
+			if (dist < judgeDist && dist > 0.0001f) {
+				(*enemyA)->AddRepulsiveForce(diff.Normalize() * ((judgeDist - dist) / judgeDist));
+			}
+
+		}
+
 		//互いの情報を共有するためのループ
 		for (auto enemyB = enemies_.begin(); enemyB != enemies_.end(); enemyB++) {
 
@@ -97,11 +123,14 @@ void EnemyManager::CreateEnemy(const Vector3& position, EnemyType type)
 	//タイプに応じて生成するものを変更
 	switch (type)
 	{
-	case EnemyType::kNormal:
-		enemies_.push_back(new Normal());
+	case EnemyType::kSaiji:
+		enemies_.push_back(new Saiji(saijiParameter_.GetStateParameter()));
 		break;
-	case EnemyType::kBoss:
-		enemies_.push_back(new Boss());
+	case EnemyType::kOniHayha:
+		enemies_.push_back(new OniHayha(oniHayhaParameter_.GetStateParameter()));
+		break;
+	case EnemyType::kOgre:
+		enemies_.push_back(new Ogre(ogreParameter_.GetStateParameter()));
 		break;
 	default:
 		break;
@@ -109,7 +138,9 @@ void EnemyManager::CreateEnemy(const Vector3& position, EnemyType type)
 
 	//初期化してリストに追加
 	enemies_.back()->Initialize(player_, position, camera_, this);
-	
+	enemies_.back()->SetParameter(parameterEditor_.GetParameter(type));
+	enemies_.back()->SetSEPlayer(sePlayer_);
+
 }
 
 
@@ -142,14 +173,19 @@ void EnemyManager::DebugGUI()
 	//敵の数が最大数になるまで召喚可能
 	if (enemies_.size() < kMaxEnemyCount_) {
 
-		//ボス召喚
-		if (ImGui::Button("Create Boss")) {
-			CreateEnemy(spawnPoint_, EnemyType::kBoss);
+		//翁雅召喚
+		if (ImGui::Button("Create Ogre")) {
+			CreateEnemy(spawnPoint_, EnemyType::kOgre);
 		}
 
-		//ザコ召喚
-		if (ImGui::Button("Create Normal")) {
-			CreateEnemy(spawnPoint_, EnemyType::kNormal);
+		//才二君召喚
+		if (ImGui::Button("Create Saiji")) {
+			CreateEnemy(spawnPoint_, EnemyType::kSaiji);
+		}
+
+		//ヘイヘ召喚
+		if (ImGui::Button("Create OniHayha")) {
+			CreateEnemy(spawnPoint_, EnemyType::kOniHayha);
 		}
 
 	}
@@ -187,14 +223,33 @@ void EnemyManager::DebugGUI()
 		//敵の共通ステート変数をいじる
 		if (ImGui::BeginTabItem("State Parameter")) {
 
-			//マネージャーで取っている敵の距離調整
-			ImGui::DragFloat("enemyDist", &enemyDist_, 0.1f);
-			ImGui::DragFloat("attackEnemyDist", &attackEnemyDist_, 0.1f);
-
-			//各ステートのパラメータ調整
-			for (int32_t i = 0; i < int32_t(States::kMax); i++) {
-				DebugState(States(i));
+			if (ImGui::Button("Apply")) {
+				ApplyLatestParameter();
 			}
+
+			if (ImGui::TreeNode("Saiji")) {
+				saijiParameter_.json.DebugGUI();
+				ImGui::TreePop();
+			}
+
+			if (ImGui::TreeNode("OniHayha")) {
+				oniHayhaParameter_.json.DebugGUI();
+				ImGui::TreePop();
+			}
+
+			if (ImGui::TreeNode("Ogre")) {
+				ogreParameter_.json.DebugGUI();
+				ImGui::TreePop();
+			}
+
+			ImGui::EndTabItem();
+
+		}
+
+		//敵の共通パラメータを設定する
+		if (ImGui::BeginTabItem("Default Parameter")) {
+
+			parameterEditor_.DebugGUI();
 
 			ImGui::EndTabItem();
 
@@ -212,6 +267,14 @@ void EnemyManager::DebugGUI()
 		}
 
 		ImGui::EndTabBar();
+	}
+
+}
+
+void EnemyManager::ApplyLatestParameter() {
+
+	for (auto enemy = enemies_.begin(); enemy != enemies_.end(); enemy++) {
+		(*enemy)->ApplyLatestParameter();
 	}
 
 }
@@ -239,36 +302,7 @@ const EnemyAttackParameter& EnemyManager::GetEnemyAttackParameter(const std::str
 	//存在しない場合はありえないのでassert
 	assert(false);
 
-	return EnemyAttackParameter();
-
-}
-
-void EnemyManager::DebugState(States states)
-{
-
-	switch (states)
-	{
-	case States::kNormalIdle:
-		NormalIdle::DebugGUI();
-		break;
-	case States::kNormalMove:
-		NormalMove::DebugGUI();
-		break;
-	case States::kNormalAttack:
-		NormalAttack::DebugGUI();
-		break;
-	case States::kSpacing:
-		Spacing::DebugGUI();
-		break;
-	case States::kFollowing:
-		Following::DebugGUI();
-		break;
-	case States::kWaitingForAttack:
-		WaitingForAttack::DebugGUI();
-		break;
-	default:
-		break;
-	}
+	return enemies_.back()->GetAttackParameter();
 
 }
 
@@ -328,6 +362,21 @@ bool EnemyManager::IsAnyAttack()
 	for (auto enemy = enemies_.begin(); enemy != enemies_.end(); enemy++) {
 
 		if ((*enemy)->GetIsAttack()) {
+			return true;
+		}
+
+	}
+
+	return false;
+}
+
+bool EnemyManager::IsAnyAttackWithinType(AttackType type)
+{
+
+	//同一タイプの誰かが攻撃していたらtrueを返す
+	for (auto enemy = enemies_.begin(); enemy != enemies_.end(); enemy++) {
+
+		if ((*enemy)->GetIsAttack() and (*enemy)->GetAttackType() == type) {
 			return true;
 		}
 

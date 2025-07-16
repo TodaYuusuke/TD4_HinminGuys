@@ -7,7 +7,7 @@
                 10.0
             ],
             "float :delayTime": 0.0,
-            "string :type": "Normal"
+            "string :type": "Saiji"
         }
     },
     "Group :Wave|2": {
@@ -18,7 +18,7 @@
                 -2.0
             ],
             "float :delayTime": 0.0,
-            "string :type": "Normal"
+            "string :type": "Saiji"
         }
     },
     "Group :Wave|3": {
@@ -29,7 +29,7 @@
                 0.0
             ],
             "float :delayTime": 0.0,
-            "string :type": "Normal"
+            "string :type": "Saiji"
         },
         "Group :Enemy|2": {
             "Vector3 :position": [
@@ -38,7 +38,7 @@
                 0.0
             ],
             "float :delayTime": 0.0,
-            "string :type": "Normal"
+            "string :type": "Saiji"
         }
     },
     "Group :Wave|4": {
@@ -49,7 +49,7 @@
                 10.0
             ],
             "float :delayTime": 0.0,
-            "string :type": "Normal"
+            "string :type": "Saiji"
         },
         "Group :Enemy|2": {
             "Vector3 :position": [
@@ -58,7 +58,7 @@
                 10.0
             ],
             "float :delayTime": 0.0,
-            "string :type": "Normal"
+            "string :type": "Saiji"
         }
     },
     "Group :Wave|5": {
@@ -69,7 +69,7 @@
                 -1.0
             ],
             "float :delayTime": 0.0,
-            "string :type": "Normal"
+            "string :type": "Saiji"
         },
         "Group :Enemy|2": {
             "Vector3 :position": [
@@ -78,7 +78,7 @@
                 0.0
             ],
             "float :delayTime": 0.0,
-            "string :type": "Normal"
+            "string :type": "Saiji"
         },
         "Group :Enemy|3": {
             "Vector3 :position": [
@@ -87,7 +87,7 @@
                 1.0
             ],
             "float :delayTime": 0.0,
-            "string :type": "Normal"
+            "string :type": "Saiji"
         }
     },
     "Group :Wave|6": {
@@ -98,7 +98,7 @@
                 -10.0
             ],
             "float :delayTime": 0.0,
-            "string :type": "Normal"
+            "string :type": "Saiji"
         },
         "Group :Enemy|2": {
             "Vector3 :position": [
@@ -107,7 +107,7 @@
                 0.0
             ],
             "float :delayTime": 0.0,
-            "string :type": "Normal"
+            "string :type": "Saiji"
         },
         "Group :Enemy|3": {
             "Vector3 :position": [
@@ -116,7 +116,7 @@
                 10.0
             ],
             "float :delayTime": 0.0,
-            "string :type": "Normal"
+            "string :type": "Saiji"
         },
         "Group :Enemy|4": {
             "Vector3 :position": [
@@ -125,7 +125,7 @@
                 10.0
             ],
             "float :delayTime": 0.0,
-            "string :type": "Normal"
+            "string :type": "Saiji"
         },
         "Group :Enemy|5": {
             "Vector3 :position": [
@@ -134,7 +134,7 @@
                 0.0
             ],
             "float :delayTime": 0.0,
-            "string :type": "Normal"
+            "string :type": "Saiji"
         }
     }
 }

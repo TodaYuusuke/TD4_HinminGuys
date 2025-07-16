@@ -80,8 +80,8 @@ void WaveData::AddEnemyData(const LWP::Math::Vector3& position)
 
 	//新しいデータを作成し、初期化する
 	EnemyData enemyData{};
-	enemyData.typeStr = IEnemy::enemyTypeName[int(EnemyType::kNormal)];
-	enemyData.type = EnemyType::kNormal;
+	enemyData.typeStr = IEnemy::enemyTypeName[int(EnemyType::kSaiji)];
+	enemyData.type = EnemyType::kSaiji;
 	enemyData.position = position;
 	enemyData.delayTime = 0;
 	enemyData.isDelete = false;
@@ -154,11 +154,14 @@ void WaveData::SetType()
 	for (EnemyData& enemyData : enemyData_) {
 		
 		//タイプに応じて変更
-		if (enemyData.typeStr == IEnemy::enemyTypeName[int(EnemyType::kNormal)]) {
-			enemyData.type = EnemyType::kNormal;
+		if (enemyData.typeStr == IEnemy::enemyTypeName[int(EnemyType::kSaiji)]) {
+			enemyData.type = EnemyType::kSaiji;
 		}
-		else if (enemyData.typeStr == IEnemy::enemyTypeName[int(EnemyType::kBoss)]) {
-			enemyData.type = EnemyType::kBoss;
+		else if (enemyData.typeStr == IEnemy::enemyTypeName[int(EnemyType::kOniHayha)]) {
+			enemyData.type = EnemyType::kOniHayha;
+		}
+		else if (enemyData.typeStr == IEnemy::enemyTypeName[int(EnemyType::kOgre)]) {
+			enemyData.type = EnemyType::kOgre;
 		}
 
 	}

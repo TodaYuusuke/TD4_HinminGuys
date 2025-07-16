@@ -54,6 +54,11 @@ void GameOver::Update() {
 	UIGameOver_.Update();
 	UI_Button_A_.Update();
 
+	//SE管理
+	sePlayer_.Update();
+	//BGM管理
+	bgmPlayer_.Update();
+
 	//デバッグ
 	DebugGUI();
 

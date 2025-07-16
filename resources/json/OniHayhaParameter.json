@@ -1,0 +1,24 @@
+{
+    "Group :OniHayhaParameter": {
+        "Group :Aiming": {
+            "float :AimingTime": 2.0,
+            "float :FlickeringTime": 0.75,
+            "int32_t :FlickeringInterval": 3
+        },
+        "Group :Attack": {
+            "float :BulletSpeed": 100.0,
+            "float :EndAcceptTime": 1.0,
+            "float :StartAcceptTime": 0.10000000149011612
+        },
+        "Group :HitReaction": {
+            "float :Decay": 0.949999988079071
+        },
+        "Group :Idle": {
+            "float :RetreatDist": 3.0,
+            "float :StandTime": 2.0
+        },
+        "Group :Retreat": {
+            "float :IdleDist": 4.0
+        }
+    }
+}

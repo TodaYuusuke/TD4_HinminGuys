@@ -82,6 +82,11 @@ void Title::Update() {
 	UIExit_.Update();
 	UITitleLogo_.Update();
 
+	//SE管理
+	sePlayer_.Update();
+	//BGM管理
+	bgmPlayer_.Update();
+
 	sceneTransitioner_.Update();
 
 	//デバッグ

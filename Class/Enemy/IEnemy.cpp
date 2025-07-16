@@ -10,11 +10,10 @@ using namespace GameMask;
 uint16_t IEnemy::currentEnemyID_ = 0;
 uint16_t IEnemy::maxAttackCount_ = 3;
 std::array<const char*, int(EnemyType::kMax)> IEnemy::enemyTypeName =
-{ "Normal", "Boss" };
+{ "Saiji",  "OniHayha", "Ogre" };
 
 IEnemy::IEnemy()
-	: aabb_(collider_.SetBroadShape(LWP::Object::Collider::AABB())),
-	capsule_(swordCollider_.SetBroadShape(LWP::Object::Collider::Capsule()))
+	: aabbBody_(collider_.SetBroadShape(LWP::Object::Collider::AABB()))
 {
 	//IDをセット
 	ID_ = currentEnemyID_;
@@ -41,6 +40,8 @@ IEnemy::IEnemy()
 		parryEffectSprite_[i].Init();
 	}
 
+	aabbBody_.isShowWireFrame = false;
+
 }
 
 IEnemy::~IEnemy()
@@ -65,16 +66,6 @@ void IEnemy::SetAnimation(const std::string& animName, bool isLoop, float speed)
     animation_.Play(animName);
 	animation_.Loop(isLoop);
 	animation_.GetPlayBackSpeed() = speed;
-}
-
-void IEnemy::DebugGUI()
-{
-
-	if (ImGui::TreeNode(std::to_string(ID_).c_str())) {
-		ImGui::Text(std::to_string(distFromPlayer_).c_str());
-		ImGui::TreePop();
-	}
-
 }
 
 void IEnemy::RotateTowardsPlayer()
@@ -135,8 +126,9 @@ void IEnemy::RotateTowardsPlayer()
 
 }
 
-void IEnemy::StartParryEffect()
+void IEnemy::StartParryEffect(const Vector3& position)
 {
+	parryEffectPosition_ = position;
 	//パリィエフェクトのフラグ開始
 	isStartParryEffect_ = true;
 	//ワールド座標からスクリーン座標に変換
@@ -146,7 +138,7 @@ void IEnemy::StartParryEffect()
 	//画像を表示させる
 	for (int32_t i = 0; i < kMaxParryEffect_; i++) {
 		parryEffectSprite_[i].isActive = true;
-		parryEffectSprite_[i].worldTF.translation = CoordTransform(swordModel_.GetJointWorldPosition("Grip"), viewProjectionViewport);
+		parryEffectSprite_[i].worldTF.translation = parryEffectPosition_ * viewProjectionViewport;
 	}
 
 	parryEffectTime_ = 0.0f;
@@ -161,24 +153,6 @@ void IEnemy::SetKnockBackValue(const float& knockBackValue)
 	//正規化
 	knockBackVelocity_ = knockBackVelocity_.Normalize() * knockBackValue;
 
-}
-
-void IEnemy::CreateSwordCollider()
-{
-	// 刀の判定生成
-	swordCollider_.SetFollow(&model_, "WeaponAnchor");
-	swordCollider_.isActive = false;
-	// 自機の所属しているマスクを設定
-	swordCollider_.mask.SetBelongFrag(GetAttack());
-	// 当たり判定をとる対象のマスクを設定
-	swordCollider_.mask.SetHitFrag(GetPlayer() | GetParry());
-	swordCollider_.enterLambda = [this](LWP::Object::Collision* hitTarget) {
-		hitTarget;
-		player_->TakeDamage(parameter_.attackParameter.attackValue);
-		//判定をオフにする
-		//swordCollider_.isActive = false;
-		};
-	capsule_.radius = 0.1f;
 }
 
 void IEnemy::UpdateParryEffect()
@@ -208,7 +182,7 @@ void IEnemy::UpdateParryEffect()
 		//画像更新
 		for (int32_t i = 0; i < kMaxParryEffect_; i++) {
 			parryEffectSprite_[i].worldTF.scale = LWP::Utility::Interpolation::Lerp({0.0f,1.0f,0.0f}, {100.0f,0.0f,0.0f}, t);
-			parryEffectSprite_[i].worldTF.translation =  CoordTransform(swordModel_.GetJointWorldPosition("Grip"), viewProjectionViewport);
+			parryEffectSprite_[i].worldTF.translation = parryEffectPosition_ * viewProjectionViewport;
 		}
 
 	}

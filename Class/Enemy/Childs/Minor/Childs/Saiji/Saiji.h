@@ -1,0 +1,94 @@
+#pragma once
+#include "../../Minor.h"
+#include "SaijiStateParameter.h"
+
+/// <summary>
+/// ダメだよぉ～才二君
+/// </summary>
+class Saiji : public Minor
+{
+public:
+	Saiji(SaijiState::StateParameter& stateParameter);
+	~Saiji() override;
+
+	void Initialize(Player* player, const Vector3& position, LWP::Object::Camera* camera,
+		EnemyManager* manager) override;
+
+	void Update() override;
+
+	void DebugGUI() override;
+	//適用後、強制的に待機状態にさせる
+	void ApplyLatestParameter() override { 
+		stateParameter_ = configParameter_;
+		state_.request = SaijiState::States::kIdle;
+	}
+
+	//直前のステートをセット(HitReactionは除外)
+	void SetPreState(SaijiState::States state) { if (state != SaijiState::States::kHitReaction) { preState_ = state; } }
+
+private:
+
+	//刀のコライダー生成
+	void CreateSwordCollider();
+
+	/// <summary>
+	/// ステートパターンに使用する関数群追加
+	/// </summary>
+	void AddStateFunc();
+
+	//ステートパターン関数群
+#pragma region ステートパターン用関数追加
+
+	void IdleInit(const SaijiState::States& pre);
+	void IdleUpdate(std::optional<SaijiState::States>& req, const SaijiState::States& pre);
+	void IdleFinalize(const SaijiState::States& pre);
+
+	void MoveInit(const SaijiState::States& pre);
+	void MoveUpdate(std::optional<SaijiState::States>& req, const SaijiState::States& pre);
+	void MoveFinalize(const SaijiState::States& pre);
+
+	void AttackInit(const SaijiState::States& pre);
+	void AttackUpdate(std::optional<SaijiState::States>& req, const SaijiState::States& pre);
+	void AttackFinalize(const SaijiState::States& pre);
+
+	void SpacingInit(const SaijiState::States& pre);
+	void SpacingUpdate(std::optional<SaijiState::States>& req, const SaijiState::States& pre);
+	void SpacingFinalize(const SaijiState::States& pre);
+
+	void FollowingInit(const SaijiState::States& pre);
+	void FollowingUpdate(std::optional<SaijiState::States>& req, const SaijiState::States& pre);
+	void FollowingFinalize(const SaijiState::States& pre);
+
+	void WaitingForAttackInit(const SaijiState::States& pre);
+	void WaitingForAttackUpdate(std::optional<SaijiState::States>& req, const SaijiState::States& pre);
+	void WaitingForAttackFinalize(const SaijiState::States& pre);
+
+	void HitReactionInit(const SaijiState::States& pre);
+	void HitReactionUpdate(std::optional<SaijiState::States>& req, const SaijiState::States& pre);
+	void HitReactionFinalize(const SaijiState::States& pre);
+
+#pragma endregion
+
+private:
+
+	//才二君用のデフォパラメータ設定
+	SaijiState::StateParameter& configParameter_;
+
+	// 刀モデル
+	SkinningModel swordModel_;
+	//攻撃コライダー(AABB)
+	LWP::Object::Collision aabbAttackCollider_;
+	LWP::Object::Collider::AABB& aabbAttack_;
+
+	//雑魚敵パラメータ
+	SaijiState::StateParameter stateParameter_;
+
+	//直前のステート保存
+	SaijiState::States preState_;
+
+	//状態
+	LWP::Utility::StatePattern<SaijiState::States, int(SaijiState::States::kMax)> state_;
+
+};
+
+
