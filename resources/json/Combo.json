@@ -15,19 +15,20 @@
                             0.0,
                             0.15000000596046448
                         ],
-                        "Vector3 :AttackColliderLengthOffset": [
+                        "Vector3 :AttackColliderOffset": [
                             0.0,
-                            1.5,
-                            0.0
+                            0.75,
+                            0.75
                         ],
                         "bool :IsLoop": false,
                         "float :AnimPlaySpeed": 1.0,
                         "float :AttackAssistEnableTime": 0.17499999701976776,
                         "float :AttackAssistStartTime": 0.0,
-                        "float :AttackColliderRadius": 0.10000000149011612,
+                        "float :AttackColliderRadius": 0.75,
                         "float :AttackEndTime": 1.0,
                         "float :AttackStartTime": 0.25,
                         "float :Damage": 2.0,
+                        "float :HitStopTime": 0.20000000298023224,
                         "float :NockbackStrength": 0.10000000149011612,
                         "float :ReceptTime": 3.0,
                         "float :SheathDurabityLoss": 25.0,
@@ -35,7 +36,7 @@
                         "float :TransitionTime": 0.10000000149011612,
                         "int32_t :derivationPriority": 0,
                         "string :AnimName": "LightAttack4",
-                        "string :FollowJointName": "WeaponAnchor"
+                        "string :FollowJointName": ""
                     },
                     "Group :StartConditions|Button|1": {
                         "float :PressTime": 0.10000000149011612,
@@ -48,19 +49,20 @@
                         0.0,
                         0.07500000298023224
                     ],
-                    "Vector3 :AttackColliderLengthOffset": [
+                    "Vector3 :AttackColliderOffset": [
                         0.0,
-                        1.0,
-                        0.0
+                        0.5,
+                        0.75
                     ],
                     "bool :IsLoop": false,
                     "float :AnimPlaySpeed": 1.0,
                     "float :AttackAssistEnableTime": 0.10000000149011612,
                     "float :AttackAssistStartTime": 0.25,
-                    "float :AttackColliderRadius": 0.10000000149011612,
+                    "float :AttackColliderRadius": 0.5,
                     "float :AttackEndTime": 1.0,
                     "float :AttackStartTime": 0.0,
                     "float :Damage": 1.0,
+                    "float :HitStopTime": 0.10000000149011612,
                     "float :NockbackStrength": 0.10000000149011612,
                     "float :ReceptTime": 1.5,
                     "float :SheathDurabityLoss": 10.0,
@@ -68,7 +70,7 @@
                     "float :TransitionTime": 0.05000000074505806,
                     "int32_t :derivationPriority": 0,
                     "string :AnimName": "LightAttack3",
-                    "string :FollowJointName": "WeaponAnchor"
+                    "string :FollowJointName": ""
                 },
                 "Group :StartConditions|Button|1": {
                     "float :PressTime": 0.10000000149011612,
@@ -81,27 +83,28 @@
                     0.0,
                     0.10000000149011612
                 ],
-                "Vector3 :AttackColliderLengthOffset": [
+                "Vector3 :AttackColliderOffset": [
                     0.0,
-                    1.0,
-                    0.0
+                    0.5,
+                    0.75
                 ],
                 "bool :IsLoop": false,
                 "float :AnimPlaySpeed": 1.0,
                 "float :AttackAssistEnableTime": 0.15000000596046448,
                 "float :AttackAssistStartTime": 0.0,
-                "float :AttackColliderRadius": 0.10000000149011612,
+                "float :AttackColliderRadius": 0.5,
                 "float :AttackEndTime": 1.0,
                 "float :AttackStartTime": 0.0,
                 "float :Damage": 1.0,
+                "float :HitStopTime": 0.10000000149011612,
                 "float :NockbackStrength": 0.10000000149011612,
                 "float :ReceptTime": 1.25,
                 "float :SheathDurabityLoss": 10.0,
-                "float :StifnessTime": 0.6499999761581421,
+                "float :StifnessTime": 0.5,
                 "float :TransitionTime": 0.05000000074505806,
                 "int32_t :derivationPriority": 0,
                 "string :AnimName": "LightAttack2",
-                "string :FollowJointName": "WeaponAnchor"
+                "string :FollowJointName": ""
             },
             "Group :StartConditions|Button|1": {
                 "float :PressTime": 0.10000000149011612,
@@ -114,27 +117,28 @@
                 0.0,
                 0.10000000149011612
             ],
-            "Vector3 :AttackColliderLengthOffset": [
+            "Vector3 :AttackColliderOffset": [
                 0.0,
-                1.0,
-                0.0
+                0.5,
+                0.75
             ],
             "bool :IsLoop": false,
             "float :AnimPlaySpeed": 1.0,
             "float :AttackAssistEnableTime": 0.05000000074505806,
             "float :AttackAssistStartTime": 0.0,
-            "float :AttackColliderRadius": 0.10000000149011612,
+            "float :AttackColliderRadius": 0.5,
             "float :AttackEndTime": 1.0,
             "float :AttackStartTime": 0.0,
             "float :Damage": 1.0,
+            "float :HitStopTime": 0.10000000149011612,
             "float :NockbackStrength": 0.10000000149011612,
-            "float :ReceptTime": 1.25,
+            "float :ReceptTime": 1.350000023841858,
             "float :SheathDurabityLoss": 10.0,
             "float :StifnessTime": 0.5,
             "float :TransitionTime": 0.05000000074505806,
             "int32_t :derivationPriority": 1,
             "string :AnimName": "LightAttack1",
-            "string :FollowJointName": "WeaponAnchor"
+            "string :FollowJointName": ""
         },
         "Group :StrongCombo1": {
             "Group :StartConditions|Button|1": {
@@ -162,7 +166,7 @@
                         0.0,
                         0.0
                     ],
-                    "Vector3 :AttackColliderLengthOffset": [
+                    "Vector3 :AttackColliderOffset": [
                         0.0,
                         0.0,
                         0.0
@@ -175,6 +179,7 @@
                     "float :AttackEndTime": 0.0,
                     "float :AttackStartTime": 0.0,
                     "float :Damage": 1.0,
+                    "float :HitStopTime": 0.10000000149011612,
                     "float :NockbackStrength": 0.10000000149011612,
                     "float :ReceptTime": 1.5,
                     "float :SheathDurabityLoss": 10.0,
@@ -189,7 +194,7 @@
                     0.0,
                     0.0
                 ],
-                "Vector3 :AttackColliderLengthOffset": [
+                "Vector3 :AttackColliderOffset": [
                     0.0,
                     0.0,
                     0.0
@@ -202,6 +207,7 @@
                 "float :AttackEndTime": 0.0,
                 "float :AttackStartTime": 0.0,
                 "float :Damage": 1.0,
+                "float :HitStopTime": 0.10000000149011612,
                 "float :NockbackStrength": 0.10000000149011612,
                 "float :ReceptTime": 0.5,
                 "float :SheathDurabityLoss": 10.0,
@@ -216,7 +222,7 @@
                 0.0,
                 0.0
             ],
-            "Vector3 :AttackColliderLengthOffset": [
+            "Vector3 :AttackColliderOffset": [
                 0.0,
                 0.0,
                 0.0
@@ -229,6 +235,7 @@
             "float :AttackEndTime": 0.0,
             "float :AttackStartTime": 0.0,
             "float :Damage": 1.0,
+            "float :HitStopTime": 0.10000000149011612,
             "float :NockbackStrength": 0.10000000149011612,
             "float :ReceptTime": 0.75,
             "float :SheathDurabityLoss": 10.0,
@@ -243,7 +250,7 @@
             0.0,
             0.0
         ],
-        "Vector3 :AttackColliderLengthOffset": [
+        "Vector3 :AttackColliderOffset": [
             0.0,
             0.0,
             0.0
@@ -256,6 +263,7 @@
         "float :AttackEndTime": 0.0,
         "float :AttackStartTime": 0.0,
         "float :Damage": 1.0,
+        "float :HitStopTime": 0.0,
         "float :NockbackStrength": 0.10000000149011612,
         "float :ReceptTime": 1.0,
         "float :SheathDurabityLoss": 10.0,

@@ -95,6 +95,12 @@ public: // アクセッサ等
 	float GetDamage() { return nowCombo_->GetDamage(); }
 
 	/// <summary>
+	/// 現在コンボのヒットストップ秒数ゲッター
+	/// </summary>
+	/// <returns>ヒットストップ秒数</returns>
+	float GetHitStopTime() { return nowCombo_->GetHitStopTime(); }
+
+	/// <summary>
 	/// 現在コンボのノックバック強さゲッター
 	/// </summary>
 	/// <returns>ノックバック強さ</returns>
@@ -117,6 +123,18 @@ public: // アクセッサ等
 	/// </summary>
 	/// <returns>硬直状態</returns>
 	bool GetIsStiffness();
+
+	/// <summary>
+	/// 現在コンボの硬直状態の進行度ゲッター
+	/// </summary>
+	/// <returns>硬直状態進行度</returns>
+	float GetStifnessProgress() { return nowCombo_->GetStifnessProgress(); }
+
+	/// <summary>
+	/// 現在コンボの硬直秒数ゲッター
+	/// </summary>
+	/// <returns>硬直秒数</returns>
+	float GetStifnessTime() { return nowCombo_->GetStifnessTime(); }
 
 	/// <summary>
 	/// コンボの受付状態のゲッター
@@ -205,7 +223,7 @@ private: // メンバ変数
 
 	// コライダー
 	LWP::Object::Collision collider_;
-	LWP::Object::Collider::Capsule& capsule_;
+	LWP::Object::Collider::Sphere& sphere_;
 
 	// 現在のコンボ
 	Combo* nowCombo_ = nullptr;
