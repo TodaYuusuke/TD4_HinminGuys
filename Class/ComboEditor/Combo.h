@@ -140,6 +140,12 @@ public: // アクセッサ等
 	float GetSheathDurabityLoss() { return sheathDurabityLoss_; }
 
 	/// <summary>
+	/// 相手に与える命中クールタイムのゲッター
+	/// </summary>
+	/// <returns>命中クールタイム</returns>
+	float GetGrantHitCoolTime() { return grantHitCoolTime_; }
+
+	/// <summary>
 	/// 硬直状態ゲッター
 	/// </summary>
 	/// <returns>硬直状態か</returns>
@@ -346,6 +352,8 @@ private: // メンバ変数
 	float nockbackStrength_ = 0.1f;
 	// 命中時の鞘の耐久値減少量
 	float sheathDurabityLoss_ = 10.0f;
+	// 相手に与える命中クールタイム
+	float grantHitCoolTime_ = 0.1f;
 
 	// 攻撃アシストの開始秒数
 	float attackAssistStartTime_ = 0.0f;

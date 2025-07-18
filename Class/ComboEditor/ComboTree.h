@@ -113,6 +113,12 @@ public: // アクセッサ等
 	float GetSheathDurabityLoss() { return nowCombo_->GetSheathDurabityLoss(); }
 
 	/// <summary>
+	/// 現在コンボが相手に与える命中クールタイムのゲッター
+	/// </summary>
+	/// <returns>命中クールタイム</returns>
+	float GetGrantHitCoolTime() { return nowCombo_->GetGrantHitCoolTime(); }
+
+	/// <summary>
 	/// 攻撃アシストの有効状態ゲッター
 	/// </summary>
 	/// <returns>攻撃アシストの有効状態</returns>

@@ -258,6 +258,7 @@ void Combo::AddValue(LWP::Utility::JsonIO& json)
 		.AddValue("HitStopTime", &hitStopTime_)									// ヒットストップ秒数
 		.AddValue("NockbackStrength", &nockbackStrength_)						// ノックバック強さ
 		.AddValue("SheathDurabityLoss", &sheathDurabityLoss_)					// 鞘の耐久値減少量
+		.AddValue("GrantHitCoolTime", &grantHitCoolTime_)						// 相手に与える命中クールタイム
 		.AddValue("AttackAssistStartTime", &attackAssistStartTime_)				// 攻撃アシスト開始時間
 		.AddValue("AttackAssistEnableTime", &attackAssistEnableTime_)			// 攻撃アシスト有効時間
 		.AddValue("AttackAssistMoveAmount", &attackAssistMoveAmount_)			// 攻撃アシスト移動量
@@ -575,6 +576,9 @@ void Combo::AttackSettings()
 	ImGui::DragFloat("NockBack Strength", &nockbackStrength_, 0.01f, 0.0f);
 	// 鞘の耐久減少量の調整
 	ImGui::DragFloat("SheathDurabityLoss", &sheathDurabityLoss_, 0.1f, 0.0f);
+	// 命中クールタイムの設定
+	ImGui::DragFloat("GrantHitCoolTime", &grantHitCoolTime_, 0.1f, 0.0f);
+
 
 	ImGui::Unindent();
 	ImGui::NewLine();
