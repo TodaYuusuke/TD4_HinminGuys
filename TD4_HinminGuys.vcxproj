@@ -187,6 +187,8 @@
     <ClCompile Include="Class\Enemy\Childs\Minor\Childs\Saiji\State\SaijiIdle.cpp" />
     <ClCompile Include="Class\Enemy\Childs\Minor\Childs\Saiji\State\SaijiMove.cpp" />
     <ClCompile Include="Class\Enemy\ParameterEditor.cpp" />
+    <ClCompile Include="Class\Player\Systems\Children\Sheath\Effect\Chain.cpp" />
+    <ClCompile Include="Class\Player\Systems\Children\Sheath\Effect\ChainNode.cpp" />
     <ClCompile Include="Class\Player\Systems\Children\Sheath\State\Break.cpp" />
     <ClCompile Include="Class\ComboEditor\ComboTree.cpp" />
     <ClCompile Include="Class\Condition\child\Input\ButtonCondition.cpp" />
@@ -244,6 +246,7 @@
     <ClCompile Include="Class\Player\PlayerParameter.cpp" />
     <ClCompile Include="Class\Player\Systems\Children\Move\Effect\MoveEffect.cpp" />
     <ClCompile Include="Class\Player\Math\MathFunctions.cpp" />
+    <ClCompile Include="Class\UI\UIMotions.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Class\Audio\AudioPlayer.h" />
@@ -258,6 +261,9 @@
     <ClInclude Include="Class\Enemy\Childs\Minor\Childs\Saiji\SaijiStateParameter.h" />
     <ClInclude Include="Class\Enemy\Childs\Minor\Minor.h" />
     <ClInclude Include="Class\Enemy\ParameterEditor.h" />
+    <ClInclude Include="Class\Player\PlayerAudioNames.h" />
+    <ClInclude Include="Class\Player\Systems\Children\Sheath\Effect\Chain.h" />
+    <ClInclude Include="Class\Player\Systems\Children\Sheath\Effect\ChainNode.h" />
     <ClInclude Include="Class\Player\Particles\ParticleJsonDataStructs.h" />
     <ClInclude Include="Class\Player\Systems\Children\Sheath\State\Break.h" />
     <ClInclude Include="Class\IParameter.h" />
@@ -327,6 +333,7 @@
     <ClInclude Include="Class\Player\Particles\IEffect.h" />
     <ClInclude Include="Class\Player\Systems\Children\Move\Effect\MoveEffect.h" />
     <ClInclude Include="Class\Player\Math\MathFunctions.h" />
+    <ClInclude Include="Class\UI\UIMotions.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />

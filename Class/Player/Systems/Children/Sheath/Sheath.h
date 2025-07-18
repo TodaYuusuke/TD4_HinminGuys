@@ -1,6 +1,7 @@
 #pragma once
 #include "../../ISystem.h"
 #include "State/ISheathSystemState.h"
+#include "Effect/Chain.h"
 
 // jsonに保存する値
 struct SheathJsonData {
@@ -143,6 +144,8 @@ public:
 	/// </summary>
 	void ClearHitTargetNames() { hitTargetNames_.clear(); }
 
+	void SetIsActiveChain(const bool& isActive) { chain_->SetIsActive(isActive); }
+
 public:// Getter, Setter
 #pragma region Getter
 	/// <summary>
@@ -167,6 +170,10 @@ public:// Getter, Setter
 	/// <returns></returns>
 	float GetSheathDecrementPercent() { return sheathDecrementPercent_; }
 
+	/// <summary>
+	/// 鞘モデルの表示中かを取得
+	/// </summary>
+	bool GetIsSheathModelActive() { return sheathModel_.isActive; }
 	/// <summary>
 	/// 鞘破壊状態かを取得
 	/// </summary>
@@ -243,6 +250,9 @@ public:// Getter, Setter
 
 public:// jsonに保存する値
 	SheathJsonData jsonData_;
+
+	// 鎖
+	std::unique_ptr<Chain> chain_;
 
 private:// プライベートな変数
 	// アクションイベント集

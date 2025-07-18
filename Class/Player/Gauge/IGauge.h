@@ -97,7 +97,7 @@ protected:
 	LWP::Utility::JsonIO json_;
 
 	// ゲージの描画
-	std::map<std::string, LWP::Primitive::Sprite> sprite_;
+	std::map<std::string, LWP::Primitive::NormalSprite> sprite_;
 
 	// ゲージの大きさ
 	LWP::Math::Vector2 size_;

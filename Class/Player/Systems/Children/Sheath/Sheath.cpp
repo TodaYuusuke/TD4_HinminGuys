@@ -58,6 +58,8 @@ void Sheath::Initialize() {
 	// コマンドの登録
 	inputHandler_ = InputHandler::GetInstance();
 
+	chain_ = std::make_unique<Chain>();
+
 	// アクションイベント作成
 	CreateThrowEventOrder();
 	CreateCollectEventOrder();
@@ -71,6 +73,10 @@ void Sheath::Initialize() {
 
 void Sheath::Update() {
 	if (!isActive_) { return; }
+
+	chain_->SetStartPos(player_->GetSwordModel()->GetJointWorldPosition("Grip"));
+	chain_->SetEndPos(sheathModel_.worldTF.GetWorldPosition() + Vector3{0.0f ,0.2f, 0.0f});
+	chain_->Update();
 
 	// 状態
 	state_->Update();
@@ -92,6 +98,9 @@ void Sheath::Update() {
 void Sheath::Reset() {
 	isActive_ = false;
 	isPreActive_ = false;
+	// 鎖の表示状況
+	chain_->SetIsActive(isActive_);
+	chain_->Reset();
 	eventOrders_[(int)SheathState::kThrow].Reset();
 	eventOrders_[(int)SheathState::kCollect].Reset();
 	eventOrders_[(int)SheathState::kBreak].Reset();
@@ -150,6 +159,14 @@ void Sheath::DebugGUI() {
 		}
 		if (ImGui::TreeNode("Invinsible")) {
 			eventOrders_[(int)SheathState::kInvinsible].DebugGUI();
+			ImGui::TreePop();
+		}
+
+		// 鎖
+		if (ImGui::TreeNode("Chain")) {
+			chain_->DebugGui();
+			chain_->SetStartPos(player_->GetSwordModelWorldTF()->GetWorldPosition());
+			chain_->SetEndPos(player_->GetSheathModelWorldTF()->GetWorldPosition());
 			ImGui::TreePop();
 		}
 

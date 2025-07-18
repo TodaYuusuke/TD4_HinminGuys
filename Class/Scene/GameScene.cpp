@@ -44,11 +44,12 @@ void GameScene::Initialize() {
 	enemyManager_.SetIsShowSpawnDataModel(false);
 	enemyManager_.SetSEPlayer(&sePlayer_);
 
-	// 追従カメラの動作確認のため生成
+	// 追従カメラの生成
 	followCamera_.Initialize();
 
-	// 自機の動作確認のため生成
+	// 自機の生成
 	player_.Initialize();
+	player_.SetSEPlayer(&sePlayer_);
 
 	//ダメージエフェクトエミッターを生成
 	damageEffectEmitter_.Initialize();

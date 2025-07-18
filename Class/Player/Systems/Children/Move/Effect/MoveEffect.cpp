@@ -18,7 +18,24 @@ void MoveEffect::Initialize() {
 }
 
 void MoveEffect::Update() {
-	IEffect::Update();
+	//IEffect::Update();
+	for (std::list<ParticleData>::iterator particleIterator = particles_.begin(); particleIterator != particles_.end();) {
+		// 生存時間が過ぎたら処理を行わない
+		if ((*particleIterator).lifeTime <= (*particleIterator).currentTime) {
+			particleIterator = particles_.erase(particleIterator);
+			continue;
+		}
+
+		// 各パーティクルの更新処理
+		if ((*particleIterator).updateFunc) {
+			(*particleIterator).updateFunc(*particleIterator);
+		}
+
+		// 生存時間
+		(*particleIterator).currentTime++;
+
+		particleIterator++;
+	}
 }
 
 void MoveEffect::DebugGui() {
@@ -58,9 +75,7 @@ void MoveEffect::SetJsonData(LWP::Utility::JsonIO& json) {
 #pragma endregion
 }
 
-ParticleData MoveEffect::CreateDustCloud(LWP::Math::Vector3 pos) {
-	ParticleData particle;
-
+void MoveEffect::CreateDustCloud(ParticleData& particle, LWP::Math::Vector3 pos) {
 	// パーティクルの種類
 	particle.type = (int)ParticleType::kCircle;
 
@@ -68,7 +83,6 @@ ParticleData MoveEffect::CreateDustCloud(LWP::Math::Vector3 pos) {
 	particle.billboard.anchorPoint = { 0.5f, 0.5f };
 	particle.billboard.material.enableLighting = false;
 	particle.billboard.material.texture = LWP::Resource::LoadTexture("Effect/Particle.png");
-	particle.billboard.Init();
 	// 平面生成(非表示)
 	particle.plane.LoadShortPath("BothPlane.obj");
 	particle.plane.isActive = false;
@@ -96,8 +110,6 @@ ParticleData MoveEffect::CreateDustCloud(LWP::Math::Vector3 pos) {
 
 	// 更新処理を設定
 	particle.updateFunc = std::bind(&MoveEffect::DustCloudUpdate, this, std::placeholders::_1);
-
-	return particle;
 }
 
 void MoveEffect::CreateDustClouds(LWP::Math::Vector3 pos) {
@@ -127,7 +139,8 @@ std::list<ParticleData> MoveEffect::Emission(LWP::Math::Vector3 pos, float& crea
 
 	// 土煙
 	for (int32_t count = 0; count < dustCloudData_.count; ++count) {
-		particles.push_back(CreateDustCloud(pos));
+		particles.emplace_back();
+		CreateDustCloud(particles.back(), pos);
 		createRotateY += (float)std::numbers::pi * 2.0f / dustCloudData_.count;
 	}
 	createRotateY = 0.0f;

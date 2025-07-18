@@ -1,6 +1,5 @@
 #include "OniHayha.h"
 #include "../../../../../Player/Player.h"
-#include "../../DirectXGame/Engine/primitive/model/Material.h"
 #include "../../../../../GameMask.h"
 #include "../../../../EnemyManager.h"
 #include "../../../../../Audio/SEPlayer.h"

@@ -13,7 +13,6 @@ Particles::Particles(Player* player, FollowCamera* followCamera) {
 	parryEffect_->Initialize();
 	// 回避
 	evasionEffect_ = std::make_unique<EvasionEffect>(player_);
-	evasionEffect_->Initialize();
 	evasionEffect_->model.LoadCube();
 	// 移動
 	moveEffect_ = std::make_unique<MoveEffect>(player_, followCamera_);
@@ -127,20 +126,44 @@ void Particles::CreateMoveParticle(const LWP::Math::Vector3& pos) {
 }
 
 void Particles::CreateMoveParticleTiming() {
-	if (player_->GetAnimation()->GetPlaying("Run", LWP::Resource::Animation::TrackType::Blend) || player_->GetAnimation()->GetPlaying("Dash", LWP::Resource::Animation::TrackType::Main)) {
-		// 右足
-		if (player_->GetAnimation()->GetProgress(LWP::Resource::Animation::TrackType::Blend) >= 0.5f || player_->GetAnimation()->GetProgress(LWP::Resource::Animation::TrackType::Main) >= 0.5f && moveEffectType_ != MoveEffectType::kLeft) {
-			Vector3 pos = player_->GetModel()->GetJoint("Foot.R")->localTF.translation + player_->GetWorldTF()->GetWorldPosition();
-			pos.y = 0.0f;
-			CreateMoveParticle(pos);
-			moveEffectType_ = MoveEffectType::kLeft;
-		}
-		// 左足
-		if (player_->GetAnimation()->GetProgress(LWP::Resource::Animation::TrackType::Blend) >= 0.95f || player_->GetAnimation()->GetProgress(LWP::Resource::Animation::TrackType::Main) >= 0.95f && moveEffectType_ != MoveEffectType::kRight) {
-			Vector3 pos = player_->GetModel()->GetJoint("Foot.L")->localTF.translation + player_->GetWorldTF()->GetWorldPosition();
-			pos.y = 0.0f;
-			CreateMoveParticle(pos);
-			moveEffectType_ = MoveEffectType::kRight;
-		}
+	if (!player_->GetAnimation()->GetPlaying("Dash", LWP::Resource::Animation::TrackType::Main) &&
+		!player_->GetAnimation()->GetPlaying("Walk", LWP::Resource::Animation::TrackType::Main) &&
+		!player_->GetAnimation()->GetPlaying("Run", LWP::Resource::Animation::TrackType::Blend)) {
+		moveEffectType_ = MoveEffectType::kNone;
+		currentMoveFrame_ = 0.0f;
+		return;
 	}
+
+	float t = 0.0f;
+	currentMoveFrame_ += HitStopController::GetInstance()->GetDeltaTime();
+	if (player_->GetAnimation()->GetPlaying("Dash", LWP::Resource::Animation::TrackType::Main) || player_->GetAnimation()->GetPlaying("Walk", LWP::Resource::Animation::TrackType::Main)) {
+		t = player_->GetAnimation()->GetTotalSeconds(LWP::Resource::Animation::TrackType::Main) / player_->GetAnimation()->GetPlayBackSpeed(LWP::Resource::Animation::TrackType::Main) * 60.0f;
+	}
+	else if (player_->GetAnimation()->GetPlaying("Run", LWP::Resource::Animation::TrackType::Blend)) {
+		t = player_->GetAnimation()->GetTotalSeconds(LWP::Resource::Animation::TrackType::Blend) / player_->GetAnimation()->GetPlayBackSpeed(LWP::Resource::Animation::TrackType::Blend) * 60.0f;
+	}
+
+	// 地面につく足は左足
+	if (t / 1.05f <= currentMoveFrame_) {
+		currentMoveFrame_ += -t;
+		moveEffectType_ = MoveEffectType::kLeft;
+	}
+	// 地面につく足は右足
+	else if (t / 2.0f <= currentMoveFrame_) {
+		moveEffectType_ = MoveEffectType::kRight;
+	}
+
+	// パーティクル生成
+	if (moveEffectType_ == MoveEffectType::kLeft && preMoveEffectType_ != MoveEffectType::kLeft) {
+		Vector3 pos = player_->GetModel()->GetJoint("Foot.R")->localTF.translation + player_->GetWorldTF()->GetWorldPosition();
+		pos.y = 0.0f;
+		CreateMoveParticle(pos);
+	}
+	else if (moveEffectType_ == MoveEffectType::kRight && preMoveEffectType_ != MoveEffectType::kRight) {
+		Vector3 pos = player_->GetModel()->GetJoint("Foot.L")->localTF.translation + player_->GetWorldTF()->GetWorldPosition();
+		pos.y = 0.0f;
+		CreateMoveParticle(pos);
+	}
+
+	preMoveEffectType_ = moveEffectType_;
 }

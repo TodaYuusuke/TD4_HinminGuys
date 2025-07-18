@@ -59,7 +59,7 @@ private:
 	//シーン切り替え時の時間管理変数
 	static float sceneChangeCount_;
 	//フェードインアウトに使う画像
-	LWP::Primitive::Sprite sprite;
+	LWP::Primitive::NormalSprite sprite;
 	//シーン切り替え速度
 	float transitionSpeed_ = 1.0f;
 

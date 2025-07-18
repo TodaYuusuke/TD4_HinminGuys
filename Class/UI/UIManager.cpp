@@ -43,29 +43,65 @@ UIManager::UIManager(Player* player) {
 	guideOperation_[6].anchorPoint = { 1,0 };
 	guideOperation_[6].Init();
 
+	coolTimeFilter_.resize(7);
+	coolTimeFilterSplitSize_.resize(7);
+	// クールタイムのフィルタ
+	for (int i = 0; i < coolTimeFilter_.size(); i++) {
+		coolTimeFilter_[i].LoadTexture("UI/ButtonUI/ButtonUI_Shadow.png");
+		coolTimeFilter_[i].anchorPoint = { 1,0 };
+		coolTimeFilter_[i].isActive = false;
+		coolTimeFilter_[i].Init();
+		coolTimeFilter_[i].worldTF.Parent(&guideOperation_[i].worldTF);
+
+		coolTimeFilterSplitSize_[i] = { 150.0f, 150.0f };
+	}
+
+
+
 	// jsonの値を保存
 	json_.Init("UI_Config");
 	json_.BeginGroup("Button")
 
 		.BeginGroup("Attack")
+		.BeginGroup("CoolTimeFilter")
+		.AddValue<Vector3>("Translation", &coolTimeFilter_[0].worldTF.translation)
+		.EndGroup()
 		.AddValue<Vector3>("Translation", &guideOperation_[0].worldTF.translation)
 		.EndGroup()
 		.BeginGroup("Evasion")
+		.BeginGroup("CoolTimeFilter")
+		.AddValue<Vector3>("Translation", &coolTimeFilter_[1].worldTF.translation)
+		.EndGroup()
 		.AddValue<Vector3>("Translation", &guideOperation_[1].worldTF.translation)
 		.EndGroup()
 		.BeginGroup("Dash")
+		.BeginGroup("CoolTimeFilter")
+		.AddValue<Vector3>("Translation", &coolTimeFilter_[2].worldTF.translation)
+		.EndGroup()
 		.AddValue<Vector3>("Translation", &guideOperation_[2].worldTF.translation)
 		.EndGroup()
 		.BeginGroup("LockOn")
+		.BeginGroup("CoolTimeFilter")
+		.AddValue<Vector3>("Translation", &coolTimeFilter_[3].worldTF.translation)
+		.EndGroup()
 		.AddValue<Vector3>("Translation", &guideOperation_[3].worldTF.translation)
 		.EndGroup()
 		.BeginGroup("Parry")
+		.BeginGroup("CoolTimeFilter")
+		.AddValue<Vector3>("Translation", &coolTimeFilter_[4].worldTF.translation)
+		.EndGroup()
 		.AddValue<Vector3>("Translation", &guideOperation_[4].worldTF.translation)
 		.EndGroup()
 		.BeginGroup("Move")
+		.BeginGroup("CoolTimeFilter")
+		.AddValue<Vector3>("Translation", &coolTimeFilter_[5].worldTF.translation)
+		.EndGroup()
 		.AddValue<Vector3>("Translation", &guideOperation_[5].worldTF.translation)
 		.EndGroup()
 		.BeginGroup("Sheath")
+		.BeginGroup("CoolTimeFilter")
+		.AddValue<Vector3>("Translation", &coolTimeFilter_[6].worldTF.translation)
+		.EndGroup()
 		.AddValue<Vector3>("Translation", &guideOperation_[6].worldTF.translation)
 		.EndGroup()
 
@@ -91,6 +127,10 @@ void UIManager::Update() {
 		guideOperation_[1].isActive = true;
 	}
 
+	// クールタイムのフィルタ
+	CoolTimeFilterUpdate();
+
+
 	// HP
 	hp_.Update();
 	// 鞘ゲージ
@@ -102,5 +142,26 @@ void UIManager::DebugGUI() {
 
 	sheathGauge_.DebugGUI();
 
+	coolTimeFilter_[6].DebugGUI();
+
 	hp_.DebugGUI();
+}
+
+void UIManager::CoolTimeFilterUpdate() {
+	// 攻撃
+
+
+	// 鞘
+	if (!player_->GetSystemManager()->GetCoolTimer()->GetSheathCoolTimeData().isFinish) {
+		coolTimeFilter_[6].isActive = true;
+		coolTimeFilterSplitSize_[6].y = 150.0f * player_->GetSystemManager()->GetCoolTimer()->GetSheathCoolTimeData().coolTime / player_->GetSystemManager()->GetCoolTimer()->GetSheathCoolTimeData().maxCoolTime;
+		//coolTimeFilter_[6].clipRect.SetSplitSize(coolTimeFilterSplitSize_[6]);
+		//coolTimeFilter_[6].Init();
+	}
+	else {
+		coolTimeFilter_[6].isActive = true;
+		coolTimeFilterSplitSize_[6].y = 150.0f;
+		//coolTimeFilter_[6].SetSplitSize(coolTimeFilterSplitSize_[6]);
+		//coolTimeFilter_[6].Init();
+	}
 }
