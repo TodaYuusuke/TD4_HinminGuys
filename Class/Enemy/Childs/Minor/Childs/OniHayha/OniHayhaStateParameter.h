@@ -94,7 +94,8 @@ namespace OniHayhaState {
 		WaitingForAttackParameter waitingForAttackParameter;
 		HitReactionParameter hitReactionParameter;
 		AimingParameter aimingParameter;
-
+		//押し出し半径
+		float extrusionDist = 0.5f;
 	};
 
 	//オニ・ヘイヘのパラメータ調整項目

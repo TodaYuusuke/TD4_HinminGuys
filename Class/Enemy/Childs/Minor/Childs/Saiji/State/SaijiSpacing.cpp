@@ -14,12 +14,27 @@ void Saiji::SpacingFinalize([[maybe_unused]] const States& pre)
 	stateParameter_.idleParameter.countStandTime = stateParameter_.idleParameter.standTime +
 		LWP::Utility::Random::GenerateFloat(0.0f, 1.0f);
 
+	animation_.Stop(LWP::Resource::Animation::TrackType::Blend);
+
 }
 
 void Saiji::SpacingInit([[maybe_unused]] const States& pre)
 {
 	
-	SetAnimation("Run", true, 0.3f);
+	animation_.Play("Walk", 0.3f)
+		.Loop(true);
+
+	if (stateParameter_.spacingParameter.isClockwise) {
+		animation_.Play("RightWalk", 0.3f, 0.0f, LWP::Resource::Animation::TrackType::Blend)
+			.Loop(true, LWP::Resource::Animation::TrackType::Blend);
+	}
+	else {
+		animation_.Play("LeftWalk", 0.3f, 0.0f, LWP::Resource::Animation::TrackType::Blend)
+			.Loop(true, LWP::Resource::Animation::TrackType::Blend);
+	}
+
+
+
 	preState_ = States::kSpacing;
 
 }
@@ -100,6 +115,9 @@ void Saiji::SpacingUpdate([[maybe_unused]] std::optional<States>& req, [[maybe_u
 			+ (GetRepulsiveForce() * LWP::Info::GetDeltaTimeF()));
 		//プレイヤーの向きに回転
 		RotateTowardsPlayer();
+
+		//velocityからアニメーションブレンドの比率を設定
+		animation_.blendT = 1.0f - LWP::Math::Vector3::Dot(dist.Normalize(), velocity.Normalize());
 
 	}
 

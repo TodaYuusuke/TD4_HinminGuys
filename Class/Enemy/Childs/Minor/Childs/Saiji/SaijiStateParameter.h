@@ -63,6 +63,11 @@ namespace SaijiState {
 		LWP::Math::Vector3 attackPosition{0.0f,0.0f,1.0f};
 		//攻撃判定の大きさ
 		float attackScale = 0.5f;
+		//攻撃後の硬直時間
+		float freezingTime = 1.5f;
+		//現在の硬直時間カウント
+		float currentFreezingTime = 0.0f;
+
 	};
 
 	/// <summary>
@@ -116,7 +121,8 @@ namespace SaijiState {
 		FollowingParameter followingParameter;
 		WaitingForAttackParameter waitingForAttackParameter;
 		HitReactionParameter hitReactionParameter;
-
+		//押し出し半径
+		float extrusionDist = 0.5f;
 	};
 
 	//才二君のパラメータ調整項目

@@ -14,7 +14,8 @@ void Saiji::HitReactionFinalize([[maybe_unused]] const States& pre) {
 void Saiji::HitReactionInit([[maybe_unused]] const States& pre)
 {
 	
-	SetAnimation("Damage", false);
+	animation_.Play("Idle", 0.2f)
+		.Loop(false);
 
 }
 

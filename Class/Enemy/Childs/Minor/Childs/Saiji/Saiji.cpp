@@ -27,13 +27,12 @@ Saiji::~Saiji()
 void Saiji::Initialize(Player* player, const Vector3& position, LWP::Object::Camera* camera,
 	EnemyManager* manager)
 {
-	model_.LoadShortPath("player/Player_Simple.gltf");
+	model_.LoadShortPath("Saiji/Saiji_IK.gltf");
 	type_ = EnemyType::kSaiji;
 	attackType_ = AttackType::kShort;
 	//アニメーションロード
-	animation_.LoadFullPath("resources/model/player/Player_Simple.gltf", &model_);
-	swordModel_.LoadShortPath("player/SimpleWeapon.gltf");
-	model_.materials["Material"].color = { 1.0f,0.0f,0.0f,1.0f };
+	animation_.LoadFullPath("resources/model/Saiji/Saiji_IK.gltf", &model_);
+	swordModel_.LoadShortPath("Saiji/Club.gltf");
 	SetPlayer(player);
 	camera_ = camera;
 	enemyManager_ = manager;

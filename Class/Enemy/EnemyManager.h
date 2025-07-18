@@ -126,7 +126,7 @@ private:
 	//攻撃する敵同士が取る距離
 	float attackEnemyDist_ = 1.5f;
 	//プレイヤーと取る距離
-	float playerDist_ = 0.4f;
+	float playerDist_ = 0.8f;
 	//敵の出現上限
 	const uint16_t kMaxEnemyCount_ = 20;
 	//スポーンデータの敵を表示するフラグ

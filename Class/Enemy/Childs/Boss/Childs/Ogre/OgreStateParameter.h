@@ -225,7 +225,8 @@ namespace OgreState {
 		AssaultSlash assaultSlash{};
 		QuadrupleAttack quadrupleAttack{};
 		HitReactionParameter hitReactionParameter{};
-
+		//押し出し半径
+		float extrusionDist = 1.0f;
 	};
 
 	//翁雅のパラメータ調整項目
