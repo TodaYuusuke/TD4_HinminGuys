@@ -71,7 +71,10 @@ private:// jsonで保存する値
 	LWP::Utility::Color maxColor;
 	LWP::Utility::Color minColor;
 
-
+	int maxWhite = 255;
+	int minWhite = 0;
+	int maxAlpha = 255;
+	int minAlpha = 0;
 
 private:
 	// 土煙を発生させるY軸の角度

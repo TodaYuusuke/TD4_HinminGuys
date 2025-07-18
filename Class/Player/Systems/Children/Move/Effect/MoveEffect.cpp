@@ -18,6 +18,10 @@ void MoveEffect::Initialize() {
 }
 
 void MoveEffect::Update() {
+	maxWhite = std::clamp<int>(maxWhite, 1, 255);
+	minWhite = std::clamp<int>(minWhite, 0, 254);
+	maxAlpha = std::clamp<int>(maxAlpha, 1, 255);
+	minAlpha = std::clamp<int>(minAlpha, 0, 254);
 	//IEffect::Update();
 	for (std::list<ParticleData>::iterator particleIterator = particles_.begin(); particleIterator != particles_.end();) {
 		// 生存時間が過ぎたら処理を行わない
@@ -39,7 +43,13 @@ void MoveEffect::Update() {
 }
 
 void MoveEffect::DebugGui() {
+	maxColor = { maxWhite, maxWhite,maxWhite,maxAlpha };
+	minColor = { minWhite, minWhite,maxWhite,maxAlpha };
 
+	maxWhite = std::clamp<int>(maxWhite, 0, 255);
+	minWhite = std::clamp<int>(minWhite, 0, 254);
+	maxAlpha = std::clamp<int>(maxAlpha, 0, 255);
+	minAlpha = std::clamp<int>(minAlpha, 0, 254);
 }
 
 void MoveEffect::SetJsonData(LWP::Utility::JsonIO& json) {
@@ -58,8 +68,18 @@ void MoveEffect::SetJsonData(LWP::Utility::JsonIO& json) {
 	json.EndGroup();
 	// 色
 	json.BeginGroup("Color");
+	json.BeginGroup("White");
+	json.AddValue<int>("Max", &maxWhite);
+	json.AddValue<int>("Min", &minWhite);
+	json.EndGroup();
+	json.BeginGroup("Alpha");
+	json.AddValue<int>("Max", &maxAlpha);
+	json.AddValue<int>("Min", &minAlpha);
+	json.EndGroup();
+	json.BeginGroup("CheckMin,Max");
 	json.AddValue<Color>("Max", &maxColor);
 	json.AddValue<Color>("Min", &minColor);
+	json.EndGroup();
 	json.EndGroup();
 
 	json.EndGroup();
@@ -110,11 +130,10 @@ void MoveEffect::CreateDustCloud(ParticleData& particle, LWP::Math::Vector3 pos)
 	};
 
 	// 色
-	int R = LWP::Utility::Random::GenerateInt(minColor.R, maxColor.R);
-	int G = LWP::Utility::Random::GenerateInt(minColor.G, maxColor.G);
-	int B = LWP::Utility::Random::GenerateInt(minColor.B, maxColor.B);
-	int Alpha = LWP::Utility::Random::GenerateInt(minColor.A, maxColor.A);
-	particle.billboard.material.color = { R,G,B,Alpha };
+	int white = LWP::Utility::Random::GenerateInt(minWhite, maxWhite);
+	int alpha = LWP::Utility::Random::GenerateInt(minAlpha, maxAlpha);
+
+	particle.billboard.material.color = { white,white,white,alpha };
 
 	// 生存可能時間
 	particle.lifeTime = dustCloudData_.maxElapseTime * 60.0f;
