@@ -67,7 +67,7 @@ void Ogre::Initialize(Player* player, const Vector3& position, LWP::Object::Came
 	collider_.mask.SetBelongFrag(GetEnemy());
 	// 当たり判定をとる対象のマスクを設定
 	collider_.mask.SetHitFrag(GetAttack());
-	collider_.enterLambda = [this](LWP::Object::Collision* hitTarget) {
+	collider_.stayLambda = [this](LWP::Object::Collision* hitTarget) {
 		hitTarget;
 
 		//SE鳴らす
@@ -75,11 +75,15 @@ void Ogre::Initialize(Player* player, const Vector3& position, LWP::Object::Came
 
 		//ステートをセット(攻撃中はリアクションしない)
 		if (not IsAttackState()) {
-			SetPreState(state_.GetCurrentBehavior());
 			state_.request = States::kHitReaction;
 			//今後プレイヤーから取得する
 			SetKnockBackValue(1.0f);
 		}
+
+		//コライダーを一時的にオフ、クールタイム設定
+		collider_.isActive = false;
+		//プレイヤーから取得してくる
+		invincibleTime_ = 0.2f;
 
 		//ダメージの加算値(テスト用)
 		int plusDamage = LWP::Utility::Random::GenerateInt(0, 1000);
@@ -114,6 +118,17 @@ void Ogre::Update()
 {
 
 	preIsStartParryEffect_ = isStartParryEffect_;
+
+	//無敵時間カウント
+	if (invincibleTime_ > 0.0f) {
+
+		invincibleTime_ -= 1.0f * LWP::Info::GetDeltaTimeF();
+		//カウントが終わったらコライダーオン
+		if (invincibleTime_ <= 0.0f) {
+			collider_.isActive = true;
+		}
+
+	}
 
 	//死亡時、更新しない(別途ステートを作成する予定)
 	if (parameter_.hp <= 0.0f) {
@@ -178,7 +193,7 @@ void Ogre::CreateColliders()
 	// 当たり判定をとる対象のマスクを設定
 	sphereCollider_.mask.SetHitFrag(GetPlayer() | GetParry());
 	sphere_.isShowWireFrame = false;
-	sphereCollider_.enterLambda = [this](LWP::Object::Collision* hitTarget) {
+	sphereCollider_.stayLambda = [this](LWP::Object::Collision* hitTarget) {
 		hitTarget;
 		player_->TakeDamage(parameter_.attackParameter.attackValue);
 		//判定をオフにする
@@ -192,7 +207,7 @@ void Ogre::CreateColliders()
 	// 当たり判定をとる対象のマスクを設定
 	aabbAttackCollider_.mask.SetHitFrag(GetPlayer() | GetParry());
 	aabbAttack_.isShowWireFrame = false;
-	aabbAttackCollider_.enterLambda = [this](LWP::Object::Collision* hitTarget) {
+	aabbAttackCollider_.stayLambda = [this](LWP::Object::Collision* hitTarget) {
 		hitTarget;
 		player_->TakeDamage(parameter_.attackParameter.attackValue);
 		//判定をオフにする

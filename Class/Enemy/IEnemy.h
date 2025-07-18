@@ -213,6 +213,12 @@ protected:
 	float maxParryEffectTime_ = 0.5f;
 	//敵の現在のモーションスピード
 	float currentMotionSpeed_ = 1.0f;
+	//敵の無敵時間
+	float invincibleTime_ = 0.0f;
+	//乱数最小
+	float randomMin_ = 0.95f;
+	//乱数最大
+	float randomMax_ = 1.05f;
 	//全体のID管理
 	static uint16_t currentEnemyID_;
 	//攻撃態勢最大人数

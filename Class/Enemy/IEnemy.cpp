@@ -37,7 +37,6 @@ IEnemy::IEnemy()
 			parryEffectSprite_[i].worldTF.rotation = LWP::Math::Quaternion::ConvertEuler({ 0.0f,0.0f,1.57f });
 		}
 
-		parryEffectSprite_[i].Init();
 	}
 
 	aabbBody_.isShowWireFrame = false;
