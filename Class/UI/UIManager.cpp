@@ -15,26 +15,19 @@ UIManager::UIManager(Player* player) {
 	guideOperation_.resize(7);
 	//攻撃
 	guideOperation_[0].LoadTexture("UI/ButtonUI/ButtonUI_Attack.png");
-	//guideOperation_[0].anchorPoint = { 1,0 };
 	// 走り(回避)
 	guideOperation_[1].LoadTexture("UI/ButtonUI/ButtonUI_Run.png");
-	//guideOperation_[1].anchorPoint = { 1,0 };
 	// 
 	guideOperation_[2].LoadTexture("UI/ButtonUI/LRButton1.png");
-	//guideOperation_[2].anchorPoint = { 1,0 };
 	guideOperation_[2].isActive = false;
 	// ロックオン
 	guideOperation_[3].LoadTexture("UI/ButtonUI/UI_LTrigger.png");
-	//guideOperation_[3].anchorPoint = { 1,0 };
 	// パリィ
 	guideOperation_[4].LoadTexture("UI/ButtonUI/ButtonUI_Parry.png");
-	//guideOperation_[4].anchorPoint = { 1,0 };
 	// 移動
 	guideOperation_[5].LoadTexture("UI/ButtonUI/UI_Move.png");
-	//guideOperation_[5].anchorPoint = { 1,0 };
 	// 鞘
 	guideOperation_[6].LoadTexture("UI/ButtonUI/ButtonUI_Throw.png");
-	//guideOperation_[6].anchorPoint = { 1,0 };
 	for (int i = 0; i < guideOperation_.size(); i++) {
 		guideOperation_[i].anchorPoint = { 0.5f, 0.0f };
 	}
@@ -143,16 +136,16 @@ void UIManager::DebugGUI() {
 
 void UIManager::CoolTimeFilterUpdate() {
 	// 攻撃
-
+	if (player_->GetSystemManager()->GetComboTree()->GetStifnessProgress() > 0.0f) {
+		coolTimeFilter_[0].isActive = true;
+		coolTimeFilterSplitSize_[0].y = 150.0f * (1.0f - player_->GetSystemManager()->GetComboTree()->GetStifnessProgress());
+		coolTimeFilter_[0].clipRect.max.y = coolTimeFilterSplitSize_[0].y;
+	}
 
 	// 鞘
 	if (!player_->GetSystemManager()->GetCoolTimer()->GetSheathCoolTimeData().isFinish) {
 		coolTimeFilter_[6].isActive = true;
 		coolTimeFilterSplitSize_[6].y = 150.0f * player_->GetSystemManager()->GetCoolTimer()->GetSheathCoolTimeData().coolTime / player_->GetSystemManager()->GetCoolTimer()->GetSheathCoolTimeData().maxCoolTime;
 		coolTimeFilter_[6].clipRect.max.y = coolTimeFilterSplitSize_[6].y;
-	}
-	else {
-		coolTimeFilter_[6].isActive = true;
-		coolTimeFilterSplitSize_[6].y = 150.0f;
 	}
 }

@@ -67,6 +67,12 @@ private:// jsonで保存する値
 	// 土煙
 	ParticleJsonData dustCloudData_;
 
+	// 色
+	LWP::Utility::Color maxColor;
+	LWP::Utility::Color minColor;
+
+
+
 private:
 	// 土煙を発生させるY軸の角度
 	float createRotateY_;

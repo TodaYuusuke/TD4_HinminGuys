@@ -3,8 +3,8 @@
         "Group :Attack": {
             "Group :CoolTimeFilter": {
                 "Vector3 :Translation": [
-                    -4.0,
-                    -2.0,
+                    0.0,
+                    1.5,
                     0.0
                 ]
             },
@@ -23,7 +23,7 @@
                 ]
             },
             "Vector3 :Translation": [
-                1763.0,
+                1783.469970703125,
                 541.0,
                 0.0
             ]

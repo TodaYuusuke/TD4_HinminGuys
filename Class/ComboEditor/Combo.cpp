@@ -76,7 +76,7 @@ void Combo::Start(LWP::Resource::SkinningModel* model, LWP::Resource::Animation*
 	}
 }
 
-void Combo::Update(LWP::Resource::SkinningModel* model, LWP::Resource::Animation* anim, LWP::Object::Collision* collider, LWP::Object::Collider::Capsule* shape)
+void Combo::Update(LWP::Resource::SkinningModel* model, LWP::Resource::Animation* anim, LWP::Object::Collision* collider, LWP::Object::Collider::Sphere* shape)
 {
 	// 攻撃判定用のタイマーが動作している場合のみ更新を行う
 	if (attackDecisionTimer_.GetIsActive()) {
@@ -252,9 +252,10 @@ void Combo::AddValue(LWP::Utility::JsonIO& json)
 		.AddValue("AttackStartTime", &attackStartTime_)							// 判定開始時間
 		.AddValue("AttackEndTime", &attackEnableTime_)							// 判定有効時間
 		.AddValue("FollowJointName", &followJointName_)							// 追従するジョイント名
-		.AddValue("AttackColliderLengthOffset", &attackColliderLengthOffset_)	// 始点からのオフセット
-		.AddValue("AttackColliderRadius", &attackColliderRadius_)				// コライダーの半径
+		.AddValue("AttackColliderOffset", &attackColliderOffset_)				// オフセット
+		.AddValue("AttackColliderRadius", &attackColliderRadius_)					// コライダーのサイズ
 		.AddValue("Damage", &damage_)											// 攻撃のダメージ量
+		.AddValue("HitStopTime", &hitStopTime_)									// ヒットストップ秒数
 		.AddValue("NockbackStrength", &nockbackStrength_)						// ノックバック強さ
 		.AddValue("SheathDurabityLoss", &sheathDurabityLoss_)					// 鞘の耐久値減少量
 		.AddValue("AttackAssistStartTime", &attackAssistStartTime_)				// 攻撃アシスト開始時間
@@ -335,7 +336,7 @@ void Combo::AddCondition(LWP::Utility::ICondition* condition)
 	conditions_.push_back(std::move(condition));
 }
 
-void Combo::AttackActiveUpdate(LWP::Resource::SkinningModel* model, LWP::Object::Collision* collider, LWP::Object::Collider::Capsule* shape)
+void Combo::AttackActiveUpdate(LWP::Resource::SkinningModel* model, LWP::Object::Collision* collider, LWP::Object::Collider::Sphere* shape)
 {
 	// タイマーの更新
 	attackDecisionTimer_.Update();
@@ -361,14 +362,19 @@ void Combo::AttackActiveUpdate(LWP::Resource::SkinningModel* model, LWP::Object:
 		}
 	}
 	
-	// 追従するジョイント名が何も指定されていない場合
+	// 追従するジョイント名が指定されている場合
 	if (followJointName_ != "") {
 		// コライダーの追従設定
 		collider->SetFollow(model, followJointName_);
 	}
+	else {
+		// コライダーの追従設定
+		collider->SetFollow(&model->worldTF);
+	}
 
-	// コライダーのオフセット設定
-	shape->end = attackColliderLengthOffset_;
+	// 回転行列を求める
+	Math::Matrix4x4 rotMat = Math::Matrix4x4::CreateRotateXYZMatrix(model->worldTF.rotation);
+	shape->position = attackColliderOffset_ * rotMat;
 	// コライダーの半径調整
 	shape->radius = attackColliderRadius_;
 }
@@ -550,7 +556,7 @@ void Combo::AttackSettings()
 	Base::ImGuiManager::InputText("FollowJointName", followJointName_);
 
 	// コライダーの半径調整
-	ImGui::DragFloat3("ColliderOffset", &attackColliderLengthOffset_.x, 0.01f, 0.0f);
+	ImGui::DragFloat3("ColliderOffset", &attackColliderOffset_.x, 0.01f, 0.0f);
 	ImGui::DragFloat("ColliderRadius", &attackColliderRadius_, 0.01f, 0.0f);
 
 	ImGui::Unindent();
@@ -563,6 +569,8 @@ void Combo::AttackSettings()
 
 	// ダメージ量の調整
 	ImGui::DragFloat("Damage Amount", &damage_, 0.01f, 0.0f);
+	// ヒットストップの調整
+	ImGui::DragFloat("HitStopTime", &hitStopTime_, 0.1f, 0.0f);
 	// ノックバック強さの調整
 	ImGui::DragFloat("NockBack Strength", &nockbackStrength_, 0.01f, 0.0f);
 	// 鞘の耐久減少量の調整

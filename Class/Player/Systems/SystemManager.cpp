@@ -57,6 +57,9 @@ void SystemManager::Initialize() {
 		// 鞘ゲージ減少量
 		player_->GetParameter()->sheathDamegeStrength_ = comboTree_->GetSheathDurabityLoss();
 		player_->TakeSheathDamage(player_->GetParameter()->GetCurrentSheathDamageStrength());
+
+		// ヒットストップの設定
+		HitStopController::GetInstance()->Start(comboTree_->GetHitStopTime(), 0.0f);
 		};
 	comboTree_->AddCollisionLamda(LWP::Utility::ComboEnum::ENTER, attackOnHitFunc_);
 
@@ -290,7 +293,7 @@ void SystemManager::CurrentSystemUpdate() {
 	currentSystem_->Update();
 
 	// 速度(攻撃時以外補間をかける)
-	if (systemState_ != SystemState::kAttack || systemState_ != SystemState::kEvasion) {
+	if (systemState_ != SystemState::kAttack && systemState_ != SystemState::kEvasion) {
 		velocity_ = LWP::Utility::Interpolation::Exponential(velocity_, currentSystem_->GetVelocity(), 0.3f);
 	}
 	else {

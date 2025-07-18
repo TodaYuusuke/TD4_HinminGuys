@@ -56,6 +56,11 @@ void MoveEffect::SetJsonData(LWP::Utility::JsonIO& json) {
 	json.AddValue<Vector3>("Max", &dustCloudData_.scale.max);
 	json.AddValue<Vector3>("Min", &dustCloudData_.scale.min);
 	json.EndGroup();
+	// 色
+	json.BeginGroup("Color");
+	json.AddValue<Color>("Max", &maxColor);
+	json.AddValue<Color>("Min", &minColor);
+	json.EndGroup();
 
 	json.EndGroup();
 
@@ -103,6 +108,13 @@ void MoveEffect::CreateDustCloud(ParticleData& particle, LWP::Math::Vector3 pos)
 		scale.x,
 		scale.x
 	};
+
+	// 色
+	int R = LWP::Utility::Random::GenerateInt(minColor.R, maxColor.R);
+	int G = LWP::Utility::Random::GenerateInt(minColor.G, maxColor.G);
+	int B = LWP::Utility::Random::GenerateInt(minColor.B, maxColor.B);
+	int Alpha = LWP::Utility::Random::GenerateInt(minColor.A, maxColor.A);
+	particle.billboard.material.color = { R,G,B,Alpha };
 
 	// 生存可能時間
 	particle.lifeTime = dustCloudData_.maxElapseTime * 60.0f;

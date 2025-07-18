@@ -63,7 +63,7 @@ public:// Getter, Setter
 	/// <summary>
 	/// ヒットストップ時間を設定
 	/// </summary>
-	/// <param name="time"></param>
+	/// <param name="time">秒数</param>
 	void SetHitStopTime(const float& time) {
 		hitStopTime_ = time * fps;
 		currentFrame_ = hitStopTime_;

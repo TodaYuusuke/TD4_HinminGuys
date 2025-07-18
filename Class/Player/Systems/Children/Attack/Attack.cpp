@@ -166,7 +166,7 @@ void Attack::LockOnAssist(IEnemy* lockOnTarget) {
 
 	// 自機とロックオン中の敵との距離
 	Vector3 attackTargetDist = (player_->GetWorldTF()->GetWorldPosition() - lockOnTarget->GetWorldTF()->GetWorldPosition());
-	Vector3 assistPos = lockOnTarget->GetWorldTF()->GetWorldPosition() + Vector3{ 0,0,1.0f } * LWP::Math::Matrix4x4::CreateRotateXYZMatrix(LWP::Math::Quaternion::ConvertDirection(attackTargetDist));
+	Vector3 assistPos = lockOnTarget->GetWorldTF()->GetWorldPosition() + Vector3{ 0,0,2.0f } * LWP::Math::Matrix4x4::CreateRotateXYZMatrix(LWP::Math::Quaternion::ConvertDirection(attackTargetDist));
 
 	// 速度
 	velocity_ = (LWP::Utility::Interpolation::Exponential(player_->GetWorldTF()->GetWorldPosition(), assistPos, 0.7f) - player_->GetWorldTF()->GetWorldPosition()) * hitStopController_->GetDeltaTime();

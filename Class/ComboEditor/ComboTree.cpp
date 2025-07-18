@@ -3,7 +3,7 @@
 using namespace LWP::Utility::Condition;
 using namespace LWP;
 
-ComboTree::ComboTree() : capsule_(collider_.SetBroadShape(LWP::Object::Collider::Capsule()))
+ComboTree::ComboTree() : sphere_(collider_.SetBroadShape(LWP::Object::Collider::Sphere()))
 {
 
 }
@@ -50,7 +50,7 @@ void ComboTree::Update()
 	if (enableEditMode_) { return; }
 
 	// 現在コンボの更新
-	nowCombo_->Update(animModel_, anim_, &collider_, &capsule_);
+	nowCombo_->Update(animModel_, anim_, &collider_, &sphere_);
 
 	// 次のコンボが無い場合コンボの受付処理
 	if (nowCombo_->ReceptUpdate() != nullptr && isRecept_) {
