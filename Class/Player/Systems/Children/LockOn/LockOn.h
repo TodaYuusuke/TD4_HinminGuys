@@ -7,8 +7,8 @@ class FollowCamera;
 class LockOn : public ISystem {
 public:// 構造体
 	struct LockOnUI {
-		LWP::Primitive::Sprite sprite;				// ロックオン可能UIのスプライト
-		LWP::Primitive::Billboard3D enableLockOnObj;
+		LWP::Primitive::NormalSprite sprite;				// ロックオン可能UIのスプライト
+		LWP::Primitive::NormalBillboard2D enableLockOnObj;
 		LWP::Object::TransformQuat offset;			// 補間の値を格納
 		Vector3 defaultPos;							// ロックオン可能UIの初期座標
 		Vector3 defaultScale;						// ロックオン可能UIの初期サイズ
@@ -144,7 +144,10 @@ private:
 	// 現在ロックオンされている敵の情報
 	IEnemy* lockOnEnemy_;
 
+	// ロックオンしたときのUI
 	LockOnUI lockOnUI_;
+	// ロックオンされる敵にUI表示
+	LWP::Primitive::NormalBillboard2D guideLockOnUI_;
 
 	// ロックオン可能数
 	int lockOnNum_;

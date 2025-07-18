@@ -95,16 +95,21 @@ void DamageResponse::CreateJsonFIle() {
 }
 
 void DamageResponse::StartInvinsible() {
-	eventOrders_[(int)EventOrderState::kInvinsible].Start();
-	eventOrders_[(int)EventOrderState::kInvinsible].Update();
-	eventOrders_[(int)EventOrderState::kStun].Start();
-	eventOrders_[(int)EventOrderState::kStun].Update();
-	isActive_ = true;
 	// 無敵時間を設定
 	player_->GetSystemManager()->SetInvisibleTime(jsonData_.invinsibleTime);
-	// ガードアニメーション開始
-	player_->ResetAnimation();
-	player_->StartAnimation("Damage", 0.15f, 0.0f);
+
+	if (!player_->GetParameter()->GetIsSheathBreak()) {
+		isActive_ = true;
+		// 無敵タイミング
+		eventOrders_[(int)EventOrderState::kInvinsible].Start();
+		eventOrders_[(int)EventOrderState::kInvinsible].Update();
+		// スタン
+		eventOrders_[(int)EventOrderState::kStun].Start();
+		eventOrders_[(int)EventOrderState::kStun].Update();
+		// ガードアニメーション開始
+		player_->ResetAnimation();
+		player_->StartAnimation("Damage", 0.15f, 0.0f);
+	}
 }
 
 void DamageResponse::HitUpdate() {

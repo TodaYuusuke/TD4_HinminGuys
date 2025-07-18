@@ -51,7 +51,7 @@ public:// Getter, Setter
 	/// <returns></returns>
 	bool GetIsIncrease() { return isIncrease_; }
 	/// <summary>
-	/// HPが無くなっているかを取得
+	/// ゲージが無くなっているかを取得
 	/// </summary>
 	/// <returns></returns>
 	bool GetValueEmpty() {

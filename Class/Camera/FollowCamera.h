@@ -85,6 +85,7 @@ public:// Getter,Setter
 	/// </summary>
 	/// <returns></returns>
 	LWP::Math::Vector3 GetTargetPos() { return *targetPos_; }
+	LWP::Math::Vector3 GetTargetPosition() { return targetPosition_; }
 	LWP::Math::Vector3 GetRadian() { return radian_; }
 	/// <summary>
 	/// ロックオン中かを取得
@@ -104,6 +105,7 @@ public:// Getter,Setter
 	/// </summary>
 	/// <param name="targetPos">追従対象の座標のアドレス</param>
 	void SetTargetPos(LWP::Math::Vector3* targetPos) { targetPos_ = targetPos; }
+	void SetTargetPosition(LWP::Math::Vector3 targetPos) { targetPosition_ = targetPos; }
 	/// <summary>
 	/// カメラの揺れを設定
 	/// </summary>
@@ -142,6 +144,9 @@ public:// jsonで保存する値
 	LWP::Math::Vector3 kTargetDist = { 0.0f,0.0f,-20.0f };
 	// 初期角度 
 	LWP::Math::Vector3 kStartAngle = { 0.3f, 0.0f, 0.0f };
+	// パリィ後に操作がなかったときに戻す角度
+	LWP::Math::Vector3 returnAngle = { 0.3f, 0.0f, 0.0f };
+
 	// x軸の下限値
 	float kMinRotateX = (float)std::numbers::pi / 2.0f - 0.1f;
 	// x軸の上限値
@@ -164,16 +169,28 @@ public:// jsonで保存する値
 	// 追従対象との初期距離
 	LWP::Math::Vector3 defaultTargetDist_;
 
+	// 追従対象とカメラの距離をもとに戻すまでの時間
+	float returnTargetDistTime = 20.0f;
+
+	float returnRotateTime = 240.0f;
+	// 注視点を変えたときにカメラを向けるまでの時間
+	float switchTargetPosTime = 15.0f;
 
 	// パリィ時のカメラのズーム時間
 	float zoomFinishTime = 55.0f;
 	float zoomHoldFinishTime = 33.0f;
 	// パリィ時のカメラの揺れる時間
 	float parryShakeTime = 22.0f;
+	// ラジアルブラーの強度
+	float parryBlurWidth = 0.003f;
+	// パリィ時のヒットストップのする時間
+	float parryHitStopTime = 0.25f;
 	// パリィ時の角度
 	LWP::Math::Vector3 parryAngle = { 0.0f,0.523f,0.06f };
 	// パリィ時のカメラ距離
 	LWP::Math::Vector3 parryDist = { 0.0f,0.0f,2.5f };
+	// カメラの揺れる範囲
+	LWP::Math::Vector3 parryShakeRange = { 0.01f,0.01f,0.0f };
 
 public:// 外部からポインタをもらう変数
 	// カメラ
@@ -185,12 +202,14 @@ private:
 private:
 	// カメラの状態
 	IFollowCameraState* state_;
+	std::string preStateName_;
 
 	// カメラの揺れ
 	LWP::Math::Vector3 shakeOffset_;
 
 	// 追従対象の座標
 	const LWP::Math::Vector3* targetPos_;
+	LWP::Math::Vector3 targetPosition_;
 
 	//　ロックオン時のカメラの位置調整
 	LWP::Math::Vector3 lockOnOffset_;

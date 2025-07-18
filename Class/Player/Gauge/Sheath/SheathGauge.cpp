@@ -1,15 +1,13 @@
 #include "SheathGauge.h"
 
 SheathGauge::SheathGauge() {
-	// HP画像の背景作成(BackGroundは長すぎるのでBGにしてます)
-	sprite_["SheathBarBG"].LoadTexture("UI/Gauge/SheathBarBackGround.png");
+	// 鞘ゲージ画像の背景作成(BackGroundは長すぎるのでBGにしてます)
+	sprite_["SheathBarBG"].LoadTexture("UI/Gauge/SheathBar/SheathBarBase.png");
 	sprite_["SheathBarBG"].Init();
-	sprite_["SheathBarBG"].isUI = true;
 	sprite_["SheathBarBG"].isActive = true;
-	// HP画像を作成
-	sprite_["SheathBar"].LoadTexture("UI/Gauge/SheathBar.png");
+	// 鞘ゲージ画像を作成
+	sprite_["SheathBar"].LoadTexture("UI/Gauge/SheathBar/SheathBarGauge.png");
 	sprite_["SheathBar"].Init();
-	sprite_["SheathBar"].isUI = true;
 	sprite_["SheathBar"].isActive = true;
 
 	// jsonに保存する値を設定
@@ -92,7 +90,8 @@ void SheathGauge::IncreaseGauge() {
 
 	if (!isIncrease_) { 
 		sprite_["SheathBar"].material.color.A = 255.0f;
-		return; }
+		return; 
+	}
 
 	t_++;
 	t_ = std::clamp<float>(t_, 0.0f, increaseTime * 60.0f);

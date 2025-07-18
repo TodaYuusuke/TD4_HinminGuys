@@ -9,14 +9,25 @@
 #include "Gauge/HP/HP.h"
 #include "Gauge/Sheath/SheathGauge.h"
 #include "Command/InputHandler.h"
+#include "PlayerParameter.h"
+#include "Systems/Children/Parry/Effect/ParryEffect.h"
+#include "Particles/Particles.h"
 #include "../Components/HitStopController.h"
 #include "../UI/UIManager.h"
+#include "../Audio/SEPlayer.h"
 #include <memory>
 
 class IEnemy;
 class EnemyManager;
 class FollowCamera;
 class Player : public ICharacter {
+public:
+	enum class MoveEffectType {
+		kNone,
+		kLeft,
+		kRight
+	};
+
 public:
 	// コンストラクタ
 	Player(LWP::Object::Camera* camera, EnemyManager* enemyManager, FollowCamera* followCamera, UIManager* uiManager);
@@ -49,21 +60,13 @@ public:
 	/// <summary>
 	/// ダメージを与える
 	/// </summary>
-	void TakeDamage(const float& damageValue, const float& multiply = 1.0f) {
-		// 自機が無敵中ならダメージ判定をとらない
-		if (!collider_.isActive) { return; }
-		// 全ての機能をリセット
-		Reset();
-		// HPゲージ変動
-		uiManager_->ChangeHPGauge(damageValue, multiply);
-		// ダメージ機能を生成しすべての行動キャンセル
-		systemManager_->StartDamageResponse();
-	}
-
-	void TakeSheathDamage(const float& damageValue, const float& multiply = 1.0f) {
-		// 鞘ゲージ変動
-		uiManager_->ChangeSheathGauge(damageValue, multiply);
-	}
+	void TakeDamage(const float& damageValue);
+	/// <summary>
+	/// 鞘にダメージを与える
+	/// </summary>
+	/// <param name="damageValue"></param>
+	/// <param name="multiply"></param>
+	void TakeSheathDamage(const float& damageValue, const float& multiply = 1.0f);
 
 	/// <summary>
 	/// 移動機能以外をリセット
@@ -91,6 +94,27 @@ private:
 	/// </summary>
 	void LimitMoveArea();
 
+	/// <summary>
+	/// SEの鳴らす条件などの更新処理
+	/// </summary>
+	void SEUpdate();
+	/// <summary>
+	/// 移動時のSEを鳴らす
+	/// </summary>
+	void MoveSE();
+
+public:
+	/// <summary>
+	/// パリィ時のパーティクル生成
+	/// </summary>
+	/// <param name="pos"></param>
+	void CreateParryParticle(const LWP::Math::Vector3& pos);
+	/// <summary>
+	/// 回避時のパーティクル生成
+	/// </summary>
+	/// <param name="pos"></param>
+	void CreateEvasionParticle(const LWP::Math::Vector3& pos);
+
 public:// Getter,Setter
 #pragma region Getter
 	/// <summary>
@@ -114,6 +138,16 @@ public:// Getter,Setter
 	/// <returns></returns>
 	LWP::Object::TransformQuat* GetWorldTF() { return &model_.worldTF; }
 	/// <summary>
+	/// 刀のTransformQuatを取得
+	/// </summary>
+	/// <returns></returns>
+	LWP::Object::TransformQuat* GetSwordModelWorldTF() { return &swordModel_.worldTF; }
+	/// <summary>
+	/// 鞘のTransformQuatを取得
+	/// </summary>
+	/// <returns></returns>
+	LWP::Object::TransformQuat* GetSheathModelWorldTF() { return &sheathModel_.worldTF; }
+	/// <summary>
 	/// アニメーション情報を取得
 	/// </summary>
 	/// <returns></returns>
@@ -123,6 +157,21 @@ public:// Getter,Setter
 	/// </summary>
 	/// <returns></returns>
 	LWP::Resource::SkinningModel* GetModel() { return &model_; }
+	/// <summary>
+	/// 刀モデルを取得
+	/// </summary>
+	/// <returns></returns>
+	LWP::Resource::SkinningModel* GetSwordModel() { return &swordModel_; }
+	/// <summary>
+	/// 鞘モデルを取得
+	/// </summary>
+	/// <returns></returns>
+	LWP::Resource::SkinningModel* GetSheathModel() { return &sheathModel_; }
+	/// <summary>
+	/// パラメータ情報を取得
+	/// </summary>
+	/// <returns></returns>
+	PlayerParameter* GetParameter() { return playerParameter_.get(); }
 	/// <summary>
 	/// 自機の座標を取得
 	/// </summary>
@@ -148,16 +197,25 @@ public:// Getter,Setter
 
 #pragma region Setter
 	/// <summary>
-	/// シーンで使用しているカメラのポインタを設定
+	/// シーンで使用しているカメラのアドレスを設定
 	/// </summary>
 	/// <param name="camera">カメラのアドレス</param>
 	void SetCamera(LWP::Object::Camera* camera) { pCamera_ = camera; }
 	/// <summary>
-	/// 敵の管理クラスを設定
+	/// 敵の管理クラスのアドレスを設定
 	/// </summary>
 	/// <param name="enemyManager">敵の管理クラスのポインタ</param>
 	void SetEnemyManager(EnemyManager* enemyManager) { enemyManager_ = enemyManager; }
-
+	/// <summary>
+	/// 効果音を管理するクラスのアドレスを設定
+	/// </summary>
+	/// <param name="SEPlayer"></param>
+	void SetSEPlayer(SEPlayer* SEPlayer) { SEPlayer_ = SEPlayer; }
+	/// <summary>
+	/// 向いている方向を設定
+	/// </summary>
+	/// <param name="quat">向かせる方向(クォータニオン)</param>
+	void SetRotate(const LWP::Math::Quaternion& quat) { pCamera_->worldTF.rotation = quat; }
 #pragma region アニメーション
 	/// <summary>
 	/// アニメーションを開始
@@ -214,9 +272,12 @@ private:// 外部からポインタをもらう変数
 	UIManager* uiManager_;
 	// ヒットストップ
 	HitStopController* hitStopController_;
+	// 効果音
+	SEPlayer* SEPlayer_;
 
 private:
 	LWP::Utility::JsonIO json_;
+
 
 	// 刀モデル
 	LWP::Resource::SkinningModel swordModel_;
@@ -229,6 +290,18 @@ private:
 
 	// 機能まとめ
 	std::unique_ptr<SystemManager> systemManager_;
+
+	// パラメータ
+	std::unique_ptr<PlayerParameter> playerParameter_;
+
+	// パーティクルの管理クラス
+	std::unique_ptr<Particles> particles_;
+
+	// どちらの足が出ているか
+	MoveEffectType moveEffectType_;
+	MoveEffectType preMoveEffectType_;
+	// 移動アニメーションの経過フレーム
+	float currentMoveFrame_;
 
 	// いきているか
 	bool isAlive_ = true;

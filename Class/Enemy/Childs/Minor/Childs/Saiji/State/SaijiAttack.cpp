@@ -13,7 +13,8 @@ void Saiji::AttackFinalize([[maybe_unused]] const States& pre) {
 	isAttack_ = false;
 	isAttackPhase_ = false;
 	//待機ステートの待機時間セット
-	stateParameter_.idleParameter.countStandTime = IdleParameter::standTime;
+	stateParameter_.idleParameter.countStandTime = stateParameter_.idleParameter.standTime +
+		LWP::Utility::Random::GenerateFloat(0.0f, 1.0f);
 
 }
 
@@ -22,20 +23,35 @@ void Saiji::AttackInit([[maybe_unused]] const States& pre)
 	
 	preState_ = States::kAttack;
 	SetAnimation("LightAttack2", false, 0.1f);
-	swordCollider_.isActive = false;
+	aabbAttackCollider_.isActive = false;
 	isAttack_ = true;
-	//パリィエフェクト開始
-	StartParryEffect(swordModel_.GetJointWorldPosition("Grip"));
+	//AABB実装
+	aabbAttackCollider_.worldTF.translation = stateParameter_.attackParameter.attackPosition;
+	aabbAttackCollider_.worldTF.scale = {
+		stateParameter_.attackParameter.attackScale,
+		stateParameter_.attackParameter.attackScale,
+		stateParameter_.attackParameter.attackScale
+	};
+	//パリィエフェクトフラグリセット
+	isActivationParryEffect_ = false;
 
 }
 
 void Saiji::AttackUpdate([[maybe_unused]] std::optional<States>& req, [[maybe_unused]] const States& pre)
 {
 
+	//パリィエフェクトが発生していないかつ、エフェクトの発生時間を超過したらパリィエフェクト発動
+	if (not isActivationParryEffect_ and
+		animation_.GetProgress() > stateParameter_.attackParameter.startAcceptTime - enemyManager_->GetParryEffectOccurTime()) {
+		//パリィエフェクト開始
+		StartParryEffect(aabbAttackCollider_.GetWorldPosition());
+		isActivationParryEffect_ = true;
+	}
+
 	//パリィエフェクト中ならアニメーションをゆっくりにして判定オフ
 	if (isStartParryEffect_) {
 		animation_.GetPlayBackSpeed() = 0.1f;
-		swordCollider_.isActive = false;
+		aabbAttackCollider_.isActive = false;
 	}
 	//パリィエフェクトが終わったら通常スピードで判定をオンにする
 	else if(IsExitParryEffect()) {
@@ -43,18 +59,21 @@ void Saiji::AttackUpdate([[maybe_unused]] std::optional<States>& req, [[maybe_un
 	}
 
 	//攻撃受付時間を超過したら判定オフ
-	if (animation_.GetProgress() > AttackParameter::endAcceptTime and swordCollider_.isActive) {
+	if (animation_.GetProgress() > stateParameter_.attackParameter.endAcceptTime and aabbAttackCollider_.isActive) {
 		isAttack_ = false;
-		swordCollider_.isActive = false;
+		aabbAttackCollider_.isActive = false;
+		aabbAttack_.isShowWireFrame = false;
 	}
 	//開始と終了時間の間だけ判定を付ける
-	else if (animation_.GetProgress() >= AttackParameter::startAcceptTime and
-		animation_.GetProgress() <= AttackParameter::endAcceptTime) {
-		swordCollider_.isActive = true;
+	else if (animation_.GetProgress() >= stateParameter_.attackParameter.startAcceptTime and
+		animation_.GetProgress() <= stateParameter_.attackParameter.endAcceptTime) {
+		aabbAttackCollider_.isActive = true;
+		aabbAttack_.isShowWireFrame = true;
 	}
 	//開始時間未満も判定を付けない
-	else {
-		swordCollider_.isActive = false;
+	else if(animation_.GetProgress() < stateParameter_.attackParameter.startAcceptTime) {
+		aabbAttackCollider_.isActive = false;
+		aabbAttack_.isShowWireFrame = false;
 	}
 
 	//攻撃が終了した時

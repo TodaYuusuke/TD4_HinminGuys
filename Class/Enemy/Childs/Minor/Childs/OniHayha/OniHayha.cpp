@@ -1,18 +1,19 @@
 #include "OniHayha.h"
 #include "../../../../../Player/Player.h"
-#include "../../DirectXGame/Engine/primitive/model/Material.h"
 #include "../../../../../GameMask.h"
 #include "../../../../EnemyManager.h"
+#include "../../../../../Audio/SEPlayer.h"
 
 using namespace LWP::Primitive;
 using namespace GameMask;
 using namespace OniHayhaState;
 
-OniHayha::OniHayha()
-	: sphere_(bulletCollider_.SetBroadShape(LWP::Object::Collider::Sphere()))
+OniHayha::OniHayha(OniHayhaState::StateParameter& stateParameter) : 
+	configParameter_(stateParameter),
+	sphere_(bulletCollider_.SetBroadShape(LWP::Object::Collider::Sphere()))
 {
 
-
+	stateParameter_ = stateParameter;
 
 }
 
@@ -53,14 +54,17 @@ void OniHayha::Initialize(Player* player, const Vector3& position, LWP::Object::
 	collider_.SetFollow(&model_.worldTF);
 	collider_.isActive = true;
 	collider_.worldTF.translation = { 0.0f, 1.0f, 0.0f };
-	aabb_.min = { -0.25f,-0.5f,-0.25f };
-	aabb_.max = { 0.25f,0.5f,0.25f };
+	aabbBody_.min = { -0.25f,-0.5f,-0.25f };
+	aabbBody_.max = { 0.25f,0.5f,0.25f };
 	// 自機の所属しているマスクを設定
 	collider_.mask.SetBelongFrag(GetEnemy());
 	// 当たり判定をとる対象のマスクを設定
 	collider_.mask.SetHitFrag(GetAttack());
 	collider_.enterLambda = [this](LWP::Object::Collision* hitTarget) {
 		hitTarget;
+
+		//SE鳴らす
+		sePlayer_->PlaySE("attack_5.mp3", "hit", 1.0f);
 
 		//ステートをセット(攻撃中はリアクションしない)
 		if (state_.GetCurrentBehavior() != States::kAttack) {

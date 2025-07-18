@@ -1,24 +1,6 @@
 #include "SaijiStateParameter.h"
 
-float SaijiState::IdleParameter::standTime = 1.0f;
-float SaijiState::IdleParameter::followingDist = 6.0f;
-
-float SaijiState::MoveParameter::attackDist = 0.5f;
-float SaijiState::MoveParameter::runTime = 2.0f;
-float SaijiState::MoveParameter::defaultSpeed = 2.0f;
-
-float SaijiState::AttackParameter::endAcceptTime = 0.13f;
-float SaijiState::AttackParameter::startAcceptTime = 0.05f;
-
-float SaijiState::SpacingParameter::spacingTime = 2.0f;
-float SaijiState::SpacingParameter::spaceDist = 3.0f;
-
-uint16_t SaijiState::WaitingForAttackParameter::attackCount = 0;
-uint16_t SaijiState::WaitingForAttackParameter::nextAttackCount = 0;
-
-float SaijiState::FollowingParameter::idleDist = 4.0f;
-
-float SaijiState::HitReactionParameter::decay = 0.9f;
+using namespace LWP::Math;
 
 void SaijiState::ParameterConfig::InitJson()
 {
@@ -27,27 +9,30 @@ void SaijiState::ParameterConfig::InitJson()
 
 	json.BeginGroup("SaijiParameter")
 		.BeginGroup("Idle")
-		.AddValue<float>("StandTime", &SaijiState::IdleParameter::standTime)
-		.AddValue<float>("FollowingDist", &SaijiState::IdleParameter::followingDist)
+		.AddValue<float>("StandTime", &stateParameter_.idleParameter.standTime)
+		.AddValue<float>("FollowingDist", &stateParameter_.idleParameter.followingDist)
+		.AddValue<float>("StartStandTime", &stateParameter_.idleParameter.countStandTime)
 		.EndGroup()
 		.BeginGroup("Move")
-		.AddValue<float>("AttackDist", &SaijiState::MoveParameter::attackDist)
-		.AddValue<float>("RunTime", &SaijiState::MoveParameter::runTime)
-		.AddValue<float>("DefaultSpeed", &SaijiState::MoveParameter::defaultSpeed)
+		.AddValue<float>("AttackDist", &stateParameter_.moveParameter.attackDist)
+		.AddValue<float>("RunTime", &stateParameter_.moveParameter.runTime)
+		.AddValue<float>("DefaultSpeed", &stateParameter_.moveParameter.defaultSpeed)
 		.EndGroup()
 		.BeginGroup("Attack")
-		.AddValue<float>("StartAcceptTime", &SaijiState::AttackParameter::startAcceptTime)
-		.AddValue<float>("EndAcceptTime", &SaijiState::AttackParameter::endAcceptTime)
+		.AddValue<float>("StartAcceptTime", &stateParameter_.attackParameter.startAcceptTime)
+		.AddValue<float>("EndAcceptTime", &stateParameter_.attackParameter.endAcceptTime)
+		.AddValue<Vector3>("AttackPosition", &stateParameter_.attackParameter.attackPosition)
+		.AddValue<float>("AttackScale", &stateParameter_.attackParameter.attackScale)
 		.EndGroup()
 		.BeginGroup("Spacing")
-		.AddValue<float>("SpacingTime", &SaijiState::SpacingParameter::spacingTime)
-		.AddValue<float>("SpacingDist", &SaijiState::SpacingParameter::spaceDist)
+		.AddValue<float>("SpacingTime", &stateParameter_.spacingParameter.spacingTime)
+		.AddValue<float>("SpacingDist", &stateParameter_.spacingParameter.spaceDist)
 		.EndGroup()
 		.BeginGroup("Following")
-		.AddValue<float>("IdleDist", &SaijiState::FollowingParameter::idleDist)
+		.AddValue<float>("IdleDist", &stateParameter_.followingParameter.idleDist)
 		.EndGroup()
 		.BeginGroup("HitReaction")
-		.AddValue<float>("Decay", &SaijiState::HitReactionParameter::decay)
+		.AddValue<float>("Decay", &stateParameter_.hitReactionParameter.decay)
 		.EndGroup()
 		.EndGroup()
 		.CheckJsonFile();

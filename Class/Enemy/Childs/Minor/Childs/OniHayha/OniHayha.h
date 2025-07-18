@@ -8,7 +8,7 @@
 class OniHayha : public Minor
 {
 public:
-	OniHayha();
+	OniHayha(OniHayhaState::StateParameter& stateParameter);
 	~OniHayha() override;
 
 	void Initialize(Player* player, const Vector3& position, LWP::Object::Camera* camera,
@@ -17,6 +17,11 @@ public:
 	void Update() override;
 
 	void DebugGUI() override;
+	//適用後、強制的に待機状態にさせる
+	void ApplyLatestParameter() override { 
+		stateParameter_ = configParameter_;
+		state_.request = OniHayhaState::States::kIdle;
+	}
 
 	//直前のステートをセット(HitReactionは除外)
 	void SetPreState(OniHayhaState::States state) { if (state != OniHayhaState::States::kHitReaction) { preState_ = state; } }
@@ -61,6 +66,9 @@ private:
 #pragma endregion
 
 private:
+
+	//オニ・ヘイヘ用のデフォパラメータ設定
+	OniHayhaState::StateParameter& configParameter_;
 
 	//警告用のレーザー
 	LWP::Resource::RigidModel laserModel_;

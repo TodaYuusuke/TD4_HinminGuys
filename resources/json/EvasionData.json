@@ -5,9 +5,9 @@
     "Group :EventOrder": {
         "Group :Acceleration": {
             "Group :GraceTime": {
-                "float :AccelerationTime": 0.20000000298023224,
+                "float :AccelerationTime": 0.10000000149011612,
                 "float :RecoveryTime": 0.0,
-                "float :SwingTime": 0.0
+                "float :SwingTime": 0.009999999776482582
             }
         },
         "Group :Invinsible": {
@@ -21,8 +21,9 @@
     "Vector3 :Movement": [
         0.0,
         0.0,
-        0.20000000298023224
+        0.5
     ],
+    "float :CoolTime": 0.0,
     "float :FinishTime": 0.20000000298023224,
     "float :MoveMultiply": 2.0
 }

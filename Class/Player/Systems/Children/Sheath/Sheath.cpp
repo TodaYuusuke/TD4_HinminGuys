@@ -19,11 +19,46 @@ Sheath::Sheath(LWP::Object::Camera* camera, Player* player) {
 	isSheathing_ = true;
 	// 機能を稼働させない
 	isActive_ = false;
+
+	// 鞘が相手に当たった時の処理
+	player_->GetSystemManager()->SetSheathOnHitFunc(
+		[this](LWP::Object::Collision* hitTarget) {
+			// 鞘が破壊されているなら処理しない
+			if (isBreak_) { return; }
+			if (!hitTargetNames_.empty()) { return; }
+			
+			hitTargetNames_.push_back(hitTarget->name);
+
+			// 鞘のゲージを減少
+			player_->TakeSheathDamage(player_->GetParameter()->GetCurrentSheathDamageStrength());
+		});
+	// 鞘攻撃が当たった時の処理
+	player_->GetSystemManager()->SetSheathAttackOnHitFunc(
+		[this](LWP::Object::Collision* hitTarget) {
+			// 鞘が破壊されているなら処理しない
+			if (isBreak_) { return; }
+			if (!hitTargetNames_.empty()) { return; }
+			hitTargetNames_.push_back(hitTarget->name);
+			//// 一度当たった相手なら処理しない
+			//bool isReturn = false;
+			//for (std::string& hitTargetName : hitTargetNames_) {
+			//	if (hitTargetName == hitTarget->name) { 
+			//		isReturn = true;
+			//		break;
+			//	}
+			//}
+			//if (isReturn) { return; }
+
+			// 鞘のゲージを減少
+			player_->TakeSheathDamage(player_->GetParameter()->GetCurrentSheathDamageStrength());
+		});
 }
 
 void Sheath::Initialize() {
 	// コマンドの登録
 	inputHandler_ = InputHandler::GetInstance();
+
+	chain_ = std::make_unique<Chain>();
 
 	// アクションイベント作成
 	CreateThrowEventOrder();
@@ -39,11 +74,15 @@ void Sheath::Initialize() {
 void Sheath::Update() {
 	if (!isActive_) { return; }
 
+	chain_->SetStartPos(player_->GetSwordModel()->GetJointWorldPosition("Grip"));
+	chain_->SetEndPos(sheathModel_.worldTF.GetWorldPosition() + Vector3{0.0f ,0.2f, 0.0f});
+	chain_->Update();
+
 	// 状態
 	state_->Update();
 
 	// カプセルの当たり判定を更新
-	player_->GetSystemManager()->GetSheathAttackCapsule().end = jsonData_.dashAttackLength;
+	player_->GetSystemManager()->GetSheathAttackCapsule().end = jsonData_.dashAttackLength;	
 
 	// 無敵時間
 	eventOrders_[(int)SheathState::kInvinsible].Update();
@@ -59,6 +98,9 @@ void Sheath::Update() {
 void Sheath::Reset() {
 	isActive_ = false;
 	isPreActive_ = false;
+	// 鎖の表示状況
+	chain_->SetIsActive(isActive_);
+	chain_->Reset();
 	eventOrders_[(int)SheathState::kThrow].Reset();
 	eventOrders_[(int)SheathState::kCollect].Reset();
 	eventOrders_[(int)SheathState::kBreak].Reset();
@@ -120,6 +162,14 @@ void Sheath::DebugGUI() {
 			ImGui::TreePop();
 		}
 
+		// 鎖
+		if (ImGui::TreeNode("Chain")) {
+			chain_->DebugGui();
+			chain_->SetStartPos(player_->GetSwordModelWorldTF()->GetWorldPosition());
+			chain_->SetEndPos(player_->GetSheathModelWorldTF()->GetWorldPosition());
+			ImGui::TreePop();
+		}
+
 		ImGui::DragFloat3("Velocity", &velocity_.x);
 		ImGui::DragFloat3("Radian", &radian_.x);
 
@@ -149,6 +199,8 @@ void Sheath::CreateJsonFIle() {
 		.AddValue<float>("CollectFinishTime", &jsonData_.collectTime)
 		.AddValue<float>("RecoveryTime", &jsonData_.collectRecoveryTime)
 		.EndGroup()
+		// 鞘ゲージ減少量[%]
+		.AddValue<float>("SheathDecrementPercent", &jsonData_.collectAttackSheathDecrementPercent)
 		.EndGroup()
 
 		// ダッシュ攻撃の設定
@@ -175,6 +227,16 @@ void Sheath::CreateJsonFIle() {
 		.BeginGroup("Collider")
 		.AddValue<float>("Radius", &player_->GetSystemManager()->GetSheathAttackCapsule().radius)
 		.AddValue<LWP::Math::Vector3>("Length", &jsonData_.dashAttackLength)
+		.EndGroup()
+
+		// 攻撃力
+		.BeginGroup("AttackValue")
+		// 鞘自体の攻撃力
+		.AddValue<float>("Sheath", &jsonData_.sheathAttackValue)
+		// ダッシュ攻撃の攻撃力
+		.AddValue<float>("Dash", &jsonData_.dashAttackValue)
+		// 回収時の攻撃の威力
+		.AddValue<float>("Collect", &jsonData_.collectAttackValue)
 		.EndGroup()
 
 		// 移動可能範囲
@@ -213,11 +275,13 @@ void Sheath::CreateThrowEventOrder() {
 }
 
 void Sheath::CreateCollectEventOrder() {
+	float graceTime = (sheathModel_.worldTF.GetWorldPosition() - player_->GetWorldTF()->GetWorldPosition()).Length() / jsonData_.enableMoveRange * jsonData_.collectTime * 60.0f;
+
 	eventOrders_[(int)SheathState::kCollect].Initialize();
 	// 回避の加速発生までの時間
 	eventOrders_[(int)SheathState::kCollect].CreateTimeEvent(TimeEvent{ jsonData_.collectSwingTime * 60.0f, "SwingTime" });
 	// 回避の加速時間
-	eventOrders_[(int)SheathState::kCollect].CreateTimeEvent(TimeEvent{ jsonData_.collectTime * 60.0f, "CollectFinishTime" });
+	eventOrders_[(int)SheathState::kCollect].CreateTimeEvent(TimeEvent{ graceTime, "CollectFinishTime" });
 	// 回避の加速硬直時間
 	eventOrders_[(int)SheathState::kCollect].CreateTimeEvent(TimeEvent{ jsonData_.collectRecoveryTime * 60.0f, "RecoveryTime" });
 }

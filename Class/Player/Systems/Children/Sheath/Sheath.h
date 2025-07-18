@@ -1,6 +1,7 @@
 #pragma once
 #include "../../ISystem.h"
 #include "State/ISheathSystemState.h"
+#include "Effect/Chain.h"
 
 // jsonに保存する値
 struct SheathJsonData {
@@ -41,6 +42,15 @@ struct SheathJsonData {
 	LWP::Math::Vector3 dashAttackMovement = { 0,0,10.0f };
 	// ダッシュ攻撃の当たり判定の長さ
 	LWP::Math::Vector3 dashAttackLength = { 0,0,-10.0f };
+
+	// 鞘自体の攻撃力[実数値]
+	float sheathAttackValue = 50.0f;
+	// ダッシュ攻撃の攻撃力[実数値]
+	float dashAttackValue = 50.0f;
+	// 回収時の攻撃の威力[実数値]
+	float collectAttackValue = 50.0f;
+	// ダッシュ攻撃時の鞘ゲージ減少量[%]
+	float collectAttackSheathDecrementPercent = 10.0f;
 
 	// クールタイム
 	float coolTime = 0.0f;
@@ -129,13 +139,20 @@ public:
 	/// <returns></returns>
 	LWP::Math::Vector3 ClampToCircle(LWP::Math::Vector3& position);
 
+	/// <summary>
+	/// 攻撃に当たった相手の名前リストをクリア
+	/// </summary>
+	void ClearHitTargetNames() { hitTargetNames_.clear(); }
+
+	void SetIsActiveChain(const bool& isActive) { chain_->SetIsActive(isActive); }
+
 public:// Getter, Setter
 #pragma region Getter
 	/// <summary>
 	/// 鞘のWorldTFを取得
 	/// </summary>
 	/// <returns></returns>
-	LWP::Object::TransformQuat GetSheathWorldTF() { return sheathModel_.worldTF; }
+	LWP::Object::TransformQuat* GetSheathWorldTF() { return &sheathModel_.worldTF; }
 	/// <summary>
 	/// 鞘の状態を取得
 	/// </summary>
@@ -147,6 +164,16 @@ public:// Getter, Setter
 	/// </summary>
 	SheathJsonData GetJsonData() { return jsonData_; }
 
+	/// <summary>
+	/// 最終的な鞘ゲージ減少量を取得
+	/// </summary>
+	/// <returns></returns>
+	float GetSheathDecrementPercent() { return sheathDecrementPercent_; }
+
+	/// <summary>
+	/// 鞘モデルの表示中かを取得
+	/// </summary>
+	bool GetIsSheathModelActive() { return sheathModel_.isActive; }
 	/// <summary>
 	/// 鞘破壊状態かを取得
 	/// </summary>
@@ -194,6 +221,12 @@ public:// Getter, Setter
 	void SetJsonData(const SheathJsonData& jsonData) { jsonData_ = jsonData; }
 
 	/// <summary>
+	/// 最終的な鞘ゲージ減少量を設定
+	/// </summary>
+	/// <returns></returns>
+	void SetSheathDecrementPercent(const float& decrementPercent) { sheathDecrementPercent_ = decrementPercent; }
+
+	/// <summary>
 	/// 鞘破壊状態かを設定
 	/// </summary>
 	/// <param name="isBreak"></param>
@@ -218,6 +251,9 @@ public:// Getter, Setter
 public:// jsonに保存する値
 	SheathJsonData jsonData_;
 
+	// 鎖
+	std::unique_ptr<Chain> chain_;
+
 private:// プライベートな変数
 	// アクションイベント集
 	std::map<int, EventOrder> eventOrders_;
@@ -227,6 +263,11 @@ private:// プライベートな変数
 
 	// 鞘のモデル
 	LWP::Resource::RigidModel sheathModel_;
+
+	// 攻撃に当たった相手の名前
+	std::vector<std::string> hitTargetNames_;
+	// 最終的な鞘ゲージ減少量
+	float sheathDecrementPercent_;
 
 	// 鞘破壊状態か
 	bool isBreak_;

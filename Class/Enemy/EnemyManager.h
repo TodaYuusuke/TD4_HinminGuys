@@ -11,6 +11,7 @@
 #include "ParameterEditor.h"
 
 class Player;
+class SEPlayer;
 
 /// <summary>
 /// 全ての敵を管理するクラス
@@ -29,6 +30,8 @@ public:
 	void Update();
 	//プレイヤーをセット
 	void SetPlayer(Player* player) { player_ = player; }
+	//SEPlayerセット
+	void SetSEPlayer(SEPlayer* sePlayer) { sePlayer_ = sePlayer; }
 	//カメラセット
 	void SetCamera(LWP::Object::Camera* camera) { camera_ = camera; }
 	//ダメージエフェクトエミッターのセット
@@ -65,6 +68,17 @@ public:
 	bool GetIsStartWave() const { return isStartWave_; }
 	//スポーンデータ表示非表示切り替え
 	void SetIsShowSpawnDataModel(bool flag){ spawnData_.SetIsShowModel(flag); }
+	//パリィエフェクトの発生タイミング取得
+	float GetParryEffectOccurTime() const { return parameterEditor_.GetParryEffectOccurTime(); }
+
+	//次の近距離敵攻撃ID
+	uint16_t shortNextAttackID = 0;
+	//近距離敵攻撃に割り当てるID
+	uint16_t shortAssignAttackID = 0;
+	//次の遠距離敵攻撃ID
+	uint16_t longNextAttackID = 0;
+	//遠距離敵攻撃に割り当てるID
+	uint16_t longAssignAttackID = 0;
 
 private:
 
@@ -74,10 +88,14 @@ private:
 	void CheckIsSpawn();
 	//全ウェーブ終了時の処理
 	void EndGame();
+	//最新のパラメータを適用させる
+	void ApplyLatestParameter();
 
 private:
 	//プレイヤーのポインタ
 	Player* player_;
+	//SEPlayerのポインタ
+	SEPlayer* sePlayer_;
 	//ダメージエフェクトエミッターのポインタ
 	DamageEffectEmitter* damageEffectEmitter_;
 	//カメラのポインタ
@@ -93,6 +111,7 @@ private:
 	//json
 	SaijiState::ParameterConfig saijiParameter_;
 	OniHayhaState::ParameterConfig oniHayhaParameter_;
+	OgreState::ParameterConfig ogreParameter_;
 
 #pragma region デバッグ用
 
@@ -100,6 +119,7 @@ private:
 	Vector3 spawnPoint_;
 
 #pragma endregion
+
 
 	//敵が互いに取る距離
 	float enemyDist_ = 3.0f;

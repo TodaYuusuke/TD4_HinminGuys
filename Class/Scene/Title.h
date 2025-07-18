@@ -2,6 +2,8 @@
 #include "scene/IScene.h"
 #include "SceneTransitioner.h"
 #include "../UI/GameUI.h"
+#include "../Audio/BGMPlayer.h"
+#include "../Audio/SEPlayer.h"
 
 enum class SelectUI {
 	kStart,
@@ -45,5 +47,8 @@ private: // ** これより先に必要な処理や変数を記述 ** //
 	SceneTransitioner sceneTransitioner_;
 
 	SelectUI selectUI_;
+	//オーディオ再生クラス
+	BGMPlayer bgmPlayer_;
+	SEPlayer sePlayer_;
 
 };

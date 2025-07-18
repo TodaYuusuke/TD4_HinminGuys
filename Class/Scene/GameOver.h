@@ -2,6 +2,8 @@
 #include "scene/IScene.h"
 #include "SceneTransitioner.h"
 #include "../UI/GameUI.h"
+#include "../Audio/BGMPlayer.h"
+#include "../Audio/SEPlayer.h"
 
 class GameOver final
 	: public IScene {
@@ -37,5 +39,8 @@ private: // ** これより先に必要な処理や変数を記述 ** //
 
 	//シーン切り替え
 	SceneTransitioner sceneTransitioner_;
+	//オーディオ再生クラス
+	BGMPlayer bgmPlayer_;
+	SEPlayer sePlayer_;
 
 };

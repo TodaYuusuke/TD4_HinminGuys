@@ -1,17 +1,19 @@
 #include "Saiji.h"
 #include "../../../../../Player/Player.h"
-#include "../../DirectXGame/Engine/primitive/model/Material.h"
 #include "../../../../../GameMask.h"
 #include "../../../../EnemyManager.h"
+#include "../../../../../Audio/SEPlayer.h"
 
 using namespace LWP::Primitive;
 using namespace GameMask;
 using namespace SaijiState;
 
-Saiji::Saiji() : 
-	capsule_(swordCollider_.SetBroadShape(LWP::Object::Collider::Capsule()))
+Saiji::Saiji(SaijiState::StateParameter& stateParameter) :
+	configParameter_(stateParameter),
+	aabbAttack_(aabbAttackCollider_.SetBroadShape(LWP::Object::Collider::AABB()))
 {
 
+	stateParameter_ = stateParameter;
 
 }
 
@@ -48,14 +50,17 @@ void Saiji::Initialize(Player* player, const Vector3& position, LWP::Object::Cam
 	collider_.SetFollow(&model_.worldTF);
 	collider_.isActive = true;
 	collider_.worldTF.translation = { 0.0f, 1.0f, 0.0f };
-	aabb_.min = { -0.25f,-0.5f,-0.25f };
-	aabb_.max = { 0.25f,0.5f,0.25f };
+	aabbBody_.min = { -0.25f,-0.5f,-0.25f };
+	aabbBody_.max = { 0.25f,0.5f,0.25f };
 	// 自機の所属しているマスクを設定
 	collider_.mask.SetBelongFrag(GetEnemy());
 	// 当たり判定をとる対象のマスクを設定
 	collider_.mask.SetHitFrag(GetAttack());
 	collider_.enterLambda = [this](LWP::Object::Collision* hitTarget) {
 		hitTarget;
+
+		//SE鳴らす
+		sePlayer_->PlaySE("attack_5.mp3", "hit", 1.0f);
 
 		//ステートをセット(攻撃中はリアクションしない)
 		if (state_.GetCurrentBehavior() != States::kAttack) {
@@ -131,19 +136,18 @@ void Saiji::DebugGUI()
 void Saiji::CreateSwordCollider()
 {
 	// 刀の判定生成
-	swordCollider_.SetFollow(&model_, "WeaponAnchor");
-	swordCollider_.isActive = false;
+	aabbAttackCollider_.SetFollow(&model_, "Hips");
+	aabbAttackCollider_.isActive = false;
 	// 自機の所属しているマスクを設定
-	swordCollider_.mask.SetBelongFrag(GetAttack());
+	aabbAttackCollider_.mask.SetBelongFrag(GetAttack());
 	// 当たり判定をとる対象のマスクを設定
-	swordCollider_.mask.SetHitFrag(GetPlayer() | GetParry());
-	swordCollider_.enterLambda = [this](LWP::Object::Collision* hitTarget) {
+	aabbAttackCollider_.mask.SetHitFrag(GetPlayer() | GetParry());
+	aabbAttackCollider_.enterLambda = [this](LWP::Object::Collision* hitTarget) {
 		hitTarget;
 		player_->TakeDamage(parameter_.attackParameter.attackValue);
 		//判定をオフにする
 		//swordCollider_.isActive = false;
 		};
-	capsule_.radius = 0.1f;
 }
 
 void Saiji::AddStateFunc()

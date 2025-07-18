@@ -18,7 +18,8 @@ Parry::Parry(LWP::Object::Camera* camera, Player* player) {
 }
 
 Parry::~Parry() {
-
+	player_->GetSystemManager()->SetIsGoodParry(false);
+	player_->GetSystemManager()->SetIsJustParry(false);
 }
 
 void Parry::Initialize() {
@@ -56,8 +57,9 @@ void Parry::Update() {
 		}
 
 		// パリィ成功フラグをfalseにする
-		player_->GetSystemManager()->SetIsSuccessParry(false);
 		isJustParry_ = false;
+		player_->GetSystemManager()->SetIsJustParry(false);
+		player_->GetSystemManager()->SetIsSuccessParry(false);
 		velocity_ = { 0,0,0 };
 		t_ = 0.0f;
 	}
@@ -72,8 +74,11 @@ void Parry::Update() {
 		}
 
 		// パリィ成功フラグをfalseにする
-		player_->GetSystemManager()->SetIsSuccessParry(false);
-		isGoodParry_ = false;
+		if (isGoodParry_) {
+			isGoodParry_ = false;
+			player_->GetSystemManager()->SetIsGoodParry(false);
+			player_->GetSystemManager()->SetIsSuccessParry(false);
+		}
 	}
 
 	// frameごとに起きるイベント
@@ -102,7 +107,8 @@ void Parry::Update() {
 
 void Parry::Reset() {
 	player_->GetSystemManager()->GetParryCollision().isActive = false;
-
+	player_->GetSystemManager()->SetIsGoodParry(false);
+	player_->GetSystemManager()->SetIsJustParry(false);
 	// クールタイム設定
 	if (!isJustParry_ || !isGoodParry_) {
 		player_->GetSystemManager()->SetParryCoolTime(jsonData_.coolTime);
@@ -145,11 +151,6 @@ void Parry::DebugGUI() {
 
 		eventOrder_.DebugGUI();
 
-		//if (ImGui::TreeNode("Collider")) {
-		//	collider_.DebugGUI();
-		//	ImGui::TreePop();
-		//}
-
 		ImGui::Checkbox("IsJustParry", &isJustParry_);
 		ImGui::Checkbox("IsGoodParry", &isGoodParry_);
 
@@ -172,21 +173,21 @@ void Parry::CreateJsonFIle() {
 		.BeginGroup("Success JustParry")
 		.AddValue<float>("InvinsibleTime", &jsonData_.successJustParryInvinsible)
 		.EndGroup()
-		// 弱jパリィ成功時
+		// 弱パリィ成功時
 		.BeginGroup("Success GoodParry")
 		.AddValue<float>("InvinsibleTime", &jsonData_.successGoodParryInvinsible)
 		.EndGroup()
-
 		.EndGroup()
-		//// 当たり判定
-		//.BeginGroup("Collider")
-		//.AddValue<Vector3>("Min", &aabb_.min)
-		//.AddValue<Vector3>("Max", &aabb_.max)
-		//.EndGroup()
+
 		// 鞘ゲージの減少量
-		.BeginGroup("SheathDecrement")
-		.AddValue<float>("JustParry", &jsonData_.justParryDecrement)
-		.AddValue<float>("GoodParry", &jsonData_.goodParryDecrement)
+		.BeginGroup("SheathDecrementPercent")
+		.AddValue<float>("JustParry", &jsonData_.justParry_DecrementSheathPercent)
+		.AddValue<float>("GoodParry", &jsonData_.goodParry_DecrementSheathPercent)
+		.EndGroup()
+
+		.BeginGroup("KnockBack")
+		.AddValue<float>("FinishTime", &jsonData_.justParryKnockBackFinishTime)
+		.AddValue<float>("Movement", &jsonData_.justParryKnockBackMovement)
 		.EndGroup()
 
 		.EndGroup()
@@ -227,9 +228,6 @@ void Parry::CreateCollision() {
 
 			// ジャストパリィ
 			if (eventOrder_.GetCurrentTimeEvent().name == "JustParry") {
-				// ヒットストップ
-				hitStopController_->Start(0.3f, 0.0f);
-
 				// パリィ成功
 				player_->GetSystemManager()->SetOnParryTargetPos(hitTarget->GetWorldPosition());
 				player_->GetSystemManager()->SetIsSuccessParry(true);
@@ -239,13 +237,16 @@ void Parry::CreateCollision() {
 
 				isJustParry_ = true;
 				isGoodParry_ = false;
+				player_->GetSystemManager()->SetIsJustParry(isJustParry_);
 				eventOrders_[(int)ParryInvinsibleState::kJust].Start();
 
 				// 無敵時間を設定
 				player_->GetSystemManager()->SetInvisibleTime(jsonData_.successJustParryInvinsible);
 
 				// 鞘のゲージを減少
-				player_->GetUIManager()->ChangeSheathGauge(jsonData_.justParryDecrement);
+				float decrementValue = jsonData_.justParry_DecrementSheathPercent / 100.0f * player_->GetUIManager()->GetSheathGauge().GetMaxValue();
+				player_->GetParameter()->sheathDamegeStrength_ = decrementValue;
+				player_->TakeSheathDamage(player_->GetParameter()->GetCurrentSheathDamageStrength());
 
 				// 相手の座標を代入
 				parryTargetPos_ = hitTarget->GetWorldPosition();
@@ -257,6 +258,12 @@ void Parry::CreateCollision() {
 
 				radian_.y = LWP::Utility::GetRadian(LWP::Math::Vector3{ 0,0,1 }, p2t, LWP::Math::Vector3{ 0,1,0 });
 				quat_ = LWP::Math::Quaternion::CreateFromAxisAngle(LWP::Math::Vector3{ 0, 1, 0 }, radian_.y);
+				player_->SetRotate(quat_);
+
+				// パーティクル生成
+				Vector3 pos = (parryTargetPos_ - player_->GetWorldTF()->GetWorldPosition()) / 2.0f;
+				pos += player_->GetWorldTF()->GetWorldPosition();
+				player_->CreateParryParticle(pos);
 			}
 			// 甘めパリィ
 			else if (eventOrder_.GetCurrentTimeEvent().name == "GoodParry") {
@@ -265,6 +272,7 @@ void Parry::CreateCollision() {
 				player_->GetSystemManager()->SetIsSuccessParry(true);
 				isGoodParry_ = true;
 				isJustParry_ = false;
+				player_->GetSystemManager()->SetIsGoodParry(isGoodParry_);
 				eventOrders_[(int)ParryInvinsibleState::kGood].Start();
 
 				// ガードアニメーション開始
@@ -275,13 +283,20 @@ void Parry::CreateCollision() {
 				player_->GetSystemManager()->SetInvisibleTime(jsonData_.successGoodParryInvinsible);
 
 				// 鞘のゲージを減少
-				player_->GetUIManager()->ChangeSheathGauge(jsonData_.goodParryDecrement);
+				float decrementValue = jsonData_.goodParry_DecrementSheathPercent / 100.0f * player_->GetUIManager()->GetSheathGauge().GetMaxValue();
+				player_->GetParameter()->sheathDamegeStrength_ = decrementValue;
+				player_->TakeSheathDamage(player_->GetParameter()->GetCurrentSheathDamageStrength());
 
 				// 相手の座標を代入
 				parryTargetPos_ = hitTarget->GetWorldPosition();
 
 				radian_.y = LWP::Utility::GetRadian(LWP::Math::Vector3{ 0,0,1 }, p2t, LWP::Math::Vector3{ 0,1,0 });
 				quat_ = LWP::Math::Quaternion::CreateFromAxisAngle(LWP::Math::Vector3{ 0, 1, 0 }, radian_.y);
+				player_->SetRotate(quat_);
+
+				Vector3 pos = (parryTargetPos_ - player_->GetWorldTF()->GetWorldPosition()) / 2.0f;
+				pos += player_->GetWorldTF()->GetWorldPosition();
+				player_->CreateParryParticle(pos);
 			}
 		}
 	);
@@ -352,6 +367,11 @@ void Parry::CheckParryState() {
 void Parry::KnockBackUpdate() {
 	// ジャストパリィ時のみ
 	if (!isJustParry_) { return; }
+	if (t_ > jsonData_.justParryKnockBackFinishTime) { 
+		velocity_ = { 0,0,0 };
+		return;
+	}
+
 	t_ += hitStopController_->GetDeltaTime();
 
 	velocity_ = Lerp(start_, end_, Easing::OutExpo(t_ / jsonData_.justParryKnockBackFinishTime)) - player_->GetWorldTF()->GetWorldPosition();

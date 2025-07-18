@@ -8,7 +8,7 @@
 class Saiji : public Minor
 {
 public:
-	Saiji();
+	Saiji(SaijiState::StateParameter& stateParameter);
 	~Saiji() override;
 
 	void Initialize(Player* player, const Vector3& position, LWP::Object::Camera* camera,
@@ -17,6 +17,11 @@ public:
 	void Update() override;
 
 	void DebugGUI() override;
+	//適用後、強制的に待機状態にさせる
+	void ApplyLatestParameter() override { 
+		stateParameter_ = configParameter_;
+		state_.request = SaijiState::States::kIdle;
+	}
 
 	//直前のステートをセット(HitReactionは除外)
 	void SetPreState(SaijiState::States state) { if (state != SaijiState::States::kHitReaction) { preState_ = state; } }
@@ -67,13 +72,13 @@ private:
 private:
 
 	//才二君用のデフォパラメータ設定
-	static EnemyParameter configParameter_;
+	SaijiState::StateParameter& configParameter_;
 
 	// 刀モデル
 	SkinningModel swordModel_;
-	// 刀コライダー
-	LWP::Object::Collision swordCollider_;
-	LWP::Object::Collider::Capsule& capsule_;
+	//攻撃コライダー(AABB)
+	LWP::Object::Collision aabbAttackCollider_;
+	LWP::Object::Collider::AABB& aabbAttack_;
 
 	//雑魚敵パラメータ
 	SaijiState::StateParameter stateParameter_;

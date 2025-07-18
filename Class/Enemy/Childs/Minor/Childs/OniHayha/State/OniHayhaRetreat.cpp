@@ -23,7 +23,7 @@ void OniHayha::RetreatUpdate([[maybe_unused]] std::optional<States>& req, [[mayb
 	if (player_) {
 
 		//待機状態に移行する距離になるまでプレイヤーに向かう
-		if (distFromPlayer_ > RetreatParameter::idleDist) {
+		if (distFromPlayer_ > stateParameter_.retreatParameter.idleDist) {
 			state_.request = States::kIdle;
 			return;
 		}

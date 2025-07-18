@@ -1,17 +1,20 @@
 #include "Ogre.h"
 #include "../../../../../Player/Player.h"
-#include "../../DirectXGame/Engine/primitive/model/Material.h"
 #include "../../../../../GameMask.h"
 #include "../../../../EnemyManager.h"
+#include "../../../../../Audio/SEPlayer.h"
 
 using namespace LWP::Primitive;
 using namespace GameMask;
 using namespace OgreState;
 
-Ogre::Ogre() :
-	capsule_(swordCollider_.SetBroadShape(LWP::Object::Collider::Capsule()))
+Ogre::Ogre(OgreState::StateParameter& stateParameter) :
+	configParameter_(stateParameter),
+	sphere_(sphereCollider_.SetBroadShape(LWP::Object::Collider::Sphere())),
+	aabbAttack_(aabbAttackCollider_.SetBroadShape(LWP::Object::Collider::AABB()))
 {
 
+	stateParameter_ = stateParameter;
 
 }
 
@@ -26,6 +29,16 @@ void Ogre::Initialize(Player* player, const Vector3& position, LWP::Object::Came
 	EnemyManager* manager)
 {
 	model_.LoadShortPath("player/Player_Simple.gltf");
+	cautionQuad_.LoadShortPath("BothPlane.obj");
+	cautionCircle_.LoadShortPath("BothPlane.obj");
+	cautionQuad_.materials["Texturematerial"].texture = LWP::Resource::LoadTexture("caution_square.png");
+	cautionCircle_.materials["Texturematerial"].texture = LWP::Resource::LoadTexture("caution_circle.png");
+	cautionQuad_.worldTF.translation.y = 0.5f;
+	cautionQuad_.materials["Texturematerial"].enableLighting = false;
+	cautionQuad_.isActive = false;
+	cautionCircle_.worldTF.translation.y = 1.0f;
+	cautionCircle_.materials["Texturematerial"].enableLighting = false;
+	cautionCircle_.isActive = false;
 	type_ = EnemyType::kOgre;
 	attackType_ = AttackType::kShort;
 	//アニメーションロード
@@ -48,8 +61,8 @@ void Ogre::Initialize(Player* player, const Vector3& position, LWP::Object::Came
 	collider_.SetFollow(&model_.worldTF);
 	collider_.isActive = true;
 	collider_.worldTF.translation = { 0.0f, 1.0f, 0.0f };
-	aabb_.min = { -0.4f,-0.5f,-0.4f };
-	aabb_.max = { 0.4f,0.5f,0.4f };
+	aabbBody_.min = { -0.4f,-0.5f,-0.4f };
+	aabbBody_.max = { 0.4f,0.5f,0.4f };
 	// 自機の所属しているマスクを設定
 	collider_.mask.SetBelongFrag(GetEnemy());
 	// 当たり判定をとる対象のマスクを設定
@@ -57,8 +70,11 @@ void Ogre::Initialize(Player* player, const Vector3& position, LWP::Object::Came
 	collider_.enterLambda = [this](LWP::Object::Collision* hitTarget) {
 		hitTarget;
 
+		//SE鳴らす
+		sePlayer_->PlaySE("attack_5.mp3", "hit", 1.0f);
+
 		//ステートをセット(攻撃中はリアクションしない)
-		if (state_.GetCurrentBehavior() != States::kAssaultSlash) {
+		if (not IsAttackState()) {
 			SetPreState(state_.GetCurrentBehavior());
 			state_.request = States::kHitReaction;
 			//今後プレイヤーから取得する
@@ -81,7 +97,16 @@ void Ogre::Initialize(Player* player, const Vector3& position, LWP::Object::Came
 	//名前設定
 	collider_.name = "Ogre" + std::to_string(ID_);
 	//刀のコライダー生成
-	CreateSwordCollider();
+	CreateColliders();
+
+	//弱攻撃の2つの中で抽選し、0ならふり降ろし
+	if (LWP::Utility::Random::GenerateInt(0, 1) == 0) {
+		nextAttackState_ = States::kSwingDownAttack;
+	}
+	//1なら回転切り
+	else {
+		nextAttackState_ = States::kRotatingSlash;
+	}
 
 }
 
@@ -128,22 +153,52 @@ void Ogre::DebugGUI()
 
 }
 
-void Ogre::CreateSwordCollider()
+bool Ogre::IsAttackState()
 {
-	// 刀の判定生成
-	swordCollider_.SetFollow(&model_, "WeaponAnchor");
-	swordCollider_.isActive = false;
+
+	if (state_.GetCurrentBehavior() == States::kSwingDownAttack or
+		state_.GetCurrentBehavior() == States::kRotatingSlash or
+		state_.GetCurrentBehavior() == States::kFallingThrust or
+		state_.GetCurrentBehavior() == States::kAssaultSlash or
+		state_.GetCurrentBehavior() == States::kQuadrupleAttack) {
+		return true;
+	}
+
+	return false;
+}
+
+void Ogre::CreateColliders()
+{
+	
+	// 球の判定生成
+	sphereCollider_.SetFollow(&model_, "Hips");
+	sphereCollider_.isActive = false;
 	// 自機の所属しているマスクを設定
-	swordCollider_.mask.SetBelongFrag(GetAttack());
+	sphereCollider_.mask.SetBelongFrag(GetAttack());
 	// 当たり判定をとる対象のマスクを設定
-	swordCollider_.mask.SetHitFrag(GetPlayer() | GetParry());
-	swordCollider_.enterLambda = [this](LWP::Object::Collision* hitTarget) {
+	sphereCollider_.mask.SetHitFrag(GetPlayer() | GetParry());
+	sphere_.isShowWireFrame = false;
+	sphereCollider_.enterLambda = [this](LWP::Object::Collision* hitTarget) {
 		hitTarget;
 		player_->TakeDamage(parameter_.attackParameter.attackValue);
 		//判定をオフにする
 		//swordCollider_.isActive = false;
 		};
-	capsule_.radius = 0.1f;
+	// AABBの判定生成
+	aabbAttackCollider_.SetFollow(&model_, "Hips");
+	aabbAttackCollider_.isActive = false;
+	// 自機の所属しているマスクを設定
+	aabbAttackCollider_.mask.SetBelongFrag(GetAttack());
+	// 当たり判定をとる対象のマスクを設定
+	aabbAttackCollider_.mask.SetHitFrag(GetPlayer() | GetParry());
+	aabbAttack_.isShowWireFrame = false;
+	aabbAttackCollider_.enterLambda = [this](LWP::Object::Collision* hitTarget) {
+		hitTarget;
+		player_->TakeDamage(parameter_.attackParameter.attackValue);
+		//判定をオフにする
+		//swordCollider_.isActive = false;
+		};
+
 }
 
 void Ogre::AddStateFunc()
@@ -180,5 +235,104 @@ void Ogre::AddStateFunc()
 	state_.init[int(States::kHitReaction)] = [this](const States& pre) {HitReactionInit(pre); };
 	state_.update[int(States::kHitReaction)] = [this](std::optional<States>& req, const States& pre) {HitReactionUpdate(req, pre); };
 	state_.finalize[int(States::kHitReaction)] = [this](const States& pre) {HitReactionFinalize(pre); };
+
+}
+
+void Ogre::EndLightAttack()
+{
+
+	//カウント加算
+	stateParameter_.moveParameter.lightAttackCount++;
+
+	//カウントが設定数以上になったら、次の攻撃抽選を変更
+	if (stateParameter_.moveParameter.lightAttackCount >= stateParameter_.moveParameter.lightTransitionCount) {
+
+		//カウントリセット
+		stateParameter_.moveParameter.lightAttackCount = 0;
+
+		//抽選して、0の場合中攻撃
+		if (LWP::Utility::Random::GenerateInt(0, 1) == 0) {
+			//落下攻撃に移行する
+			nextAttackState_ = States::kFallingThrust;
+		}
+		//強攻撃
+		else {
+
+			//強攻撃の2つの中で抽選し、0なら連続突撃
+			if (LWP::Utility::Random::GenerateInt(0, 1) == 0) {
+				nextAttackState_ = States::kAssaultSlash;
+			}
+			//1なら四連撃
+			else {
+				nextAttackState_ = States::kQuadrupleAttack;
+			}
+
+		}
+
+	}
+	//弱攻撃抽選
+	else {
+
+		//弱攻撃の2つの中で抽選し、0ならふり降ろし
+		if (LWP::Utility::Random::GenerateInt(0, 1) == 0) {
+			nextAttackState_ = States::kSwingDownAttack;
+		}
+		//1なら回転切り
+		else {
+			nextAttackState_ = States::kRotatingSlash;
+		}
+
+	}
+
+}
+
+void Ogre::EndMediumAttack()
+{
+
+	//中攻撃カウント増加
+	stateParameter_.moveParameter.mediumAttackCount++;
+	//カウントが設定数以上になったら、次の攻撃抽選を変更
+	if (stateParameter_.moveParameter.mediumAttackCount >= stateParameter_.moveParameter.mediumTransitionCount) {
+
+		//カウントリセット
+		stateParameter_.moveParameter.mediumAttackCount = 0;
+
+		//強攻撃の2つの中で抽選し、0なら連続突撃
+		if (LWP::Utility::Random::GenerateInt(0, 1) == 0) {
+			nextAttackState_ = States::kAssaultSlash;
+		}
+		//1なら四連撃
+		else {
+			nextAttackState_ = States::kQuadrupleAttack;
+		}
+
+	}
+	//弱攻撃抽選
+	else {
+
+		//弱攻撃の2つの中で抽選し、0ならふり降ろし
+		if (LWP::Utility::Random::GenerateInt(0, 1) == 0) {
+			nextAttackState_ = States::kSwingDownAttack;
+		}
+		//1なら回転切り
+		else {
+			nextAttackState_ = States::kRotatingSlash;
+		}
+
+	}
+
+}
+
+void Ogre::EndHeavyAttack()
+{
+
+	//弱攻撃の2つの中で抽選し、0ならふり降ろし
+	if (LWP::Utility::Random::GenerateInt(0, 1) == 0) {
+		nextAttackState_ = States::kSwingDownAttack;
+	}
+	//1なら回転切り
+	else {
+		nextAttackState_ = States::kRotatingSlash;
+	}
 
 }

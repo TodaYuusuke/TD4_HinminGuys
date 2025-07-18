@@ -55,7 +55,7 @@ public:
 	// コンストラクタ
 	Evasion(LWP::Object::Camera* camera, Player* player);
 	// デストラクタ
-	~Evasion() override = default;
+	~Evasion() override;
 
 	/// <summary>
 	/// 初期化
@@ -186,4 +186,7 @@ private:// プライベートな変数
 
 	// 回避ボタンを押した時間
 	float pressTime_;
+	
+	// バックステップするか
+	bool isBackStep_;
 };

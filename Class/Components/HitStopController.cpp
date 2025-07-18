@@ -5,6 +5,9 @@ using namespace LWP::Utility;
 using namespace LWP::Information;
 
 HitStopController::HitStopController() {
+	// 現在のフレームレート算出
+	fps = 1.0f / LWP::Info::GetDeltaTimeF();
+
 	Initialize();
 }
 
@@ -23,6 +26,14 @@ void HitStopController::Initialize() {
 }
 
 void HitStopController::Update() {
+	// 現在のフレームレート算出
+	if (LWP::Info::GetDeltaTimeF() <= 0.0f) {
+		fps = 0.0f;
+	}
+	else {
+		fps = 1.0f / LWP::Info::GetDeltaTimeF();
+	}
+
 	// 数値が入っているならデクリメント
 	if (currentFrame_ > 0.0f) {
 		currentFrame_--;
@@ -33,10 +44,8 @@ void HitStopController::Update() {
 		// デルタタイムの係数初期化
 		if (!isFinish_) {
 			SetDeltaTimeMultiply(1.0f);
-			multiply_ = 1.0f;
 		}
 		isFinish_ = true;
-
 	}
 	else {
 		isFinish_ = false;

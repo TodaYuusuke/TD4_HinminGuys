@@ -16,6 +16,7 @@ void EnemyManager::Initialize()
 
 	saijiParameter_.InitJson();
 	oniHayhaParameter_.InitJson();
+	ogreParameter_.InitJson();
 
 	parameterEditor_.Initialize();
 
@@ -123,13 +124,13 @@ void EnemyManager::CreateEnemy(const Vector3& position, EnemyType type)
 	switch (type)
 	{
 	case EnemyType::kSaiji:
-		enemies_.push_back(new Saiji());
+		enemies_.push_back(new Saiji(saijiParameter_.GetStateParameter()));
 		break;
 	case EnemyType::kOniHayha:
-		enemies_.push_back(new OniHayha());
+		enemies_.push_back(new OniHayha(oniHayhaParameter_.GetStateParameter()));
 		break;
 	case EnemyType::kOgre:
-		enemies_.push_back(new Ogre());
+		enemies_.push_back(new Ogre(ogreParameter_.GetStateParameter()));
 		break;
 	default:
 		break;
@@ -138,6 +139,7 @@ void EnemyManager::CreateEnemy(const Vector3& position, EnemyType type)
 	//初期化してリストに追加
 	enemies_.back()->Initialize(player_, position, camera_, this);
 	enemies_.back()->SetParameter(parameterEditor_.GetParameter(type));
+	enemies_.back()->SetSEPlayer(sePlayer_);
 
 }
 
@@ -197,6 +199,7 @@ void EnemyManager::DebugGUI()
 	//敵リセット
 	if (ImGui::Button("Clear")) {
 		ClearList();
+		player_->GetSystemManager()->GetLockOnSystem()->Reset();
 	}
 
 	//敵の総数
@@ -220,6 +223,10 @@ void EnemyManager::DebugGUI()
 		//敵の共通ステート変数をいじる
 		if (ImGui::BeginTabItem("State Parameter")) {
 
+			if (ImGui::Button("Apply")) {
+				ApplyLatestParameter();
+			}
+
 			if (ImGui::TreeNode("Saiji")) {
 				saijiParameter_.json.DebugGUI();
 				ImGui::TreePop();
@@ -227,6 +234,11 @@ void EnemyManager::DebugGUI()
 
 			if (ImGui::TreeNode("OniHayha")) {
 				oniHayhaParameter_.json.DebugGUI();
+				ImGui::TreePop();
+			}
+
+			if (ImGui::TreeNode("Ogre")) {
+				ogreParameter_.json.DebugGUI();
 				ImGui::TreePop();
 			}
 
@@ -255,6 +267,14 @@ void EnemyManager::DebugGUI()
 		}
 
 		ImGui::EndTabBar();
+	}
+
+}
+
+void EnemyManager::ApplyLatestParameter() {
+
+	for (auto enemy = enemies_.begin(); enemy != enemies_.end(); enemy++) {
+		(*enemy)->ApplyLatestParameter();
 	}
 
 }

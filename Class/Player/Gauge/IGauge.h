@@ -46,6 +46,11 @@ public:
 public:// Getter, Setter
 #pragma region Getter
 	/// <summary>
+	/// ゲージの最大値を取得
+	/// </summary>
+	/// <returns></returns>
+	inline float GetMaxValue() { return maxValue_; }
+	/// <summary>
 	/// ゲージが減る瞬間を取得(使用する場合は更新処理でisPreHit = isHit)
 	/// </summary>
 	/// <returns></returns>
@@ -92,7 +97,7 @@ protected:
 	LWP::Utility::JsonIO json_;
 
 	// ゲージの描画
-	std::map<std::string, LWP::Primitive::Sprite> sprite_;
+	std::map<std::string, LWP::Primitive::NormalSprite> sprite_;
 
 	// ゲージの大きさ
 	LWP::Math::Vector2 size_;

@@ -6,6 +6,7 @@ using namespace SaijiState;
 
 void Saiji::FollowingFinalize([[maybe_unused]] const States& pre)
 {
+	parameter_.speed = 1.0f;
 }
 
 void Saiji::FollowingInit([[maybe_unused]] const States& pre)
@@ -13,6 +14,8 @@ void Saiji::FollowingInit([[maybe_unused]] const States& pre)
 	
 	SetAnimation("Run", true);
 	preState_ = States::kFollowing;
+
+	parameter_.speed = stateParameter_.moveParameter.defaultSpeed;
 
 }
 
@@ -23,7 +26,7 @@ void Saiji::FollowingUpdate([[maybe_unused]] std::optional<States>& req, [[maybe
 	if (player_) {
 
 		//待機状態に移行する距離になるまでプレイヤーに向かう
-		if (distFromPlayer_ < FollowingParameter::idleDist) {
+		if (distFromPlayer_ < stateParameter_.followingParameter.idleDist) {
 			state_.request = States::kIdle;
 			return;
 		}

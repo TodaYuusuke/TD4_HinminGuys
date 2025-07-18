@@ -109,6 +109,7 @@
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <AdditionalOptions>/source-charset:utf-8 %(AdditionalOptions)</AdditionalOptions>
+      <TreatWarningAsError>false</TreatWarningAsError>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -134,6 +135,7 @@
       <Optimization>MinSpace</Optimization>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <AdditionalOptions>/source-charset:utf-8 %(AdditionalOptions)</AdditionalOptions>
+      <TreatWarningAsError>false</TreatWarningAsError>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -148,6 +150,9 @@
     </Manifest>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Class\Audio\AudioPlayer.cpp" />
+    <ClCompile Include="Class\Audio\BGMPlayer.cpp" />
+    <ClCompile Include="Class\Audio\SEPlayer.cpp" />
     <ClCompile Include="Class\Enemy\Childs\Boss\Childs\Ogre\Ogre.cpp" />
     <ClCompile Include="Class\Enemy\Childs\Boss\Childs\Ogre\OgreStateParameter.cpp" />
     <ClCompile Include="Class\Enemy\Childs\Boss\Childs\Ogre\State\OgreAssaultSlash.cpp" />
@@ -182,6 +187,8 @@
     <ClCompile Include="Class\Enemy\Childs\Minor\Childs\Saiji\State\SaijiIdle.cpp" />
     <ClCompile Include="Class\Enemy\Childs\Minor\Childs\Saiji\State\SaijiMove.cpp" />
     <ClCompile Include="Class\Enemy\ParameterEditor.cpp" />
+    <ClCompile Include="Class\Player\Systems\Children\Sheath\Effect\Chain.cpp" />
+    <ClCompile Include="Class\Player\Systems\Children\Sheath\Effect\ChainNode.cpp" />
     <ClCompile Include="Class\Player\Systems\Children\Sheath\State\Break.cpp" />
     <ClCompile Include="Class\ComboEditor\ComboTree.cpp" />
     <ClCompile Include="Class\Condition\child\Input\ButtonCondition.cpp" />
@@ -218,6 +225,8 @@
     <ClCompile Include="Class\UI\GameUI.cpp" />
     <ClCompile Include="Class\Components\CoolTimer.cpp" />
     <ClCompile Include="Class\Components\HitStopController.cpp" />
+    <ClCompile Include="Class\Player\Systems\Children\Evasion\Effect\EvasionEffect.cpp" />
+    <ClCompile Include="Class\Player\Particles\IEffect.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Class\Player\Player.cpp" />
     <ClCompile Include="Class\Player\Systems\Children\Move\Move.cpp" />
@@ -232,8 +241,17 @@
     <ClCompile Include="Class\Camera\State\ParryCamera.cpp" />
     <ClCompile Include="Class\Components\Shake.cpp" />
     <ClCompile Include="Class\Player\Systems\Children\Sheath\State\SwordDrawn.cpp" />
+    <ClCompile Include="Class\Player\Systems\Children\Parry\Effect\ParryEffect.cpp" />
+    <ClCompile Include="Class\Player\Particles\Particles.cpp" />
+    <ClCompile Include="Class\Player\PlayerParameter.cpp" />
+    <ClCompile Include="Class\Player\Systems\Children\Move\Effect\MoveEffect.cpp" />
+    <ClCompile Include="Class\Player\Math\MathFunctions.cpp" />
+    <ClCompile Include="Class\UI\UIMotions.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Class\Audio\AudioPlayer.h" />
+    <ClInclude Include="Class\Audio\BGMPlayer.h" />
+    <ClInclude Include="Class\Audio\SEPlayer.h" />
     <ClInclude Include="Class\Enemy\Childs\Boss\Childs\Ogre\Ogre.h" />
     <ClInclude Include="Class\Enemy\Childs\Boss\Childs\Ogre\OgreStateParameter.h" />
     <ClInclude Include="Class\Enemy\Childs\Minor\Childs\Faster\Faster.h" />
@@ -243,6 +261,10 @@
     <ClInclude Include="Class\Enemy\Childs\Minor\Childs\Saiji\SaijiStateParameter.h" />
     <ClInclude Include="Class\Enemy\Childs\Minor\Minor.h" />
     <ClInclude Include="Class\Enemy\ParameterEditor.h" />
+    <ClInclude Include="Class\Player\PlayerAudioNames.h" />
+    <ClInclude Include="Class\Player\Systems\Children\Sheath\Effect\Chain.h" />
+    <ClInclude Include="Class\Player\Systems\Children\Sheath\Effect\ChainNode.h" />
+    <ClInclude Include="Class\Player\Particles\ParticleJsonDataStructs.h" />
     <ClInclude Include="Class\Player\Systems\Children\Sheath\State\Break.h" />
     <ClInclude Include="Class\IParameter.h" />
     <ClInclude Include="Class\ComboEditor\ComboTree.h" />
@@ -255,10 +277,6 @@
     <ClInclude Include="Class\Enemy\Childs\Boss\Boss.h" />
     <ClInclude Include="Class\Enemy\EnemyManager.h" />
     <ClInclude Include="Class\Enemy\IEnemy.h" />
-    <ClInclude Include="Class\Enemy\Childs\Normal\NormalEnemy.h" />
-    <ClInclude Include="Class\Enemy\Childs\Normal\State\NormalEnemyAttack.h" />
-    <ClInclude Include="Class\Enemy\Childs\Normal\State\NormalEnemyIdle.h" />
-    <ClInclude Include="Class\Enemy\Childs\Normal\State\NormalEnemyMove.h" />
     <ClInclude Include="Class\Enemy\SpawnData.h" />
     <ClInclude Include="Class\Enemy\WaveData.h" />
     <ClInclude Include="Class\Player\Command\BanInput.h" />
@@ -308,6 +326,14 @@
     <ClInclude Include="Class\Player\Systems\Children\Sheath\State\SwordDrawn.h" />
     <ClInclude Include="Class\Components\CoolTimer.h" />
     <ClInclude Include="Class\Components\HitStopController.h" />
+    <ClInclude Include="Class\Player\Systems\Children\Parry\Effect\ParryEffect.h" />
+    <ClInclude Include="Class\Player\Particles\Particles.h" />
+    <ClInclude Include="Class\Player\Systems\Children\Evasion\Effect\EvasionEffect.h" />
+    <ClInclude Include="Class\Player\PlayerParameter.h" />
+    <ClInclude Include="Class\Player\Particles\IEffect.h" />
+    <ClInclude Include="Class\Player\Systems\Children\Move\Effect\MoveEffect.h" />
+    <ClInclude Include="Class\Player\Math\MathFunctions.h" />
+    <ClInclude Include="Class\UI\UIMotions.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />

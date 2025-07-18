@@ -7,17 +7,6 @@
 
 namespace SaijiState {
 
-	//才二君のパラメータ調整項目
-	class ParameterConfig {
-	public:
-
-		LWP::Utility::JsonIO json;
-
-		//JSON初期化
-		void InitJson();
-
-	};
-
 	/// <summary>
 	/// 状態一覧
 	/// </summary>
@@ -37,9 +26,9 @@ namespace SaijiState {
 	/// </summary>
 	struct IdleParameter {
 		//待機時間
-		static float standTime;
+		float standTime = 1.0f;
 		//追従モーションに移行する距離
-		static float followingDist;
+		float followingDist = 6.0f;
 		//カウント
 		float countStandTime = 1.0f;
 	};
@@ -49,15 +38,15 @@ namespace SaijiState {
 	/// </summary>
 	struct MoveParameter {
 		//移動時間
-		static float runTime;
+		float runTime = 2.0f;
 		//攻撃モーションに入る距離
-		static float attackDist;
+		float attackDist = 1.0f;
 		//デフォのスピード
-		static float defaultSpeed;
+		float defaultSpeed = 1.0f;
 		//移動方向
-		LWP::Math::Vector3 direction;
+		LWP::Math::Vector3 direction{};
 		//カウント
-		float countRunTime;
+		float countRunTime = 0.0f;
 		//プレイヤーに近づくかどうか
 		bool isApproach = true;
 	};
@@ -67,9 +56,13 @@ namespace SaijiState {
 	/// </summary>
 	struct AttackParameter {
 		//攻撃判定受付開始時間
-		static float startAcceptTime;
+		float startAcceptTime = 0.05f;
 		//攻撃判定受付終了時間
-		static float endAcceptTime;
+		float endAcceptTime = 0.13f;
+		//攻撃発生座標
+		LWP::Math::Vector3 attackPosition{0.0f,0.0f,1.0f};
+		//攻撃判定の大きさ
+		float attackScale = 0.5f;
 	};
 
 	/// <summary>
@@ -77,25 +70,11 @@ namespace SaijiState {
 	/// </summary>
 	struct SpacingParameter {
 		//間合いを取る時間
-		static float spacingTime;
+		float spacingTime = 1.0f;
 		//間合い距離
-		static float spaceDist;
+		float spaceDist = 3.0f;
 		//カウント
-		float countSpacingTime;
-		//右回りかどうか
-		bool isClockwise = false;
-	};
-
-	/// <summary>
-	/// 攻撃待機パラメータ
-	/// </summary>
-	struct WaitingForAttackParameter {
-		//攻撃の順番を決める変数
-		static uint16_t attackCount;
-		//次攻撃するのは何番かを決める変数
-		static uint16_t nextAttackCount;
-		//自身の攻撃する順番
-		uint16_t attackID;
+		float countSpacingTime = 0.0f;
 		//右回りかどうか
 		bool isClockwise = false;
 	};
@@ -105,7 +84,17 @@ namespace SaijiState {
 	/// </summary>
 	struct FollowingParameter {
 		//待機モーションに移行する距離
-		static float idleDist;
+		float idleDist = 3.0f;
+	};
+
+	/// <summary>
+	/// 攻撃待機パラメータ
+	/// </summary>
+	struct WaitingForAttackParameter {
+		//自身の攻撃する順番
+		uint16_t attackID;
+		//右回りかどうか
+		bool isClockwise = false;
 	};
 
 	/// <summary>
@@ -113,7 +102,7 @@ namespace SaijiState {
 	/// </summary>
 	struct HitReactionParameter {
 		//減衰
-		static float decay;
+		float decay = 0.99f;
 	};
 
 	/// <summary>
@@ -122,8 +111,28 @@ namespace SaijiState {
 	struct StateParameter {
 		IdleParameter idleParameter;
 		MoveParameter moveParameter;
+		AttackParameter attackParameter;
 		SpacingParameter spacingParameter;
+		FollowingParameter followingParameter;
 		WaitingForAttackParameter waitingForAttackParameter;
+		HitReactionParameter hitReactionParameter;
+
+	};
+
+	//才二君のパラメータ調整項目
+	class ParameterConfig {
+	public:
+
+		LWP::Utility::JsonIO json;
+
+		//JSON初期化
+		void InitJson();
+		//パラメータ取得
+		StateParameter& GetStateParameter() { return stateParameter_; }
+
+	private:
+		//編集用パラメータ
+		StateParameter stateParameter_{};
 
 	};
 

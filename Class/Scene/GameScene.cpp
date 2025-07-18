@@ -42,12 +42,14 @@ void GameScene::Initialize() {
 	enemyManager_.SetDamageEffectEmitter(&damageEffectEmitter_);
 	enemyManager_.SetCamera(followCamera_.GetCamera());
 	enemyManager_.SetIsShowSpawnDataModel(false);
+	enemyManager_.SetSEPlayer(&sePlayer_);
 
-	// 追従カメラの動作確認のため生成
+	// 追従カメラの生成
 	followCamera_.Initialize();
 
-	// 自機の動作確認のため生成
+	// 自機の生成
 	player_.Initialize();
+	player_.SetSEPlayer(&sePlayer_);
 
 	//ダメージエフェクトエミッターを生成
 	damageEffectEmitter_.Initialize();
@@ -110,23 +112,28 @@ void GameScene::Update() {
 	//敵全て
 	enemyManager_.Update();
 
-	// 追従カメラ
-	followCamera_.Update();
-
 	// 自機
 	player_.Update();
 
+	// 追従カメラ
+	followCamera_.Update();
+
+	
 	//ダメージエフェクトエミッター
 	damageEffectEmitter_.Update();
 
 	// uiの管理クラス
 	uiManager_.Update();
 
+	//SE管理
+	sePlayer_.Update();
+	//BGM管理
+	bgmPlayer_.Update();
+
 	// デバッグ用のウィンドウ
 	DebugGUI();
 
 	sceneTransitioner_.Update();
-
 }
 
 void GameScene::DebugGUI() {

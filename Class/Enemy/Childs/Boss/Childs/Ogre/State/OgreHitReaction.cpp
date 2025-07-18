@@ -2,12 +2,17 @@
 #include "../Ogre.h"
 #include "../../../../../EnemyManager.h"
 
+/// <summary>
+/// ノックバックの実装
+/// </summary>
+
 using namespace LWP::Math;
 using namespace OgreState;
 
 void Ogre::HitReactionFinalize([[maybe_unused]] const States& pre) {
 
-
+	//スピードをリセット
+	currentMotionSpeed_ = 1.0f;
 
 }
 
@@ -24,7 +29,7 @@ void Ogre::HitReactionUpdate([[maybe_unused]] std::optional<States>& req, [[mayb
 	SetPosition(GetPosition() + (GetKnockBackVelocity() + GetRepulsiveForce()) *
 		LWP::Info::GetDeltaTimeF());
 	//ノックバック減衰
-	SetKnockBackVelocity(GetKnockBackVelocity() * HitReactionParameter::decay);
+	SetKnockBackVelocity(GetKnockBackVelocity() * stateParameter_.hitReactionParameter.decay);
 
 	//ノックバックが終了した時
 	if (not animation_.GetPlaying()) {
