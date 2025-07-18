@@ -22,13 +22,6 @@ class EnemyManager;
 class FollowCamera;
 class Player : public ICharacter {
 public:
-	enum class MoveEffectType {
-		kNone,
-		kLeft,
-		kRight
-	};
-
-public:
 	// コンストラクタ
 	Player(LWP::Object::Camera* camera, EnemyManager* enemyManager, FollowCamera* followCamera, UIManager* uiManager);
 	// デストラクタ
@@ -98,10 +91,6 @@ private:
 	/// SEの鳴らす条件などの更新処理
 	/// </summary>
 	void SEUpdate();
-	/// <summary>
-	/// 移動時のSEを鳴らす
-	/// </summary>
-	void MoveSE();
 
 public:
 	/// <summary>
@@ -114,6 +103,16 @@ public:
 	/// </summary>
 	/// <param name="pos"></param>
 	void CreateEvasionParticle(const LWP::Math::Vector3& pos);
+
+	/// <summary>
+	/// 効果音再生
+	/// </summary>
+	/// <param name="fileName">SE/～/ファイル名</param>
+	/// <param name="name">識別名</param>
+	/// <param name="volume">音量</param>
+	void PlaySE(const std::string& fileName, const std::string& name, float volume) {
+		SEPlayer_->PlaySE(fileName, name, volume); 
+	}
 
 public:// Getter,Setter
 #pragma region Getter
@@ -132,6 +131,16 @@ public:// Getter,Setter
 	/// </summary>
 	/// <returns></returns>
 	SystemManager* GetSystemManager() { return systemManager_.get(); }
+	/// <summary>
+	/// パーティクル管理クラスのアドレス取得
+	/// </summary>
+	/// <returns></returns>
+	Particles* GetParticles() { return particles_.get(); }
+	/// <summary>
+	/// 自機の効果音クラスを取得
+	/// </summary>
+	/// <returns></returns>
+	SEPlayer* GetSEPlayer() { return SEPlayer_; }
 	/// <summary>
 	/// 自機のTransformQuatを取得
 	/// </summary>
@@ -296,12 +305,6 @@ private:
 
 	// パーティクルの管理クラス
 	std::unique_ptr<Particles> particles_;
-
-	// どちらの足が出ているか
-	MoveEffectType moveEffectType_;
-	MoveEffectType preMoveEffectType_;
-	// 移動アニメーションの経過フレーム
-	float currentMoveFrame_;
 
 	// いきているか
 	bool isAlive_ = true;

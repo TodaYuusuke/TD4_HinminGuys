@@ -4,10 +4,13 @@
 #include "State/Walk.h"
 #include "State/Dash.h"
 #include "../../../../Camera/FollowCamera.h"
+#include "../../../Math/MathFunctions.h"
+#include "../../../PlayerAudioNames.h"
 
 using namespace LWP;
 using namespace LWP::Math;
 using namespace LWP::Input;
+using namespace PlayerAudio;
 
 Move::Move(LWP::Object::Camera* camera, Player* player) {
 	pCamera_ = camera;
@@ -39,7 +42,11 @@ void Move::Update() {
 	// 入力処理
 	InputUpdate();
 
+	// 移動状態の遷移
 	CheckMoveState();
+
+	// 左右の足が着いた瞬間の演出
+	EffectFootOnGround();
 
 	// 入力のあったシステム
 	nextSystem_ = CheckNextSystems();
@@ -166,12 +173,65 @@ void Move::InputUpdate() {
 
 	isMove_ = false;
 	// 移動ベクトルから体の向きを算出(入力があるときのみ処理する)
-	if (LWP::Math::Vector3::Dot(Abs(dir), LWP::Math::Vector3{ 1,1,1 }) != 0) {
+	if (LWP::Math::Vector3::Dot(MathFunc::Abs(dir), LWP::Math::Vector3{ 1,1,1 }) != 0) {
 		// 移動速度からラジアンを求める
 		radian_.y = LWP::Utility::GetRadian(LWP::Math::Vector3{ 0,0,1 }, velocity_.Normalize(), LWP::Math::Vector3{ 0,1,0 });
 		quat_ = LWP::Math::Quaternion::CreateFromAxisAngle(LWP::Math::Vector3{ 0, 1, 0 }, radian_.y);
 		isMove_ = true;
 	}
+}
+
+void Move::EffectFootOnGround() {
+	// 移動に関連するアニメーションでなければ処理しない
+	if (!player_->GetAnimation()->GetPlaying("Dash", LWP::Resource::Animation::TrackType::Main) &&
+		!player_->GetAnimation()->GetPlaying("Walk", LWP::Resource::Animation::TrackType::Main) &&
+		!player_->GetAnimation()->GetPlaying("Run", LWP::Resource::Animation::TrackType::Blend)) {
+		footState_ = FootState::kNone;
+		currentMoveFrame_ = 0.0f;
+		return;
+	}
+
+	float t = 0.0f;
+	currentMoveFrame_ += HitStopController::GetInstance()->GetDeltaTime();
+	if (player_->GetAnimation()->GetPlaying("Dash", LWP::Resource::Animation::TrackType::Main) || player_->GetAnimation()->GetPlaying("Walk", LWP::Resource::Animation::TrackType::Main)) {
+		t = player_->GetAnimation()->GetTotalSeconds(LWP::Resource::Animation::TrackType::Main) / player_->GetAnimation()->GetPlayBackSpeed(LWP::Resource::Animation::TrackType::Main) * 60.0f;
+	}
+	else if (player_->GetAnimation()->GetPlaying("Run", LWP::Resource::Animation::TrackType::Blend)) {
+		t = player_->GetAnimation()->GetTotalSeconds(LWP::Resource::Animation::TrackType::Blend) / player_->GetAnimation()->GetPlayBackSpeed(LWP::Resource::Animation::TrackType::Blend) * 60.0f;
+	}
+
+	// 地面につく足は左足
+	if (t / 1.05f <= currentMoveFrame_) {
+		currentMoveFrame_ += -t;
+		footState_ = FootState::kLeft;
+	}
+	// 地面につく足は右足
+	else if (t / 2.0f <= currentMoveFrame_) {
+		footState_ = FootState::kRight;
+	}
+
+	// 左足
+	if (footState_ == FootState::kLeft && preFootState_ != FootState::kLeft) {
+		// パーティクル生成
+		Vector3 pos = player_->GetModel()->GetJointWorldPosition("Foot.R");
+		pos.y = 0.0f;
+		player_->GetParticles()->CreateMoveParticle(pos);
+
+		// 効果音再生
+		player_->PlaySE(SE::move[0].fileName, SE::move[0].name, SE::move[0].volume);
+	}
+	// 右足
+	else if (footState_ == FootState::kRight && preFootState_ != FootState::kRight) {
+		// パーティクル生成
+		Vector3 pos = player_->GetModel()->GetJointWorldPosition("Foot.L");
+		pos.y = 0.0f;
+		player_->GetParticles()->CreateMoveParticle(pos);
+
+		// 効果音再生
+		player_->PlaySE(SE::move[0].fileName, SE::move[0].name, SE::move[0].volume);
+	}
+
+	preFootState_ = footState_;
 }
 
 void Move::ChangeState(IMoveSystemState* pState) {

@@ -168,4 +168,20 @@ namespace MathFunc {
 
 		return q;
 	}
+
+	float GetYawFromQuaternion(const LWP::Math::Quaternion& q) {
+		// Yaw（Y軸まわりの回転）を取り出す
+		float siny_cosp = 2.0f * (q.w * q.y + q.z * q.x);
+		float cosy_cosp = 1.0f - 2.0f * (q.y * q.y + q.z * q.z);
+		return std::atan2(siny_cosp, cosy_cosp); // ラジアン
+	}
+
+	LWP::Math::Vector3 Abs(LWP::Math::Vector3 value) {
+		LWP::Math::Vector3 result{
+			std::fabsf(value.x),
+			std::fabsf(value.y),
+			std::fabsf(value.z)
+		};
+		return result;
+	}
 }

@@ -139,6 +139,10 @@ public:// Getter,Setter
 		lockOnData_.isLocked = false;
 	}
 
+	void StartFov(const float& fov, const float& time) { goalFov_ = fov; }
+
+	void FinishFov() {/* goalFov_ = ; */}
+
 public:// jsonで保存する値
 	// 追従対象との距離
 	LWP::Math::Vector3 kTargetDist = { 0.0f,0.0f,-20.0f };
@@ -221,6 +225,9 @@ private:
 
 	// ロックオン時に使う情報
 	LockOnData lockOnData_;
+
+	// 視野角の目標値
+	float goalFov_;
 
 	// パラメーターの保存
 	LWP::Utility::JsonIO json_;
