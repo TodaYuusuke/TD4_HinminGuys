@@ -12,7 +12,8 @@ void OniHayha::RetreatFinalize([[maybe_unused]] const States& pre) {
 
 void OniHayha::RetreatInit([[maybe_unused]] const States& pre) {
 
-	SetAnimation("Run", true);
+	animation_.Play("BackWalk", 0.6f)
+		.Loop(true);
 	preState_ = States::kRetreat;
 
 }

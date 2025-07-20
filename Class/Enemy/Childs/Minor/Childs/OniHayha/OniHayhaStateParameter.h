@@ -17,6 +17,7 @@ namespace OniHayhaState {
 		kWaitingForAttack,
 		kHitReaction,
 		kAiming,
+		kDead,
 		kMax,
 	};
 
@@ -42,6 +43,10 @@ namespace OniHayhaState {
 		float endAcceptTime = 0.99f;
 		//弾の速度
 		float bulletSpeed = 50.0f;
+		//攻撃後の硬直時間
+		float freezingTime = 1.5f;
+		//現在の硬直時間カウント
+		float currentFreezingTime = 0.0f;
 	};
 
 	/// <summary>
@@ -82,6 +87,8 @@ namespace OniHayhaState {
 		float countAimingTime = 0.0f;
 		//チカチカカウント
 		int32_t flickeringCounter = 0;
+		//既に銃を構えているかどうか
+		bool isSettingUp = false;
 	};
 
 	/// <summary>

@@ -14,7 +14,8 @@ void OniHayha::HitReactionFinalize([[maybe_unused]] const States& pre) {
 void OniHayha::HitReactionInit([[maybe_unused]] const States& pre)
 {
 	
-	SetAnimation("Damage", false);
+	animation_.Play("Damage", 0.2f)
+		.Loop(false);
 
 }
 

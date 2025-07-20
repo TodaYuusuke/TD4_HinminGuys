@@ -63,6 +63,10 @@ private:
 	void AimingUpdate(std::optional<OniHayhaState::States>& req, const OniHayhaState::States& pre);
 	void AimingFinalize(const OniHayhaState::States& pre);
 
+	void DeadInit(const OniHayhaState::States& pre);
+	void DeadUpdate(std::optional<OniHayhaState::States>& req, const OniHayhaState::States& pre);
+	void DeadFinalize(const OniHayhaState::States& pre);
+
 #pragma endregion
 
 private:
@@ -73,7 +77,9 @@ private:
 	//警告用のレーザー
 	LWP::Resource::RigidModel laserModel_;
 
-	// 刀コライダー
+	// 銃モデル
+	SkinningModel gunModel_;
+	// 弾コライダー
 	LWP::Object::Collision bulletCollider_;
 	LWP::Object::Collider::Sphere& sphere_;
 	//弾の攻撃方向

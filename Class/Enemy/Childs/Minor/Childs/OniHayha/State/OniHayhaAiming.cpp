@@ -6,12 +6,20 @@ using namespace OniHayhaState;
 void OniHayha::AimingFinalize(const OniHayhaState::States& pre) {
 
 	laserModel_.isActive = false;
+	stateParameter_.aimingParameter.isSettingUp = false;
 
 }
 
 void OniHayha::AimingInit(const OniHayhaState::States& pre) {
 
-	laserModel_.isActive = true;
+	//構えていなければ狙い撃ちアニメーションを再生
+	if (not stateParameter_.aimingParameter.isSettingUp) {
+
+		animation_.Play("ShotReady", 0.6f)
+			.Loop(false);
+
+	}
+
 	isAttack_ = true;
 	stateParameter_.aimingParameter.flickeringCounter = stateParameter_.aimingParameter.flickeringInterval;
 
@@ -22,6 +30,11 @@ void OniHayha::AimingUpdate(std::optional<OniHayhaState::States>& req, const Oni
 	//カウントダウン
 	if (stateParameter_.aimingParameter.countAimingTime > 0) {
 		stateParameter_.aimingParameter.countAimingTime -= 1.0f * LWP::Info::GetDeltaTimeF();
+	}
+
+	//構えが終わってからレーザー表示
+	if (not animation_.GetPlaying()) {
+		laserModel_.isActive = true;
 	}
 
 	//0になったら状態切り替え

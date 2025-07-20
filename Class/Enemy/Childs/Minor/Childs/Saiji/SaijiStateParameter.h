@@ -18,6 +18,7 @@ namespace SaijiState {
 		kFollowing,
 		kWaitingForAttack,
 		kHitReaction,
+		kDead,
 		kMax,
 	};
 

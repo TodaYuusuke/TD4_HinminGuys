@@ -130,10 +130,15 @@ void Ogre::Update()
 
 	}
 
-	//死亡時、更新しない(別途ステートを作成する予定)
+	//死亡時
 	if (parameter_.hp <= 0.0f) {
-		isDead_ = true;
-		return;
+		//コライダーオフ
+		collider_.isActive = false;
+		//死亡ステートでなければ強制的に死亡ステートに移行
+		if (state_.GetCurrentBehavior() != States::kDead) {
+			state_.request = States::kDead;
+		}
+
 	}
 
 	//デルタタイムが0.0f以下の時、更新しない
@@ -250,6 +255,10 @@ void Ogre::AddStateFunc()
 	state_.init[int(States::kHitReaction)] = [this](const States& pre) {HitReactionInit(pre); };
 	state_.update[int(States::kHitReaction)] = [this](std::optional<States>& req, const States& pre) {HitReactionUpdate(req, pre); };
 	state_.finalize[int(States::kHitReaction)] = [this](const States& pre) {HitReactionFinalize(pre); };
+
+	state_.init[int(States::kDead)] = [this](const States& pre) {DeadInit(pre); };
+	state_.update[int(States::kDead)] = [this](std::optional<States>& req, const States& pre) {DeadUpdate(req, pre); };
+	state_.finalize[int(States::kDead)] = [this](const States& pre) {DeadFinalize(pre); };
 
 }
 

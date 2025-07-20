@@ -20,6 +20,7 @@ namespace OgreState {
 		kAssaultSlash, //連続突撃
 		kQuadrupleAttack, //四連撃
 		kHitReaction, //ヒット演出
+		kDead, //死亡
 		kMax, //最大数
 	};
 

@@ -27,12 +27,14 @@ OniHayha::~OniHayha()
 void OniHayha::Initialize(Player* player, const Vector3& position, LWP::Object::Camera* camera,
 	EnemyManager* manager)
 {
-	model_.LoadShortPath("player/Player_Simple.gltf");
+	model_.LoadShortPath("Oniheihe/Oniheihe_IK.gltf");
 	type_ = EnemyType::kOniHayha;
 	attackType_ = AttackType::kLong;
 	//アニメーションロード
-	animation_.LoadFullPath("resources/model/player/Player_Simple.gltf", &model_);
-	model_.materials["Material"].color = { 1.0f,0.0f,0.0f,1.0f };
+	animation_.LoadFullPath("resources/model/Oniheihe/Oniheihe_IK.gltf", &model_);
+	gunModel_.LoadShortPath("Oniheihe/MatchLockGun.gltf");
+	// 銃モデルをプレイヤーの手に追従させる
+	gunModel_.GetJoint("Grip")->localTF.Parent(&model_, "WeaponAnchor");
 	laserModel_.LoadShortPath("effect/laser.obj");
 	laserModel_.worldTF.Parent(&model_.worldTF);
 	laserModel_.worldTF.scale = {0.01f,0.01f,50.0f};
@@ -116,10 +118,15 @@ void OniHayha::Update()
 
 	}
 
-	//死亡時、更新しない(別途ステートを作成する予定)
+	//死亡時
 	if (parameter_.hp <= 0.0f) {
-		isDead_ = true;
-		return;
+		//コライダーオフ
+		collider_.isActive = false;
+		//死亡ステートでなければ強制的に死亡ステートに移行
+		if (state_.GetCurrentBehavior() != States::kDead) {
+			state_.request = States::kDead;
+		}
+
 	}
 
 	//デルタタイムが0.0f以下の時、更新しない
@@ -197,5 +204,9 @@ void OniHayha::AddStateFunc()
 	state_.init[int(States::kAiming)] = [this](const States& pre) {AimingInit(pre); };
 	state_.update[int(States::kAiming)] = [this](std::optional<States>& req, const States& pre) {AimingUpdate(req, pre); };
 	state_.finalize[int(States::kAiming)] = [this](const States& pre) {AimingFinalize(pre); };
+
+	state_.init[int(States::kDead)] = [this](const States& pre) {DeadInit(pre); };
+	state_.update[int(States::kDead)] = [this](std::optional<States>& req, const States& pre) {DeadUpdate(req, pre); };
+	state_.finalize[int(States::kDead)] = [this](const States& pre) {DeadFinalize(pre); };
 
 }

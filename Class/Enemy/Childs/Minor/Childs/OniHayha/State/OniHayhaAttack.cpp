@@ -21,7 +21,8 @@ void OniHayha::AttackInit([[maybe_unused]] const States& pre)
 {
 	
 	preState_ = States::kAttack;
-	SetAnimation("LightAttack3", false, 1.0f);
+	animation_.Play("Shot", 0.6f)
+		.Loop(false);
 	bulletCollider_.isActive = false;
 	isAttack_ = true;
 	//パリィエフェクトフラグリセット
@@ -32,6 +33,8 @@ void OniHayha::AttackInit([[maybe_unused]] const States& pre)
 	bulletDirection_ = GetPlayerPosition() - GetPosition();
 	bulletDirection_.y = 0.0f;
 	bulletDirection_ = bulletDirection_.Normalize();
+
+	stateParameter_.attackParameter.currentFreezingTime = 0.0f;
 
 }
 
@@ -82,9 +85,20 @@ void OniHayha::AttackUpdate([[maybe_unused]] std::optional<States>& req, [[maybe
 
 	//攻撃が終了した時
 	if (not animation_.GetPlaying()) {
-		isAttack_ = false;
-		state_.request = States::kIdle;
-		return;
+
+		//硬直時間をカウント
+		if (stateParameter_.attackParameter.currentFreezingTime < stateParameter_.attackParameter.freezingTime) {
+
+			stateParameter_.attackParameter.currentFreezingTime += 1.0f * LWP::Info::GetDeltaTimeF();
+
+			//カウント超えたら終わり
+			if (stateParameter_.attackParameter.currentFreezingTime >= stateParameter_.attackParameter.freezingTime) {
+				isAttack_ = false;
+				state_.request = States::kIdle;
+				return;
+			}
+
+		}
 
 	}
 
