@@ -38,7 +38,7 @@ public:
 	void ColGaugeSize(std::string name) {
 		// HPバーの長さ計算
 		// 今のHPバーのスケール = 最大HPの時のバーのサイズ × (今のHP ÷ 最大HP)
-		sprite_[name].worldTF.scale.x = (maxSize_.x * (value_ / maxValue_));
+		sprite_[name].clipRect.max.x = (maxSize_.x * (value_ / maxValue_));
 
 		isPreHit_ = isHit_;
 	}
@@ -97,7 +97,7 @@ protected:
 	LWP::Utility::JsonIO json_;
 
 	// ゲージの描画
-	std::map<std::string, LWP::Primitive::NormalSprite> sprite_;
+	std::map<std::string, LWP::Primitive::ClipSprite> sprite_;
 
 	// ゲージの大きさ
 	LWP::Math::Vector2 size_;

@@ -31,6 +31,7 @@ UIManager::UIManager(Player* player) {
 	for (int i = 0; i < guideOperation_.size(); i++) {
 		guideOperation_[i].anchorPoint = { 0.5f, 0.0f };
 	}
+
 	coolTimeFilter_.resize(7);
 	coolTimeFilterSplitSize_.resize(7);
 	// クールタイムのフィルタ
@@ -42,8 +43,6 @@ UIManager::UIManager(Player* player) {
 
 		coolTimeFilterSplitSize_[i] = { 150.0f, 150.0f };
 	}
-
-
 
 	// jsonの値を保存
 	json_.Init("UI_Config");
@@ -97,6 +96,30 @@ UIManager::UIManager(Player* player) {
 
 	// 座標適用
 	guideOperation_[2].worldTF = guideOperation_[1].worldTF;
+
+
+
+	// 各UIの残像
+	afterimage_.resize(7);
+	//攻撃
+	afterimage_[0].sprite.LoadTexture("UI/ButtonUI/ButtonUI_Attack.png");
+	// 走り(回避)
+	afterimage_[1].sprite.LoadTexture("UI/ButtonUI/ButtonUI_Run.png");
+	// 
+	afterimage_[2].sprite.LoadTexture("UI/ButtonUI/LRButton1.png");
+	afterimage_[2].sprite.isActive = false;
+	// ロックオン
+	afterimage_[3].sprite.LoadTexture("UI/ButtonUI/UI_LTrigger.png");
+	// パリィ
+	afterimage_[4].sprite.LoadTexture("UI/ButtonUI/ButtonUI_Parry.png");
+	// 移動
+	afterimage_[5].sprite.LoadTexture("UI/ButtonUI/UI_Move.png");
+	// 鞘
+	afterimage_[6].sprite.LoadTexture("UI/ButtonUI/ButtonUI_Throw.png");
+	for (int i = 0; i < afterimage_.size(); i++) {
+		afterimage_[i].sprite = guideOperation_[i];
+		afterimage_[i].sprite.isActive = false;
+	}
 }
 
 void UIManager::Initialize() {
@@ -116,7 +139,6 @@ void UIManager::Update() {
 
 	// クールタイムのフィルタ
 	CoolTimeFilterUpdate();
-
 
 	// HP
 	hp_.Update();
@@ -148,4 +170,15 @@ void UIManager::CoolTimeFilterUpdate() {
 		coolTimeFilterSplitSize_[6].y = 150.0f * player_->GetSystemManager()->GetCoolTimer()->GetSheathCoolTimeData().coolTime / player_->GetSystemManager()->GetCoolTimer()->GetSheathCoolTimeData().maxCoolTime;
 		coolTimeFilter_[6].clipRect.max.y = coolTimeFilterSplitSize_[6].y;
 	}
+}
+
+void UIManager::StartEnableUIEffect(const int& id) {
+	afterimage_[id].sprite.isActive = true;
+
+	// 徐々に大きくなる
+	afterimage_[id].sprite.worldTF.scale = Utility::Interpolation::Lerp(afterimage_[id].startScale, afterimage_[id].endScale, Utility::Easing::InExpo(afterimage_[id].currentFrame / afterimage_[id].endFrame));
+	// 透明度
+	afterimage_[id].sprite.material.color.A = (int)Utility::Interpolation::LerpF(afterimage_[id].alpha, 0.0f, Utility::Easing::InExpo(afterimage_[id].currentFrame / afterimage_[id].endFrame));
+
+	afterimage_[id].currentFrame++;
 }

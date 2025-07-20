@@ -6,6 +6,16 @@
 class Player;
 class UIManager {
 public:
+	struct AfterimageData {
+		LWP::Primitive::NormalSprite sprite;
+		LWP::Math::Vector3 startScale;
+		LWP::Math::Vector3 endScale;
+		float currentFrame;
+		float endFrame;
+		int alpha;
+	};
+
+public:
 	// コンストラクタ
 	UIManager(Player* player);
 	// デストラクタ
@@ -26,7 +36,16 @@ public:
 	/// </summary>
 	void DebugGUI();
 
+	/// <summary>
+	/// クールタイム演出
+	/// </summary>
 	void CoolTimeFilterUpdate();
+
+	/// <summary>
+	/// 使用可能演出
+	/// </summary>
+	/// <param name="id">残像スプライトの要素番号</param>
+	void StartEnableUIEffect(const int& id);
 
 public:
 #pragma region Getter
@@ -93,4 +112,6 @@ private:
 	// クールタイムのフィルタ
 	std::vector<LWP::Primitive::ClipSprite> coolTimeFilter_;
 	std::vector<LWP::Math::Vector2> coolTimeFilterSplitSize_;
+	// 残像
+	std::vector<AfterimageData> afterimage_;
 };

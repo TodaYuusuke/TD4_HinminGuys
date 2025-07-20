@@ -27,33 +27,6 @@ void ChainNode::Update() {
 		p1.velocity += CalcPointMassVel(p0, p1);
 		p1.model.worldTF.translation += p1.velocity;
 	}
-
-	//	Vector3 delta = p1.model.worldTF.translation - p0.model.worldTF.translation;
-	//	float dist = delta.Length();
-	//	Vector3 dir = delta.Normalize();
-	//
-	//	// フックの法則（ばね力）
-	//	float springForceMag = (dist - spring_.restLength) * -spring_.stiffness;
-	//	// 質点に加わる力のベクトル
-	//	Vector3 f = springForceMag * dir;
-	//	// p1に加わる加速度
-	//	Vector3 a = f / p1.mass + Vector3{ 0.0f, -0.000008f, 0.0f };
-	//
-	//#pragma region 減衰を含んだ計算
-	//	// 相対速度による減衰
-	//	Vector3 relVel = p1.velocity - p0.velocity;
-	//	// 減衰を含んだ力
-	//	Vector3 dampedForce = p1.mass * a + spring_.damping * relVel;
-	//	// 減衰を含んだ加速度
-	//	Vector3 dampedAcceleration = dampedForce - (spring_.damping * relVel);
-	//#pragma endregion
-
-	//float dampingForceMag = Vector3::Dot(relVel, dir) * spring_.damping;
-	//float totalForce = -springForceMag - dampingForceMag;
-	//Vector3 force = dir * totalForce;
-
-	//if (!p0.isFixed) p0.force += force / p0.mass;
-	//if (!p1.isFixed) p1.force -= force / p1.mass;
 }
 
 void ChainNode::InverseUpdate() {
@@ -69,19 +42,11 @@ void ChainNode::InverseUpdate() {
 }
 
 void ChainNode::CreateJsonData() {
-	//// ばね
-	//json_.BeginGroup("Spring")
-	//	// 自然長
-	//	.AddValue("RestLength", &spring_.restLength)
-	//	// ばね定数
-	//	.AddValue("Stiffness", &spring_.stiffness)
-	//	// 減衰
-	//	.AddValue("Damping", &spring_.damping)
-	//	.EndGroup();
+
 }
 
 void ChainNode::DebugGui() {
-	//json_.DebugGUI();
+
 }
 
 LWP::Math::Vector3 ChainNode::CalcPointMassVel(PointMass p0, PointMass p1) {

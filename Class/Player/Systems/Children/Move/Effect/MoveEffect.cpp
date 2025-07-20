@@ -14,7 +14,7 @@ MoveEffect::MoveEffect(Player* player, FollowCamera* followCamera) {
 }
 
 void MoveEffect::Initialize() {
-
+	//disappearEasing = Utility::Easing::kFunction[]
 }
 
 void MoveEffect::Update() {
@@ -50,6 +50,18 @@ void MoveEffect::DebugGui() {
 	minWhite = std::clamp<int>(minWhite, 0, 254);
 	maxAlpha = std::clamp<int>(maxAlpha, 0, 255);
 	minAlpha = std::clamp<int>(minAlpha, 0, 254);
+
+	// どれが選ばれているかを示すインデックス（0 から始まる）
+	static int selectedIndex = 0;
+
+	// Comboボックスの表示
+	if (ImGui::Combo("Easing Type", &selectedIndex, Easing::kTypeNames, IM_ARRAYSIZE(Easing::kTypeNames))) {
+		// 選択が変更されたときの処理（必要があればここに書く）
+	}
+
+	// 使用例：選ばれた名前を取得する
+	const char* selectedName = Easing::kTypeNames[selectedIndex];
+	disappearEasing = Easing::kFunction[selectedIndex];
 }
 
 void MoveEffect::SetJsonData(LWP::Utility::JsonIO& json) {

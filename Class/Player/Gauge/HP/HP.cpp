@@ -3,11 +3,9 @@
 HP::HP() {
 	// HP画像の背景作成(BackGroundは長すぎるのでBGにしてます)
 	sprite_["HpBarBG"].LoadTexture("UI/Gauge/HpBarBackGround.png");
-	sprite_["HpBarBG"].Init();
 	sprite_["HpBarBG"].isActive = true;
 	// HP画像を作成
 	sprite_["HpBar"].LoadTexture("UI/Gauge/HpBar.png");
-	sprite_["HpBar"].Init();
 	sprite_["HpBar"].isActive = true;
 
 	// jsonに保存する値を設定
@@ -34,7 +32,7 @@ HP::HP() {
 		.AddValue<float>("Multiply", &multiply_)
 		.CheckJsonFile();
 
-	maxSize_ = { 1.0f, 1.0f };
+	maxSize_ = sprite_["HpBar"].material.texture.t.GetSize();
 	// HPを最大値にする
 	value_ = maxValue_;
 }

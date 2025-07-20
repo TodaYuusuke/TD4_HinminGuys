@@ -25,6 +25,18 @@ namespace MathFunc {
 		return q;
 	}
 
+	LWP::Math::Vector3 RotateVector(LWP::Math::Vector3 v, LWP::Math::Vector3 axis, float theta) {
+		Vector3 k = (axis).Normalize();
+		float cosTheta = cos(theta);
+		float sinTheta = sin(theta);
+
+		Vector3 term1 = v * cosTheta;
+		Vector3 term2 = Vector3::Cross(k, v) * sinTheta;
+		Vector3 term3 = k * Vector3::Dot(k, v) * (1.0f - cosTheta);
+
+		return term1 + term2 + term3;
+	}
+
 	Quaternion HorizontalBillboard(const Vector3& cameraPos, const Vector3& targetPos) {
 		Vector3 dir = cameraPos - targetPos;
 		dir.y = 0;  // 水平成分だけ使う

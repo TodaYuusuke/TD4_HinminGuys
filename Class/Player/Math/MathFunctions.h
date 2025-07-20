@@ -10,6 +10,15 @@ namespace MathFunc {
 	LWP::Math::Quaternion LookRotation(const LWP::Math::Vector3& dirVec);
 
 	/// <summary>
+	/// ベクトルの回転
+	/// </summary>
+	/// <param name="v"></param>
+	/// <param name="axis"></param>
+	/// <param name="theta"></param>
+	/// <returns></returns>
+	LWP::Math::Vector3 RotateVector(LWP::Math::Vector3 v, LWP::Math::Vector3 axis, float theta);
+
+	/// <summary>
 	/// 地面と水平方向のビルボード
 	/// </summary>
 	/// <param name="cameraPos"></param>

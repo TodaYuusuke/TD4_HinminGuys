@@ -3,11 +3,9 @@
 SheathGauge::SheathGauge() {
 	// 鞘ゲージ画像の背景作成(BackGroundは長すぎるのでBGにしてます)
 	sprite_["SheathBarBG"].LoadTexture("UI/Gauge/SheathBar/SheathBarBase.png");
-	sprite_["SheathBarBG"].Init();
 	sprite_["SheathBarBG"].isActive = true;
 	// 鞘ゲージ画像を作成
 	sprite_["SheathBar"].LoadTexture("UI/Gauge/SheathBar/SheathBarGauge.png");
-	sprite_["SheathBar"].Init();
 	sprite_["SheathBar"].isActive = true;
 
 	// jsonに保存する値を設定
@@ -34,7 +32,7 @@ SheathGauge::SheathGauge() {
 		.AddValue<float>("IncreaseTime", &increaseTime)
 		.CheckJsonFile();
 
-	maxSize_ = { 1.0f, 1.0f };
+	maxSize_ = sprite_["SheathBar"].material.texture.t.GetSize();
 	// HPを最大値にする
 	value_ = maxValue_;
 }

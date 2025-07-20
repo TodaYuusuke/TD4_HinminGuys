@@ -139,9 +139,9 @@ public:// Getter,Setter
 		lockOnData_.isLocked = false;
 	}
 
-	void StartFov(const float& fov, const float& time) { goalFov_ = fov; }
+	//void StartFov(const float& fov, const float& time) { goalFov_ = fov; }
 
-	void FinishFov() {/* goalFov_ = ; */}
+	//void FinishFov() {/* goalFov_ = ; */}
 
 public:// jsonで保存する値
 	// 追従対象との距離

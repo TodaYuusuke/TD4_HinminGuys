@@ -83,7 +83,6 @@ void Chain::Update() {
 
 	for (PointMass& pointMass : pointMassList_) {
 		if (pointMass.model.worldTF.translation.y <= 0.0f) {
-			//pointMass.model.worldTF.translation.y = 0.0f;
 			pointMass.model.worldTF.translation.y = std::clamp<float>(pointMass.model.worldTF.translation.y, 0.0f, 10000.0f);
 		}
 	}
