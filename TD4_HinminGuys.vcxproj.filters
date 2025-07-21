@@ -97,7 +97,8 @@
     <ClCompile Include="Class\Audio\AudioPlayer.cpp" />
     <ClCompile Include="Class\Player\Systems\Children\Sheath\Effect\Chain.cpp" />
     <ClCompile Include="Class\Player\Systems\Children\Sheath\Effect\ChainNode.cpp" />
-    <ClCompile Include="Class\UI\UIMotions.cpp" />
+    <ClCompile Include="Class\Camera\CameraSystems.cpp" />
+    <ClCompile Include="Class\UI\AfterimageMotion.cpp" />
     <ClCompile Include="Class\Enemy\Childs\Minor\Childs\OniHayha\State\OniHayhaDead.cpp" />
     <ClCompile Include="Class\Enemy\Childs\Minor\Childs\Saiji\State\SaijiDead.cpp" />
     <ClCompile Include="Class\Enemy\Childs\Boss\Childs\Ogre\State\OgreDead.cpp" />
@@ -186,8 +187,11 @@
     <ClInclude Include="Class\Audio\AudioPlayer.h" />
     <ClInclude Include="Class\Player\Systems\Children\Sheath\Effect\Chain.h" />
     <ClInclude Include="Class\Player\Systems\Children\Sheath\Effect\ChainNode.h" />
-    <ClInclude Include="Class\UI\UIMotions.h" />
     <ClInclude Include="Class\Player\PlayerAudioNames.h" />
+    <ClInclude Include="Class\Player\PlayerModelConfig.h" />
+    <ClInclude Include="Class\Camera\CameraSystems.h" />
+    <ClInclude Include="Class\Camera\ICameraSystem.h" />
+    <ClInclude Include="Class\UI\AfterimageMotion.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />

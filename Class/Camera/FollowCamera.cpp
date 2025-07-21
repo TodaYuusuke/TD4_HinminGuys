@@ -120,7 +120,6 @@ void FollowCamera::CheckState() {
 	if (!lockOnData_.targetTransform && !lockOnData_.isLocked) {
 		if (state_->GetStateName() != "Input") {
 			InputCamera* pState = new InputCamera(player_, this);
-			//pState->FinishReturnTargetDistance();
 			ChangeState(pState);
 		}
 	}

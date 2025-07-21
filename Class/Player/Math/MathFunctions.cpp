@@ -25,6 +25,18 @@ namespace MathFunc {
 		return q;
 	}
 
+	LWP::Math::Vector3 RotateVector(LWP::Math::Vector3 v, LWP::Math::Vector3 axis, float theta) {
+		Vector3 k = (axis).Normalize();
+		float cosTheta = cos(theta);
+		float sinTheta = sin(theta);
+
+		Vector3 term1 = v * cosTheta;
+		Vector3 term2 = Vector3::Cross(k, v) * sinTheta;
+		Vector3 term3 = k * Vector3::Dot(k, v) * (1.0f - cosTheta);
+
+		return term1 + term2 + term3;
+	}
+
 	Quaternion HorizontalBillboard(const Vector3& cameraPos, const Vector3& targetPos) {
 		Vector3 dir = cameraPos - targetPos;
 		dir.y = 0;  // 水平成分だけ使う
@@ -167,5 +179,21 @@ namespace MathFunc {
 		q.w = cosHalf;
 
 		return q;
+	}
+
+	float GetYawFromQuaternion(const LWP::Math::Quaternion& q) {
+		// Yaw（Y軸まわりの回転）を取り出す
+		float siny_cosp = 2.0f * (q.w * q.y + q.z * q.x);
+		float cosy_cosp = 1.0f - 2.0f * (q.y * q.y + q.z * q.z);
+		return std::atan2(siny_cosp, cosy_cosp); // ラジアン
+	}
+
+	LWP::Math::Vector3 Abs(LWP::Math::Vector3 value) {
+		LWP::Math::Vector3 result{
+			std::fabsf(value.x),
+			std::fabsf(value.y),
+			std::fabsf(value.z)
+		};
+		return result;
 	}
 }

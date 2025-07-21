@@ -3,6 +3,7 @@
 #include "State/Break.h"
 #include "../../../Player.h"
 #include "../../../../GameMask.h"
+#include "../../../Math/MathFunctions.h"
 
 Sheath::Sheath(LWP::Object::Camera* camera, Player* player) {
 	pCamera_ = camera;
@@ -26,7 +27,7 @@ Sheath::Sheath(LWP::Object::Camera* camera, Player* player) {
 			// 鞘が破壊されているなら処理しない
 			if (isBreak_) { return; }
 			if (!hitTargetNames_.empty()) { return; }
-			
+
 			hitTargetNames_.push_back(hitTarget->name);
 
 			// 鞘のゲージを減少
@@ -74,15 +75,15 @@ void Sheath::Initialize() {
 void Sheath::Update() {
 	if (!isActive_) { return; }
 
-	chain_->SetStartPos(player_->GetSwordModel()->GetJointWorldPosition("Grip"));
-	chain_->SetEndPos(sheathModel_.worldTF.GetWorldPosition() + Vector3{0.0f ,0.2f, 0.0f});
+	chain_->SetStartPos(player_->GetSwordModel()->GetJointWorldPosition("Grip")); 
+	chain_->SetEndPos(sheathModel_.GetJointWorldPosition("Sheath"));
 	chain_->Update();
 
 	// 状態
 	state_->Update();
 
 	// カプセルの当たり判定を更新
-	player_->GetSystemManager()->GetSheathAttackCapsule().end = jsonData_.dashAttackLength;	
+	player_->GetSystemManager()->GetSheathAttackCapsule().end = jsonData_.dashAttackLength;
 
 	// 無敵時間
 	eventOrders_[(int)SheathState::kInvinsible].Update();
@@ -98,9 +99,6 @@ void Sheath::Update() {
 void Sheath::Reset() {
 	isActive_ = false;
 	isPreActive_ = false;
-	// 鎖の表示状況
-	chain_->SetIsActive(isActive_);
-	chain_->Reset();
 	eventOrders_[(int)SheathState::kThrow].Reset();
 	eventOrders_[(int)SheathState::kCollect].Reset();
 	eventOrders_[(int)SheathState::kBreak].Reset();
@@ -312,12 +310,17 @@ void Sheath::ChangeState(ISheathSystemState* pState) {
 }
 
 LWP::Math::Vector3 Sheath::ClampToCircle(LWP::Math::Vector3& position) {
-	LWP::Math::Vector3 offset = position - sheathModel_.worldTF.GetWorldPosition();
+	// 移動可能範囲を円でとる
+	LWP::Math::Vector2 offset = LWP::Math::Vector2{ position.x,position.z } - LWP::Math::Vector2{ sheathModel_.worldTF.GetWorldPosition().x,sheathModel_.worldTF.GetWorldPosition().z };
 	float distance = offset.Length();
 
 	if (distance > jsonData_.enableMoveRange) {
+		// 移動可能範囲の設定
 		offset = offset.Normalize() * jsonData_.enableMoveRange;
-		position = sheathModel_.worldTF.GetWorldPosition() + offset;
+		// 鞘の座標
+		LWP::Math::Vector3 sheathPos = sheathModel_.worldTF.GetWorldPosition();
+		sheathPos.y = player_->GetWorldTF()->GetWorldPosition().y;// 自機基準
+		position = sheathPos + LWP::Math::Vector3{offset.x, 0.0f, offset.y};
 	}
 
 	return position;

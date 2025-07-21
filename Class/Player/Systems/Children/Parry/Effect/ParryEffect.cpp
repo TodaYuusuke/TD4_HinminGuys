@@ -91,7 +91,7 @@ void ParryEffect::MakeCircleParticle(ParticleData& particle, LWP::Math::Vector3 
 	// 色
 	//float kelvin = LWP::Utility::Random::GenerateFloat(lineParticleKelvin.min, lineParticleKelvin.max);
 	//particle.plane.materials[""].color = LWP::Utility::Color::KelvinToRGB(kelvin);
-
+	particle.billboard.material.color.A = 122;
 	// 速度
 	Vector3 vel = LWP::Utility::Random::GenerateVector3(circleParticleData_.velocity.min, circleParticleData_.velocity.max);
 	particle.vel = vel;
@@ -128,7 +128,7 @@ void ParryEffect::MakeLargeFlashParticle(ParticleData& particle, LWP::Math::Vect
 	particle.plane.isActive = false;
 
 	// アヤメ色に変更
-	particle.billboard.material.color = { 199, 126, 181, 255 };
+	particle.billboard.material.color = { 199, 126, 181, 122 };
 
 	// 座標
 	particle.billboard.worldTF.translation = pos;
@@ -167,7 +167,7 @@ void ParryEffect::MakeShortFlashParticle(ParticleData& particle, LWP::Math::Vect
 
 	// 黄色に変更
 	particle.billboard.material.color = { 255,212,71,255 };
-	particle.plane.materials["Texturematerial"].color = { 255,212,71,255 };
+	particle.plane.materials["Texturematerial"].color = { 255,212,71,122 };
 
 	// 座標
 	particle.billboard.worldTF.translation = pos;

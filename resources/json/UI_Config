@@ -3,14 +3,14 @@
         "Group :Attack": {
             "Group :CoolTimeFilter": {
                 "Vector3 :Translation": [
-                    -9.0,
                     0.0,
+                    1.5,
                     0.0
                 ]
             },
             "Vector3 :Translation": [
-                1754.5,
-                793.0,
+                1729.0,
+                792.5,
                 0.0
             ]
         },
@@ -51,8 +51,8 @@
                 ]
             },
             "Vector3 :Translation": [
-                1850.0,
-                450.0,
+                1820.0,
+                475.0,
                 0.0
             ]
         },
@@ -65,7 +65,7 @@
                 ]
             },
             "Vector3 :Translation": [
-                1850.0,
+                1810.0,
                 400.0,
                 0.0
             ]
@@ -79,7 +79,7 @@
                 ]
             },
             "Vector3 :Translation": [
-                1842.0,
+                1822.0,
                 635.0,
                 0.0
             ]
@@ -87,13 +87,13 @@
         "Group :Sheath": {
             "Group :CoolTimeFilter": {
                 "Vector3 :Translation": [
-                    -11.0,
-                    5.0,
+                    -5.5,
+                    4.5,
                     0.0
                 ]
             },
             "Vector3 :Translation": [
-                1830.0,
+                1807.0,
                 715.0,
                 0.0
             ]

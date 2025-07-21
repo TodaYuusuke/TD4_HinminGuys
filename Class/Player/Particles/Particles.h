@@ -68,12 +68,6 @@ public:// パーティクル生成
 	void CreateMoveParticle(const LWP::Math::Vector3& pos);
 
 private:
-	/// <summary>
-	/// 移動時のパーティクル発生のタイミング
-	/// </summary>
-	void CreateMoveParticleTiming();
-
-private:
 	Player* player_;
 	FollowCamera* followCamera_;
 
@@ -89,11 +83,6 @@ private:
 
 	// パーティクル生成座標(デバッグ用)
 	LWP::Math::Vector3 debugEmitterPos_;
-
-	MoveEffectType moveEffectType_;
-	MoveEffectType preMoveEffectType_;
-	// 移動アニメーションの経過フレーム
-	float currentMoveFrame_;
 
 	bool isPreJustParry_ = false;
 	bool isPreGoodParry_ = false;

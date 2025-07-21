@@ -2,9 +2,19 @@
 #include "../Adapter/Adapter.h"
 #include "../Player/Gauge/HP/HP.h"
 #include "../Player/Gauge/Sheath/SheathGauge.h"
+#include "AfterimageMotion.h"
 
 class Player;
 class UIManager {
+public:
+	struct GuideUI {
+		LWP::Primitive::NormalSprite sprite;
+		LWP::Primitive::ClipSprite coolTimeFilter;		// クールタイムのフィルタ
+		LWP::Math::Vector2 coolTimeFilterSplitSize;
+		bool isActive = false;// 可能状態か
+		bool isPreActive = false;// 可能状態か
+	};
+
 public:
 	// コンストラクタ
 	UIManager(Player* player);
@@ -26,6 +36,9 @@ public:
 	/// </summary>
 	void DebugGUI();
 
+	/// <summary>
+	/// クールタイム演出
+	/// </summary>
 	void CoolTimeFilterUpdate();
 
 public:
@@ -89,8 +102,7 @@ private:
 	SheathGauge sheathGauge_;
 
 	// 操作ガイド
-	std::vector<LWP::Primitive::NormalSprite> guideOperation_;
-	// クールタイムのフィルタ
-	std::vector<LWP::Primitive::ClipSprite> coolTimeFilter_;
-	std::vector<LWP::Math::Vector2> coolTimeFilterSplitSize_;
+	std::vector<GuideUI> guideUI_;
+	// 残像
+	std::vector<AfterimageMotion*> afterimageUI_;
 };

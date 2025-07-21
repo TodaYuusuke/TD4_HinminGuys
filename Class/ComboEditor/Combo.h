@@ -48,7 +48,7 @@ public: // メンバ関数
 	/// <param name="anim">アニメーション</param>
 	/// <param name="collider">コライダー</param>
 	/// <param name="shape">使用するコライダー形状</param>
-	void Update(LWP::Resource::SkinningModel* model, LWP::Resource::Animation* anim, LWP::Object::Collision* collider, LWP::Object::Collider::Capsule* shape);
+	void Update(LWP::Resource::SkinningModel* model, LWP::Resource::Animation* anim, LWP::Object::Collision* collider, LWP::Object::Collider::Sphere* shape);
 
 	/// <summary>
 	/// コンボ受付関数
@@ -120,6 +120,12 @@ public: // アクセッサ等
 	/// </summary>
 	/// <returns>ダメージ量</returns>
 	float GetDamage() { return damage_; }
+	
+	/// <summary>
+	/// ヒットストップ秒数ゲッター
+	/// </summary>
+	/// <returns>ヒットストップ秒数</returns>
+	float GetHitStopTime() { return hitStopTime_; }
 
 	/// <summary>
 	/// ノックバック強さゲッター
@@ -138,6 +144,18 @@ public: // アクセッサ等
 	/// </summary>
 	/// <returns>硬直状態か</returns>
 	bool GetIsStifness() { return isStifness_; }
+
+	/// <summary>
+	/// 硬直状態の進行度ゲッター
+	/// </summary>
+	/// <returns>硬直状態進行度</returns>
+	float GetStifnessProgress() { return stifnessTimer_.GetProgress(); }
+
+	/// <summary>
+	/// 硬直秒数ゲッター
+	/// </summary>
+	/// <returns>硬直秒数</returns>
+	float GetStifnessTime() { return stifnessTime_ - (stifnessTime_ * stifnessTimer_.GetProgress()); }
 
 	/// <summary>
 	/// 次のコンボへの移行可能状態ゲッター
@@ -230,7 +248,7 @@ private: // プライベートなメンバ関数
 	/// <param name="model">モデル</param>
 	/// <param name="collider">コライダー</param>
 	/// <param name="shape">使用するコライダー形状</param>
-	void AttackActiveUpdate(LWP::Resource::SkinningModel* model, LWP::Object::Collision* collider, LWP::Object::Collider::Capsule* shape);
+	void AttackActiveUpdate(LWP::Resource::SkinningModel* model, LWP::Object::Collision* collider, LWP::Object::Collider::Sphere* shape);
 
 	/// <summary>
 	/// 攻撃アシストの有効判定関係の更新
@@ -316,12 +334,14 @@ private: // メンバ変数
 	// 攻撃判定の追従先ジョイント名
 	std::string followJointName_{};
 	// 攻撃判定のオフセット
-	LWP::Math::Vector3 attackColliderLengthOffset_{};
-	// 攻撃判定半径
-	float attackColliderRadius_ = 0.1f;
+	LWP::Math::Vector3 attackColliderOffset_{};
+	// 攻撃判定サイズ
+	float attackColliderRadius_ = 1.0f;
 
 	// 攻撃のダメージ量
 	float damage_ = 1.0f;
+	// 攻撃のヒットストップ秒数
+	float hitStopTime_ = 0.1f;
 	// ノックバック強さ
 	float nockbackStrength_ = 0.1f;
 	// 命中時の鞘の耐久値減少量

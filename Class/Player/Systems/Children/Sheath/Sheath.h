@@ -215,6 +215,11 @@ public:// Getter, Setter
 	/// <param name="pos"></param>
 	void SetSheathPos(const LWP::Math::Vector3& pos) { sheathModel_.worldTF.translation = pos; }
 	/// <summary>
+	/// 鞘の角度を設定
+	/// </summary>
+	/// <param name="rotation"></param>
+	void SetSheathRotation(const LWP::Math::Quaternion& rotation) { sheathModel_.worldTF.rotation = rotation; }
+	/// <summary>
 	/// jsonに保存する値を設定
 	/// </summary>
 	/// <param name="jsonData"></param>
@@ -251,6 +256,9 @@ public:// Getter, Setter
 public:// jsonに保存する値
 	SheathJsonData jsonData_;
 
+	// 鞘の位置修正
+	const LWP::Math::Vector3 kSheathDefaultPos = { 0.0f, 0.7f, 0.0f };
+
 	// 鎖
 	std::unique_ptr<Chain> chain_;
 
@@ -262,7 +270,7 @@ private:// プライベートな変数
 	ISheathSystemState* state_;
 
 	// 鞘のモデル
-	LWP::Resource::RigidModel sheathModel_;
+	LWP::Resource::SkinningModel sheathModel_;
 
 	// 攻撃に当たった相手の名前
 	std::vector<std::string> hitTargetNames_;
