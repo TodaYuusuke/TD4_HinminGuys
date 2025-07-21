@@ -51,9 +51,12 @@ void Ogre::Initialize(Player* player, const Vector3& position, LWP::Object::Came
 	model_.worldTF.translation = position;
 	// 大きさを一時的に調整
 	model_.worldTF.scale = { 0.8f, 0.8f, 0.8f };
+	//プレイヤーの向きに回転
+	RotateTowardsPlayer();
 	//関数セット
 	AddStateFunc();
-	state_.request = States::kIdle;
+	state_.request = States::kSpawn;
+	model_.worldTF.translation.y = stateParameter_.spawnParameter.startY;
 
 	// 刀モデルをプレイヤーの手に追従させる
 	swordModel_.GetJoint("Grip")->localTF.Parent(&model_, "WeaponAnchor");
@@ -259,6 +262,10 @@ void Ogre::AddStateFunc()
 	state_.init[int(States::kDead)] = [this](const States& pre) {DeadInit(pre); };
 	state_.update[int(States::kDead)] = [this](std::optional<States>& req, const States& pre) {DeadUpdate(req, pre); };
 	state_.finalize[int(States::kDead)] = [this](const States& pre) {DeadFinalize(pre); };
+
+	state_.init[int(States::kSpawn)] = [this](const States& pre) {SpawnInit(pre); };
+	state_.update[int(States::kSpawn)] = [this](std::optional<States>& req, const States& pre) {SpawnUpdate(req, pre); };
+	state_.finalize[int(States::kSpawn)] = [this](const States& pre) {SpawnFinalize(pre); };
 
 }
 

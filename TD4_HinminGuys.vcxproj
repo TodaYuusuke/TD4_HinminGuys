@@ -150,6 +150,9 @@
     </Manifest>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Class\Enemy\Childs\Boss\Childs\Ogre\State\OgreSpawn.cpp" />
+    <ClCompile Include="Class\Enemy\Childs\Minor\Childs\OniHayha\State\OniHayhaSpawn.cpp" />
+    <ClCompile Include="Class\Enemy\Childs\Minor\Childs\Saiji\State\SaijiSpawn.cpp" />
     <ClCompile Include="Class\UI\AfterimageMotion.cpp" />
     <ClCompile Include="Class\Camera\CameraSystems.cpp" />
     <ClCompile Include="Class\Audio\AudioPlayer.cpp" />

@@ -75,6 +75,10 @@ private:
 	void DeadUpdate(std::optional<OgreState::States>& req, const OgreState::States& pre);
 	void DeadFinalize(const OgreState::States& pre);
 
+	void SpawnInit(const OgreState::States& pre);
+	void SpawnUpdate(std::optional<OgreState::States>& req, const OgreState::States& pre);
+	void SpawnFinalize(const OgreState::States& pre);
+
 	//各パラメータを個別に取得
 	OgreState::IdleParameter& GetIdleParameter() { return stateParameter_.idleParameter; }
 	OgreState::MoveParameter& GetMoveParameter() { return stateParameter_.moveParameter; }

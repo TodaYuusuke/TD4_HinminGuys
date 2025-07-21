@@ -8,67 +8,44 @@
 		{
 			"name":"Scene",
 			"nodes":[
-				4
+				2
 			]
 		}
 	],
 	"nodes":[
 		{
-			"name":"Hanmmer",
-			"rotation":[
-				3.875269527497949e-08,
-				6.207862668361486e-08,
-				-0.5295424461364746,
-				0.8482834696769714
-			],
-			"translation":[
-				0.10077701508998871,
-				0.020030833780765533,
-				0.024676697328686714
-			]
-		},
-		{
-			"name":"Muzzle",
+			"name":"Bone",
 			"rotation":[
 				-2.6692537957728746e-08,
-				-2.6692537957728746e-08,
-				-0.7071067690849304,
+				2.6692537957728746e-08,
+				0.7071067690849304,
 				0.7071067690849304
-			],
-			"translation":[
-				1.600000023841858,
-				0.032063305377960205,
-				0
 			]
-		},
-		{
-			"children":[
-				0,
-				1
-			],
-			"name":"Grip"
 		},
 		{
 			"mesh":0,
-			"name":"MatchLockGun_Mesh",
+			"name":"LazerMesh",
 			"skin":0
 		},
 		{
 			"children":[
-				3,
-				2
+				1,
+				0
 			],
-			"name":"MatchLockGun"
+			"name":"Lazer"
 		}
 	],
 	"materials":[
 		{
 			"doubleSided":true,
-			"name":"GunMaterial",
+			"name":"Material",
 			"pbrMetallicRoughness":{
-				"baseColorTexture":{
-					"index":0
-				},
+				"baseColorFactor":[
+					0.8001810312271118,
+					0.0017936304211616516,
+					0,
+					1
+				],
 				"metallicFactor":0,
 				"roughnessFactor":0.5
 			}
@@ -76,7 +53,7 @@
 	],
 	"meshes":[
 		{
-			"name":"\u5186\u67f1.003",
+			"name":"Cube.001",
 			"primitives":[
 				{
 					"attributes":{
@@ -92,137 +69,116 @@
 			]
 		}
 	],
-	"textures":[
-		{
-			"sampler":0,
-			"source":0
-		}
-	],
-	"images":[
-		{
-			"mimeType":"image/png",
-			"name":"GunTex",
-			"uri":"GunTex.png"
-		}
-	],
 	"skins":[
 		{
 			"inverseBindMatrices":6,
 			"joints":[
-				2,
-				0,
-				1
+				0
 			],
-			"name":"MatchLockGun"
+			"name":"Lazer"
 		}
 	],
 	"accessors":[
 		{
 			"bufferView":0,
 			"componentType":5126,
-			"count":2432,
+			"count":24,
 			"max":[
-				1.6116557121276855,
-				0.06773403286933899,
-				0.028069542720913887
+				0,
+				0.009999999776482582,
+				0.009999999776482582
 			],
 			"min":[
-				-0.2464638650417328,
-				-0.12388338148593903,
-				-0.022505706176161766
+				-2,
+				-0.009999999776482582,
+				-0.009999999776482582
 			],
 			"type":"VEC3"
 		},
 		{
 			"bufferView":1,
 			"componentType":5126,
-			"count":2432,
+			"count":24,
 			"type":"VEC3"
 		},
 		{
 			"bufferView":2,
 			"componentType":5126,
-			"count":2432,
+			"count":24,
 			"type":"VEC2"
 		},
 		{
 			"bufferView":3,
 			"componentType":5121,
-			"count":2432,
+			"count":24,
 			"type":"VEC4"
 		},
 		{
 			"bufferView":4,
 			"componentType":5126,
-			"count":2432,
+			"count":24,
 			"type":"VEC4"
 		},
 		{
 			"bufferView":5,
 			"componentType":5123,
-			"count":4224,
+			"count":36,
 			"type":"SCALAR"
 		},
 		{
 			"bufferView":6,
 			"componentType":5126,
-			"count":3,
+			"count":1,
 			"type":"MAT4"
 		}
 	],
 	"bufferViews":[
 		{
 			"buffer":0,
-			"byteLength":29184,
+			"byteLength":288,
 			"byteOffset":0,
 			"target":34962
 		},
 		{
 			"buffer":0,
-			"byteLength":29184,
-			"byteOffset":29184,
+			"byteLength":288,
+			"byteOffset":288,
 			"target":34962
-		},
-		{
-			"buffer":0,
-			"byteLength":19456,
-			"byteOffset":58368,
-			"target":34962
-		},
-		{
-			"buffer":0,
-			"byteLength":9728,
-			"byteOffset":77824,
-			"target":34962
-		},
-		{
-			"buffer":0,
-			"byteLength":38912,
-			"byteOffset":87552,
-			"target":34962
-		},
-		{
-			"buffer":0,
-			"byteLength":8448,
-			"byteOffset":126464,
-			"target":34963
 		},
 		{
 			"buffer":0,
 			"byteLength":192,
-			"byteOffset":134912
-		}
-	],
-	"samplers":[
+			"byteOffset":576,
+			"target":34962
+		},
 		{
-			"magFilter":9729,
-			"minFilter":9987
+			"buffer":0,
+			"byteLength":96,
+			"byteOffset":768,
+			"target":34962
+		},
+		{
+			"buffer":0,
+			"byteLength":384,
+			"byteOffset":864,
+			"target":34962
+		},
+		{
+			"buffer":0,
+			"byteLength":72,
+			"byteOffset":1248,
+			"target":34963
+		},
+		{
+			"buffer":0,
+			"byteLength":64,
+			"byteOffset":1320
 		}
 	],
 	"buffers":[
 		{
-			"byteLength":135104,
-			"uri":"MatchLockGun.bin"
+			"byteLength":1384,
+			"uri":"Lazer.bin"
 		}
 	]
 }

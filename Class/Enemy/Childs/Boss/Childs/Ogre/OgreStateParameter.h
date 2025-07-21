@@ -12,6 +12,7 @@ namespace OgreState {
 	/// 状態一覧
 	/// </summary>
 	enum class States {
+		kSpawn, //出現
 		kIdle, //待機
 		kMove, //移動
 		kSwingDownAttack, //ふり降ろし
@@ -22,6 +23,18 @@ namespace OgreState {
 		kHitReaction, //ヒット演出
 		kDead, //死亡
 		kMax, //最大数
+	};
+
+	/// <summary>
+	/// 出現パラメータ
+	/// </summary>
+	struct SpawnParameter {
+		//出現時間
+		float appearanceTime = 3.0f;
+		//現在の時間
+		float currentTime = 0.0f;
+		//スポーン時の開始Y座標
+		float startY = -2.0f;
 	};
 
 	/// <summary>
@@ -218,6 +231,7 @@ namespace OgreState {
 	/// 全てのパラメータ
 	/// </summary>
 	struct StateParameter {
+		SpawnParameter spawnParameter{};
 		IdleParameter idleParameter{};
 		MoveParameter moveParameter{};
 		SwingDownAttack swingDownAttack{};

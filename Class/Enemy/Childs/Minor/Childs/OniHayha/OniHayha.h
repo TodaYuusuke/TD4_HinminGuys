@@ -67,6 +67,10 @@ private:
 	void DeadUpdate(std::optional<OniHayhaState::States>& req, const OniHayhaState::States& pre);
 	void DeadFinalize(const OniHayhaState::States& pre);
 
+	void SpawnInit(const OniHayhaState::States& pre);
+	void SpawnUpdate(std::optional<OniHayhaState::States>& req, const OniHayhaState::States& pre);
+	void SpawnFinalize(const OniHayhaState::States& pre);
+
 #pragma endregion
 
 private:

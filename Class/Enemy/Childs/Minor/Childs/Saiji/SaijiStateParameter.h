@@ -11,6 +11,7 @@ namespace SaijiState {
 	/// 状態一覧
 	/// </summary>
 	enum class States {
+		kSpawn,
 		kIdle,
 		kMove,
 		kAttack,
@@ -20,6 +21,18 @@ namespace SaijiState {
 		kHitReaction,
 		kDead,
 		kMax,
+	};
+
+	/// <summary>
+	/// 出現パラメータ
+	/// </summary>
+	struct SpawnParameter {
+		//出現時間
+		float appearanceTime = 3.0f;
+		//現在の時間
+		float currentTime = 0.0f;
+		//スポーン時の開始Y座標
+		float startY = -2.0f;
 	};
 
 	/// <summary>
@@ -115,6 +128,7 @@ namespace SaijiState {
 	/// 雑魚敵の全てのパラメータ
 	/// </summary>
 	struct StateParameter {
+		SpawnParameter spawnParameter;
 		IdleParameter idleParameter;
 		MoveParameter moveParameter;
 		AttackParameter attackParameter;

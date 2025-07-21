@@ -3387,12 +3387,12 @@
 				},
 				{
 					"input":35,
-					"interpolation":"STEP",
+					"interpolation":"LINEAR",
 					"output":246
 				},
 				{
 					"input":35,
-					"interpolation":"STEP",
+					"interpolation":"LINEAR",
 					"output":247
 				},
 				{
@@ -8462,7 +8462,7 @@
 				},
 				{
 					"input":630,
-					"interpolation":"STEP",
+					"interpolation":"LINEAR",
 					"output":671
 				},
 				{
