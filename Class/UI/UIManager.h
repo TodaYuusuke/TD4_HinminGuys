@@ -2,17 +2,17 @@
 #include "../Adapter/Adapter.h"
 #include "../Player/Gauge/HP/HP.h"
 #include "../Player/Gauge/Sheath/SheathGauge.h"
+#include "AfterimageMotion.h"
 
 class Player;
 class UIManager {
 public:
-	struct AfterimageData {
+	struct GuideUI {
 		LWP::Primitive::NormalSprite sprite;
-		LWP::Math::Vector3 startScale;
-		LWP::Math::Vector3 endScale;
-		float currentFrame;
-		float endFrame;
-		int alpha;
+		LWP::Primitive::ClipSprite coolTimeFilter;		// クールタイムのフィルタ
+		LWP::Math::Vector2 coolTimeFilterSplitSize;
+		bool isActive = false;// 可能状態か
+		bool isPreActive = false;// 可能状態か
 	};
 
 public:
@@ -40,12 +40,6 @@ public:
 	/// クールタイム演出
 	/// </summary>
 	void CoolTimeFilterUpdate();
-
-	/// <summary>
-	/// 使用可能演出
-	/// </summary>
-	/// <param name="id">残像スプライトの要素番号</param>
-	void StartEnableUIEffect(const int& id);
 
 public:
 #pragma region Getter
@@ -108,10 +102,7 @@ private:
 	SheathGauge sheathGauge_;
 
 	// 操作ガイド
-	std::vector<LWP::Primitive::NormalSprite> guideOperation_;
-	// クールタイムのフィルタ
-	std::vector<LWP::Primitive::ClipSprite> coolTimeFilter_;
-	std::vector<LWP::Math::Vector2> coolTimeFilterSplitSize_;
+	std::vector<GuideUI> guideUI_;
 	// 残像
-	std::vector<AfterimageData> afterimage_;
+	std::vector<AfterimageMotion*> afterimageUI_;
 };
