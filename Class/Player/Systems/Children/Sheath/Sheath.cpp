@@ -99,9 +99,6 @@ void Sheath::Update() {
 void Sheath::Reset() {
 	isActive_ = false;
 	isPreActive_ = false;
-	// 鎖の表示状況
-	chain_->SetIsActive(isActive_);
-	chain_->Reset();
 	eventOrders_[(int)SheathState::kThrow].Reset();
 	eventOrders_[(int)SheathState::kCollect].Reset();
 	eventOrders_[(int)SheathState::kBreak].Reset();

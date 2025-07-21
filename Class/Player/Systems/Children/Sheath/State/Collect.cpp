@@ -46,6 +46,10 @@ void Collect::Update() {
 		sheathSystem_->Reset();
 		(*eventOrders_)[(int)Sheath::SheathState::kCollect].Reset();
 
+		// 鎖の表示をしない
+		sheathSystem_->chain_->SetIsActive(false);
+		sheathSystem_->chain_->Reset();
+
 		// 投げる用の鞘モデルを非表示
 		sheathSystem_->SetIsSheathModelActive(false);
 		// 本体のモデルも非表示

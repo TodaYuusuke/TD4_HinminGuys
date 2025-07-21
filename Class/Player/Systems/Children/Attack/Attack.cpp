@@ -166,14 +166,15 @@ void Attack::LockOnAssist(IEnemy* lockOnTarget) {
 
 	// 自機とロックオン中の敵との距離
 	Vector3 attackTargetDist = (player_->GetWorldTF()->GetWorldPosition() - lockOnTarget->GetWorldTF()->GetWorldPosition());
-	Vector3 assistPos = lockOnTarget->GetWorldTF()->GetWorldPosition() + Vector3{ 0,0,2.0f } * LWP::Math::Matrix4x4::CreateRotateXYZMatrix(LWP::Math::Quaternion::ConvertDirection(attackTargetDist));
+	Vector3 assistPos = lockOnTarget->GetWorldTF()->GetWorldPosition() + Vector3{ 0,0,0.5f } * LWP::Math::Matrix4x4::CreateRotateXYZMatrix(LWP::Math::Quaternion::ConvertDirection(attackTargetDist));
 
 	// 速度
-	velocity_ = (LWP::Utility::Interpolation::Exponential(player_->GetWorldTF()->GetWorldPosition(), assistPos, 0.7f) - player_->GetWorldTF()->GetWorldPosition()) * hitStopController_->GetDeltaTime();
+	velocity_ = (LWP::Utility::Interpolation::Exponential(player_->GetWorldTF()->GetWorldPosition(), assistPos, 1.0f) - player_->GetWorldTF()->GetWorldPosition()) * hitStopController_->GetDeltaTime();
 	// 移動速度からラジアンを求める
 	radian_.y = LWP::Utility::GetRadian(LWP::Math::Vector3{ 0,0,1 }, (lockOnTarget->GetWorldTF()->GetWorldPosition() - player_->GetWorldTF()->GetWorldPosition()).Normalize(), LWP::Math::Vector3{ 0,1,0 });
 	quat_ = LWP::Math::Quaternion::CreateFromAxisAngle(LWP::Math::Vector3{ 0, 1, 0 }, radian_.y);
 
+	// 近くなりすぎたら位置アシストをしない
 	if ((lockOnTarget->GetWorldTF()->GetWorldPosition() - player_->GetWorldTF()->GetWorldPosition()).Length() <= std::powf(1.0f, 2.0f)) {
 		velocity_ = { 0.0f,0.0f,0.0f };
 	}
