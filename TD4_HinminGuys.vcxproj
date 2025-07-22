@@ -235,6 +235,7 @@
     <ClCompile Include="Class\Components\HitStopController.cpp" />
     <ClCompile Include="Class\Player\Systems\Children\Evasion\Effect\EvasionEffect.cpp" />
     <ClCompile Include="Class\Player\Particles\IEffect.cpp" />
+    <ClCompile Include="Class\World\World.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Class\Player\Player.cpp" />
     <ClCompile Include="Class\Player\Systems\Children\Move\Move.cpp" />
@@ -256,6 +257,7 @@
     <ClCompile Include="Class\Player\Math\MathFunctions.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Class\World\World.h" />
     <ClInclude Include="Class\UI\AfterimageMotion.h" />
     <ClInclude Include="Class\Camera\CameraSystems.h" />
     <ClInclude Include="Class\Audio\AudioPlayer.h" />

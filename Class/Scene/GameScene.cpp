@@ -43,6 +43,7 @@ void GameScene::Initialize() {
 	enemyManager_.SetCamera(followCamera_.GetCamera());
 	enemyManager_.SetIsShowSpawnDataModel(false);
 	enemyManager_.SetSEPlayer(&sePlayer_);
+	enemyManager_.SetWorld(&world_);
 
 	// 追従カメラの生成
 	followCamera_.Initialize();
@@ -163,6 +164,11 @@ void GameScene::DebugGUI() {
 		//ダメージエフェクトエミッター
 		if (ImGui::BeginTabItem("DamageEffectEmitter")) {
 			damageEffectEmitter_.DebugGUI();
+			ImGui::EndTabItem();
+		}
+		// 世界
+		if (ImGui::BeginTabItem("World")) {
+			world_.DebugGUI();
 			ImGui::EndTabItem();
 		}
 		// 地面

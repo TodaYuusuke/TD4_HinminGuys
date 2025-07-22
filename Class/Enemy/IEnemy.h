@@ -7,6 +7,7 @@ using namespace LWP::Resource;
 class Player;
 class EnemyManager;
 class SEPlayer;
+class World;
 
 /// <summary>
 /// 敵の種類
@@ -91,6 +92,8 @@ public:
 	void SetPlayer(Player* player) { player_ = player; }
 	//SEPlayerセット
 	void SetSEPlayer(SEPlayer* sePlayer) { sePlayer_ = sePlayer; }
+	//Worldセット
+	void SetWorld(World* world) { world_ = world; }
 	//パラメータをセット
 	void SetParameter(const EnemyParameter& parameter) { parameter_ = parameter; }
 	//死亡フラグ取得
@@ -100,7 +103,7 @@ public:
 	//座標取得
 	const Vector3& GetPosition() const { return model_.worldTF.translation; }
 	//座標セット
-	void SetPosition(const Vector3& position) { model_.worldTF.translation = position; }
+	void SetPosition(const Vector3& position);
 	//回転取得
 	const Quaternion& GetRotation() const { return model_.worldTF.rotation; }
 	//回転セット
@@ -193,6 +196,8 @@ protected:
 	EnemyManager* enemyManager_;
 	//SEを再生するクラスのポインタ
 	SEPlayer* sePlayer_;
+	//Worldポインタ
+	World* world_;
 	//敵個別のパラメータ
 	EnemyParameter parameter_;
 	//互いに距離を取るときの反発力

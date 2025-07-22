@@ -12,6 +12,7 @@
 
 class Player;
 class SEPlayer;
+class World;
 
 /// <summary>
 /// 全ての敵を管理するクラス
@@ -32,6 +33,8 @@ public:
 	void SetPlayer(Player* player) { player_ = player; }
 	//SEPlayerセット
 	void SetSEPlayer(SEPlayer* sePlayer) { sePlayer_ = sePlayer; }
+	//Worldセット
+	void SetWorld(World* world) { world_ = world; }
 	//カメラセット
 	void SetCamera(LWP::Object::Camera* camera) { camera_ = camera; }
 	//ダメージエフェクトエミッターのセット
@@ -96,6 +99,8 @@ private:
 	Player* player_;
 	//SEPlayerのポインタ
 	SEPlayer* sePlayer_;
+	//Worldポインタ
+	World* world_;
 	//ダメージエフェクトエミッターのポインタ
 	DamageEffectEmitter* damageEffectEmitter_;
 	//カメラのポインタ

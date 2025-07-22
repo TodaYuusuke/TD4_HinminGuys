@@ -12,6 +12,7 @@
 #include "../UI/DamageEffectEmitter.h"
 #include "../Audio/BGMPlayer.h"
 #include "../Audio/SEPlayer.h"
+#include "../World/World.h"
 
 class GameScene final
 	: public IScene {
@@ -47,6 +48,9 @@ private: // ** これより先に必要な処理や変数を記述 ** //
 
 	// 追従カメラ
 	FollowCamera followCamera_;
+
+	//世界共通のルールをまとめるクラス
+	World world_;
 
 	//敵マネージャー
 	EnemyManager enemyManager_;

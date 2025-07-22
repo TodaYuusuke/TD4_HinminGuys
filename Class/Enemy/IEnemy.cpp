@@ -1,6 +1,7 @@
 #include "IEnemy.h"
 #include "../Player/Player.h"
 #include "../GameMask.h"
+#include "../World/World.h"
 
 #define UNIT16_MAX 65535
 
@@ -52,6 +53,25 @@ IEnemy::~IEnemy()
 
 void IEnemy::Update()
 {
+
+}
+
+void IEnemy::SetPosition(const Vector3& position)
+{
+
+	model_.worldTF.translation = position;
+
+	Vector2 posizionXZ = Vector2{ model_.worldTF.translation.x, model_.worldTF.translation.z };
+
+	float dist = posizionXZ.Length();
+
+	//制限範囲を超える場合
+	if (dist > world_->GetWorldLimitRadius()) {
+		//中心からの向きを取得し、制限範囲まで伸ばしたところに移動
+		posizionXZ = posizionXZ.Normalize() * world_->GetWorldLimitRadius();
+		model_.worldTF.translation.x = posizionXZ.x;
+		model_.worldTF.translation.z = posizionXZ.y;
+	}
 
 }
 
