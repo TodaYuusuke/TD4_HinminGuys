@@ -101,6 +101,8 @@ void Player::DebugGUI() {
 	// 各機能
 	if (ImGui::TreeNode("Systems")) {
 		systemManager_->DebugGUI();
+
+		sheathModel_.DebugGUI();
 		ImGui::TreePop();
 	}
 	// WorldTransform

@@ -25,10 +25,19 @@ Throw::Throw(Sheath* sheathSystem, Player* player, std::map<int, EventOrder>* ev
 	sheathSystem_->SetIsNone(false);
 	sheathSystem_->SetIsBreak(false);
 	sheathSystem_->SetIsSheathing(true);
+
+	// 鞘の残像を発生させる
+	ghostTrail_ = std::make_unique<GhostTrail>("player/Sheath.gltf", "SheathMaterial", sheathSystem_->GetSheathWorldTF());
+	ghostTrail_->Initialize();
+	ghostTrail_->SetIsActive(false);
+}
+
+Throw::~Throw() {
+	ghostTrail_.reset();
 }
 
 void Throw::Initialize() {
-
+	
 }
 
 void Throw::Update() {
@@ -37,6 +46,9 @@ void Throw::Update() {
 	(*eventOrders_)[(int)Sheath::SheathState::kThrow].Update();
 
 	CheckThrowState();
+
+	// 残像
+	ghostTrail_->Update();
 
 	// 全ての移動処理終了
 	if ((*eventOrders_)[(int)Sheath::SheathState::kThrow].GetIsEnd()) {
@@ -116,6 +128,9 @@ void Throw::CheckThrowState() {
 			sheathSystem_->chain_->SetIsActive(isActive_);
 			sheathSystem_->chain_->Reset();
 			sheathSystem_->chain_->Initialize();
+
+			// 残像生成
+			ghostTrail_->SetIsActive(true);
 		}
 
 		// 鞘判定をとれるようにする

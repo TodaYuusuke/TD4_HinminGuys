@@ -98,7 +98,9 @@
     <ClCompile Include="Class\Player\Systems\Children\Sheath\Effect\Chain.cpp" />
     <ClCompile Include="Class\Player\Systems\Children\Sheath\Effect\ChainNode.cpp" />
     <ClCompile Include="Class\Camera\CameraSystems.cpp" />
-    <ClCompile Include="Class\UI\AfterimageMotion.cpp" />
+    <ClCompile Include="Class\UI\EchoMotion.cpp" />
+    <ClCompile Include="Class\Player\Systems\Children\Sheath\Effect\GhostTrail\GhostTrail.cpp" />
+    <ClCompile Include="Class\Player\Systems\Children\Sheath\Effect\GhostTrail\GhostTrailNode.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Class\ComboEditor\ComboTree.h" />
@@ -188,7 +190,9 @@
     <ClInclude Include="Class\Player\PlayerModelConfig.h" />
     <ClInclude Include="Class\Camera\CameraSystems.h" />
     <ClInclude Include="Class\Camera\ICameraSystem.h" />
-    <ClInclude Include="Class\UI\AfterimageMotion.h" />
+    <ClInclude Include="Class\UI\EchoMotion.h" />
+    <ClInclude Include="Class\Player\Systems\Children\Sheath\Effect\GhostTrail\GhostTrail.h" />
+    <ClInclude Include="Class\Player\Systems\Children\Sheath\Effect\GhostTrail\GhostTrailNode.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />

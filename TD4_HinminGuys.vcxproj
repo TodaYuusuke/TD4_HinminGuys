@@ -150,7 +150,7 @@
     </Manifest>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Class\UI\AfterimageMotion.cpp" />
+    <ClCompile Include="Class\UI\EchoMotion.cpp" />
     <ClCompile Include="Class\Camera\CameraSystems.cpp" />
     <ClCompile Include="Class\Audio\AudioPlayer.cpp" />
     <ClCompile Include="Class\Audio\BGMPlayer.cpp" />
@@ -229,6 +229,8 @@
     <ClCompile Include="Class\Components\HitStopController.cpp" />
     <ClCompile Include="Class\Player\Systems\Children\Evasion\Effect\EvasionEffect.cpp" />
     <ClCompile Include="Class\Player\Particles\IEffect.cpp" />
+    <ClCompile Include="Class\Player\Systems\Children\Sheath\Effect\GhostTrail\GhostTrail.cpp" />
+    <ClCompile Include="Class\Player\Systems\Children\Sheath\Effect\GhostTrail\GhostTrailNode.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Class\Player\Player.cpp" />
     <ClCompile Include="Class\Player\Systems\Children\Move\Move.cpp" />
@@ -250,7 +252,7 @@
     <ClCompile Include="Class\Player\Math\MathFunctions.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Class\UI\AfterimageMotion.h" />
+    <ClInclude Include="Class\UI\EchoMotion.h" />
     <ClInclude Include="Class\Camera\CameraSystems.h" />
     <ClInclude Include="Class\Audio\AudioPlayer.h" />
     <ClInclude Include="Class\Audio\BGMPlayer.h" />
@@ -338,6 +340,8 @@
     <ClInclude Include="Class\Player\Particles\IEffect.h" />
     <ClInclude Include="Class\Player\Systems\Children\Move\Effect\MoveEffect.h" />
     <ClInclude Include="Class\Player\Math\MathFunctions.h" />
+    <ClInclude Include="Class\Player\Systems\Children\Sheath\Effect\GhostTrail\GhostTrail.h" />
+    <ClInclude Include="Class\Player\Systems\Children\Sheath\Effect\GhostTrail\GhostTrailNode.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />
