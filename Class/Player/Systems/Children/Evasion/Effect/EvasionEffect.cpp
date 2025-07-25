@@ -28,6 +28,7 @@ void EvasionEffect::Generate(LWP::Object::Particle::Data& data) {
 
 bool EvasionEffect::UpdateParticle(LWP::Object::Particle::Data& data) {
 	if (data.elapsedTime <= 0.0f) { return true; }
+
 	data.elapsedTime--;
 
 	data.velocity.y += -9.8f / 6000.0f;

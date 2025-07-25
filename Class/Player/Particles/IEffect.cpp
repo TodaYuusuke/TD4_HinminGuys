@@ -16,7 +16,7 @@ void IEffect::Update() {
 		}
 
 		// 各パーティクルの更新処理
-		(*particleIterator).updateFunc(*particleIterator);
+		//(*particleIterator).updateFunc(*particleIterator);
 
 		// 生存時間
 		(*particleIterator).currentTime++;

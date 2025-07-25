@@ -34,36 +34,36 @@ public:
 	void DebugGui();
 
 private:// 各パーティクル単体を生成
-	/// <summary>
-	/// 線パーティクル単体を生成
-	/// </summary>
-	/// <param name="pos"></param>
-	/// <returns></returns>
-	void MakeLineParticle(ParticleData& particle, LWP::Math::Vector3 pos);
-	/// <summary>
-	/// 円パーティクル単体を生成
-	/// </summary>
-	/// <param name="pos"></param>
-	/// <returns></returns>
-	void MakeCircleParticle(ParticleData& particle, LWP::Math::Vector3 pos);
-	/// <summary>
-	/// 大きい光パーティクル単体を生成
-	/// </summary>
-	/// <param name="pos"></param>
-	/// <returns></returns>
-	void MakeLargeFlashParticle(ParticleData& particle, LWP::Math::Vector3 pos);
-	/// <summary>
-	/// 小さい光パーティクル単体を生成
-	/// </summary>
-	/// <param name="pos"></param>
-	/// <returns></returns>
-	void MakeShortFlashParticle(ParticleData& particle, LWP::Math::Vector3 pos);
-	/// <summary>
-	/// リングを生成
-	/// </summary>
-	/// <param name="pos"></param>
-	/// <returns></returns>
-	void MakeRingParticle(ParticleData& particle, LWP::Math::Vector3 pos);
+	///// <summary>
+	///// 線パーティクル単体を生成
+	///// </summary>
+	///// <param name="pos"></param>
+	///// <returns></returns>
+	//void MakeLineParticle(ParticleData& particle, LWP::Math::Vector3 pos);
+	///// <summary>
+	///// 円パーティクル単体を生成
+	///// </summary>
+	///// <param name="pos"></param>
+	///// <returns></returns>
+	//void MakeCircleParticle(ParticleData& particle, LWP::Math::Vector3 pos);
+	///// <summary>
+	///// 大きい光パーティクル単体を生成
+	///// </summary>
+	///// <param name="pos"></param>
+	///// <returns></returns>
+	//void MakeLargeFlashParticle(ParticleData& particle, LWP::Math::Vector3 pos);
+	///// <summary>
+	///// 小さい光パーティクル単体を生成
+	///// </summary>
+	///// <param name="pos"></param>
+	///// <returns></returns>
+	//void MakeShortFlashParticle(ParticleData& particle, LWP::Math::Vector3 pos);
+	///// <summary>
+	///// リングを生成
+	///// </summary>
+	///// <param name="pos"></param>
+	///// <returns></returns>
+	//void MakeRingParticle(ParticleData& particle, LWP::Math::Vector3 pos);
 	/// <summary>
 	/// 指定されている数のジャストパリィパーティクルを生成
 	/// </summary>
@@ -90,31 +90,31 @@ public:// 演出開始
 	void CreateGoodParticles(LWP::Math::Vector3 pos);
 
 private:// パーティクルの更新処理
-	/// <summary>
-	/// 線パーティクルの更新処理
-	/// </summary>
-	/// <param name="data"></param>
-	void LineParticleUpdate(ParticleData& data);
-	/// <summary>
-	/// 円パーティクルの更新処理
-	/// </summary>
-	/// <param name="data"></param>
-	void CircleParticleUpdate(ParticleData& data);
-	/// <summary>
-	/// 大きい閃光の更新処理
-	/// </summary>
-	/// <param name="data"></param>
-	void LargeFlashUpdate(ParticleData& data);
-	/// <summary>
-	/// 小さい閃光の更新処理
-	/// </summary>
-	/// <param name="data"></param>
-	void ShortFlashUpdate(ParticleData& data);
-	/// <summary>
-	/// リングの更新処理
-	/// </summary>
-	/// <param name="data"></param>
-	void RingParticleUpdate(ParticleData& data);
+	///// <summary>
+	///// 線パーティクルの更新処理
+	///// </summary>
+	///// <param name="data"></param>
+	//void LineParticleUpdate(ParticleData& data);
+	///// <summary>
+	///// 円パーティクルの更新処理
+	///// </summary>
+	///// <param name="data"></param>
+	//void CircleParticleUpdate(ParticleData& data);
+	///// <summary>
+	///// 大きい閃光の更新処理
+	///// </summary>
+	///// <param name="data"></param>
+	//void LargeFlashUpdate(ParticleData& data);
+	///// <summary>
+	///// 小さい閃光の更新処理
+	///// </summary>
+	///// <param name="data"></param>
+	//void ShortFlashUpdate(ParticleData& data);
+	///// <summary>
+	///// リングの更新処理
+	///// </summary>
+	///// <param name="data"></param>
+	//void RingParticleUpdate(ParticleData& data);
 
 public:// Getter, Setter
 #pragma region Getter

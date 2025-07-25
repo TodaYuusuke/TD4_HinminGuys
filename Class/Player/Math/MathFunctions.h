@@ -17,6 +17,7 @@ namespace MathFunc {
 	/// <param name="theta"></param>
 	/// <returns></returns>
 	LWP::Math::Vector3 RotateVector(LWP::Math::Vector3 v, LWP::Math::Vector3 axis, float theta);
+	LWP::Math::Vector3 RotateVector(LWP::Math::Quaternion q, LWP::Math::Vector3 axis);
 
 	/// <summary>
 	/// 地面と水平方向のビルボード

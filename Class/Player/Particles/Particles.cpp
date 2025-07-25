@@ -17,6 +17,16 @@ Particles::Particles(Player* player, FollowCamera* followCamera) {
 	// 移動
 	moveEffect_ = std::make_unique<MoveEffect>(player_, followCamera_);
 	moveEffect_->Initialize();
+
+
+
+
+	largeFlashes_ = std::make_unique<LargeFlashes>(player_, followCamera_);
+	shortFlashes_ = std::make_unique<ShortFlashes>(player_, followCamera_);
+	rings_ = std::make_unique<Rings>(player_, followCamera_);
+	sparks_ = std::make_unique<Sparks>(player_, followCamera_);
+	floatParticle_ = std::make_unique<FloatParticle>(player_);
+	floatParticle_->model.LoadCube();
 }
 
 void Particles::Initialize() {
@@ -25,8 +35,15 @@ void Particles::Initialize() {
 }
 
 void Particles::Update() {
-	parryEffect_->Update();
-	moveEffect_->Update();
+	largeFlashes_->Update();
+	shortFlashes_->Update();
+	rings_->Update();
+	sparks_->Update();
+	shortFlashes_->Update();
+
+
+	//parryEffect_->Update();
+	//moveEffect_->Update();
 
 	isPreJustParry_ = player_->GetSystemManager()->GetIsJustParry();
 	isPreGoodParry_ = player_->GetSystemManager()->GetIsGoodParry();
@@ -48,6 +65,22 @@ void Particles::CreateJsonData() {
 	// パリィ時のパーティクル
 	json_.BeginGroup("Move");
 	moveEffect_->SetJsonData(json_);
+	json_.EndGroup();
+
+	json_.BeginGroup("LargeFlash");
+	largeFlashes_->SetJsonData(json_);
+	json_.EndGroup();
+	json_.BeginGroup("ShortFlash");
+	shortFlashes_->SetJsonData(json_);
+	json_.EndGroup();
+	json_.BeginGroup("Ring");
+	rings_->SetJsonData(json_);
+	json_.EndGroup();
+	json_.BeginGroup("Spark");
+	sparks_->SetJsonData(json_);
+	json_.EndGroup();
+	json_.BeginGroup("FloatParticle");
+	floatParticle_->SetJsonData(json_);
 	json_.EndGroup();
 
 	json_.CheckJsonFile();
@@ -72,6 +105,22 @@ void Particles::DebugGui() {
 	// 移動時のパーティクル生成
 	if (ImGui::Button("Create Move Particle")) {
 		CreateMoveParticle(debugEmitterPos_);
+	}
+
+	if (ImGui::Button("Create Large Particle")) {
+		largeFlashes_->Add(3, debugEmitterPos_);
+	}
+	if (ImGui::Button("Create Short Particle")) {
+		shortFlashes_->Add(12, debugEmitterPos_);
+	}
+	if (ImGui::Button("Create Ring Particle")) {
+		rings_->Add(1, debugEmitterPos_);
+	}
+	if (ImGui::Button("Create Spark Particle")) {
+		sparks_->Add(50, debugEmitterPos_);
+	}
+	if (ImGui::Button("Create Float Particle")) {
+		floatParticle_->Add(1, debugEmitterPos_);
 	}
 
 	// パーティクルの詳細

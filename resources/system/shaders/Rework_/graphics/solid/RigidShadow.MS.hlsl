@@ -17,7 +17,7 @@ void main(
 
     if (gtid < meshlet.VertCount) {
         // 頂点インデックスの取得
-        uint32_t vertexIndex = GetVertexIndex(meshlet, gtid, mUniqueVertexIndices);
+        uint32_t vertexIndex = GetVertexIndex(meshlet, gtid);
         
         // 取得したインデックスから頂点座標を求める
         Vertex vertex = mVertices[vertexIndex];
@@ -30,8 +30,12 @@ void main(
         outVerts[gtid].color = vertex.color;
         outVerts[gtid].mIndex = vertex.mIndex + (gid * mMetadata.mSize); // マテリアルのインデックスをインスタンス番号分ずらす
     }
-    if (gtid < meshlet.PrimCount) {
-        // プリミティブ情報のインデックス情報を取得し、出力するプリミティブを求める
-        outIndices[gtid] = GetPrimitive(meshlet, gtid, mPrimitiveIndices);
+    if (gtid < meshlet.PrimCount)
+    {
+        // プリミティブ情報のインデックス情報を取得
+        uint32_t3 packedIndices = GetPrimitive(meshlet, gtid);
+        
+        // 出力するプリミティブを求める
+        outIndices[gtid] = packedIndices;
     }
 }

@@ -3,6 +3,11 @@
 #include "../Systems/Children/Parry/Effect/ParryEffect.h"
 #include "../Systems/Children/Evasion/Effect/EvasionEffect.h"
 #include "../Systems/Children/Move/Effect/MoveEffect.h"
+#include "Common/LargeFlashes.h"
+#include "Common/ShortFlashes.h"
+#include "Common/Rings.h"
+#include "Common/Sparks.h"
+#include "Common/Children/FloatParticle.h"
 
 class FollowCamera;
 /// <summary>
@@ -80,6 +85,16 @@ private:
 	std::unique_ptr<EvasionEffect> evasionEffect_;
 	// 移動
 	std::unique_ptr<MoveEffect> moveEffect_;
+
+
+
+	std::unique_ptr<LargeFlashes> largeFlashes_;
+	std::unique_ptr<ShortFlashes> shortFlashes_;
+	std::unique_ptr<Rings> rings_;
+	std::unique_ptr<Sparks> sparks_;
+	std::unique_ptr<FloatParticle> floatParticle_;
+
+
 
 	// パーティクル生成座標(デバッグ用)
 	LWP::Math::Vector3 debugEmitterPos_;
