@@ -2,10 +2,10 @@
 
 HP::HP() {
 	// HP画像の背景作成(BackGroundは長すぎるのでBGにしてます)
-	sprite_["HpBarBG"].LoadTexture("UI/Gauge/HpBarBackGround.png");
+	sprite_["HpBarBG"].LoadTexture("UI/Gauge/HpBarBase.png");
 	sprite_["HpBarBG"].isActive = true;
 	// HP画像を作成
-	sprite_["HpBar"].LoadTexture("UI/Gauge/HpBar.png");
+	sprite_["HpBar"].LoadTexture("UI/Gauge/HpBarGauge.png");
 	sprite_["HpBar"].isActive = true;
 
 	// jsonに保存する値を設定
