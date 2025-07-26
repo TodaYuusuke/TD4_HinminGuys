@@ -39,10 +39,9 @@ void Particles::Update() {
 	shortFlashes_->Update();
 	rings_->Update();
 	sparks_->Update();
-	shortFlashes_->Update();
 
 
-	//parryEffect_->Update();
+	parryEffect_->Update();
 	//moveEffect_->Update();
 
 	isPreJustParry_ = player_->GetSystemManager()->GetIsJustParry();

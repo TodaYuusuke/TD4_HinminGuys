@@ -113,6 +113,8 @@
     <ClCompile Include="Class\Player\Particles\Common\ShortFlashes.cpp" />
     <ClCompile Include="Class\Player\Particles\Common\Rings.cpp" />
     <ClCompile Include="Class\Player\Particles\Common\Sparks.cpp" />
+    <ClCompile Include="Class\Player\Particles\Common\Children\AuraParticle.cpp" />
+    <ClCompile Include="Class\Player\Particles\Common\AuraParticles.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Class\ComboEditor\ComboTree.h" />
@@ -217,6 +219,8 @@
     <ClInclude Include="Class\Player\Particles\Common\ShortFlashes.h" />
     <ClInclude Include="Class\Player\Particles\Common\Rings.h" />
     <ClInclude Include="Class\Player\Particles\Common\Sparks.h" />
+    <ClInclude Include="Class\Player\Particles\Common\Children\AuraParticle.h" />
+    <ClInclude Include="Class\Player\Particles\Common\AuraParticles.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />

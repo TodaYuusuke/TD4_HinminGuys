@@ -2,6 +2,10 @@
 #include "Adapter.h"
 #include "../../../../Particles/IEffect.h"
 #include "../../../../Particles/ParticleJsonDataStructs.h"
+#include "../../../../Particles/Common/LargeFlashes.h"
+#include "../../../../Particles/Common/ShortFlashes.h"
+#include "../../../../Particles/Common/Rings.h"
+#include "../../../../Particles/Common/Sparks.h"
 
 class ParryEffect : public IEffect {
 public:
@@ -153,4 +157,10 @@ private:
 
 	// イージング終了時間
 	float circleParticleEasingEndTime = 1.0f;
+
+
+	std::unique_ptr<LargeFlashes> largeFlashes_;
+	std::unique_ptr<ShortFlashes> shortFlashes_;
+	std::unique_ptr<Rings> rings_;
+	std::unique_ptr<Sparks> sparks_;
 };

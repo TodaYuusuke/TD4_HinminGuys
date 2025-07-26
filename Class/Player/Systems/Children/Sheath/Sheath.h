@@ -3,6 +3,8 @@
 #include "State/ISheathSystemState.h"
 #include "Effect/Chain.h"
 #include "../../../Particles/Common/Children/FloatParticle.h"
+#include "../../../Particles/Common/AuraParticles.h"
+
 // jsonに保存する値
 struct SheathJsonData {
 	// 鞘投げ発動までにかかる時間[秒]
@@ -176,6 +178,11 @@ public:// Getter, Setter
 	/// </summary>
 	/// <returns></returns>
 	FloatParticle* GetFloatParticle() { return floatParticle_.get(); }
+	/// <summary>
+	/// オーラの取得
+	/// </summary>
+	/// <returns></returns>
+	AuraParticles* GetAuraParticles() { return auraParticles_.get(); }
 
 	/// <summary>
 	/// 最終的な鞘ゲージ減少量を取得
@@ -287,6 +294,8 @@ private:// プライベートな変数
 
 	// 浮遊パーティクル
 	std::unique_ptr<FloatParticle> floatParticle_;
+	// オーラ
+	std::unique_ptr<AuraParticles> auraParticles_;
 
 	// 攻撃に当たった相手の名前
 	std::vector<std::string> hitTargetNames_;

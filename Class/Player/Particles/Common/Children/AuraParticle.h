@@ -3,24 +3,22 @@
 #include "IParticle.h"
 
 class FollowCamera;
-class Spark : public IParticle {
+class AuraParticle : public IParticle {
 public:
-	struct SparkJsonData {
+	struct AuraParticleJsonData {
 		LimitVec3 velLimit;
-		LimitVec3 scaleLimit;
-		LimitF kelvinLimit = { 1000.0f, 3000.0f };
-		LWP::Math::Vector3 firstVel;
-		LWP::Math::Vector3 acceleration;
+		LimitF scaleLimit;
+		LWP::Utility::Color color;
+		float acceleration;
 		float multiply;
 		float maxElapseTime;								// パーティクルが存在できる時間
-		LWP::Math::Vector3 maxScale = { 1.0f,1.0f,1.0f };	// 大きい閃光の最大サイズ
 	};
 
 public:
 	// コンストラクタ
-	Spark(Player* player, FollowCamera* followCamera);
+	AuraParticle(Player* player, FollowCamera* followCamera, const std::string& texName);
 	// デストラクタ
-	~Spark() override = default;
+	~AuraParticle() override = default;
 
 	/// <summary>
 	/// 更新処理
@@ -40,17 +38,22 @@ private:
 
 public:// アクセサ
 #pragma region Getter
-	SparkJsonData GetSparkJsonData() { return jsonData_; }
+	AuraParticleJsonData GetAuraParticleJsonData() { return jsonData_; }
 #pragma endregion
 
 #pragma region Setter
-	void SetSparkJsonData(SparkJsonData data) { jsonData_ = data; }
+	void SetAuraParticleJsonData(AuraParticleJsonData data) { jsonData_ = data; }
+	void SetParent(LWP::Object::TransformQuat* emitter) { emitterPos_ = emitter; }
 #pragma endregion
 
 private:
 	// ビルボード
-	LWP::Primitive::NormalStretchedBillboard plane_;
+	LWP::Primitive::NormalBillboard2D plane_;
 
 	// 外部で調整するデータ
-	SparkJsonData jsonData_;
+	AuraParticleJsonData jsonData_;
+
+	// 生成座標
+	LWP::Object::TransformQuat* emitterPos_;
+	LWP::Math::Vector3 localPos_;
 };

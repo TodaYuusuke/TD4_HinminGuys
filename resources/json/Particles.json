@@ -141,52 +141,6 @@
         }
     },
     "Group :Parry": {
-        "Group :Circle": {
-            "Group :Kelvin": {
-                "float :Max": 20000.0,
-                "float :Min": 1.0
-            },
-            "Group :RandomValueMinMax": {
-                "Group :Scale": {
-                    "Vector3 :Max": [
-                        0.30000001192092896,
-                        0.30000001192092896,
-                        0.30000001192092896
-                    ],
-                    "Vector3 :Min": [
-                        0.10000000149011612,
-                        0.10000000149011612,
-                        0.10000000149011612
-                    ]
-                },
-                "Group :Velocity": {
-                    "Vector3 :Max": [
-                        0.20000000298023224,
-                        0.009999999776482582,
-                        0.20000000298023224
-                    ],
-                    "Vector3 :Min": [
-                        -0.20000000298023224,
-                        0.0,
-                        -0.20000000298023224
-                    ]
-                }
-            },
-            "Vector3 :Acceleration": [
-                0.0,
-                -0.0010000000474974513,
-                0.0
-            ],
-            "Vector3 :First": [
-                0.0,
-                0.03500000014901161,
-                0.0
-            ],
-            "float :ElapseTime": 3.0,
-            "float :Multiply": 1.0,
-            "float :VelocityEaseEndTime": 0.5,
-            "int32_t :Count": 0
-        },
         "Group :LargeFlash": {
             "Vector3 :MaxScale": [
                 2.0,
@@ -196,7 +150,7 @@
             "float :ElapseTime": 0.6000000238418579,
             "int32_t :Count": 3
         },
-        "Group :Line": {
+        "Group :Spark": {
             "Group :Kelvin": {
                 "float :Max": 8000.0,
                 "float :Min": 7999.0

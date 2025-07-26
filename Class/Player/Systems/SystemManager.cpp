@@ -120,6 +120,12 @@ void SystemManager::Initialize() {
 	// 移動機能をセット
 	CreateMoveSystem(currentSystem_);
 	systemState_ = SystemState::kMove;
+
+	// オーラ
+	aura_ = std::make_unique<AuraParticles>();
+	aura_->Initialize();
+	aura_->SetJsonData();
+	aura_->SetTexName("Effect/Particle.png");
 }
 
 void SystemManager::Update() {
@@ -151,6 +157,17 @@ void SystemManager::Update() {
 	if (invinsibleTime_ >= 0.0f) {
 		invinsibleTime_-= HitStopController::GetInstance()->GetDeltaTime();
 	}
+
+	// 鞘が壊れているならオーラを出す
+	if (player_->GetParameter()->GetIsSheathBreak()) {
+		aura_->Start(true, player_->GetModel()->worldTF.GetWorldPosition());
+	}
+	else {
+		// 終了
+		aura_->Finish();
+	}
+	// 更新処理
+	aura_->Update();
 }
 
 void SystemManager::Reset() {
@@ -195,6 +212,12 @@ void SystemManager::DebugGUI() {
 	ImGui::DragFloat3("Velocity", &velocity_.x);
 	ImGui::DragFloat3("Radian", &radian_.x);
 	ImGui::DragFloat("InvinsibleTime", &invinsibleTime_);
+
+	// オーラ
+	if (ImGui::TreeNode("Aura")) {
+		aura_->JsonDebugGui();
+		ImGui::TreePop();
+	}
 #endif // DEBUG
 }
 

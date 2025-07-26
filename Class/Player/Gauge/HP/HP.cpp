@@ -33,6 +33,8 @@ HP::HP() {
 		.CheckJsonFile();
 
 	maxSize_ = sprite_["HpBar"].material.texture.t.GetSize();
+	sprite_["HpBar"].clipRect.max = maxSize_;
+	sprite_["HpBarBG"].clipRect.max = sprite_["HpBarBG"].material.texture.t.GetSize();
 	// HPを最大値にする
 	value_ = maxValue_;
 }

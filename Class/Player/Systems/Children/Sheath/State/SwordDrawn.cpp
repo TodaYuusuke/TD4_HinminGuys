@@ -28,11 +28,16 @@ SwordDrawn::SwordDrawn(Sheath* sheathSystem, Player* player, std::map<int, Event
 	if (sheathSystem_->GetNextSystems().empty()) {
 		sheathSystem_->SetNextSystem(SystemState::kMove);
 	}
+
+	// オーラ生成
+	sheathSystem_->GetAuraParticles()->Start(true, sheathSystem_->GetSheathWorldTF()->GetWorldPosition());
 }
 
 SwordDrawn::~SwordDrawn() {
 	// リストクリア
 	sheathSystem_->ClearNextSystems();
+	// オーラを消す
+	sheathSystem_->GetAuraParticles()->Finish();
 }
 
 void SwordDrawn::Initialize()

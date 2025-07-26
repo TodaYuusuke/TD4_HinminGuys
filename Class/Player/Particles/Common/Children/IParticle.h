@@ -34,6 +34,11 @@ public:// アクセサ
 
 #pragma region Setter
 	//void SetJsonData(ParticleJsonData data) { jsonData_ = data; }
+	/// <summary>
+	/// 使用するテクスチャの名前
+	/// </summary>
+	/// <param name="name"></param>
+	void SetTexName(const std::string& name) { texName_ = name; }
 #pragma endregion
 
 protected:// 外部から受け取る変数
@@ -43,4 +48,7 @@ protected:// 外部から受け取る変数
 
 protected:
 	ParticleData particleData_;
+
+	// 使用するテクスチャの名前
+	std::string texName_;
 };

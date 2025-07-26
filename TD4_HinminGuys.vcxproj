@@ -150,6 +150,8 @@
     </Manifest>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Class\Player\Particles\Common\AuraParticles.cpp" />
+    <ClCompile Include="Class\Player\Particles\Common\Children\AuraParticle.cpp" />
     <ClCompile Include="Class\UI\EchoMotion.cpp" />
     <ClCompile Include="Class\Camera\CameraSystems.cpp" />
     <ClCompile Include="Class\Audio\AudioPlayer.cpp" />
@@ -264,6 +266,8 @@
     <ClCompile Include="Class\Player\Particles\Common\Sparks.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Class\Player\Particles\Common\AuraParticles.h" />
+    <ClInclude Include="Class\Player\Particles\Common\Children\AuraParticle.h" />
     <ClInclude Include="Class\UI\EchoMotion.h" />
     <ClInclude Include="Class\Camera\CameraSystems.h" />
     <ClInclude Include="Class\Audio\AudioPlayer.h" />

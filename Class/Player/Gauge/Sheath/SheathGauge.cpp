@@ -33,6 +33,8 @@ SheathGauge::SheathGauge() {
 		.CheckJsonFile();
 
 	maxSize_ = sprite_["SheathBar"].material.texture.t.GetSize();
+	sprite_["SheathBar"].clipRect.max = maxSize_;
+	sprite_["SheathBarBG"].clipRect.max = maxSize_;
 	// HPを最大値にする
 	value_ = maxValue_;
 }

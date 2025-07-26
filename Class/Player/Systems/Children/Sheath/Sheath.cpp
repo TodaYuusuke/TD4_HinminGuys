@@ -54,8 +54,13 @@ Sheath::Sheath(LWP::Object::Camera* camera, Player* player) {
 			player_->TakeSheathDamage(player_->GetParameter()->GetCurrentSheathDamageStrength());
 		});
 
+	// 浮遊パーティクル
 	floatParticle_ = std::make_unique<FloatParticle>(player_);
 	floatParticle_->model.LoadCube();
+	// オーラ
+	auraParticles_ = std::make_unique<AuraParticles>();
+	auraParticles_->Initialize();
+	auraParticles_->SetTexName("Effect/Particle.png");
 }
 
 void Sheath::Initialize() {
@@ -78,6 +83,10 @@ void Sheath::Initialize() {
 void Sheath::Update() {
 	if (!isActive_) { return; }
 
+	// オーラ
+	auraParticles_->Update();
+
+	// 鎖の始点終点を指定
 	chain_->SetStartPos(player_->GetSwordModel()->GetJointWorldPosition("Grip")); 
 	chain_->SetEndPos(sheathModel_.GetJointWorldPosition("Sheath"));
 	chain_->Update();
@@ -243,6 +252,10 @@ void Sheath::CreateJsonFIle() {
 		// パーティクル
 		json_.BeginGroup("FloatParticle");
 		floatParticle_->SetJsonData(json_);
+		json_.EndGroup();
+		// パーティクル
+		json_.BeginGroup("AuraParticle");
+		auraParticles_->SetJsonData(json_);
 		json_.EndGroup();
 
 		// 移動可能範囲

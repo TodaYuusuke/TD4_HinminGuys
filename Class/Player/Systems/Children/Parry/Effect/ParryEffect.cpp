@@ -11,6 +11,11 @@ using namespace LWP::Utility::Interpolation;
 ParryEffect::ParryEffect(Player* player, FollowCamera* followCamera) {
 	player_ = player;
 	followCamera_ = followCamera;
+
+	largeFlashes_ = std::make_unique<LargeFlashes>(player_, followCamera_);
+	shortFlashes_ = std::make_unique<ShortFlashes>(player_, followCamera_);
+	rings_ = std::make_unique<Rings>(player_, followCamera_);
+	sparks_ = std::make_unique<Sparks>(player_, followCamera_);
 }
 
 void ParryEffect::Initialize() {
@@ -18,22 +23,27 @@ void ParryEffect::Initialize() {
 }
 
 void ParryEffect::Update() {
+	largeFlashes_->Update();
+	shortFlashes_->Update();
+	rings_->Update();
+	sparks_->Update();
+
 	//IEffect::Update();
-	for (std::list<ParticleData>::iterator particleIterator = particles_.begin(); particleIterator != particles_.end();) {
-		// 生存時間が過ぎたら処理を行わない
-		if ((*particleIterator).lifeTime <= (*particleIterator).currentTime) {
-			particleIterator = particles_.erase(particleIterator);
-			continue;
-		}
+	//for (std::list<ParticleData>::iterator particleIterator = particles_.begin(); particleIterator != particles_.end();) {
+	//	// 生存時間が過ぎたら処理を行わない
+	//	if ((*particleIterator).lifeTime <= (*particleIterator).currentTime) {
+	//		particleIterator = particles_.erase(particleIterator);
+	//		continue;
+	//	}
 
-		// 各パーティクルの更新処理
-		//(*particleIterator).updateFunc(*particleIterator);
+	//	// 各パーティクルの更新処理
+	//	//(*particleIterator).updateFunc(*particleIterator);
 
-		// 生存時間
-		(*particleIterator).currentTime++;
+	//	// 生存時間
+	//	(*particleIterator).currentTime++;
 
-		particleIterator++;
-	}
+	//	particleIterator++;
+	//}
 }
 
 void ParryEffect::DebugGui() {
@@ -270,8 +280,16 @@ void ParryEffect::CreateJustParticles(Vector3 pos) {
 	// 発生地点
 	emitterPos_ = pos;
 
+	largeFlashes_->Add(3, emitterPos_);
+
+	shortFlashes_->Add(12, emitterPos_);
+
+	rings_->Add(1, emitterPos_);
+
+	sparks_->Add(50, emitterPos_);
+
 	// パーティクル発生
-	particles_.splice(particles_.end(), JustEmission(pos));
+	//particles_.splice(particles_.end(), JustEmission(pos));
 
 	//// 使用するテクスチャ設定
 	//for (std::list<ParticleData>::iterator particleIterator = particles_.begin(); particleIterator != particles_.end();) {
@@ -307,9 +325,14 @@ void ParryEffect::CreateJustParticles(Vector3 pos) {
 void ParryEffect::CreateGoodParticles(LWP::Math::Vector3 pos) {
 	// 発生地点
 	emitterPos_ = pos;
+	shortFlashes_->Add(12, emitterPos_);
+
+	sparks_->Add(50, emitterPos_);
+
+
 
 	// パーティクル発生
-	particles_.splice(particles_.end(), GoodEmission(pos));
+	//particles_.splice(particles_.end(), GoodEmission(pos));
 
 	//// 使用するテクスチャ設定
 	//for (std::list<ParticleData>::iterator particleIterator = particles_.begin(); particleIterator != particles_.end();) {
@@ -451,118 +474,132 @@ void ParryEffect::CreateGoodParticles(LWP::Math::Vector3 pos) {
 //}
 
 void ParryEffect::SetJsonData(LWP::Utility::JsonIO& json) {
-#pragma region Line
-	json.BeginGroup("Line");
-	json.BeginGroup("RandomValueMinMax");
-	// 速度
-	json.BeginGroup("Velocity");
-	json.AddValue<Vector3>("Max", &lineParticleData_.velocity.max);
-	json.AddValue<Vector3>("Min", &lineParticleData_.velocity.min);
-	json.EndGroup();
-	// サイズ
-	json.BeginGroup("Scale");
-	json.AddValue<Vector3>("Max", &lineParticleData_.scale.max);
-	json.AddValue<Vector3>("Min", &lineParticleData_.scale.min);
-	json.EndGroup();
-
-	json.EndGroup();
-
-	// ケルビン
-	json.BeginGroup("Kelvin");
-	json.AddValue<float>("Max", &lineParticleKelvin.max);
-	json.AddValue<float>("Min", &lineParticleKelvin.min);
-	json.EndGroup();
-
-	// 初速
-	json.AddValue<Vector3>("First", &lineParticleData_.firstVel);
-	// 重力加速度
-	json.AddValue<Vector3>("Acceleration", &lineParticleData_.acceleration);
-	// 速度倍率
-	json.AddValue<float>("Multiply", &lineParticleData_.multiply);
-
-	// パーティクルが存在できる時間
-	json.AddValue<float>("ElapseTime", &lineParticleData_.maxElapseTime);
-
-	// パーティクルの数
-	json.AddValue<int>("Count", &lineParticleData_.count);
-	json.EndGroup();
-#pragma endregion
-
-#pragma region Circle
-	json.BeginGroup("Circle");
-	json.BeginGroup("RandomValueMinMax");
-	// 速度
-	json.BeginGroup("Velocity");
-	json.AddValue<Vector3>("Max", &circleParticleData_.velocity.max);
-	json.AddValue<Vector3>("Min", &circleParticleData_.velocity.min);
-	json.EndGroup();
-	// サイズ
-	json.BeginGroup("Scale");
-	json.AddValue<Vector3>("Max", &circleParticleData_.scale.max);
-	json.AddValue<Vector3>("Min", &circleParticleData_.scale.min);
-	json.EndGroup();
-
-	json.EndGroup();
-
-	// ケルビン
-	json.BeginGroup("Kelvin");
-	json.AddValue<float>("Max", &circleParticleKelvin.max);
-	json.AddValue<float>("Min", &circleParticleKelvin.min);
-	json.EndGroup();
-
-	// 初速
-	json.AddValue<Vector3>("First", &circleParticleData_.firstVel);
-	// 重力加速度
-	json.AddValue<Vector3>("Acceleration", &circleParticleData_.acceleration);
-	// 速度倍率
-	json.AddValue<float>("Multiply", &circleParticleData_.multiply);
-
-	json.AddValue<float>("VelocityEaseEndTime", &circleParticleEasingEndTime);
-
-	// パーティクルが存在できる時間
-	json.AddValue<float>("ElapseTime", &circleParticleData_.maxElapseTime);
-
-	// パーティクルの数
-	json.AddValue<int>("Count", &circleParticleData_.count);
-	json.EndGroup();
-#pragma endregion
-
-#pragma region LargeFlash
 	json.BeginGroup("LargeFlash");
-	// 最大サイズ
-	json.AddValue<Vector3>("MaxScale", &maxLargeFlashScale);
-
-	// パーティクルが存在できる時間
-	json.AddValue<float>("ElapseTime", &largeFlashData_.maxElapseTime);
-
-	// パーティクルの数
-	json.AddValue<int>("Count", &largeFlashData_.count);
+	largeFlashes_->SetJsonData(json);
 	json.EndGroup();
-#pragma endregion
-
-#pragma region ShortFlash
 	json.BeginGroup("ShortFlash");
-	// 最大サイズ
-	json.AddValue<Vector3>("MaxScale", &maxShortFlashScale);
-
-	// パーティクルが存在できる時間
-	json.AddValue<float>("ElapseTime", &shortFlashData_.maxElapseTime);
-
-	// パーティクルの数
-	json.AddValue<int>("Count", &shortFlashData_.count);
+	shortFlashes_->SetJsonData(json);
 	json.EndGroup();
-#pragma endregion
-
-#pragma region Ring
 	json.BeginGroup("Ring");
-	// 最大サイズ
-	json.AddValue<Vector3>("MaxScale", &maxRingScale);
-
-	// パーティクルが存在できる時間
-	json.AddValue<float>("ElapseTime", &ringData_.maxElapseTime);
-
-	// パーティクルの数
-	json.AddValue<int>("Count", &ringData_.count);
+	rings_->SetJsonData(json);
 	json.EndGroup();
-#pragma endregion
+	json.BeginGroup("Spark");
+	sparks_->SetJsonData(json);
+	json.EndGroup();
+
+
+	//#pragma region Line
+	//	json.BeginGroup("Line");
+	//	json.BeginGroup("RandomValueMinMax");
+	//	// 速度
+	//	json.BeginGroup("Velocity");
+	//	json.AddValue<Vector3>("Max", &lineParticleData_.velocity.max);
+	//	json.AddValue<Vector3>("Min", &lineParticleData_.velocity.min);
+	//	json.EndGroup();
+	//	// サイズ
+	//	json.BeginGroup("Scale");
+	//	json.AddValue<Vector3>("Max", &lineParticleData_.scale.max);
+	//	json.AddValue<Vector3>("Min", &lineParticleData_.scale.min);
+	//	json.EndGroup();
+	//
+	//	json.EndGroup();
+	//
+	//	// ケルビン
+	//	json.BeginGroup("Kelvin");
+	//	json.AddValue<float>("Max", &lineParticleKelvin.max);
+	//	json.AddValue<float>("Min", &lineParticleKelvin.min);
+	//	json.EndGroup();
+	//
+	//	// 初速
+	//	json.AddValue<Vector3>("First", &lineParticleData_.firstVel);
+	//	// 重力加速度
+	//	json.AddValue<Vector3>("Acceleration", &lineParticleData_.acceleration);
+	//	// 速度倍率
+	//	json.AddValue<float>("Multiply", &lineParticleData_.multiply);
+	//
+	//	// パーティクルが存在できる時間
+	//	json.AddValue<float>("ElapseTime", &lineParticleData_.maxElapseTime);
+	//
+	//	// パーティクルの数
+	//	json.AddValue<int>("Count", &lineParticleData_.count);
+	//	json.EndGroup();
+	//#pragma endregion
+	//
+	//#pragma region Circle
+	//	json.BeginGroup("Circle");
+	//	json.BeginGroup("RandomValueMinMax");
+	//	// 速度
+	//	json.BeginGroup("Velocity");
+	//	json.AddValue<Vector3>("Max", &circleParticleData_.velocity.max);
+	//	json.AddValue<Vector3>("Min", &circleParticleData_.velocity.min);
+	//	json.EndGroup();
+	//	// サイズ
+	//	json.BeginGroup("Scale");
+	//	json.AddValue<Vector3>("Max", &circleParticleData_.scale.max);
+	//	json.AddValue<Vector3>("Min", &circleParticleData_.scale.min);
+	//	json.EndGroup();
+	//
+	//	json.EndGroup();
+	//
+	//	// ケルビン
+	//	json.BeginGroup("Kelvin");
+	//	json.AddValue<float>("Max", &circleParticleKelvin.max);
+	//	json.AddValue<float>("Min", &circleParticleKelvin.min);
+	//	json.EndGroup();
+	//
+	//	// 初速
+	//	json.AddValue<Vector3>("First", &circleParticleData_.firstVel);
+	//	// 重力加速度
+	//	json.AddValue<Vector3>("Acceleration", &circleParticleData_.acceleration);
+	//	// 速度倍率
+	//	json.AddValue<float>("Multiply", &circleParticleData_.multiply);
+	//
+	//	json.AddValue<float>("VelocityEaseEndTime", &circleParticleEasingEndTime);
+	//
+	//	// パーティクルが存在できる時間
+	//	json.AddValue<float>("ElapseTime", &circleParticleData_.maxElapseTime);
+	//
+	//	// パーティクルの数
+	//	json.AddValue<int>("Count", &circleParticleData_.count);
+	//	json.EndGroup();
+	//#pragma endregion
+	//
+	//#pragma region LargeFlash
+	//	json.BeginGroup("LargeFlash");
+	//	// 最大サイズ
+	//	json.AddValue<Vector3>("MaxScale", &maxLargeFlashScale);
+	//
+	//	// パーティクルが存在できる時間
+	//	json.AddValue<float>("ElapseTime", &largeFlashData_.maxElapseTime);
+	//
+	//	// パーティクルの数
+	//	json.AddValue<int>("Count", &largeFlashData_.count);
+	//	json.EndGroup();
+	//#pragma endregion
+	//
+	//#pragma region ShortFlash
+	//	json.BeginGroup("ShortFlash");
+	//	// 最大サイズ
+	//	json.AddValue<Vector3>("MaxScale", &maxShortFlashScale);
+	//
+	//	// パーティクルが存在できる時間
+	//	json.AddValue<float>("ElapseTime", &shortFlashData_.maxElapseTime);
+	//
+	//	// パーティクルの数
+	//	json.AddValue<int>("Count", &shortFlashData_.count);
+	//	json.EndGroup();
+	//#pragma endregion
+	//
+	//#pragma region Ring
+	//	json.BeginGroup("Ring");
+	//	// 最大サイズ
+	//	json.AddValue<Vector3>("MaxScale", &maxRingScale);
+	//
+	//	// パーティクルが存在できる時間
+	//	json.AddValue<float>("ElapseTime", &ringData_.maxElapseTime);
+	//
+	//	// パーティクルの数
+	//	json.AddValue<int>("Count", &ringData_.count);
+	//	json.EndGroup();
+	//#pragma endregion
 }
