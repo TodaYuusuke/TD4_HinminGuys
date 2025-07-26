@@ -7,6 +7,7 @@
 #include "Common/ShortFlashes.h"
 #include "Common/Rings.h"
 #include "Common/Sparks.h"
+#include "Common/DustClouds.h"
 #include "Common/Children/FloatParticle.h"
 
 class FollowCamera;
@@ -84,7 +85,9 @@ private:
 	// 回避
 	std::unique_ptr<EvasionEffect> evasionEffect_;
 	// 移動
-	std::unique_ptr<MoveEffect> moveEffect_;
+	//std::unique_ptr<MoveEffect> moveEffect_;
+	std::unique_ptr<DustClouds> dustClouds_;
+
 
 
 

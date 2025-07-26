@@ -15,8 +15,8 @@ Particles::Particles(Player* player, FollowCamera* followCamera) {
 	evasionEffect_ = std::make_unique<EvasionEffect>(player_);
 	evasionEffect_->model.LoadCube();
 	// 移動
-	moveEffect_ = std::make_unique<MoveEffect>(player_, followCamera_);
-	moveEffect_->Initialize();
+	dustClouds_ = std::make_unique<DustClouds>("Effect/Particle.png");
+	dustClouds_->Initialize();
 
 
 
@@ -42,7 +42,7 @@ void Particles::Update() {
 
 
 	parryEffect_->Update();
-	//moveEffect_->Update();
+	dustClouds_->Update();
 
 	isPreJustParry_ = player_->GetSystemManager()->GetIsJustParry();
 	isPreGoodParry_ = player_->GetSystemManager()->GetIsGoodParry();
@@ -61,9 +61,9 @@ void Particles::CreateJsonData() {
 	evasionEffect_->SetJsonData(json_);
 	json_.EndGroup();
 
-	// パリィ時のパーティクル
+	// 移動時の土煙
 	json_.BeginGroup("Move");
-	moveEffect_->SetJsonData(json_);
+	dustClouds_->SetJsonData(json_);
 	json_.EndGroup();
 
 	json_.BeginGroup("LargeFlash");
@@ -136,7 +136,7 @@ void Particles::DebugGui() {
 		}
 		// 移動
 		if (ImGui::TreeNode("Move")) {
-			moveEffect_->DebugGui();
+			//dustClouds_->DebugGui();
 			ImGui::TreePop();
 		}
 		ImGui::TreePop();
@@ -167,5 +167,5 @@ void Particles::CreateEvasionParticle(const LWP::Math::Vector3& pos) {
 }
 
 void Particles::CreateMoveParticle(const LWP::Math::Vector3& pos) {
-	moveEffect_->CreateDustClouds(pos);
+	dustClouds_->Add(3, pos);
 }

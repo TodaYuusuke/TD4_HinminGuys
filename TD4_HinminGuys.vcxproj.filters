@@ -115,6 +115,8 @@
     <ClCompile Include="Class\Player\Particles\Common\Sparks.cpp" />
     <ClCompile Include="Class\Player\Particles\Common\Children\AuraParticle.cpp" />
     <ClCompile Include="Class\Player\Particles\Common\AuraParticles.cpp" />
+    <ClCompile Include="Class\Player\Particles\Common\Children\DustCloud.cpp" />
+    <ClCompile Include="Class\Player\Particles\Common\DustClouds.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Class\ComboEditor\ComboTree.h" />
@@ -221,6 +223,8 @@
     <ClInclude Include="Class\Player\Particles\Common\Sparks.h" />
     <ClInclude Include="Class\Player\Particles\Common\Children\AuraParticle.h" />
     <ClInclude Include="Class\Player\Particles\Common\AuraParticles.h" />
+    <ClInclude Include="Class\Player\Particles\Common\Children\DustCloud.h" />
+    <ClInclude Include="Class\Player\Particles\Common\DustClouds.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />

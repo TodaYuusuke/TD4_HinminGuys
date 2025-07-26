@@ -9,6 +9,10 @@ struct LimitF {
 	float min;
 	float max;
 };
+struct LimitInt {
+	int min;
+	int max;
+};
 
 struct ParticleJsonData {
 	LimitVec3 velocity;

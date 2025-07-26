@@ -18,10 +18,10 @@ void MoveEffect::Initialize() {
 }
 
 void MoveEffect::Update() {
-	maxWhite = std::clamp<int>(maxWhite, 1, 255);
-	minWhite = std::clamp<int>(minWhite, 0, 254);
-	maxAlpha = std::clamp<int>(maxAlpha, 1, 255);
-	minAlpha = std::clamp<int>(minAlpha, 0, 254);
+	//maxWhite = std::clamp<int>(maxWhite, 1, 255);
+	//minWhite = std::clamp<int>(minWhite, 0, 254);
+	//maxAlpha = std::clamp<int>(maxAlpha, 1, 255);
+	//minAlpha = std::clamp<int>(minAlpha, 0, 254);
 	//IEffect::Update();
 	for (std::list<ParticleData>::iterator particleIterator = particles_.begin(); particleIterator != particles_.end();) {
 		// 生存時間が過ぎたら処理を行わない
@@ -43,25 +43,25 @@ void MoveEffect::Update() {
 }
 
 void MoveEffect::DebugGui() {
-	maxColor = { maxWhite, maxWhite,maxWhite,maxAlpha };
-	minColor = { minWhite, minWhite,maxWhite,maxAlpha };
+	//maxColor = { maxWhite, maxWhite,maxWhite,maxAlpha };
+	//minColor = { minWhite, minWhite,maxWhite,maxAlpha };
 
-	maxWhite = std::clamp<int>(maxWhite, 0, 255);
-	minWhite = std::clamp<int>(minWhite, 0, 254);
-	maxAlpha = std::clamp<int>(maxAlpha, 0, 255);
-	minAlpha = std::clamp<int>(minAlpha, 0, 254);
+	//maxWhite = std::clamp<int>(maxWhite, 0, 255);
+	//minWhite = std::clamp<int>(minWhite, 0, 254);
+	//maxAlpha = std::clamp<int>(maxAlpha, 0, 255);
+	//minAlpha = std::clamp<int>(minAlpha, 0, 254);
 
-	// どれが選ばれているかを示すインデックス（0 から始まる）
-	static int selectedIndex = 0;
+	//// どれが選ばれているかを示すインデックス（0 から始まる）
+	//static int selectedIndex = 0;
 
-	// Comboボックスの表示
-	if (ImGui::Combo("Easing Type", &selectedIndex, Easing::kTypeNames, IM_ARRAYSIZE(Easing::kTypeNames))) {
-		// 選択が変更されたときの処理（必要があればここに書く）
-	}
+	//// Comboボックスの表示
+	//if (ImGui::Combo("Easing Type", &selectedIndex, Easing::kTypeNames, IM_ARRAYSIZE(Easing::kTypeNames))) {
+	//	// 選択が変更されたときの処理（必要があればここに書く）
+	//}
 
-	// 使用例：選ばれた名前を取得する
-	const char* selectedName = Easing::kTypeNames[selectedIndex];
-	disappearEasing = Easing::kFunction[selectedIndex];
+	//// 使用例：選ばれた名前を取得する
+	//const char* selectedName = Easing::kTypeNames[selectedIndex];
+	//disappearEasing = Easing::kFunction[selectedIndex];
 }
 
 void MoveEffect::SetJsonData(LWP::Utility::JsonIO& json) {

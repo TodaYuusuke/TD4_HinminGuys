@@ -236,6 +236,8 @@
     <ClCompile Include="Class\Player\Particles\Common\Children\FloatParticle.cpp" />
     <ClCompile Include="Class\Player\Particles\Common\Children\IParticle.cpp" />
     <ClCompile Include="Class\Player\Particles\Common\Children\LargeFlash.cpp" />
+    <ClCompile Include="Class\Player\Particles\Common\Children\DustCloud.cpp" />
+    <ClCompile Include="Class\Player\Particles\Common\DustClouds.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Class\Player\Player.cpp" />
     <ClCompile Include="Class\Player\Systems\Children\Move\Move.cpp" />
@@ -370,6 +372,8 @@
     <ClInclude Include="Class\Player\Particles\Common\ShortFlashes.h" />
     <ClInclude Include="Class\Player\Particles\Common\Rings.h" />
     <ClInclude Include="Class\Player\Particles\Common\Sparks.h" />
+    <ClInclude Include="Class\Player\Particles\Common\Children\DustCloud.h" />
+    <ClInclude Include="Class\Player\Particles\Common\DustClouds.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />
