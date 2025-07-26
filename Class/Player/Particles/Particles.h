@@ -92,6 +92,7 @@ private:
 	std::unique_ptr<ShortFlashes> shortFlashes_;
 	std::unique_ptr<Rings> rings_;
 	std::unique_ptr<Sparks> sparks_;
+	// 浮遊パーティクル
 	std::unique_ptr<FloatParticle> floatParticle_;
 
 

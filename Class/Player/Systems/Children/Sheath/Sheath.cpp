@@ -53,6 +53,9 @@ Sheath::Sheath(LWP::Object::Camera* camera, Player* player) {
 			// 鞘のゲージを減少
 			player_->TakeSheathDamage(player_->GetParameter()->GetCurrentSheathDamageStrength());
 		});
+
+	floatParticle_ = std::make_unique<FloatParticle>(player_);
+	floatParticle_->model.LoadCube();
 }
 
 void Sheath::Initialize() {
@@ -235,10 +238,15 @@ void Sheath::CreateJsonFIle() {
 		.AddValue<float>("Dash", &jsonData_.dashAttackValue)
 		// 回収時の攻撃の威力
 		.AddValue<float>("Collect", &jsonData_.collectAttackValue)
-		.EndGroup()
+		.EndGroup();
+		
+		// パーティクル
+		json_.BeginGroup("FloatParticle");
+		floatParticle_->SetJsonData(json_);
+		json_.EndGroup();
 
 		// 移動可能範囲
-		.AddValue<float>("MoveRange", &jsonData_.enableMoveRange)
+		json_.AddValue<float>("MoveRange", &jsonData_.enableMoveRange)
 		// クールタイム
 		.AddValue<float>("CoolTime", &jsonData_.coolTime)
 

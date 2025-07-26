@@ -120,7 +120,7 @@ void Particles::DebugGui() {
 		sparks_->Add(50, debugEmitterPos_);
 	}
 	if (ImGui::Button("Create Float Particle")) {
-		floatParticle_->Add(1, debugEmitterPos_);
+		floatParticle_->Add(10, debugEmitterPos_);
 	}
 
 	// パーティクルの詳細

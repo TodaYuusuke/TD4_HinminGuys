@@ -34,6 +34,8 @@ Throw::Throw(Sheath* sheathSystem, Player* player, std::map<int, EventOrder>* ev
 
 Throw::~Throw() {
 	ghostTrail_.reset();
+	// 浮遊パーティクル生成
+	sheathSystem_->CreateFloatParticle();
 }
 
 void Throw::Initialize() {

@@ -12,12 +12,14 @@ public:
 	struct FloatParticleData {
 		float height;				// 浮く高さ
 		float amplitude;			// 振幅
+		float currentFrame;
 	};
 	struct FloatParticleJsonData {
+		LimitF posLimit;
 		LimitF scaleLimit;
 		LimitF heightLimit;
 		LimitF amplitudeLimit;
-		LWP::Math::Vector3 acceleration;
+		float acceleration;
 		float multiply = 1.0f;
 		float maxFloatTime;					// 浮き終わる時間
 		float maxDropingTime;				// 落下終了時間
@@ -69,7 +71,16 @@ public:
 
 public:
 #pragma region Getter
-
+	/// <summary>
+	/// 落下状態かを取得
+	/// </summary>
+	/// <returns></returns>
+	bool GetIsDrop() { return isStartDrop_; }
+	/// <summary>
+	/// 落下状態かを取得
+	/// </summary>
+	/// <returns></returns>
+	bool GetIsHover() { return isHover_; }
 #pragma endregion
 
 #pragma region Setter
@@ -78,6 +89,11 @@ public:
 	/// </summary>
 	/// <param name="jsonData"></param>
 	void SetJsonData(LWP::Utility::JsonIO& json);
+	/// <summary>
+	/// 落下状態かを設定
+	/// </summary>
+	/// <param name="isDrop"></param>
+	void SetIsDrop(const bool& isDrop) { isStartDrop_ = isDrop; }
 #pragma endregion
 
 private:// 外部からアドレスを受け取る変数
@@ -89,4 +105,5 @@ private:
 
 	// 落下開始
 	bool isStartDrop_ = false;
+	bool isHover_ = false;
 };

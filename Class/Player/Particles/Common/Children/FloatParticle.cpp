@@ -16,13 +16,12 @@ void FloatParticle::Generate(LWP::Object::Particle::Data& data) {
 	// パーティクルの浮く高さをランダムで設定
 	datas_[data.idNumber].amplitude = LWP::Utility::Random::GenerateFloat(jsonData_.amplitudeLimit.min, jsonData_.amplitudeLimit.max);
 	datas_[data.idNumber].height = LWP::Utility::Random::GenerateFloat(jsonData_.heightLimit.min, jsonData_.heightLimit.max);
-	// 速度
-	//Vector3 dir = { 0,0,-1 };
-	//Matrix4x4 rotMatrix = LWP::Math::Matrix4x4::CreateRotateXYZMatrix(player_->GetRadian());
-	//dir = (dir * rotMatrix).Normalize();
-	//dir.y = 0.0f;
-	//data.velocity = dir - LWP::Utility::Random::GenerateVector3(jsonData_.velocity.min, jsonData_.velocity.max);
-	//data.velocity *= LWP::Utility::Random::GenerateFloat(0.2f, 0.5f);
+
+	// 座標
+	float posMin = jsonData_.posLimit.min;
+	float posMax = jsonData_.posLimit.max;
+	data.m.worldTF.translation += LWP::Utility::Random::GenerateVector3(Vector3{ posMin ,posMin ,posMin }, Vector3{ posMax ,posMax ,posMax });
+	data.m.worldTF.translation.y = 0.0f;
 	// スケール
 	float scale = LWP::Utility::Random::GenerateFloat(jsonData_.scaleLimit.min, jsonData_.scaleLimit.max);
 	data.m.worldTF.scale = {
@@ -36,7 +35,10 @@ void FloatParticle::Generate(LWP::Object::Particle::Data& data) {
 }
 
 bool FloatParticle::UpdateParticle(LWP::Object::Particle::Data& data) {
-	if (data.elapsedTime <= 0.0f) { return true; }
+	if (data.elapsedTime <= 0.0f) { 
+		datas_.erase(data.idNumber);
+		return true;
+	}
 
 	// 移動状態の確認と更新
 	StateUpdate(data);
@@ -46,6 +48,7 @@ bool FloatParticle::UpdateParticle(LWP::Object::Particle::Data& data) {
 }
 
 void FloatParticle::Floating(LWP::Object::Particle::Data& data) {
+	isHover_ = false;
 	float aa = (jsonData_.maxFloatTime * 60.0f + jsonData_.maxDropingTime * 60.0f) - data.elapsedTime;
 	float bb = (jsonData_.maxFloatTime * 60.0f);
 	float currentFrame = aa / bb;
@@ -56,20 +59,22 @@ void FloatParticle::Floating(LWP::Object::Particle::Data& data) {
 }
 
 void FloatParticle::Hover(LWP::Object::Particle::Data& data) {
+	isHover_ = true;
+	float theta = datas_[data.idNumber].currentFrame / 60.0f;
 
+	data.m.worldTF.translation.y += std::sinf(theta) * datas_[data.idNumber].amplitude;
+
+	datas_[data.idNumber].currentFrame++;
 }
 
 void FloatParticle::Droping(LWP::Object::Particle::Data& data) {
-	data.velocity.y += -9.8f / 6000.0f;
+	isHover_ = false;
+	data.velocity.y += Interpolation::Exponential(Vector3{ 0.0f, 0.0f, 0.0f }, Vector3{ 0.0f, jsonData_.acceleration, 0.0f }, 0.05f).y;
 
 	data.elapsedTime--;
 }
 
 void FloatParticle::StateUpdate(LWP::Object::Particle::Data& data) {
-	if(!player_->GetSystemManager()->GetSheathSystem()->GetIsSheathing()) {
-		isStartDrop_ = true;
-	}
-
 	// 落下状態
 	if (isStartDrop_) {
 		Droping(data);
@@ -103,6 +108,11 @@ void FloatParticle::SetJsonData(LWP::Utility::JsonIO& json) {
 	json.AddValue<float>("Max", &jsonData_.heightLimit.max);
 	json.AddValue<float>("Min", &jsonData_.heightLimit.min);
 	json.EndGroup();
+	// 座標
+	json.BeginGroup("Pos");
+	json.AddValue<float>("Max", &jsonData_.posLimit.max);
+	json.AddValue<float>("Min", &jsonData_.posLimit.min);
+	json.EndGroup();
 	// サイズ
 	json.BeginGroup("Scale");
 	json.AddValue<float>("Max", &jsonData_.scaleLimit.max);
@@ -115,7 +125,7 @@ void FloatParticle::SetJsonData(LWP::Utility::JsonIO& json) {
 	json.AddValue<float>("Multiply", &jsonData_.multiply);
 
 	// 加速度
-	json.AddValue<Vector3>("Acceleration", &jsonData_.acceleration);
+	json.AddValue<float>("Acceleration", &jsonData_.acceleration);
 
 	// 浮き終わり時間
 	json.AddValue<float>("FloatTime", &jsonData_.maxFloatTime);

@@ -42,25 +42,25 @@
     "Group :FloatParticle": {
         "Group :RandomValueMinMax": {
             "Group :Amplitude": {
-                "float :Max": 0.5,
-                "float :Min": 0.009999999776482582
+                "float :Max": 0.0010000000474974513,
+                "float :Min": 9.999999747378752e-05
             },
             "Group :Height": {
                 "float :Max": 0.5,
                 "float :Min": 0.10000000149011612
             },
+            "Group :Pos": {
+                "float :Max": 3.0,
+                "float :Min": -3.0
+            },
             "Group :Scale": {
-                "float :Max": 0.20000000298023224,
-                "float :Min": 0.10000000149011612
+                "float :Max": 0.10000000149011612,
+                "float :Min": 0.009999999776482582
             }
         },
-        "Vector3 :Acceleration": [
-            0.0,
-            0.0,
-            0.0
-        ],
+        "float :Acceleration": -0.016300000250339508,
         "float :DropingTime": 1.5,
-        "float :FloatTime": 1.0,
+        "float :FloatTime": 5.0,
         "float :Multiply": 1.0
     },
     "Group :LargeFlash": {

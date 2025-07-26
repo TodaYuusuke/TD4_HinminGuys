@@ -22,6 +22,10 @@ Collect::Collect(Sheath* sheathSystem, Player* player, std::map<int, EventOrder>
 	Command();
 }
 
+Collect::~Collect() {
+	sheathSystem_->GetFloatParticle()->SetIsDrop(true);
+}
+
 void Collect::Initialize() {
 
 }
