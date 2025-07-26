@@ -6,7 +6,7 @@
 /// ダメージ一回分のエフェクト
 /// </summary>
 struct DamageEffect {
-	std::list<LWP::Primitive::Sprite> sprites; //画像
+	std::list<LWP::Primitive::SequenceSprite> sprites; //画像
 	LWP::Math::Vector3 position; //座標
 	static LWP::Math::Vector3 color; //色
 	int digit; //桁数

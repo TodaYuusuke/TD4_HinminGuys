@@ -1,6 +1,7 @@
 #pragma once
 #include "ISheathSystemState.h"
 #include "../../../../../Components/EventOrder.h"
+#include "../Effect/GhostTrail/GhostTrail.h"
 
 /// <summary>
 /// 鞘を投擲可能状態
@@ -10,7 +11,7 @@ public:
 	// コンストラクタ
 	Throw(Sheath* sheathSystem, Player* player, std::map<int, EventOrder>* eventOrders);
 	// デストラクタ
-	~Throw() override = default;
+	~Throw() override;
 
 	/// <summary>
 	/// 初期化
@@ -47,6 +48,12 @@ private:
 	float startSheathThrowTime = 0.5f * 60.0f;
 
 private:
+	// 鞘の残像
+	//std::array<LWP::Resource::SkinningModel, 5> sheathModels_;
+
+	// 鞘の残像
+	std::unique_ptr<GhostTrail> ghostTrail_;
+
 	LWP::Math::Vector3 velocity_;
 	LWP::Math::Vector3 start_;
 	LWP::Math::Vector3 end_;

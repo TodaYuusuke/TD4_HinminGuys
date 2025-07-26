@@ -185,7 +185,7 @@ protected:
 	LWP::Object::Collision collider_;
 	LWP::Object::Collider::AABB& aabbBody_;
 	//パリィエフェクト画像
-	std::array<LWP::Primitive::Sprite, kMaxParryEffect_> parryEffectSprite_;
+	std::array<LWP::Primitive::NormalSprite, kMaxParryEffect_> parryEffectSprite_;
 	
 	//プレイヤー情報
 	Player* player_;

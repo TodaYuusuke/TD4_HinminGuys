@@ -97,7 +97,24 @@
     <ClCompile Include="Class\Audio\AudioPlayer.cpp" />
     <ClCompile Include="Class\Player\Systems\Children\Sheath\Effect\Chain.cpp" />
     <ClCompile Include="Class\Player\Systems\Children\Sheath\Effect\ChainNode.cpp" />
-    <ClCompile Include="Class\UI\UIMotions.cpp" />
+    <ClCompile Include="Class\Camera\CameraSystems.cpp" />
+    <ClCompile Include="Class\UI\EchoMotion.cpp" />
+    <ClCompile Include="Class\Player\Systems\Children\Sheath\Effect\GhostTrail\GhostTrail.cpp" />
+    <ClCompile Include="Class\Player\Systems\Children\Sheath\Effect\GhostTrail\GhostTrailNode.cpp" />
+    <ClCompile Include="Class\Player\Particles\Common\Children\FloatParticle.cpp" />
+    <ClCompile Include="Class\TestBillboard.cpp" />
+    <ClCompile Include="Class\Player\Particles\Common\Children\IParticle.cpp" />
+    <ClCompile Include="Class\Player\Particles\Common\Children\LargeFlash.cpp" />
+    <ClCompile Include="Class\Player\Particles\Common\Children\ShortFlash.cpp" />
+    <ClCompile Include="Class\Player\Particles\Common\Children\Spark.cpp" />
+    <ClCompile Include="Class\Player\Particles\Common\Children\Ring.cpp" />
+    <ClCompile Include="Class\Player\Particles\Common\IParticles.cpp" />
+    <ClCompile Include="Class\Player\Particles\Common\LargeFlashes.cpp" />
+    <ClCompile Include="Class\Player\Particles\Common\ShortFlashes.cpp" />
+    <ClCompile Include="Class\Player\Particles\Common\Rings.cpp" />
+    <ClCompile Include="Class\Player\Particles\Common\Sparks.cpp" />
+    <ClCompile Include="Class\Player\Particles\Common\Children\AuraParticle.cpp" />
+    <ClCompile Include="Class\Player\Particles\Common\AuraParticles.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Class\ComboEditor\ComboTree.h" />
@@ -183,7 +200,27 @@
     <ClInclude Include="Class\Audio\AudioPlayer.h" />
     <ClInclude Include="Class\Player\Systems\Children\Sheath\Effect\Chain.h" />
     <ClInclude Include="Class\Player\Systems\Children\Sheath\Effect\ChainNode.h" />
-    <ClInclude Include="Class\UI\UIMotions.h" />
+    <ClInclude Include="Class\Player\PlayerAudioNames.h" />
+    <ClInclude Include="Class\Player\PlayerModelConfig.h" />
+    <ClInclude Include="Class\Camera\CameraSystems.h" />
+    <ClInclude Include="Class\Camera\ICameraSystem.h" />
+    <ClInclude Include="Class\UI\EchoMotion.h" />
+    <ClInclude Include="Class\Player\Systems\Children\Sheath\Effect\GhostTrail\GhostTrail.h" />
+    <ClInclude Include="Class\Player\Systems\Children\Sheath\Effect\GhostTrail\GhostTrailNode.h" />
+    <ClInclude Include="Class\Player\Particles\Common\Children\FloatParticle.h" />
+    <ClInclude Include="Class\TestBillboard.h" />
+    <ClInclude Include="Class\Player\Particles\Common\Children\IParticle.h" />
+    <ClInclude Include="Class\Player\Particles\Common\Children\LargeFlash.h" />
+    <ClInclude Include="Class\Player\Particles\Common\Children\ShortFlash.h" />
+    <ClInclude Include="Class\Player\Particles\Common\Children\Spark.h" />
+    <ClInclude Include="Class\Player\Particles\Common\Children\Ring.h" />
+    <ClInclude Include="Class\Player\Particles\Common\IParticles.h" />
+    <ClInclude Include="Class\Player\Particles\Common\LargeFlashes.h" />
+    <ClInclude Include="Class\Player\Particles\Common\ShortFlashes.h" />
+    <ClInclude Include="Class\Player\Particles\Common\Rings.h" />
+    <ClInclude Include="Class\Player\Particles\Common\Sparks.h" />
+    <ClInclude Include="Class\Player\Particles\Common\Children\AuraParticle.h" />
+    <ClInclude Include="Class\Player\Particles\Common\AuraParticles.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />

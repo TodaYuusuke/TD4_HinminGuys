@@ -14,6 +14,7 @@
 #include "Particles/Particles.h"
 #include "../Components/HitStopController.h"
 #include "../UI/UIManager.h"
+#include "../Audio/SEPlayer.h"
 #include <memory>
 
 class IEnemy;
@@ -86,6 +87,11 @@ private:
 	/// </summary>
 	void LimitMoveArea();
 
+	/// <summary>
+	/// SEの鳴らす条件などの更新処理
+	/// </summary>
+	void SEUpdate();
+
 public:
 	/// <summary>
 	/// パリィ時のパーティクル生成
@@ -97,6 +103,16 @@ public:
 	/// </summary>
 	/// <param name="pos"></param>
 	void CreateEvasionParticle(const LWP::Math::Vector3& pos);
+
+	/// <summary>
+	/// 効果音再生
+	/// </summary>
+	/// <param name="fileName">SE/～/ファイル名</param>
+	/// <param name="name">識別名</param>
+	/// <param name="volume">音量</param>
+	void PlaySE(const std::string& fileName, const std::string& name, float volume) {
+		SEPlayer_->PlaySE(fileName, name, volume); 
+	}
 
 public:// Getter,Setter
 #pragma region Getter
@@ -115,6 +131,16 @@ public:// Getter,Setter
 	/// </summary>
 	/// <returns></returns>
 	SystemManager* GetSystemManager() { return systemManager_.get(); }
+	/// <summary>
+	/// パーティクル管理クラスのアドレス取得
+	/// </summary>
+	/// <returns></returns>
+	Particles* GetParticles() { return particles_.get(); }
+	/// <summary>
+	/// 自機の効果音クラスを取得
+	/// </summary>
+	/// <returns></returns>
+	SEPlayer* GetSEPlayer() { return SEPlayer_; }
 	/// <summary>
 	/// 自機のTransformQuatを取得
 	/// </summary>
@@ -180,15 +206,20 @@ public:// Getter,Setter
 
 #pragma region Setter
 	/// <summary>
-	/// シーンで使用しているカメラのポインタを設定
+	/// シーンで使用しているカメラのアドレスを設定
 	/// </summary>
 	/// <param name="camera">カメラのアドレス</param>
 	void SetCamera(LWP::Object::Camera* camera) { pCamera_ = camera; }
 	/// <summary>
-	/// 敵の管理クラスを設定
+	/// 敵の管理クラスのアドレスを設定
 	/// </summary>
 	/// <param name="enemyManager">敵の管理クラスのポインタ</param>
 	void SetEnemyManager(EnemyManager* enemyManager) { enemyManager_ = enemyManager; }
+	/// <summary>
+	/// 効果音を管理するクラスのアドレスを設定
+	/// </summary>
+	/// <param name="SEPlayer"></param>
+	void SetSEPlayer(SEPlayer* SEPlayer) { SEPlayer_ = SEPlayer; }
 	/// <summary>
 	/// 向いている方向を設定
 	/// </summary>
@@ -250,9 +281,12 @@ private:// 外部からポインタをもらう変数
 	UIManager* uiManager_;
 	// ヒットストップ
 	HitStopController* hitStopController_;
+	// 効果音
+	SEPlayer* SEPlayer_;
 
 private:
 	LWP::Utility::JsonIO json_;
+
 
 	// 刀モデル
 	LWP::Resource::SkinningModel swordModel_;

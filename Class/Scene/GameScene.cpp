@@ -18,6 +18,7 @@ GameScene::GameScene()
 
 GameScene::~GameScene() {
 	enemyManager_.Finalize();
+	delete testBillboard_;
 }
 
 // 初期化
@@ -44,11 +45,12 @@ void GameScene::Initialize() {
 	enemyManager_.SetIsShowSpawnDataModel(false);
 	enemyManager_.SetSEPlayer(&sePlayer_);
 
-	// 追従カメラの動作確認のため生成
+	// 追従カメラの生成
 	followCamera_.Initialize();
 
-	// 自機の動作確認のため生成
+	// 自機の生成
 	player_.Initialize();
+	player_.SetSEPlayer(&sePlayer_);
 
 	//ダメージエフェクトエミッターを生成
 	damageEffectEmitter_.Initialize();
@@ -72,10 +74,16 @@ void GameScene::Initialize() {
 
 	//シーン切り替え機能生成
 	sceneTransitioner_.Initialize(this);
+
+
+
+	testBillboard_ = new TestBillboard(&followCamera_);
 }
 
 // 更新
 void GameScene::Update() {
+	testBillboard_->Update();
+
 	
 	//シーン遷移が終わった時点でウェーブを開始していない場合、ウェーブを開始
 	if (not sceneTransitioner_.GetIsSceneChange() and not enemyManager_.GetIsDefeatedAllEnemy() and

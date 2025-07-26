@@ -12,6 +12,7 @@
 #include "../UI/DamageEffectEmitter.h"
 #include "../Audio/BGMPlayer.h"
 #include "../Audio/SEPlayer.h"
+#include "../TestBillboard.h"
 
 class GameScene final
 	: public IScene {
@@ -71,4 +72,6 @@ private: // ** これより先に必要な処理や変数を記述 ** //
 	BGMPlayer bgmPlayer_;
 	SEPlayer sePlayer_;
 
+
+	TestBillboard* testBillboard_;
 };

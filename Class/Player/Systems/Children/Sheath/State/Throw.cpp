@@ -4,6 +4,7 @@
 #include "SwordDrawn.h"
 #include "../../../../Command/InputHandler.h"
 #include "../../../../../Components/HitStopController.h"
+#include "../../../../Math/MathFunctions.h"
 
 using namespace LWP;
 using namespace LWP::Math;
@@ -24,10 +25,21 @@ Throw::Throw(Sheath* sheathSystem, Player* player, std::map<int, EventOrder>* ev
 	sheathSystem_->SetIsNone(false);
 	sheathSystem_->SetIsBreak(false);
 	sheathSystem_->SetIsSheathing(true);
+
+	// 鞘の残像を発生させる
+	ghostTrail_ = std::make_unique<GhostTrail>("player/Sheath.gltf", "SheathMaterial", sheathSystem_->GetSheathWorldTF());
+	ghostTrail_->Initialize();
+	ghostTrail_->SetIsActive(false);
+}
+
+Throw::~Throw() {
+	ghostTrail_.reset();
+	// 浮遊パーティクル生成
+	sheathSystem_->CreateFloatParticle();
 }
 
 void Throw::Initialize() {
-
+	
 }
 
 void Throw::Update() {
@@ -36,6 +48,9 @@ void Throw::Update() {
 	(*eventOrders_)[(int)Sheath::SheathState::kThrow].Update();
 
 	CheckThrowState();
+
+	// 残像
+	ghostTrail_->Update();
 
 	// 全ての移動処理終了
 	if ((*eventOrders_)[(int)Sheath::SheathState::kThrow].GetIsEnd()) {
@@ -115,6 +130,9 @@ void Throw::CheckThrowState() {
 			sheathSystem_->chain_->SetIsActive(isActive_);
 			sheathSystem_->chain_->Reset();
 			sheathSystem_->chain_->Initialize();
+
+			// 残像生成
+			ghostTrail_->SetIsActive(true);
 		}
 
 		// 鞘判定をとれるようにする
@@ -123,13 +141,21 @@ void Throw::CheckThrowState() {
 		// 本体のモデルも非表示
 		player_->SetIsSheathModelActive(false);
 
+		// 速度
 		velocity_ = LWP::Utility::Interpolation::Lerp(start_, end_, LWP::Utility::Easing::OutExpo((*eventOrders_)[(int)Sheath::SheathState::kThrow].GetCurrentFrame() / (sheathSystem_->jsonData_.collectTime * 60.0f)));
 
 		// 移動速度からラジアンを求める
 		radian_.y = LWP::Utility::GetRadian(LWP::Math::Vector3{ 0,0,1 }, velocity_.Normalize(), LWP::Math::Vector3{ 0,1,0 });
 		quat_ = LWP::Math::Quaternion::CreateFromAxisAngle(LWP::Math::Vector3{ 0, 1, 0 }, radian_.y);
 
-		sheathSystem_->SetSheathPos(velocity_);
+		// 座標更新
+		sheathSystem_->SetSheathPos(velocity_ + sheathSystem_->kSheathDefaultPos);// 地面から鞘を離す
+
+		// 鞘を自機に向ける角度更新
+		Quaternion q = LWP::Math::Quaternion::CreateFromAxisAngle(Vector3{ 1,0,0 }, 3.14f / 2.0f);// 横向きにする
+		Vector3 dir = (sheathSystem_->GetSheathWorldTF()->GetWorldPosition() - player_->GetWorldTF()->GetWorldPosition()).Normalize();
+		dir.y = 0.0f;
+		sheathSystem_->SetSheathRotation(MathFunc::LookRotation(dir) * q);
 	}
 	else {
 		// 鞘判定をとらない

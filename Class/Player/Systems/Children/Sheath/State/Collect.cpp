@@ -22,6 +22,10 @@ Collect::Collect(Sheath* sheathSystem, Player* player, std::map<int, EventOrder>
 	Command();
 }
 
+Collect::~Collect() {
+	sheathSystem_->GetFloatParticle()->SetIsDrop(true);
+}
+
 void Collect::Initialize() {
 
 }
@@ -45,6 +49,10 @@ void Collect::Update() {
 
 		sheathSystem_->Reset();
 		(*eventOrders_)[(int)Sheath::SheathState::kCollect].Reset();
+
+		// 鎖の表示をしない
+		sheathSystem_->chain_->SetIsActive(false);
+		sheathSystem_->chain_->Reset();
 
 		// 投げる用の鞘モデルを非表示
 		sheathSystem_->SetIsSheathModelActive(false);
@@ -100,6 +108,7 @@ void Collect::Command() {
 		// イージングの始点終点を設定
 		start_ = player_->GetWorldTF()->GetWorldPosition();
 		end_ = sheathSystem_->GetSheathWorldTF()->GetWorldPosition();
+		end_.y = player_->GetWorldTF()->GetWorldPosition().y;			// 地面と平行に移動させる
 
 		// イージングの始点終点から角度を求める
 		radian_.y = LWP::Utility::GetRadian(LWP::Math::Vector3{ 0,0,1 }, (end_ - start_).Normalize(), LWP::Math::Vector3{ 0,1,0 });

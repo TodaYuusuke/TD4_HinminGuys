@@ -13,11 +13,20 @@ Particles::Particles(Player* player, FollowCamera* followCamera) {
 	parryEffect_->Initialize();
 	// 回避
 	evasionEffect_ = std::make_unique<EvasionEffect>(player_);
-	evasionEffect_->Initialize();
 	evasionEffect_->model.LoadCube();
 	// 移動
 	moveEffect_ = std::make_unique<MoveEffect>(player_, followCamera_);
 	moveEffect_->Initialize();
+
+
+
+
+	largeFlashes_ = std::make_unique<LargeFlashes>(player_, followCamera_);
+	shortFlashes_ = std::make_unique<ShortFlashes>(player_, followCamera_);
+	rings_ = std::make_unique<Rings>(player_, followCamera_);
+	sparks_ = std::make_unique<Sparks>(player_, followCamera_);
+	floatParticle_ = std::make_unique<FloatParticle>(player_);
+	floatParticle_->model.LoadCube();
 }
 
 void Particles::Initialize() {
@@ -26,11 +35,14 @@ void Particles::Initialize() {
 }
 
 void Particles::Update() {
-	parryEffect_->Update();
-	moveEffect_->Update();
+	largeFlashes_->Update();
+	shortFlashes_->Update();
+	rings_->Update();
+	sparks_->Update();
 
-	// 移動時のパーティクル発生のタイミング
-	CreateMoveParticleTiming();
+
+	parryEffect_->Update();
+	//moveEffect_->Update();
 
 	isPreJustParry_ = player_->GetSystemManager()->GetIsJustParry();
 	isPreGoodParry_ = player_->GetSystemManager()->GetIsGoodParry();
@@ -52,6 +64,22 @@ void Particles::CreateJsonData() {
 	// パリィ時のパーティクル
 	json_.BeginGroup("Move");
 	moveEffect_->SetJsonData(json_);
+	json_.EndGroup();
+
+	json_.BeginGroup("LargeFlash");
+	largeFlashes_->SetJsonData(json_);
+	json_.EndGroup();
+	json_.BeginGroup("ShortFlash");
+	shortFlashes_->SetJsonData(json_);
+	json_.EndGroup();
+	json_.BeginGroup("Ring");
+	rings_->SetJsonData(json_);
+	json_.EndGroup();
+	json_.BeginGroup("Spark");
+	sparks_->SetJsonData(json_);
+	json_.EndGroup();
+	json_.BeginGroup("FloatParticle");
+	floatParticle_->SetJsonData(json_);
 	json_.EndGroup();
 
 	json_.CheckJsonFile();
@@ -76,6 +104,22 @@ void Particles::DebugGui() {
 	// 移動時のパーティクル生成
 	if (ImGui::Button("Create Move Particle")) {
 		CreateMoveParticle(debugEmitterPos_);
+	}
+
+	if (ImGui::Button("Create Large Particle")) {
+		largeFlashes_->Add(3, debugEmitterPos_);
+	}
+	if (ImGui::Button("Create Short Particle")) {
+		shortFlashes_->Add(12, debugEmitterPos_);
+	}
+	if (ImGui::Button("Create Ring Particle")) {
+		rings_->Add(1, debugEmitterPos_);
+	}
+	if (ImGui::Button("Create Spark Particle")) {
+		sparks_->Add(50, debugEmitterPos_);
+	}
+	if (ImGui::Button("Create Float Particle")) {
+		floatParticle_->Add(10, debugEmitterPos_);
 	}
 
 	// パーティクルの詳細
@@ -124,23 +168,4 @@ void Particles::CreateEvasionParticle(const LWP::Math::Vector3& pos) {
 
 void Particles::CreateMoveParticle(const LWP::Math::Vector3& pos) {
 	moveEffect_->CreateDustClouds(pos);
-}
-
-void Particles::CreateMoveParticleTiming() {
-	if (player_->GetAnimation()->GetPlaying("Run", LWP::Resource::Animation::TrackType::Blend) || player_->GetAnimation()->GetPlaying("Dash", LWP::Resource::Animation::TrackType::Main)) {
-		// 右足
-		if (player_->GetAnimation()->GetProgress(LWP::Resource::Animation::TrackType::Blend) >= 0.5f || player_->GetAnimation()->GetProgress(LWP::Resource::Animation::TrackType::Main) >= 0.5f && moveEffectType_ != MoveEffectType::kLeft) {
-			Vector3 pos = player_->GetModel()->GetJoint("Foot.R")->localTF.translation + player_->GetWorldTF()->GetWorldPosition();
-			pos.y = 0.0f;
-			CreateMoveParticle(pos);
-			moveEffectType_ = MoveEffectType::kLeft;
-		}
-		// 左足
-		if (player_->GetAnimation()->GetProgress(LWP::Resource::Animation::TrackType::Blend) >= 0.95f || player_->GetAnimation()->GetProgress(LWP::Resource::Animation::TrackType::Main) >= 0.95f && moveEffectType_ != MoveEffectType::kRight) {
-			Vector3 pos = player_->GetModel()->GetJoint("Foot.L")->localTF.translation + player_->GetWorldTF()->GetWorldPosition();
-			pos.y = 0.0f;
-			CreateMoveParticle(pos);
-			moveEffectType_ = MoveEffectType::kRight;
-		}
-	}
 }

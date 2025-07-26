@@ -52,7 +52,7 @@ void DamageEffectEmitter::Update() {
 		for (DamageEffect& effect : effects_) {
 
 			//画像の更新
-			for (int32_t i = 0; LWP::Primitive::Sprite& sprite : effect.sprites) {
+			for (int32_t i = 0; LWP::Primitive::SequenceSprite & sprite : effect.sprites) {
 
 				sprite.worldTF.translation = (effect.position) * viewProjectionViewport;
 				sprite.worldTF.translation.x += DamageEffect::widthSpacing * float(i);
@@ -144,7 +144,7 @@ void DamageEffectEmitter::AddEffect(const float& damage, const LWP::Math::Vector
 		//割られる数を割る数で割り、数字を決める
 		int assignNum = dividedNum / divisionNum;
 
-		effects_.back().sprites.push_back(LWP::Primitive::Sprite());
+		effects_.back().sprites.push_back(LWP::Primitive::SequenceSprite());
 		effects_.back().sprites.back().LoadTexture("UI/Number.png");
 		effects_.back().sprites.back().SetSplitSize({ 128.0f,128.0f });
 		effects_.back().sprites.back().material.uvTransform.translation.x = shiftVal * float(assignNum);

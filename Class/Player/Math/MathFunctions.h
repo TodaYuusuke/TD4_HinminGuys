@@ -10,6 +10,16 @@ namespace MathFunc {
 	LWP::Math::Quaternion LookRotation(const LWP::Math::Vector3& dirVec);
 
 	/// <summary>
+	/// ベクトルの回転
+	/// </summary>
+	/// <param name="v"></param>
+	/// <param name="axis"></param>
+	/// <param name="theta"></param>
+	/// <returns></returns>
+	LWP::Math::Vector3 RotateVector(LWP::Math::Vector3 v, LWP::Math::Vector3 axis, float theta);
+	LWP::Math::Vector3 RotateVector(LWP::Math::Quaternion q, LWP::Math::Vector3 axis);
+
+	/// <summary>
 	/// 地面と水平方向のビルボード
 	/// </summary>
 	/// <param name="cameraPos"></param>
@@ -50,4 +60,18 @@ namespace MathFunc {
 	/// <param name="m"></param>
 	/// <returns></returns>
 	LWP::Math::Quaternion QuaternionFromMatrix(const LWP::Math::Matrix4x4& m);
+
+	/// <summary>
+	/// クォータニオンのy軸のみ取り出す
+	/// </summary>
+	/// <param name="q"></param>
+	/// <returns></returns>
+	float GetYawFromQuaternion(const LWP::Math::Quaternion& q);
+
+	/// <summary>
+	/// 絶対値に変換
+	/// </summary>
+	/// <param name="value"></param>
+	/// <returns></returns>
+	LWP::Math::Vector3 Abs(LWP::Math::Vector3 value);
 }

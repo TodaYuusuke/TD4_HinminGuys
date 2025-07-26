@@ -39,19 +39,77 @@
         "float :ElapseTime": 2.0,
         "int32_t :Count": 16
     },
+    "Group :FloatParticle": {
+        "Group :RandomValueMinMax": {
+            "Group :Amplitude": {
+                "float :Max": 0.0010000000474974513,
+                "float :Min": 9.999999747378752e-05
+            },
+            "Group :Height": {
+                "float :Max": 0.5,
+                "float :Min": 0.10000000149011612
+            },
+            "Group :Pos": {
+                "float :Max": 3.0,
+                "float :Min": -3.0
+            },
+            "Group :Scale": {
+                "float :Max": 0.10000000149011612,
+                "float :Min": 0.009999999776482582
+            }
+        },
+        "float :Acceleration": -0.016300000250339508,
+        "float :DropingTime": 1.5,
+        "float :FloatTime": 5.0,
+        "float :Multiply": 1.0
+    },
+    "Group :LargeFlash": {
+        "Group :LargeFlash": {
+            "Vector3 :MaxScale": [
+                2.0,
+                10.0,
+                1.0
+            ],
+            "float :ElapseTime": 0.6000000238418579
+        }
+    },
     "Group :Move": {
         "Group :Circle": {
             "Group :RandomValueMinMax": {
+                "Group :Color": {
+                    "Group :Alpha": {
+                        "int32_t :Max": 255,
+                        "int32_t :Min": 0
+                    },
+                    "Group :CheckMin,Max": {
+                        "Color :Max": [
+                            255,
+                            255,
+                            255,
+                            255
+                        ],
+                        "Color :Min": [
+                            255,
+                            255,
+                            255,
+                            255
+                        ]
+                    },
+                    "Group :White": {
+                        "int32_t :Max": 255,
+                        "int32_t :Min": 0
+                    }
+                },
                 "Group :Scale": {
                     "Vector3 :Max": [
-                        1.0,
-                        1.0,
-                        1.0
+                        0.10000000149011612,
+                        0.10000000149011612,
+                        0.10000000149011612
                     ],
                     "Vector3 :Min": [
-                        -1.0,
-                        -1.0,
-                        -1.0
+                        -0.10000000149011612,
+                        -0.10000000149011612,
+                        -0.10000000149011612
                     ]
                 },
                 "Group :Velocity": {
@@ -83,62 +141,16 @@
         }
     },
     "Group :Parry": {
-        "Group :Circle": {
-            "Group :Kelvin": {
-                "float :Max": 20000.0,
-                "float :Min": 1.0
-            },
-            "Group :RandomValueMinMax": {
-                "Group :Scale": {
-                    "Vector3 :Max": [
-                        0.30000001192092896,
-                        0.30000001192092896,
-                        0.30000001192092896
-                    ],
-                    "Vector3 :Min": [
-                        0.10000000149011612,
-                        0.10000000149011612,
-                        0.10000000149011612
-                    ]
-                },
-                "Group :Velocity": {
-                    "Vector3 :Max": [
-                        0.20000000298023224,
-                        0.009999999776482582,
-                        0.20000000298023224
-                    ],
-                    "Vector3 :Min": [
-                        -0.20000000298023224,
-                        0.0,
-                        -0.20000000298023224
-                    ]
-                }
-            },
-            "Vector3 :Acceleration": [
-                0.0,
-                -0.0010000000474974513,
-                0.0
-            ],
-            "Vector3 :First": [
-                0.0,
-                0.03500000014901161,
-                0.0
-            ],
-            "float :ElapseTime": 3.0,
-            "float :Multiply": 1.0,
-            "float :VelocityEaseEndTime": 0.5,
-            "int32_t :Count": 0
-        },
         "Group :LargeFlash": {
             "Vector3 :MaxScale": [
-                0.5,
-                0.5,
-                6.0
+                2.0,
+                10.0,
+                1000.0
             ],
             "float :ElapseTime": 0.6000000238418579,
             "int32_t :Count": 3
         },
-        "Group :Line": {
+        "Group :Spark": {
             "Group :Kelvin": {
                 "float :Max": 8000.0,
                 "float :Min": 7999.0
@@ -152,7 +164,7 @@
                     ],
                     "Vector3 :Min": [
                         0.10000000149011612,
-                        0.10000000149011612,
+                        0.5,
                         0.10000000149011612
                     ]
                 },
@@ -185,21 +197,81 @@
         },
         "Group :Ring": {
             "Vector3 :MaxScale": [
-                7.0,
-                7.0,
-                7.0
+                3.0,
+                3.0,
+                3.0
             ],
             "float :ElapseTime": 1.0,
             "int32_t :Count": 1
         },
         "Group :ShortFlash": {
             "Vector3 :MaxScale": [
-                0.10000000149011612,
-                0.10000000149011612,
+                2.0,
+                3.0,
                 1.0
             ],
             "float :ElapseTime": 0.5,
             "int32_t :Count": 12
         }
+    },
+    "Group :Ring": {
+        "Vector3 :MaxScale": [
+            3.0,
+            3.0,
+            3.0
+        ],
+        "float :ElapseTime": 1.0
+    },
+    "Group :ShortFlash": {
+        "Vector3 :MaxScale": [
+            2.0,
+            3.0,
+            1.0
+        ],
+        "float :ElapseTime": 0.5
+    },
+    "Group :Spark": {
+        "Group :Kelvin": {
+            "float :Max": 8000.0,
+            "float :Min": 7999.0
+        },
+        "Group :RandomValueMinMax": {
+            "Group :Scale": {
+                "Vector3 :Max": [
+                    0.5,
+                    1.0,
+                    1.0
+                ],
+                "Vector3 :Min": [
+                    0.10000000149011612,
+                    0.5,
+                    0.10000000149011612
+                ]
+            },
+            "Group :Velocity": {
+                "Vector3 :Max": [
+                    0.5,
+                    0.20000000298023224,
+                    0.5
+                ],
+                "Vector3 :Min": [
+                    -0.5,
+                    -0.20000000298023224,
+                    -0.5
+                ]
+            }
+        },
+        "Vector3 :Acceleration": [
+            0.0,
+            0.0,
+            0.0
+        ],
+        "Vector3 :First": [
+            0.0,
+            0.0,
+            0.0
+        ],
+        "float :ElapseTime": 2.0,
+        "float :Multiply": 1.0
     }
 }

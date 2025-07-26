@@ -1,6 +1,7 @@
 #include "Player.h"
 #include "../Enemy/EnemyManager.h"
 #include "../GameMask.h"
+#include "PlayerAudioNames.h"
 
 using namespace LWP::Utility;
 using namespace GameMask;
@@ -85,6 +86,9 @@ void Player::Update() {
 
 	// パーティクル管理クラス
 	particles_->Update();
+
+	// 効果音
+	SEUpdate();
 }
 
 void Player::Reset() {
@@ -184,6 +188,11 @@ void Player::LimitMoveArea() {
 	if (systemManager_->GetSheathSystem()->GetSheathState()->GetStateName() == "SwordDrawn") {
 		systemManager_->GetSheathSystem()->ClampToCircle(model_.worldTF.translation);
 	}
+}
+
+void Player::SEUpdate() {
+	// 効果音
+	SEPlayer_->Update();
 }
 
 void Player::CreateParryParticle(const LWP::Math::Vector3& pos) {

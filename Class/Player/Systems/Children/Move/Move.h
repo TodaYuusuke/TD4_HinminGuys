@@ -29,6 +29,12 @@ enum class MoveState {
 	kCount
 };
 
+enum class FootState {
+	kNone,
+	kLeft,
+	kRight
+};
+
 public:
 	// コンストラクタ
 	Move(LWP::Object::Camera* camera, Player* player);
@@ -85,28 +91,11 @@ private:
 	/// 入力処理
 	/// </summary>
 	void InputUpdate();
-
+	
 	/// <summary>
-	/// クォータニオンのy軸のみ取り出す
+	/// 左右の足が着いた瞬間の演出
 	/// </summary>
-	/// <param name="q"></param>
-	/// <returns></returns>
-	float GetYawFromQuaternion(const LWP::Math::Quaternion& q) {
-		// Yaw（Y軸まわりの回転）を取り出す
-		float siny_cosp = 2.0f * (q.w * q.y + q.z * q.x);
-		float cosy_cosp = 1.0f - 2.0f * (q.y * q.y + q.z * q.z);
-		return std::atan2(siny_cosp, cosy_cosp); // ラジアン
-	}
-
-	// 絶対値に変換
-	LWP::Math::Vector3 Abs(LWP::Math::Vector3 value) {
-		LWP::Math::Vector3 result{
-			std::fabsf(value.x),
-			std::fabsf(value.y),
-			std::fabsf(value.z)
-		};
-		return result;
-	}
+	void EffectFootOnGround();
 
 public:// Getter, Setter
 #pragma region Getter
@@ -193,6 +182,12 @@ private:// プライベートな変数
 
 	MoveState moveState_;
 	MoveState preMoveState_;
+
+	// どちらの足が出ているか
+	FootState footState_;
+	FootState preFootState_;
+	// 移動アニメーションの経過フレーム
+	float currentMoveFrame_;
 
 	// スティックの倒し具合
 	float stickStrength_;

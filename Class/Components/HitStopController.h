@@ -35,6 +35,11 @@ public:// Getter, Setter
 	}
 #pragma region Getter
 	/// <summary>
+	/// フレームレートの取得
+	/// </summary>
+	/// <returns></returns>
+	float GetFPS() { return fps; }
+	/// <summary>
 	/// ヒットストップ時間を取得
 	/// </summary>
 	float GetHitStopTime() { return hitStopTime_; }
@@ -43,7 +48,7 @@ public:// Getter, Setter
 	/// </summary>
 	float GetCurrentFrame() { return currentFrame_; }
 	/// <summary>
-	/// 経過時間を取得(既存のΔタイムだと数値のばらつきがありジッターが起きてしまうので固定値にする)
+	/// 経過時間を取得
 	/// </summary>
 	/// <returns></returns>
 	float GetDeltaTime() { return LWP::Info::GetDeltaTimeF() * fps; }
@@ -58,7 +63,7 @@ public:// Getter, Setter
 	/// <summary>
 	/// ヒットストップ時間を設定
 	/// </summary>
-	/// <param name="time"></param>
+	/// <param name="time">秒数</param>
 	void SetHitStopTime(const float& time) {
 		hitStopTime_ = time * fps;
 		currentFrame_ = hitStopTime_;

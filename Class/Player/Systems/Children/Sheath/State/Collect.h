@@ -9,7 +9,7 @@ public:
 	// コンストラクタ
 	Collect(Sheath* sheathSystem, Player* player, std::map<int, EventOrder>* eventOrders);
 	// デストラクタ
-	~Collect() override = default;
+	~Collect() override;
 
 	/// <summary>
 	/// 初期化
