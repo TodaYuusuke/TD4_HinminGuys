@@ -63,7 +63,7 @@ void Spark::UpdateParticle() {
 	//particleData_.vel = Exponential(particleData_.vel, Vector3{ 0.0f, 0.0f, 0.0f }, 0.01f);
 
 	// stretchビルボードの計算のために速度を代入
-	plane_.velocity = particleData_.vel;
+	plane_.velocity = particleData_.vel * 100.0f;
 
 	// 色のイージング
 	int alpha = LerpF((float)jsonData_.color.A, 0.0f, particleData_.currentTime / particleData_.lifeTime);

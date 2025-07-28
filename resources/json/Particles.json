@@ -33,7 +33,7 @@
             "float :Acceleration": -0.009999999776482582,
             "float :ElapseTime": 1.0,
             "float :Multiply": 1.0,
-            "int32_t :Count": 20
+            "int32_t :Count": 0
         },
         "Group :Spark": {
             "Color :Color": [
@@ -82,7 +82,7 @@
                 0.0,
                 0.0
             ],
-            "float :CreateCircleRange": 0.10000000149011612,
+            "float :CreateCircleRange": 0.20000000298023224,
             "float :ElapseTime": 0.20000000298023224,
             "float :Multiply": 1.0,
             "int32_t :Count": 10

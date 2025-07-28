@@ -67,6 +67,6 @@ void SwordDrawn::AnimCommand()
 {
 }
 
-void SwordDrawn::Reset()
-{
+void SwordDrawn::Reset() {
+
 }

@@ -30,6 +30,11 @@ private:
 
 public:// アクセサ
 	/// <summary>
+	/// リセット
+	/// </summary>
+	void Reset();
+
+	/// <summary>
 	/// 親子付けの設定
 	/// </summary>
 	/// <param name="parent"></param>

@@ -1,9 +1,14 @@
 #include "HP.h"
+#include "../../Math/MathFunctions.h"
 
 HP::HP() {
 	// HP画像の背景作成(BackGroundは長すぎるのでBGにしてます)
 	sprite_["HpBarBG"].LoadTexture("UI/Gauge/HpBarBase.png");
 	sprite_["HpBarBG"].isActive = true;
+	// HP画像を作成
+	sprite_["HpBarDecriment"].LoadTexture("UI/Gauge/HpBarGauge.png");
+	sprite_["HpBarDecriment"].isActive = true;
+	sprite_["HpBarDecriment"].material.color = { 50,50,50,255 };
 	// HP画像を作成
 	sprite_["HpBar"].LoadTexture("UI/Gauge/HpBarGauge.png");
 	sprite_["HpBar"].isActive = true;
@@ -26,7 +31,7 @@ HP::HP() {
 		.EndGroup()
 		.AddValue<LWP::Math::Vector2>("AnchorPoint", &sprite_["HpBarBG"].anchorPoint)
 		.EndGroup()
-		
+
 		.AddValue<float>("MaxHpValue", &maxValue_)
 		.AddValue<float>("DeltaValue", &deltaValue_)
 		.AddValue<float>("Multiply", &multiply_)
@@ -34,7 +39,11 @@ HP::HP() {
 
 	maxSize_ = sprite_["HpBar"].material.texture.t.GetSize();
 	sprite_["HpBar"].clipRect.max = maxSize_;
+	sprite_["HpBarDecriment"].clipRect.max = maxSize_;
 	sprite_["HpBarBG"].clipRect.max = sprite_["HpBarBG"].material.texture.t.GetSize();
+
+	sprite_["HpBarDecriment"].worldTF = sprite_["HpBar"].worldTF;
+	sprite_["HpBarDecriment"].anchorPoint = sprite_["HpBar"].anchorPoint;
 	// HPを最大値にする
 	value_ = maxValue_;
 }
@@ -49,6 +58,9 @@ void HP::Update() {
 
 	// HPバーの長さ計算
 	ColGaugeSize("HpBar");
+
+	// ゲージ増加中はしない
+	sprite_["HpBarDecriment"].clipRect.max.x = MathFunc::ExponentialInterpolateF(sprite_["HpBarDecriment"].clipRect.max.x, sprite_["HpBar"].clipRect.max.x, 0.05f);
 }
 
 void HP::DebugGUI() {

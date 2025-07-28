@@ -79,10 +79,14 @@ void GameScene::Initialize() {
 
 	//シーン切り替え機能生成
 	sceneTransitioner_.Initialize(this);
+
+
+	//testBillboard_.Init();
 }
 
 // 更新
 void GameScene::Update() {
+	//testBillboard_.Update();
 	//シーン遷移が終わった時点でウェーブを開始していない場合、ウェーブを開始
 	if (not sceneTransitioner_.GetIsSceneChange() and not enemyManager_.GetIsDefeatedAllEnemy() and
 		not enemyManager_.GetIsStartWave()) {

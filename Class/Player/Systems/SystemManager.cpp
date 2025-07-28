@@ -139,7 +139,7 @@ void SystemManager::Update() {
 	SwitchCurrentSystem();
 
 	// 鞘機能(ダメージ中は何もしない)
-	if (systemState_ != SystemState::kDamage) {
+	//if (systemState_ != SystemState::kDamage) {
 		sheathSystem_->Update();
 		if (sheathSystem_->GetIsActive() && sheathSystem_->GetSheathState()->GetStateName() != "SwordDrawn") {
 			// 速度
@@ -148,7 +148,7 @@ void SystemManager::Update() {
 			radian_ = sheathSystem_->GetRadian();
 			quat_ = LWP::Math::Quaternion::CreateFromAxisAngle(LWP::Math::Vector3{ 0, 1, 0 }, radian_.y);
 		}
-	}
+	//}
 
 	// 各機能のクールタイムの処理
 	coolTimer_->Update();

@@ -71,7 +71,7 @@ void Player::Update() {
 
 	// 速度を加算
 	model_.worldTF.translation += systemManager_->GetVelocity();
-	// 角度を代入S
+	// 角度を代入
 	model_.worldTF.rotation = LWP::Utility::Interpolation::SlerpQuaternion(model_.worldTF.rotation, systemManager_->GetQuat(), 0.25f);
 
 	// 移動制限

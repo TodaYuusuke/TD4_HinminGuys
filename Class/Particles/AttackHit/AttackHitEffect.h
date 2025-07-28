@@ -2,11 +2,11 @@
 #include "../Common/IParticles.h"
 #include "Children/AttackHitParticle.h"
 #include "../Common/Children/Spark.h"
+#include "../Common/Sparks.h"
 
 class AttackHitEffect : public IParticles {
 public:
 	struct AttackHitEffectJsonData {
-		Spark::SparkJsonData spark;
 		AttackHitParticle::AttackHitParticleJsonData attackHitParticle;
 		int sparkCount;
 		int attackHitParticleCount;
@@ -53,11 +53,9 @@ public:
 	AttackHitEffectJsonData GetJsonData() { return jsonData_; }
 
 private:
-	// 使用するなら(多分あまり使わない)
-	LWP::Utility::JsonIO json_;
-
 	// パーティクル
-	std::list<IParticle*> particles_;
+	std::list<AttackHitParticle*> particles_;
+	std::unique_ptr<Sparks> sparks_;
 
 	// 調整項目
 	AttackHitEffectJsonData jsonData_;

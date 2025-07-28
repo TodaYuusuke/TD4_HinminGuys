@@ -47,3 +47,16 @@ GhostTrailNode* GhostTrail::CreateGhostTrailNode() {
 	ghostNode->Initialize();
 	return ghostNode;
 }
+
+void GhostTrail::Reset() {
+	// 残像
+	for (GhostTrailNode* ghost : ghostNodes_) {
+		delete ghost;
+	}
+	ghostNodes_.clear();
+
+	// 経過時間
+	currentFrame_ = 0.0f;
+
+	isActive_ = false;
+}

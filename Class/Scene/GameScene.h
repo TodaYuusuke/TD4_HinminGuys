@@ -5,6 +5,7 @@
 #include "../Enemy/EnemyManager.h"
 #include "../Player/Command/InputHandler.h"
 #include "../TestCollider.h"
+#include "../TestBillboard.h"
 #include "../UI/UIManager.h"
 #include "../Components/HitStopController.h"
 #include <set>
@@ -78,4 +79,7 @@ private: // ** これより先に必要な処理や変数を記述 ** //
 	//オーディオ再生クラス
 	BGMPlayer bgmPlayer_;
 	SEPlayer sePlayer_;
+
+
+	//TestBillboard testBillboard_;
 };
