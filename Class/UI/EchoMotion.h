@@ -4,13 +4,13 @@
 /// <summary>
 /// UIの残像を出す
 /// </summary>
-class AfterimageMotion {
+class EchoMotion {
 public:
 	// コンストラクタ
-	AfterimageMotion(std::string fileName);
-	AfterimageMotion(LWP::Resource::Texture texture);
+	EchoMotion(std::string fileName);
+	EchoMotion(LWP::Resource::Texture texture);
 	// デストラクタ
-	~AfterimageMotion() = default;
+	~EchoMotion() = default;
 
 	/// <summary>
 	/// 初期化

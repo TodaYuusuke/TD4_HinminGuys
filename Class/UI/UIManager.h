@@ -2,7 +2,7 @@
 #include "../Adapter/Adapter.h"
 #include "../Player/Gauge/HP/HP.h"
 #include "../Player/Gauge/Sheath/SheathGauge.h"
-#include "AfterimageMotion.h"
+#include "EchoMotion.h"
 
 class Player;
 class UIManager {
@@ -104,5 +104,5 @@ private:
 	// 操作ガイド
 	std::vector<GuideUI> guideUI_;
 	// 残像
-	std::vector<AfterimageMotion*> afterimageUI_;
+	std::vector<EchoMotion*> afterimageUI_;
 };

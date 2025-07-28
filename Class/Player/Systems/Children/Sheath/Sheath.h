@@ -2,6 +2,8 @@
 #include "../../ISystem.h"
 #include "State/ISheathSystemState.h"
 #include "Effect/Chain.h"
+#include "../../../../Particles/Common/Children/FloatParticle.h"
+#include "../../../../Particles/Common/AuraParticles.h"
 
 // jsonに保存する値
 struct SheathJsonData {
@@ -144,6 +146,13 @@ public:
 	/// </summary>
 	void ClearHitTargetNames() { hitTargetNames_.clear(); }
 
+
+public:
+	/// <summary>
+	/// 浮遊パーティクルの生成
+	/// </summary>
+	void CreateFloatParticle() { floatParticle_->Add(15, sheathModel_.worldTF.GetWorldPosition()); }
+
 	void SetIsActiveChain(const bool& isActive) { chain_->SetIsActive(isActive); }
 
 public:// Getter, Setter
@@ -163,6 +172,17 @@ public:// Getter, Setter
 	/// jsonに保存する値を取得
 	/// </summary>
 	SheathJsonData GetJsonData() { return jsonData_; }
+
+	/// <summary>
+	/// 浮遊パーティクルを取得
+	/// </summary>
+	/// <returns></returns>
+	FloatParticle* GetFloatParticle() { return floatParticle_.get(); }
+	/// <summary>
+	/// オーラの取得
+	/// </summary>
+	/// <returns></returns>
+	AuraParticles* GetAuraParticles() { return auraParticles_.get(); }
 
 	/// <summary>
 	/// 最終的な鞘ゲージ減少量を取得
@@ -271,6 +291,11 @@ private:// プライベートな変数
 
 	// 鞘のモデル
 	LWP::Resource::SkinningModel sheathModel_;
+
+	// 浮遊パーティクル
+	std::unique_ptr<FloatParticle> floatParticle_;
+	// オーラ
+	std::unique_ptr<AuraParticles> auraParticles_;
 
 	// 攻撃に当たった相手の名前
 	std::vector<std::string> hitTargetNames_;

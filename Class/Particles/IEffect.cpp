@@ -1,6 +1,6 @@
 #include "IEffect.h"
-#include "../../Camera/FollowCamera.h"
-#include "../Player.h"
+#include "../Camera/FollowCamera.h"
+#include "../Player/Player.h"
 
 using namespace LWP;
 using namespace LWP::Math;
@@ -16,7 +16,7 @@ void IEffect::Update() {
 		}
 
 		// 各パーティクルの更新処理
-		(*particleIterator).updateFunc(*particleIterator);
+		//(*particleIterator).updateFunc(*particleIterator);
 
 		// 生存時間
 		(*particleIterator).currentTime++;

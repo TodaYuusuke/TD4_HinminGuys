@@ -1,0 +1,32 @@
+{
+    "Group :AuraParticle": {
+        "Color :Color": [
+            203,
+            59,
+            2,
+            200
+        ],
+        "Group :RandomValueMinMax": {
+            "Group :Scale": {
+                "float :Max": 0.30000001192092896,
+                "float :Min": 0.0
+            },
+            "Group :Velocity": {
+                "Vector3 :Max": [
+                    0.05000000074505806,
+                    0.009999999776482582,
+                    0.05000000074505806
+                ],
+                "Vector3 :Min": [
+                    -0.05000000074505806,
+                    0.0,
+                    -0.05000000074505806
+                ]
+            }
+        },
+        "float :Acceleration": 0.0020000000949949026,
+        "float :ElapseTime": 0.5,
+        "float :Multiply": 1.0,
+        "int32_t :Count": 3
+    }
+}

@@ -115,7 +115,7 @@ void UIManager::Update() {
 	CoolTimeFilterUpdate();
 
 	for (auto it = afterimageUI_.begin(); it != afterimageUI_.end(); ) {
-		AfterimageMotion* afterUI = *it;
+		EchoMotion* afterUI = *it;
 		if (!afterUI->GetIsActive()) {
 			delete afterUI;
 			it = afterimageUI_.erase(it); // eraseの戻り値で次に進む
@@ -170,7 +170,7 @@ void UIManager::CoolTimeFilterUpdate() {
 	// 残像生成
 	for (GuideUI& ui : guideUI_) {
 		if (ui.isPreActive && !ui.isActive) {
-			AfterimageMotion* afterUI = new AfterimageMotion(ui.sprite.material.texture);
+			EchoMotion* afterUI = new EchoMotion(ui.sprite.material.texture);
 			afterUI->SetSpriteData(ui.sprite);
 			// アンカーポイント分ずらす
 			Vector3 offset = ui.sprite.worldTF.translation;

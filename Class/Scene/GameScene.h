@@ -12,6 +12,7 @@
 #include "../UI/DamageEffectEmitter.h"
 #include "../Audio/BGMPlayer.h"
 #include "../Audio/SEPlayer.h"
+#include "../Particles/Particles.h"
 #include "../World/World.h"
 
 class GameScene final
@@ -46,6 +47,9 @@ private: // ** これより先に必要な処理や変数を記述 ** //
 	//ダメージエフェクトエミッター
 	DamageEffectEmitter damageEffectEmitter_;
 
+	// パーティクルの管理クラス
+	Particles particles_;
+
 	// 追従カメラ
 	FollowCamera followCamera_;
 
@@ -74,5 +78,4 @@ private: // ** これより先に必要な処理や変数を記述 ** //
 	//オーディオ再生クラス
 	BGMPlayer bgmPlayer_;
 	SEPlayer sePlayer_;
-
 };

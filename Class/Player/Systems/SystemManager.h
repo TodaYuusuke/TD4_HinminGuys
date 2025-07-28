@@ -10,6 +10,7 @@
 #include "../Command/InputHandler.h"
 #include "../../ComboEditor/ComboTree.h"
 #include "../../Components/CoolTimer.h"
+#include "../../Particles/Common/AuraParticles.h"
 #include <memory>
 #include <functional>
 
@@ -320,6 +321,9 @@ private:
 
 	// コンボ攻撃用クラス
 	ComboTree* comboTree_;
+
+	// オーラ
+	std::unique_ptr<AuraParticles> aura_;
 
 #pragma region 当たり判定に関する変数
 	// 攻撃の当たり判定の内容

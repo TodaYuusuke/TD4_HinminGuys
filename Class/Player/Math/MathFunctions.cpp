@@ -37,6 +37,16 @@ namespace MathFunc {
 		return term1 + term2 + term3;
 	}
 
+	LWP::Math::Vector3 RotateVector(LWP::Math::Quaternion q, LWP::Math::Vector3 axis) {
+		Quaternion vQuat = Quaternion(0, axis.x, axis.y, axis.z); // ベクトルを純粋なクォータニオンに
+		Quaternion qInv = vQuat.Inverse();                  // 共役（逆クォータニオン）
+
+		Quaternion rotated = q * vQuat * qInv;
+
+		Vector3 result = { rotated.x, rotated.y, rotated.z }; // 回転後のベクトル
+		return result;
+	}
+
 	Quaternion HorizontalBillboard(const Vector3& cameraPos, const Vector3& targetPos) {
 		Vector3 dir = cameraPos - targetPos;
 		dir.y = 0;  // 水平成分だけ使う

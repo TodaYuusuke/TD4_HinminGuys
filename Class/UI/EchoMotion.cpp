@@ -1,26 +1,26 @@
-#include "AfterimageMotion.h"
+#include "EchoMotion.h"
 
 using namespace LWP;
 using namespace LWP::Utility;
 using namespace LWP::Utility::Interpolation;
 
-AfterimageMotion::AfterimageMotion(std::string fileName) {
+EchoMotion::EchoMotion(std::string fileName) {
 	afterimage_.material.texture = LWP::Resource::LoadTexture(fileName);
 	Initialize();
 }
 
-AfterimageMotion::AfterimageMotion(LWP::Resource::Texture texture) {
+EchoMotion::EchoMotion(LWP::Resource::Texture texture) {
 	afterimage_.material.texture = texture;
 	Initialize();
 }
 
-void AfterimageMotion::Initialize() {
+void EchoMotion::Initialize() {
 	afterimage_.isActive = true;
 	afterimage_.anchorPoint = { 0.5f, 0.5f };
 	currentFrame_ = 0.0f;
 }
 
-void AfterimageMotion::Update() {
+void EchoMotion::Update() {
 	afterimage_.isActive = true;
 	// 徐々に大きくなる
 	afterimage_.worldTF.scale = Lerp(startScale_, endScale_, Utility::Easing::OutExpo(currentFrame_ / endFrame_));
