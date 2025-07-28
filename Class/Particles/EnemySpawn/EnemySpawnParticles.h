@@ -36,7 +36,7 @@ public:
 	/// <param name="isActive"></param>
 	void Start(const bool& isActive, const LWP::Math::Vector3& pos);
 	/// <summary>
-	/// オーラの生成終了
+	/// 生成終了
 	/// </summary>
 	void Finish();
 

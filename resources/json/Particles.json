@@ -283,8 +283,8 @@
                 "float :Min": 9.999999747378752e-05
             },
             "Group :Height": {
-                "float :Max": 0.5,
-                "float :Min": 0.10000000149011612
+                "float :Max": 2.0,
+                "float :Min": 1.0
             },
             "Group :Pos": {
                 "float :Max": 3.0,
@@ -296,7 +296,7 @@
             }
         },
         "float :Acceleration": -0.016300000250339508,
-        "float :DropingTime": 1.5,
+        "float :DropingTime": 3.5,
         "float :FloatTime": 5.0,
         "float :Multiply": 1.0
     },
