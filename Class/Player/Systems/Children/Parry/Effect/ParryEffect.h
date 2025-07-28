@@ -1,11 +1,11 @@
 #pragma once
 #include "Adapter.h"
-#include "../../../../Particles/IEffect.h"
-#include "../../../../Particles/ParticleJsonDataStructs.h"
-#include "../../../../Particles/Common/LargeFlashes.h"
-#include "../../../../Particles/Common/ShortFlashes.h"
-#include "../../../../Particles/Common/Rings.h"
-#include "../../../../Particles/Common/Sparks.h"
+#include "../../../../../Particles/IEffect.h"
+#include "../../../../../Particles/ParticleJsonDataStructs.h"
+#include "../../../../../Particles/Common/LargeFlashes.h"
+#include "../../../../../Particles/Common/ShortFlashes.h"
+#include "../../../../../Particles/Common/Rings.h"
+#include "../../../../../Particles/Common/Sparks.h"
 
 class ParryEffect : public IEffect {
 public:

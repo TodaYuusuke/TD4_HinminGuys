@@ -11,14 +11,14 @@ using namespace LWP::Info;
 GameScene::GameScene()
 	: player_(&mainCamera, &enemyManager_, &followCamera_, &uiManager_),
 	followCamera_(&player_, &mainCamera, player_.GetModelPos()),
-	uiManager_(&player_)
+	uiManager_(&player_),
+	particles_(&player_, &followCamera_)
 {
 	enemyManager_.Initialize();
 }
 
 GameScene::~GameScene() {
 	enemyManager_.Finalize();
-	delete testBillboard_;
 }
 
 // 初期化
@@ -37,6 +37,9 @@ void GameScene::Initialize() {
 	// UIの管理クラスを生成
 	uiManager_.Initialize();
 
+	// パーティクルの管理クラス
+	particles_.Initialize();
+
 	// 敵管理クラス
 	enemyManager_.Initialize();
 	enemyManager_.SetPlayer(&player_);
@@ -51,6 +54,7 @@ void GameScene::Initialize() {
 	// 自機の生成
 	player_.Initialize();
 	player_.SetSEPlayer(&sePlayer_);
+	player_.SetParticles(&particles_);
 
 	//ダメージエフェクトエミッターを生成
 	damageEffectEmitter_.Initialize();
@@ -74,17 +78,10 @@ void GameScene::Initialize() {
 
 	//シーン切り替え機能生成
 	sceneTransitioner_.Initialize(this);
-
-
-
-	testBillboard_ = new TestBillboard(&followCamera_);
 }
 
 // 更新
 void GameScene::Update() {
-	testBillboard_->Update();
-
-	
 	//シーン遷移が終わった時点でウェーブを開始していない場合、ウェーブを開始
 	if (not sceneTransitioner_.GetIsSceneChange() and not enemyManager_.GetIsDefeatedAllEnemy() and
 		not enemyManager_.GetIsStartWave()) {
@@ -124,10 +121,12 @@ void GameScene::Update() {
 
 	// 追従カメラ
 	followCamera_.Update();
-
 	
 	//ダメージエフェクトエミッター
 	damageEffectEmitter_.Update();
+
+	// パーティクル管理クラス
+	particles_.Update();
 
 	// uiの管理クラス
 	uiManager_.Update();
@@ -150,6 +149,11 @@ void GameScene::DebugGUI() {
 		// 自機
 		if (ImGui::BeginTabItem("Player")) {
 			player_.DebugGUI();
+			ImGui::EndTabItem();
+		}
+		// パーティクル管理クラス
+		if (ImGui::BeginTabItem("Particles")) {
+			particles_.DebugGui();
 			ImGui::EndTabItem();
 		}
 		// キーコンフィグ

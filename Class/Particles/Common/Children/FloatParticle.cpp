@@ -1,5 +1,5 @@
 #include "FloatParticle.h"
-#include "../../../Player.h"
+#include "../../../Player/Player.h"
 
 using namespace LWP;
 using namespace LWP::Math;
@@ -70,6 +70,13 @@ void FloatParticle::Hover(LWP::Object::Particle::Data& data) {
 void FloatParticle::Droping(LWP::Object::Particle::Data& data) {
 	isHover_ = false;
 	data.velocity.y += Interpolation::Exponential(Vector3{ 0.0f, 0.0f, 0.0f }, Vector3{ 0.0f, jsonData_.acceleration, 0.0f }, 0.05f).y;
+
+	// 地面に反射する
+	if (data.m.worldTF.translation.y <= 0.0f) {
+		data.velocity.x *= 0.8f;
+		data.velocity.y *= -0.8f;
+		data.velocity.z *= 0.8f;
+	}
 
 	data.elapsedTime--;
 }

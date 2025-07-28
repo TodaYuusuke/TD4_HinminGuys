@@ -17,11 +17,18 @@ public:
 	/// 更新処理
 	/// </summary>
 	void Update() override;
+
 	/// <summary>
 	/// Jsonで保存する値を設定
 	/// </summary>
 	/// <param name="json"></param>
 	void SetJsonData(LWP::Utility::JsonIO& json) override;
+	void SetJsonData(const Spark::SparkJsonData& jsonData) { jsonData_ = jsonData; }
+	/// <summary>
+	/// jsonで保存する内容の取得
+	/// </summary>
+	/// <returns></returns>
+	Spark::SparkJsonData GetJsonData() { return jsonData_; }
 
 	/// <summary>
 	/// パーティクルを生成

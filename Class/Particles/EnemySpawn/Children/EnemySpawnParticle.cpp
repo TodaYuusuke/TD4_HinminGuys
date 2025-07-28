@@ -1,5 +1,5 @@
 #include "EnemySpawnParticle.h"
-#include "../../../Math/MathFunctions.h"
+#include "../../../Player/Math/MathFunctions.h"
 #include <numbers>
 
 using namespace LWP;

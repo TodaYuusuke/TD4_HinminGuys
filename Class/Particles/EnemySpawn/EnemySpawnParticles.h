@@ -28,6 +28,7 @@ public:
 	/// </summary>
 	/// <param name="json"></param>
 	void SetJsonData(LWP::Utility::JsonIO& json) override;
+	void SetJsonData(const EnemySpawnParticle::EnemySpawnParticleJsonData& jsonData) { jsonData_ = jsonData; }
 	void SetJsonData();
 	/// <summary>
 	/// 生成をするかを設定
@@ -38,6 +39,12 @@ public:
 	/// オーラの生成終了
 	/// </summary>
 	void Finish();
+
+	/// <summary>
+	/// jsonで保存する内容の取得
+	/// </summary>
+	/// <returns></returns>
+	EnemySpawnParticle::EnemySpawnParticleJsonData GetJsonData() { return jsonData_; }
 
 private:
 	/// <summary>

@@ -1,7 +1,7 @@
 #pragma once
 #include "Adapter.h"
-#include "../../../../Particles/IEffect.h"
-#include "../../../../Particles/ParticleJsonDataStructs.h"
+#include "../../../../../Particles/IEffect.h"
+#include "../../../../../Particles/ParticleJsonDataStructs.h"
 
 class MoveEffect : public IEffect {
 public:

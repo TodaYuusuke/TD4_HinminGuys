@@ -1,5 +1,5 @@
 #include "Particles.h"
-#include "../Player.h"
+#include "../Player/Player.h"
 
 using namespace LWP;
 using namespace LWP::Math;
@@ -51,7 +51,6 @@ void Particles::Update() {
 	enemyDeadParticles_->Update();
 	attackHitEffect_->Update();
 	crackEffect_->Update();
-
 	parryEffect_->Update();
 	dustClouds_->Update();
 

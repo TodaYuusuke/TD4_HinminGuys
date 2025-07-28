@@ -28,6 +28,7 @@ public:
 	/// </summary>
 	/// <param name="json"></param>
 	void SetJsonData(LWP::Utility::JsonIO& json) override;
+	void SetJsonData(const EnemyDeadParticle::EnemyDeadParticleJsonData& jsonData) { jsonData_ = jsonData; }
 	void SetJsonData();
 
 	/// <summary>
@@ -40,6 +41,12 @@ public:
 	/// </summary>
 	/// <param name="value">生成する個数</param>
 	void Add(int value, LWP::Math::Vector3 pos);
+
+	/// <summary>
+	/// jsonで保存する内容の取得
+	/// </summary>
+	/// <returns></returns>
+	EnemyDeadParticle::EnemyDeadParticleJsonData GetJsonData() { return jsonData_; }
 
 private:
 	// 使用するなら(多分あまり使わない)

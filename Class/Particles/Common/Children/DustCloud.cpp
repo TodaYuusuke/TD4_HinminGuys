@@ -1,5 +1,5 @@
 #include "DustCloud.h"
-#include "../../../Math/MathFunctions.h"
+#include "../../../Player/Math/MathFunctions.h"
 
 using namespace LWP;
 using namespace LWP::Math;

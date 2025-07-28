@@ -1,35 +1,34 @@
 #pragma once
 #include "../Common/IParticles.h"
-#include "../Common/DustClouds.h"
-#include "../AttackHit/Children/AttackHitParticle.h"
-#include "Children/CrackPlane.h"
+#include "Children/AttackHitParticle.h"
+#include "../Common/Children/Spark.h"
 
-class CrackEffect : public IParticles {
+class AttackHitEffect : public IParticles {
 public:
-	struct CrackEffectJsonData {
-		AttackHitParticle::AttackHitParticleJsonData rockParticle;
-		CrackPlane::CrackPlaneJsonData crackPlane;
-		int smokeCount;
-		int rockParticleCount;
+	struct AttackHitEffectJsonData {
+		Spark::SparkJsonData spark;
+		AttackHitParticle::AttackHitParticleJsonData attackHitParticle;
+		int sparkCount;
+		int attackHitParticleCount;
 	};
 
 public:
 	// コンストラクタ
-	CrackEffect(const std::string& texName);
+	AttackHitEffect();
 	// デストラクタ
-	~CrackEffect() override = default;
+	~AttackHitEffect() override = default;
 
 	/// <summary>
 	/// 初期化
 	/// </summary>
 	void Initialize() override;
 	/// <summary>
-	/// 更新処理A
+	/// 更新処理
 	/// </summary>
 	void Update() override;
 
 	/// <summary>
-	/// Jsonで保存した調整項目
+	/// Jsonで保存した調整項目()
 	/// </summary>
 	void JsonDebugGui();
 
@@ -38,6 +37,7 @@ public:
 	/// </summary>
 	/// <param name="json"></param>
 	void SetJsonData(LWP::Utility::JsonIO& json) override;
+	void SetJsonData(const AttackHitEffectJsonData& jsonData) { jsonData_ = jsonData; }
 	void SetJsonData();
 
 	/// <summary>
@@ -46,16 +46,19 @@ public:
 	/// <param name="value">生成する個数</param>
 	void Add(const LWP::Math::Vector3& pos);
 
+	/// <summary>
+	/// jsonで保存する内容の取得
+	/// </summary>
+	/// <returns></returns>
+	AttackHitEffectJsonData GetJsonData() { return jsonData_; }
+
 private:
 	// 使用するなら(多分あまり使わない)
 	LWP::Utility::JsonIO json_;
-
-	// 土煙
-	std::unique_ptr<DustClouds> dustClouds_;
 
 	// パーティクル
 	std::list<IParticle*> particles_;
 
 	// 調整項目
-	CrackEffectJsonData jsonData_;
+	AttackHitEffectJsonData jsonData_;
 };

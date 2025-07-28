@@ -11,7 +11,7 @@
 #include "Command/InputHandler.h"
 #include "PlayerParameter.h"
 #include "Systems/Children/Parry/Effect/ParryEffect.h"
-#include "Particles/Particles.h"
+#include "../Particles/Particles.h"
 #include "../Components/HitStopController.h"
 #include "../UI/UIManager.h"
 #include "../Audio/SEPlayer.h"
@@ -135,7 +135,7 @@ public:// Getter,Setter
 	/// パーティクル管理クラスのアドレス取得
 	/// </summary>
 	/// <returns></returns>
-	Particles* GetParticles() { return particles_.get(); }
+	Particles* GetParticles() { return particles_; }
 	/// <summary>
 	/// 自機の効果音クラスを取得
 	/// </summary>
@@ -221,6 +221,11 @@ public:// Getter,Setter
 	/// <param name="SEPlayer"></param>
 	void SetSEPlayer(SEPlayer* SEPlayer) { SEPlayer_ = SEPlayer; }
 	/// <summary>
+	/// パーティクル管理クラスのアドレスを設定
+	/// </summary>
+	/// <param name="particles"></param>
+	void SetParticles(Particles* particles) { particles_ = particles; }
+	/// <summary>
 	/// 向いている方向を設定
 	/// </summary>
 	/// <param name="quat">向かせる方向(クォータニオン)</param>
@@ -279,6 +284,8 @@ private:// 外部からポインタをもらう変数
 	InputHandler* inputHandler_;
 	// UIの管理クラス
 	UIManager* uiManager_;
+	// パーティクルの管理クラス
+	Particles* particles_;
 	// ヒットストップ
 	HitStopController* hitStopController_;
 	// 効果音
@@ -302,9 +309,6 @@ private:
 
 	// パラメータ
 	std::unique_ptr<PlayerParameter> playerParameter_;
-
-	// パーティクルの管理クラス
-	std::unique_ptr<Particles> particles_;
 
 	// いきているか
 	bool isAlive_ = true;

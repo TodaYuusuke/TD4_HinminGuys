@@ -10,7 +10,7 @@
 #include "../Command/InputHandler.h"
 #include "../../ComboEditor/ComboTree.h"
 #include "../../Components/CoolTimer.h"
-#include "../Particles/Common/AuraParticles.h"
+#include "../../Particles/Common/AuraParticles.h"
 #include <memory>
 #include <functional>
 
