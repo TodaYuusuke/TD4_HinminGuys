@@ -1,6 +1,6 @@
 #pragma once
 #include "Adapter.h"
-#include "../../../../Particles/ParticleJsonDataStructs.h"
+#include "../../../../../Particles/ParticleJsonDataStructs.h"
 
 class Player;
 class EvasionEffect : public LWP::Object::Particle {

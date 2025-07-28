@@ -32,10 +32,6 @@ void Player::Initialize() {
 	// ヒットストップの管理クラス
 	hitStopController_ = HitStopController::GetInstance();
 
-	// パーティクルの管理クラス
-	particles_ = std::make_unique<Particles>(this, followCamera_);
-	particles_->Initialize();
-
 	// パラメータ管理クラス生成
 	playerParameter_ = std::make_unique<PlayerParameter>(this);
 	playerParameter_->Initialize();
@@ -84,9 +80,6 @@ void Player::Update() {
 	// 無敵時間
 	InvinsibleUpdate();
 
-	// パーティクル管理クラス
-	particles_->Update();
-
 	// 効果音
 	SEUpdate();
 }
@@ -113,10 +106,6 @@ void Player::DebugGUI() {
 	// アニメーション
 	if (ImGui::TreeNode("Animation")) {
 		animation_.DebugGUI();
-		ImGui::TreePop();
-	}
-	if (ImGui::TreeNode("Particles")) {
-		particles_->DebugGui();
 		ImGui::TreePop();
 	}
 	// パラメータ

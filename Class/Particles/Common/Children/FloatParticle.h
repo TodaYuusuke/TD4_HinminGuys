@@ -45,6 +45,12 @@ public:
 	bool UpdateParticle(LWP::Object::Particle::Data& data) override;
 
 	/// <summary>
+	/// 調整項目
+	/// </summary>
+	void DebugGui();
+
+private:
+	/// <summary>
 	/// 浮遊開始状態の処理
 	/// </summary>
 	/// <param name="data"></param>
@@ -64,13 +70,13 @@ public:
 	/// </summary>
 	void StateUpdate(LWP::Object::Particle::Data& data);
 
-	/// <summary>
-	/// 調整項目
-	/// </summary>
-	void DebugGui();
-
 public:
 #pragma region Getter
+	/// <summary>
+	/// jsonで保存する内容の取得
+	/// </summary>
+	/// <returns></returns>
+	FloatParticleJsonData GetJsonData() { return jsonData_; }
 	/// <summary>
 	/// 落下状態かを取得
 	/// </summary>
@@ -89,6 +95,7 @@ public:
 	/// </summary>
 	/// <param name="jsonData"></param>
 	void SetJsonData(LWP::Utility::JsonIO& json);
+	void SetJsonData(const FloatParticleJsonData& jsonData) { jsonData_ = jsonData; }
 	/// <summary>
 	/// 落下状態かを設定
 	/// </summary>

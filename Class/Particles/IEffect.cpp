@@ -1,6 +1,6 @@
 #include "IEffect.h"
-#include "../../Camera/FollowCamera.h"
-#include "../Player.h"
+#include "../Camera/FollowCamera.h"
+#include "../Player/Player.h"
 
 using namespace LWP;
 using namespace LWP::Math;

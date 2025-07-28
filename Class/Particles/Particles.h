@@ -1,8 +1,8 @@
 #pragma once
 #include "Adapter.h"
-#include "../Systems/Children/Parry/Effect/ParryEffect.h"
-#include "../Systems/Children/Evasion/Effect/EvasionEffect.h"
-#include "../Systems/Children/Move/Effect/MoveEffect.h"
+#include "../Player/Systems/Children/Parry/Effect/ParryEffect.h"
+#include "../Player/Systems/Children/Evasion/Effect/EvasionEffect.h"
+#include "../Player/Systems/Children/Move/Effect/MoveEffect.h"
 #include "Common/LargeFlashes.h"
 #include "Common/ShortFlashes.h"
 #include "Common/Rings.h"
@@ -77,6 +77,43 @@ public:// パーティクル生成
 	/// <param name="pos"></param>
 	void CreateMoveParticle(const LWP::Math::Vector3& pos);
 
+#pragma region Getter
+	/// <summary>
+	/// 火花パーティクルを取得
+	/// </summary>
+	/// <returns></returns>
+	Sparks* GetSparks() { return sparks_.get(); }
+	/// <summary>
+	/// 浮遊パーティクルを取得
+	/// </summary>
+	/// <returns></returns>
+	FloatParticle* GetFloatParticle() { return floatParticle_.get(); }
+	/// <summary>
+	/// 出現パーティクル取得
+	/// </summary>
+	/// <returns></returns>
+	EnemySpawnParticles* GetEnemySpawnParticles() { return enemySpawnParticles_.get(); }
+	/// <summary>
+	/// 敵死亡パーティクル取得
+	/// </summary>
+	/// <returns></returns>
+	EnemyDeadParticles* GetEnemyDeadParticles() { return enemyDeadParticles_.get(); }
+	/// <summary>
+	/// 攻撃が当たった時のパーティクル取得
+	/// </summary>
+	/// <returns></returns>
+	AttackHitEffect* GetAttackHitEffect() { return attackHitEffect_.get(); }
+	/// <summary>
+	/// 重攻撃時のパーティクル取得
+	/// </summary>
+	/// <returns></returns>
+	CrackEffect* GetCrackEffect() { return crackEffect_.get(); }
+#pragma endregion
+
+#pragma region Setter
+
+#pragma endregion
+
 private:
 	Player* player_;
 	FollowCamera* followCamera_;
@@ -101,7 +138,6 @@ private:
 	std::unique_ptr<Sparks> sparks_;
 	// 浮遊パーティクル
 	std::unique_ptr<FloatParticle> floatParticle_;
-
 	std::unique_ptr<EnemySpawnParticles> enemySpawnParticles_;
 	std::unique_ptr<EnemyDeadParticles> enemyDeadParticles_;
 	std::unique_ptr<AttackHitEffect> attackHitEffect_;
