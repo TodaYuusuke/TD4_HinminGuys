@@ -6,6 +6,7 @@ void OniHayhaState::ParameterConfig::InitJson()
 	json.Init("OniHayhaParameter.json");
 
 	json.BeginGroup("OniHayhaParameter")
+		.AddValue<float>("ExtrusionDist", &stateParameter_.extrusionDist)
 		.BeginGroup("Idle")
 		.AddValue<float>("StandTime", &stateParameter_.idleParameter.standTime)
 		.AddValue<float>("RetreatDist", &stateParameter_.idleParameter.retreatDist)

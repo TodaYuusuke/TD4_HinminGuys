@@ -8,6 +8,7 @@ void OgreState::ParameterConfig::InitJson()
 	json.Init("OgreParameter.json");
 
 	json.BeginGroup("OgreParameter")
+		.AddValue<float>("ExtrusionDist", &stateParameter_.extrusionDist)
 		.BeginGroup("Idle")
 		.AddValue<float>("StandTime", &stateParameter_.idleParameter.standTime)
 		.AddValue<float>("FollowingDist", &stateParameter_.idleParameter.followingDist)

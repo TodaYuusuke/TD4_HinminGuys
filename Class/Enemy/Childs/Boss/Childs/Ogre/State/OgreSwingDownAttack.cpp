@@ -21,7 +21,8 @@ void Ogre::SwingDownAttackFinalize([[maybe_unused]] const States& pre) {
 void Ogre::SwingDownAttackInit([[maybe_unused]] const States& pre)
 {
 
-	SetAnimation("LightAttack2", false);
+	animation_.Play("Slash", 0.6f)
+		.Loop(false);
 	//もしノックバックしたら待機に戻る
 	preState_ = States::kIdle;
 

@@ -22,7 +22,8 @@ void Ogre::RotatingSlashFinalize([[maybe_unused]] const States& pre) {
 void Ogre::RotatingSlashInit([[maybe_unused]] const States& pre)
 {
 
-	SetAnimation("LightAttack4", false);
+	animation_.Play("RotatingSlash", 0.6f)
+		.Loop(false);
 	//もしノックバックしたら待機に戻る
 	preState_ = States::kIdle;
 

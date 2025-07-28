@@ -12,7 +12,9 @@ void Saiji::FollowingFinalize([[maybe_unused]] const States& pre)
 void Saiji::FollowingInit([[maybe_unused]] const States& pre)
 {
 	
-	SetAnimation("Run", true);
+	animation_.Play("Run", 0.3f)
+		.Loop(true);
+
 	preState_ = States::kFollowing;
 
 	parameter_.speed = stateParameter_.moveParameter.defaultSpeed;

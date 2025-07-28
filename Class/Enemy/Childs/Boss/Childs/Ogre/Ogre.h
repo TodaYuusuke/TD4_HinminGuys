@@ -3,7 +3,7 @@
 #include "OgreStateParameter.h"
 
 /// <summary>
-/// オニ・ヘイヘ~青い死神~
+/// 翁雅、降臨
 /// </summary>
 class Ogre : public Boss
 {
@@ -70,6 +70,14 @@ private:
 	void HitReactionInit(const OgreState::States& pre);
 	void HitReactionUpdate(std::optional<OgreState::States>& req, const OgreState::States& pre);
 	void HitReactionFinalize(const OgreState::States& pre);
+
+	void DeadInit(const OgreState::States& pre);
+	void DeadUpdate(std::optional<OgreState::States>& req, const OgreState::States& pre);
+	void DeadFinalize(const OgreState::States& pre);
+
+	void SpawnInit(const OgreState::States& pre);
+	void SpawnUpdate(std::optional<OgreState::States>& req, const OgreState::States& pre);
+	void SpawnFinalize(const OgreState::States& pre);
 
 	//各パラメータを個別に取得
 	OgreState::IdleParameter& GetIdleParameter() { return stateParameter_.idleParameter; }

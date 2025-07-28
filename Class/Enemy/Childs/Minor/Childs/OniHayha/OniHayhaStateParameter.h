@@ -11,13 +11,27 @@ namespace OniHayhaState {
 	/// 状態一覧
 	/// </summary>
 	enum class States {
+		kSpawn,
 		kIdle,
 		kAttack,
 		kRetreat,
 		kWaitingForAttack,
 		kHitReaction,
 		kAiming,
+		kDead,
 		kMax,
+	};
+
+	/// <summary>
+	/// 出現パラメータ
+	/// </summary>
+	struct SpawnParameter {
+		//出現時間
+		float appearanceTime = 3.0f;
+		//現在の時間
+		float currentTime = 0.0f;
+		//スポーン時の開始Y座標
+		float startY = -2.0f;
 	};
 
 	/// <summary>
@@ -42,6 +56,10 @@ namespace OniHayhaState {
 		float endAcceptTime = 0.99f;
 		//弾の速度
 		float bulletSpeed = 50.0f;
+		//攻撃後の硬直時間
+		float freezingTime = 1.5f;
+		//現在の硬直時間カウント
+		float currentFreezingTime = 0.0f;
 	};
 
 	/// <summary>
@@ -82,19 +100,23 @@ namespace OniHayhaState {
 		float countAimingTime = 0.0f;
 		//チカチカカウント
 		int32_t flickeringCounter = 0;
+		//既に銃を構えているかどうか
+		bool isSettingUp = false;
 	};
 
 	/// <summary>
 	/// 雑魚敵の全てのパラメータ
 	/// </summary>
 	struct StateParameter {
+		SpawnParameter spawnParameter;
 		IdleParameter idleParameter;
 		AttackParameter attackParameter;
 		RetreatParameter retreatParameter;
 		WaitingForAttackParameter waitingForAttackParameter;
 		HitReactionParameter hitReactionParameter;
 		AimingParameter aimingParameter;
-
+		//押し出し半径
+		float extrusionDist = 0.5f;
 	};
 
 	//オニ・ヘイヘのパラメータ調整項目

@@ -27,22 +27,24 @@ Saiji::~Saiji()
 void Saiji::Initialize(Player* player, const Vector3& position, LWP::Object::Camera* camera,
 	EnemyManager* manager)
 {
-	model_.LoadShortPath("player/Player_Simple.gltf");
+	model_.LoadShortPath("Saiji/Saiji_IK.gltf");
 	type_ = EnemyType::kSaiji;
 	attackType_ = AttackType::kShort;
 	//アニメーションロード
-	animation_.LoadFullPath("resources/model/player/Player_Simple.gltf", &model_);
-	swordModel_.LoadShortPath("player/SimpleWeapon.gltf");
-	model_.materials["Material"].color = { 1.0f,0.0f,0.0f,1.0f };
+	animation_.LoadFullPath("resources/model/Saiji/Saiji_IK.gltf", &model_);
+	swordModel_.LoadShortPath("Saiji/Club.gltf");
 	SetPlayer(player);
 	camera_ = camera;
 	enemyManager_ = manager;
 	model_.worldTF.translation = position;
 	// 大きさを一時的に調整
 	model_.worldTF.scale = { 0.5f, 0.5f, 0.5f };
+	//プレイヤーの向きに回転
+	RotateTowardsPlayer();
 	//関数セット
 	AddStateFunc();
-	state_.request = States::kIdle;
+	state_.request = States::kSpawn;
+	model_.worldTF.translation.y = stateParameter_.spawnParameter.startY;
 
 	// 刀モデルをプレイヤーの手に追従させる
 	swordModel_.GetJoint("Grip")->localTF.Parent(&model_, "WeaponAnchor");
@@ -56,7 +58,7 @@ void Saiji::Initialize(Player* player, const Vector3& position, LWP::Object::Cam
 	collider_.mask.SetBelongFrag(GetEnemy());
 	// 当たり判定をとる対象のマスクを設定
 	collider_.mask.SetHitFrag(GetAttack());
-	collider_.enterLambda = [this](LWP::Object::Collision* hitTarget) {
+	collider_.stayLambda = [this](LWP::Object::Collision* hitTarget) {
 		hitTarget;
 
 		//SE鳴らす
@@ -64,11 +66,16 @@ void Saiji::Initialize(Player* player, const Vector3& position, LWP::Object::Cam
 
 		//ステートをセット(攻撃中はリアクションしない)
 		if (state_.GetCurrentBehavior() != States::kAttack) {
-			SetPreState(state_.GetCurrentBehavior());
 			state_.request = States::kHitReaction;
 			//今後プレイヤーから取得する
 			SetKnockBackValue(1.0f);
 		}
+
+		//コライダーを一時的にオフ、クールタイム設定
+		collider_.isActive = false;
+		//プレイヤーから取得してくる
+		invincibleTime_ = 0.2f;
+
 
 		//ダメージの加算値(テスト用)
 		int plusDamage = LWP::Utility::Random::GenerateInt(0, 1000);
@@ -95,10 +102,26 @@ void Saiji::Update()
 
 	preIsStartParryEffect_ = isStartParryEffect_;
 
-	//死亡時、更新しない(別途ステートを作成する予定)
+	//無敵時間カウント
+	if (invincibleTime_ > 0.0f) {
+
+		invincibleTime_ -= 1.0f * LWP::Info::GetDeltaTimeF();
+		//カウントが終わったらコライダーオン
+		if (invincibleTime_ <= 0.0f) {
+			collider_.isActive = true;
+		}
+
+	}
+
+	//死亡時
 	if (parameter_.hp <= 0.0f) {
-		isDead_ = true;
-		return;
+		//コライダーオフ
+		collider_.isActive = false;
+		//死亡ステートでなければ強制的に死亡ステートに移行
+		if (state_.GetCurrentBehavior() != States::kDead) {
+			state_.request = States::kDead;
+		}
+		
 	}
 
 	//デルタタイムが0.0f以下の時、更新しない
@@ -142,7 +165,7 @@ void Saiji::CreateSwordCollider()
 	aabbAttackCollider_.mask.SetBelongFrag(GetAttack());
 	// 当たり判定をとる対象のマスクを設定
 	aabbAttackCollider_.mask.SetHitFrag(GetPlayer() | GetParry());
-	aabbAttackCollider_.enterLambda = [this](LWP::Object::Collision* hitTarget) {
+	aabbAttackCollider_.stayLambda = [this](LWP::Object::Collision* hitTarget) {
 		hitTarget;
 		player_->TakeDamage(parameter_.attackParameter.attackValue);
 		//判定をオフにする
@@ -180,5 +203,13 @@ void Saiji::AddStateFunc()
 	state_.init[int(States::kHitReaction)] = [this](const States& pre) {HitReactionInit(pre); };
 	state_.update[int(States::kHitReaction)] = [this](std::optional<States>& req, const States& pre) {HitReactionUpdate(req, pre); };
 	state_.finalize[int(States::kHitReaction)] = [this](const States& pre) {HitReactionFinalize(pre); };
+
+	state_.init[int(States::kDead)] = [this](const States& pre) {DeadInit(pre); };
+	state_.update[int(States::kDead)] = [this](std::optional<States>& req, const States& pre) {DeadUpdate(req, pre); };
+	state_.finalize[int(States::kDead)] = [this](const States& pre) {DeadFinalize(pre); };
+
+	state_.init[int(States::kSpawn)] = [this](const States& pre) {SpawnInit(pre); };
+	state_.update[int(States::kSpawn)] = [this](std::optional<States>& req, const States& pre) {SpawnUpdate(req, pre); };
+	state_.finalize[int(States::kSpawn)] = [this](const States& pre) {SpawnFinalize(pre); };
 
 }

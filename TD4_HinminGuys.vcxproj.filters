@@ -125,6 +125,9 @@
     <ClCompile Include="Class\Particles\EnemyDead\EnemyDeadParticles.cpp" />
     <ClCompile Include="Class\Particles\Crack\CrackEffect.cpp" />
     <ClCompile Include="Class\Particles\Crack\Children\CrackPlane.cpp" />
+    <ClCompile Include="Class\Enemy\Childs\Minor\Childs\OniHayha\State\OniHayhaDead.cpp" />
+    <ClCompile Include="Class\Enemy\Childs\Minor\Childs\Saiji\State\SaijiDead.cpp" />
+    <ClCompile Include="Class\Enemy\Childs\Boss\Childs\Ogre\State\OgreDead.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Class\ComboEditor\ComboTree.h" />

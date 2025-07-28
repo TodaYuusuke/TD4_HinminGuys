@@ -67,6 +67,14 @@ private:
 	void HitReactionUpdate(std::optional<SaijiState::States>& req, const SaijiState::States& pre);
 	void HitReactionFinalize(const SaijiState::States& pre);
 
+	void DeadInit(const SaijiState::States& pre);
+	void DeadUpdate(std::optional<SaijiState::States>& req, const SaijiState::States& pre);
+	void DeadFinalize(const SaijiState::States& pre);
+
+	void SpawnInit(const SaijiState::States& pre);
+	void SpawnUpdate(std::optional<SaijiState::States>& req, const SaijiState::States& pre);
+	void SpawnFinalize(const SaijiState::States& pre);
+
 #pragma endregion
 
 private:

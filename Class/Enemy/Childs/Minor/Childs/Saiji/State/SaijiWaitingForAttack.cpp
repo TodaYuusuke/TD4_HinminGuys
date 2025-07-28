@@ -21,22 +21,34 @@ void Saiji::WaitingForAttackFinalize([[maybe_unused]] const States& pre)
 	//デフォの移動速度セット
 	parameter_.speed = 1.0f;
 
+	animation_.Stop(LWP::Resource::Animation::TrackType::Blend);
+
 }
 
 void Saiji::WaitingForAttackInit([[maybe_unused]] const States& pre)
 {
 
-	SetAnimation("Run", true, 0.3f);
+	//ランダムな数字を利用して右回りかどうかを決める
+	if (LWP::Utility::Random::GenerateInt(0, 1) == 0) {
+		stateParameter_.waitingForAttackParameter.isClockwise = true;
+	}
+
+	animation_.Play("Walk", 0.3f)
+		.Loop(true);
+
+	if (stateParameter_.waitingForAttackParameter.isClockwise) {
+		animation_.Play("RightWalk", 0.3f, 0.0f, LWP::Resource::Animation::TrackType::Blend)
+			.Loop(true, LWP::Resource::Animation::TrackType::Blend);
+	}
+	else {
+		animation_.Play("LeftWalk", 0.3f, 0.0f, LWP::Resource::Animation::TrackType::Blend)
+			.Loop(true, LWP::Resource::Animation::TrackType::Blend);
+	}
 
 	//現在の攻撃カウントから順番を決める
 	stateParameter_.waitingForAttackParameter.attackID = enemyManager_->shortAssignAttackID;
 	//攻撃の順番を決める数字を上昇させる
 	enemyManager_->shortAssignAttackID++;
-
-	//ランダムな数字を利用して右回りかどうかを決める
-	if (LWP::Utility::Random::GenerateInt(0, 1) == 0) {
-		stateParameter_.waitingForAttackParameter.isClockwise = true;
-	}
 
 	preState_ = States::kWaitingForAttack;
 
@@ -110,6 +122,9 @@ void Saiji::WaitingForAttackUpdate([[maybe_unused]] std::optional<States>& req, 
 
 			SetPosition(GetPosition() + result * LWP::Info::GetDeltaTimeF() * 1.0f
 				+ (GetRepulsiveForce() * LWP::Info::GetDeltaTimeF()));
+
+			//velocityからアニメーションブレンドの比率を設定
+			animation_.blendT = 1.0f - LWP::Math::Vector3::Dot(dist.Normalize(), result.Normalize());
 
 		}
 

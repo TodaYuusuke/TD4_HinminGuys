@@ -12,6 +12,7 @@ namespace OgreState {
 	/// 状態一覧
 	/// </summary>
 	enum class States {
+		kSpawn, //出現
 		kIdle, //待機
 		kMove, //移動
 		kSwingDownAttack, //ふり降ろし
@@ -20,7 +21,20 @@ namespace OgreState {
 		kAssaultSlash, //連続突撃
 		kQuadrupleAttack, //四連撃
 		kHitReaction, //ヒット演出
+		kDead, //死亡
 		kMax, //最大数
+	};
+
+	/// <summary>
+	/// 出現パラメータ
+	/// </summary>
+	struct SpawnParameter {
+		//出現時間
+		float appearanceTime = 3.0f;
+		//現在の時間
+		float currentTime = 0.0f;
+		//スポーン時の開始Y座標
+		float startY = -2.0f;
 	};
 
 	/// <summary>
@@ -199,6 +213,8 @@ namespace OgreState {
 		int32_t currentAttackCount = 0;
 		//攻撃発生時間に関するデータ
 		std::array<AttackData, kMaxAttackCount> multipleAttackData{};
+		//次の攻撃モーション名
+		std::array<std::string, kMaxAttackCount> nextAttackName{ "Slash", "RushSlash", "Slash", "RotatingSlash" };
 		//移動方向
 		LWP::Math::Vector3 attackDirection{};
 		//攻撃の強さ
@@ -217,6 +233,7 @@ namespace OgreState {
 	/// 全てのパラメータ
 	/// </summary>
 	struct StateParameter {
+		SpawnParameter spawnParameter{};
 		IdleParameter idleParameter{};
 		MoveParameter moveParameter{};
 		SwingDownAttack swingDownAttack{};
@@ -225,7 +242,8 @@ namespace OgreState {
 		AssaultSlash assaultSlash{};
 		QuadrupleAttack quadrupleAttack{};
 		HitReactionParameter hitReactionParameter{};
-
+		//押し出し半径
+		float extrusionDist = 1.0f;
 	};
 
 	//翁雅のパラメータ調整項目

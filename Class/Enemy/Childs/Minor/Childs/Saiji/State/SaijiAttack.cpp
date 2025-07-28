@@ -15,6 +15,7 @@ void Saiji::AttackFinalize([[maybe_unused]] const States& pre) {
 	//待機ステートの待機時間セット
 	stateParameter_.idleParameter.countStandTime = stateParameter_.idleParameter.standTime +
 		LWP::Utility::Random::GenerateFloat(0.0f, 1.0f);
+	animation_.GetPlayBackSpeed() = 1.0f;
 
 }
 
@@ -22,7 +23,10 @@ void Saiji::AttackInit([[maybe_unused]] const States& pre)
 {
 	
 	preState_ = States::kAttack;
-	SetAnimation("LightAttack2", false, 0.1f);
+
+	animation_.Play("VerticalAttack", 0.3f)
+		.Loop(false);
+
 	aabbAttackCollider_.isActive = false;
 	isAttack_ = true;
 	//AABB実装
@@ -34,6 +38,8 @@ void Saiji::AttackInit([[maybe_unused]] const States& pre)
 	};
 	//パリィエフェクトフラグリセット
 	isActivationParryEffect_ = false;
+
+	stateParameter_.attackParameter.currentFreezingTime = 0.0f;
 
 }
 
@@ -78,13 +84,24 @@ void Saiji::AttackUpdate([[maybe_unused]] std::optional<States>& req, [[maybe_un
 
 	//攻撃が終了した時
 	if (not animation_.GetPlaying()) {
-		isAttack_ = false;
-		state_.request = States::kIdle;
-		return;
+
+		//硬直時間をカウント
+		if (stateParameter_.attackParameter.currentFreezingTime < stateParameter_.attackParameter.freezingTime) {
+
+			stateParameter_.attackParameter.currentFreezingTime += 1.0f * LWP::Info::GetDeltaTimeF();
+
+			//カウント超えたら終わり
+			if (stateParameter_.attackParameter.currentFreezingTime >= stateParameter_.attackParameter.freezingTime) {
+				isAttack_ = false;
+				state_.request = States::kIdle;
+				return;
+			}
+
+		}
 
 	}
 
-	SetPosition(GetPosition() + (GetRepulsiveForce() * LWP::Info::GetDeltaTimeF()));
+	/*SetPosition(GetPosition() + (GetRepulsiveForce() * LWP::Info::GetDeltaTimeF()));*/
 
 }
 

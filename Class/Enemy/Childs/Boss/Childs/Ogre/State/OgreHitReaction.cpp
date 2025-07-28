@@ -19,7 +19,8 @@ void Ogre::HitReactionFinalize([[maybe_unused]] const States& pre) {
 void Ogre::HitReactionInit([[maybe_unused]] const States& pre)
 {
 
-	SetAnimation("Damage", false);
+	animation_.Play("Damage", 0.2f)
+		.Loop(false);
 
 }
 

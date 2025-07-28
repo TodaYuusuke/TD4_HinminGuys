@@ -22,7 +22,8 @@ void Ogre::AssaultSlashFinalize([[maybe_unused]] const States& pre) {
 void Ogre::AssaultSlashInit([[maybe_unused]] const States& pre)
 {
 
-	SetAnimation("Idle", true);
+	animation_.Play("ShadowHide", 0.2f)
+		.Loop(false);
 	//もしノックバックしたら待機に戻る
 	preState_ = States::kIdle;
 
@@ -124,7 +125,8 @@ void Ogre::AssaultSlashUpdate([[maybe_unused]] std::optional<States>& req, [[may
 				//ワープ先セット
 				SetAssaultSlashWarpPosition();
 				//モーションリセット
-
+				animation_.Play("RushSlash", 0.2f)
+					.Loop(false);
 				//パリィエフェクトリセット
 				isActivationParryEffect_ = false;
 				//カウント増加

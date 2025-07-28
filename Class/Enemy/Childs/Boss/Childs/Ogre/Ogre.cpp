@@ -28,7 +28,7 @@ Ogre::~Ogre()
 void Ogre::Initialize(Player* player, const Vector3& position, LWP::Object::Camera* camera,
 	EnemyManager* manager)
 {
-	model_.LoadShortPath("player/Player_Simple.gltf");
+	model_.LoadShortPath("Ogre/Orga_IK.gltf");
 	cautionQuad_.LoadShortPath("BothPlane.obj");
 	cautionCircle_.LoadShortPath("BothPlane.obj");
 	cautionQuad_.materials["Texturematerial"].texture = LWP::Resource::LoadTexture("caution_square.png");
@@ -42,8 +42,8 @@ void Ogre::Initialize(Player* player, const Vector3& position, LWP::Object::Came
 	type_ = EnemyType::kOgre;
 	attackType_ = AttackType::kShort;
 	//アニメーションロード
-	animation_.LoadFullPath("resources/model/player/Player_Simple.gltf", &model_);
-	swordModel_.LoadShortPath("player/SimpleWeapon.gltf");
+	animation_.LoadFullPath("resources/model/Ogre/Orga_IK.gltf", &model_);
+	swordModel_.LoadShortPath("Ogre/Weapon.gltf");
 	model_.materials["Material"].color = { 1.0f,0.0f,0.0f,1.0f };
 	SetPlayer(player);
 	camera_ = camera;
@@ -51,9 +51,12 @@ void Ogre::Initialize(Player* player, const Vector3& position, LWP::Object::Came
 	model_.worldTF.translation = position;
 	// 大きさを一時的に調整
 	model_.worldTF.scale = { 0.8f, 0.8f, 0.8f };
+	//プレイヤーの向きに回転
+	RotateTowardsPlayer();
 	//関数セット
 	AddStateFunc();
-	state_.request = States::kIdle;
+	state_.request = States::kSpawn;
+	model_.worldTF.translation.y = stateParameter_.spawnParameter.startY;
 
 	// 刀モデルをプレイヤーの手に追従させる
 	swordModel_.GetJoint("Grip")->localTF.Parent(&model_, "WeaponAnchor");
@@ -67,7 +70,7 @@ void Ogre::Initialize(Player* player, const Vector3& position, LWP::Object::Came
 	collider_.mask.SetBelongFrag(GetEnemy());
 	// 当たり判定をとる対象のマスクを設定
 	collider_.mask.SetHitFrag(GetAttack());
-	collider_.enterLambda = [this](LWP::Object::Collision* hitTarget) {
+	collider_.stayLambda = [this](LWP::Object::Collision* hitTarget) {
 		hitTarget;
 
 		//SE鳴らす
@@ -75,11 +78,15 @@ void Ogre::Initialize(Player* player, const Vector3& position, LWP::Object::Came
 
 		//ステートをセット(攻撃中はリアクションしない)
 		if (not IsAttackState()) {
-			SetPreState(state_.GetCurrentBehavior());
 			state_.request = States::kHitReaction;
 			//今後プレイヤーから取得する
 			SetKnockBackValue(1.0f);
 		}
+
+		//コライダーを一時的にオフ、クールタイム設定
+		collider_.isActive = false;
+		//プレイヤーから取得してくる
+		invincibleTime_ = 0.2f;
 
 		//ダメージの加算値(テスト用)
 		int plusDamage = LWP::Utility::Random::GenerateInt(0, 1000);
@@ -115,10 +122,26 @@ void Ogre::Update()
 
 	preIsStartParryEffect_ = isStartParryEffect_;
 
-	//死亡時、更新しない(別途ステートを作成する予定)
+	//無敵時間カウント
+	if (invincibleTime_ > 0.0f) {
+
+		invincibleTime_ -= 1.0f * LWP::Info::GetDeltaTimeF();
+		//カウントが終わったらコライダーオン
+		if (invincibleTime_ <= 0.0f) {
+			collider_.isActive = true;
+		}
+
+	}
+
+	//死亡時
 	if (parameter_.hp <= 0.0f) {
-		isDead_ = true;
-		return;
+		//コライダーオフ
+		collider_.isActive = false;
+		//死亡ステートでなければ強制的に死亡ステートに移行
+		if (state_.GetCurrentBehavior() != States::kDead) {
+			state_.request = States::kDead;
+		}
+
 	}
 
 	//デルタタイムが0.0f以下の時、更新しない
@@ -178,7 +201,7 @@ void Ogre::CreateColliders()
 	// 当たり判定をとる対象のマスクを設定
 	sphereCollider_.mask.SetHitFrag(GetPlayer() | GetParry());
 	sphere_.isShowWireFrame = false;
-	sphereCollider_.enterLambda = [this](LWP::Object::Collision* hitTarget) {
+	sphereCollider_.stayLambda = [this](LWP::Object::Collision* hitTarget) {
 		hitTarget;
 		player_->TakeDamage(parameter_.attackParameter.attackValue);
 		//判定をオフにする
@@ -192,7 +215,7 @@ void Ogre::CreateColliders()
 	// 当たり判定をとる対象のマスクを設定
 	aabbAttackCollider_.mask.SetHitFrag(GetPlayer() | GetParry());
 	aabbAttack_.isShowWireFrame = false;
-	aabbAttackCollider_.enterLambda = [this](LWP::Object::Collision* hitTarget) {
+	aabbAttackCollider_.stayLambda = [this](LWP::Object::Collision* hitTarget) {
 		hitTarget;
 		player_->TakeDamage(parameter_.attackParameter.attackValue);
 		//判定をオフにする
@@ -235,6 +258,14 @@ void Ogre::AddStateFunc()
 	state_.init[int(States::kHitReaction)] = [this](const States& pre) {HitReactionInit(pre); };
 	state_.update[int(States::kHitReaction)] = [this](std::optional<States>& req, const States& pre) {HitReactionUpdate(req, pre); };
 	state_.finalize[int(States::kHitReaction)] = [this](const States& pre) {HitReactionFinalize(pre); };
+
+	state_.init[int(States::kDead)] = [this](const States& pre) {DeadInit(pre); };
+	state_.update[int(States::kDead)] = [this](std::optional<States>& req, const States& pre) {DeadUpdate(req, pre); };
+	state_.finalize[int(States::kDead)] = [this](const States& pre) {DeadFinalize(pre); };
+
+	state_.init[int(States::kSpawn)] = [this](const States& pre) {SpawnInit(pre); };
+	state_.update[int(States::kSpawn)] = [this](std::optional<States>& req, const States& pre) {SpawnUpdate(req, pre); };
+	state_.finalize[int(States::kSpawn)] = [this](const States& pre) {SpawnFinalize(pre); };
 
 }
 

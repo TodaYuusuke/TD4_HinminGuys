@@ -75,22 +75,22 @@
             "float :AttackScale2": 1.0,
             "float :AttackScale3": 1.0,
             "float :AttackScale4": 1.0,
-            "float :EndAcceptTime1": 0.15000000596046448,
-            "float :EndAcceptTime2": 0.18000000715255737,
-            "float :EndAcceptTime3": 0.27000001072883606,
-            "float :EndAcceptTime4": 0.15000000596046448,
-            "float :EndMotionTime1": 0.2199999988079071,
-            "float :EndMotionTime2": 0.23999999463558197,
-            "float :EndMotionTime3": 0.30000001192092896,
+            "float :EndAcceptTime1": 0.6000000238418579,
+            "float :EndAcceptTime2": 0.75,
+            "float :EndAcceptTime3": 0.6000000238418579,
+            "float :EndAcceptTime4": 0.800000011920929,
+            "float :EndMotionTime1": 1.0,
+            "float :EndMotionTime2": 1.0,
+            "float :EndMotionTime3": 1.0,
             "float :EndMotionTime4": 1.0,
             "float :MoveSpeed1": 3.0,
             "float :MoveSpeed2": 3.0,
             "float :MoveSpeed3": 3.0,
             "float :MoveSpeed4": 5.0,
-            "float :StartAcceptTime1": 0.05000000074505806,
-            "float :StartAcceptTime2": 0.10000000149011612,
-            "float :StartAcceptTime3": 0.20000000298023224,
-            "float :StartAcceptTime4": 0.05000000074505806
+            "float :StartAcceptTime1": 0.4000000059604645,
+            "float :StartAcceptTime2": 0.550000011920929,
+            "float :StartAcceptTime3": 0.4000000059604645,
+            "float :StartAcceptTime4": 0.5
         },
         "Group :RotatingSlash": {
             "Vector3 :AttackPosition": [
@@ -100,10 +100,10 @@
             ],
             "float :AttackDistance": 1.0,
             "float :AttackScale": 1.0,
-            "float :EndAcceptTime": 0.14000000059604645,
-            "float :EndMotionTime": 0.5,
+            "float :EndAcceptTime": 0.800000011920929,
+            "float :EndMotionTime": 1.0,
             "float :MoveSpeed": 1.0,
-            "float :StartAcceptTime": 0.07000000029802322
+            "float :StartAcceptTime": 0.5
         },
         "Group :SwingDownAttack": {
             "Vector3 :AttackPosition": [
@@ -113,10 +113,11 @@
             ],
             "float :AttackDistance": 0.800000011920929,
             "float :AttackScale": 0.5,
-            "float :EndAcceptTime": 0.15000000596046448,
-            "float :EndMotionTime": 0.5,
+            "float :EndAcceptTime": 0.6000000238418579,
+            "float :EndMotionTime": 1.0,
             "float :MoveSpeed": 5.0,
-            "float :StartAcceptTime": 0.09000000357627869
-        }
+            "float :StartAcceptTime": 0.4000000059604645
+        },
+        "float :ExtrusionDist": 1.0
     }
 }

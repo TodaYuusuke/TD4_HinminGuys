@@ -12,7 +12,8 @@ void OniHayha::IdleFinalize([[maybe_unused]] const States& pre) {
 void OniHayha::IdleInit([[maybe_unused]] const States& pre)
 {
 	
-	SetAnimation("Idle", true);
+	animation_.Play("Idle", 0.6f)
+		.Loop(true);
 	preState_ = States::kIdle;
 	//攻撃状態解除
 	isAttack_ = false;

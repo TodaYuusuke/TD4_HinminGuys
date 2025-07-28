@@ -25,26 +25,32 @@ void OniHayha::WaitingForAttackFinalize([[maybe_unused]] const States& pre)
 void OniHayha::WaitingForAttackInit([[maybe_unused]] const States& pre)
 {
 
-	SetAnimation("Idle", true);
+
+	animation_.Play("ShotReady", 0.6f)
+		.Loop(false);
 
 	//現在の攻撃カウントから順番を決める
 	stateParameter_.waitingForAttackParameter.attackID = enemyManager_->longAssignAttackID;
 	//攻撃の順番を決める数字を上昇させる
 	enemyManager_->longAssignAttackID++;
 
-	laserModel_.isActive = true;
-
 }
 
 void OniHayha::WaitingForAttackUpdate([[maybe_unused]] std::optional<States>& req, [[maybe_unused]] const States& pre)
 {
 
+	//構えが終わってからレーザー表示
+	if (not animation_.GetPlaying()) {
+		laserModel_.isActive = true;
+	}
 
 	//誰も攻撃しておらず、順番が回ってきたら攻撃に移行
 	if (not enemyManager_->IsAnyAttack() and 
 		stateParameter_.waitingForAttackParameter.attackID == enemyManager_->longNextAttackID) {
 		//狙い撃ちの待機時間セット
 		stateParameter_.aimingParameter.countAimingTime = stateParameter_.aimingParameter.aimingTime;
+		//既に狙っているフラグをオンにする
+		stateParameter_.aimingParameter.isSettingUp = true;
 		//狙い状態に移行
 		state_.request = States::kAiming;
 		return;

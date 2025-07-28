@@ -21,7 +21,6 @@ void GameUI::Initialize(const std::string& fileName, const std::string& UIName) 
 
 	sprite_.LoadTexture(fileName);
 	sprite_.anchorPoint = { 0.5f,0.5f };
-	sprite_.Init();
 	name_ = UIName;
 
 	json_.Init(name_ + ".json");

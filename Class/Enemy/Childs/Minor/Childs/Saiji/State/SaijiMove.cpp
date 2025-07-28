@@ -18,7 +18,9 @@ void Saiji::MoveFinalize([[maybe_unused]] const States& pre) {
 void Saiji::MoveInit([[maybe_unused]] const States& pre)
 {
 	
-	SetAnimation("Run", true);
+	animation_.Play("Run", 0.3f)
+		.Loop(true);
+
 	preState_ = States::kMove;
 	//移動速度をセット
 	parameter_.speed = stateParameter_.moveParameter.defaultSpeed;

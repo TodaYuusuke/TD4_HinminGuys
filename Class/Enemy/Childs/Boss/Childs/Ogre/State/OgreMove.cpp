@@ -22,7 +22,8 @@ void Ogre::MoveFinalize([[maybe_unused]] const States& pre) {
 void Ogre::MoveInit([[maybe_unused]] const States& pre)
 {
 
-	SetAnimation("Run", true);
+	animation_.Play("Walk", 0.6f)
+		.Loop(true);
 	preState_ = States::kMove;
 	//移動速度をセット
 	parameter_.speed = stateParameter_.moveParameter.defaultSpeed;

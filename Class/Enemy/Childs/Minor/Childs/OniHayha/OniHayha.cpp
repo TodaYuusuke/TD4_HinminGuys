@@ -27,16 +27,17 @@ OniHayha::~OniHayha()
 void OniHayha::Initialize(Player* player, const Vector3& position, LWP::Object::Camera* camera,
 	EnemyManager* manager)
 {
-	model_.LoadShortPath("player/Player_Simple.gltf");
+	model_.LoadShortPath("Oniheihe/Oniheihe_IK.gltf");
 	type_ = EnemyType::kOniHayha;
 	attackType_ = AttackType::kLong;
 	//アニメーションロード
-	animation_.LoadFullPath("resources/model/player/Player_Simple.gltf", &model_);
-	model_.materials["Material"].color = { 1.0f,0.0f,0.0f,1.0f };
+	animation_.LoadFullPath("resources/model/Oniheihe/Oniheihe_IK.gltf", &model_);
+	gunModel_.LoadShortPath("Oniheihe/MatchLockGun.gltf");
+	// 銃モデルをプレイヤーの手に追従させる
+	gunModel_.GetJoint("Grip")->localTF.Parent(&model_, "WeaponAnchor");
 	laserModel_.LoadShortPath("effect/laser.obj");
-	laserModel_.worldTF.Parent(&model_.worldTF);
-	laserModel_.worldTF.scale = {0.01f,0.01f,50.0f};
-	laserModel_.worldTF.translation = { 0.0f,1.0f,0.0f };
+	laserModel_.worldTF.Parent(&gunModel_, "Muzzle");
+	/*laserModel_.worldTF.translation = { 0.0f,1.0f,0.0f };*/
 	laserModel_.materials["Laser"].color.R = (unsigned char)255;
 	laserModel_.isActive = false;
 	laserModel_.materials["Laser"].enableLighting = false;
@@ -46,9 +47,13 @@ void OniHayha::Initialize(Player* player, const Vector3& position, LWP::Object::
 	model_.worldTF.translation = position;
 	// 大きさを一時的に調整
 	model_.worldTF.scale = { 0.5f, 0.5f, 0.5f };
+	//プレイヤーの向きに回転
+	RotateTowardsPlayer();
 	//関数セット
 	AddStateFunc();
-	state_.request = States::kIdle;
+	state_.request = States::kSpawn;
+	model_.worldTF.translation.y = stateParameter_.spawnParameter.startY;
+	
 
 	// 体の判定生成
 	collider_.SetFollow(&model_.worldTF);
@@ -60,7 +65,7 @@ void OniHayha::Initialize(Player* player, const Vector3& position, LWP::Object::
 	collider_.mask.SetBelongFrag(GetEnemy());
 	// 当たり判定をとる対象のマスクを設定
 	collider_.mask.SetHitFrag(GetAttack());
-	collider_.enterLambda = [this](LWP::Object::Collision* hitTarget) {
+	collider_.stayLambda = [this](LWP::Object::Collision* hitTarget) {
 		hitTarget;
 
 		//SE鳴らす
@@ -74,6 +79,11 @@ void OniHayha::Initialize(Player* player, const Vector3& position, LWP::Object::
 			//今後プレイヤーから取得する
 			SetKnockBackValue(1.0f);
 		}
+
+		//コライダーを一時的にオフ、クールタイム設定
+		collider_.isActive = false;
+		//プレイヤーから取得してくる
+		invincibleTime_ = 0.2f;
 
 		//ダメージの加算値(テスト用)
 		int plusDamage = LWP::Utility::Random::GenerateInt(0, 1000);
@@ -100,10 +110,26 @@ void OniHayha::Update()
 	//1フレーム前のパリィエフェクトフラグ更新
 	preIsStartParryEffect_ = isStartParryEffect_;
 
-	//死亡時、更新しない(別途ステートを作成する予定)
+	//無敵時間カウント
+	if (invincibleTime_ > 0.0f) {
+
+		invincibleTime_ -= 1.0f * LWP::Info::GetDeltaTimeF();
+		//カウントが終わったらコライダーオン
+		if (invincibleTime_ <= 0.0f) {
+			collider_.isActive = true;
+		}
+
+	}
+
+	//死亡時
 	if (parameter_.hp <= 0.0f) {
-		isDead_ = true;
-		return;
+		//コライダーオフ
+		collider_.isActive = false;
+		//死亡ステートでなければ強制的に死亡ステートに移行
+		if (state_.GetCurrentBehavior() != States::kDead) {
+			state_.request = States::kDead;
+		}
+
 	}
 
 	//デルタタイムが0.0f以下の時、更新しない
@@ -181,5 +207,13 @@ void OniHayha::AddStateFunc()
 	state_.init[int(States::kAiming)] = [this](const States& pre) {AimingInit(pre); };
 	state_.update[int(States::kAiming)] = [this](std::optional<States>& req, const States& pre) {AimingUpdate(req, pre); };
 	state_.finalize[int(States::kAiming)] = [this](const States& pre) {AimingFinalize(pre); };
+
+	state_.init[int(States::kDead)] = [this](const States& pre) {DeadInit(pre); };
+	state_.update[int(States::kDead)] = [this](std::optional<States>& req, const States& pre) {DeadUpdate(req, pre); };
+	state_.finalize[int(States::kDead)] = [this](const States& pre) {DeadFinalize(pre); };
+
+	state_.init[int(States::kSpawn)] = [this](const States& pre) {SpawnInit(pre); };
+	state_.update[int(States::kSpawn)] = [this](std::optional<States>& req, const States& pre) {SpawnUpdate(req, pre); };
+	state_.finalize[int(States::kSpawn)] = [this](const States& pre) {SpawnFinalize(pre); };
 
 }
