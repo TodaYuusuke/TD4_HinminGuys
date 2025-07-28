@@ -5,9 +5,9 @@ using namespace LWP::Math;
 using namespace LWP::Utility;
 using namespace LWP::Utility::Interpolation;
 
-ShortFlashes::ShortFlashes(Player* player, FollowCamera* followCamera) {
-	player_ = player;
+ShortFlashes::ShortFlashes(FollowCamera* followCamera, const std::string& texName) {
 	followCamera_ = followCamera;
+	texName_ = texName;
 }
 
 void ShortFlashes::Initialize() { 
@@ -41,7 +41,7 @@ void ShortFlashes::SetJsonData(LWP::Utility::JsonIO& json) {
 
 void ShortFlashes::Add(int value) {
 	for (int i = 0; i < value; i++) {
-		ShortFlash* p = new ShortFlash(player_, followCamera_);
+		ShortFlash* p = new ShortFlash(followCamera_, texName_);
 		p->SetShortFlashJsonData(jsonData_);
 		p->Create(emitterPos_);
 		particles_.push_back(p);

@@ -7,6 +7,11 @@
 #include "Common/ShortFlashes.h"
 #include "Common/Rings.h"
 #include "Common/Sparks.h"
+#include "Common/DustClouds.h"
+#include "EnemySpawn/EnemySpawnParticles.h"
+#include "EnemyDead/EnemyDeadParticles.h"
+#include "AttackHit/AttackHitEffect.h"
+#include "Crack/CrackEffect.h"
 #include "Common/Children/FloatParticle.h"
 
 class FollowCamera;
@@ -84,7 +89,9 @@ private:
 	// 回避
 	std::unique_ptr<EvasionEffect> evasionEffect_;
 	// 移動
-	std::unique_ptr<MoveEffect> moveEffect_;
+	//std::unique_ptr<MoveEffect> moveEffect_;
+	std::unique_ptr<DustClouds> dustClouds_;
+
 
 
 
@@ -94,6 +101,11 @@ private:
 	std::unique_ptr<Sparks> sparks_;
 	// 浮遊パーティクル
 	std::unique_ptr<FloatParticle> floatParticle_;
+
+	std::unique_ptr<EnemySpawnParticles> enemySpawnParticles_;
+	std::unique_ptr<EnemyDeadParticles> enemyDeadParticles_;
+	std::unique_ptr<AttackHitEffect> attackHitEffect_;
+	std::unique_ptr<CrackEffect> crackEffect_;
 
 
 

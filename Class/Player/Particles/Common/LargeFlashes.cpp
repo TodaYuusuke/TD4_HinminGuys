@@ -5,9 +5,9 @@ using namespace LWP::Math;
 using namespace LWP::Utility;
 using namespace LWP::Utility::Interpolation;
 
-LargeFlashes::LargeFlashes(Player* player, FollowCamera* followCamera) {
-	player_ = player;
+LargeFlashes::LargeFlashes(FollowCamera* followCamera, const std::string& texName) {
 	followCamera_ = followCamera;
+	texName_ = texName;
 }
 
 void LargeFlashes::Initialize() {
@@ -44,7 +44,7 @@ void LargeFlashes::SetJsonData(LWP::Utility::JsonIO& json) {
 
 void LargeFlashes::Add(int value) {
 	for (int i = 0; i < value; i++) {
-		LargeFlash* p = new LargeFlash(player_, followCamera_);
+		LargeFlash* p = new LargeFlash(followCamera_, texName_);
 		p->SetLargeFlashJsonData(jsonData_);
 		p->Create(emitterPos_);
 		particles_.push_back(p);

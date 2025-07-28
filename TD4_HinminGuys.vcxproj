@@ -150,6 +150,8 @@
     </Manifest>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Class\Player\Particles\AttackHit\AttackHitEffect.cpp" />
+    <ClCompile Include="Class\Player\Particles\AttackHit\Children\AttackHitParticle.cpp" />
     <ClCompile Include="Class\Player\Particles\Common\AuraParticles.cpp" />
     <ClCompile Include="Class\Player\Particles\Common\Children\AuraParticle.cpp" />
     <ClCompile Include="Class\UI\EchoMotion.cpp" />
@@ -236,6 +238,14 @@
     <ClCompile Include="Class\Player\Particles\Common\Children\FloatParticle.cpp" />
     <ClCompile Include="Class\Player\Particles\Common\Children\IParticle.cpp" />
     <ClCompile Include="Class\Player\Particles\Common\Children\LargeFlash.cpp" />
+    <ClCompile Include="Class\Player\Particles\Common\Children\DustCloud.cpp" />
+    <ClCompile Include="Class\Player\Particles\Common\DustClouds.cpp" />
+    <ClCompile Include="Class\Player\Particles\EnemySpawn\Children\EnemySpawnParticle.cpp" />
+    <ClCompile Include="Class\Player\Particles\EnemySpawn\EnemySpawnParticles.cpp" />
+    <ClCompile Include="Class\Player\Particles\EnemyDead\Children\EnemyDeadParticle.cpp" />
+    <ClCompile Include="Class\Player\Particles\EnemyDead\EnemyDeadParticles.cpp" />
+    <ClCompile Include="Class\Player\Particles\Crack\CrackEffect.cpp" />
+    <ClCompile Include="Class\Player\Particles\Crack\Children\CrackPlane.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Class\Player\Player.cpp" />
     <ClCompile Include="Class\Player\Systems\Children\Move\Move.cpp" />
@@ -266,6 +276,8 @@
     <ClCompile Include="Class\Player\Particles\Common\Sparks.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Class\Player\Particles\AttackHit\AttackHitEffect.h" />
+    <ClInclude Include="Class\Player\Particles\AttackHit\Children\AttackHitParticle.h" />
     <ClInclude Include="Class\Player\Particles\Common\AuraParticles.h" />
     <ClInclude Include="Class\Player\Particles\Common\Children\AuraParticle.h" />
     <ClInclude Include="Class\UI\EchoMotion.h" />
@@ -370,6 +382,14 @@
     <ClInclude Include="Class\Player\Particles\Common\ShortFlashes.h" />
     <ClInclude Include="Class\Player\Particles\Common\Rings.h" />
     <ClInclude Include="Class\Player\Particles\Common\Sparks.h" />
+    <ClInclude Include="Class\Player\Particles\Common\Children\DustCloud.h" />
+    <ClInclude Include="Class\Player\Particles\Common\DustClouds.h" />
+    <ClInclude Include="Class\Player\Particles\EnemySpawn\Children\EnemySpawnParticle.h" />
+    <ClInclude Include="Class\Player\Particles\EnemySpawn\EnemySpawnParticles.h" />
+    <ClInclude Include="Class\Player\Particles\EnemyDead\Children\EnemyDeadParticle.h" />
+    <ClInclude Include="Class\Player\Particles\EnemyDead\EnemyDeadParticles.h" />
+    <ClInclude Include="Class\Player\Particles\Crack\CrackEffect.h" />
+    <ClInclude Include="Class\Player\Particles\Crack\Children\CrackPlane.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />

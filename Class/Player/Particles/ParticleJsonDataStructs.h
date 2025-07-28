@@ -9,6 +9,10 @@ struct LimitF {
 	float min;
 	float max;
 };
+struct LimitInt {
+	int min;
+	int max;
+};
 
 struct ParticleJsonData {
 	LimitVec3 velocity;
@@ -22,8 +26,7 @@ struct ParticleJsonData {
 
 // 各パーティクルの情報
 struct ParticleData {
-	//LWP::Primitive::NormalStretchedBillboard billboard;
-	//LWP::Resource::RigidModel plane;		// 平面
+	LWP::Primitive::IPlane* plane;
 	LWP::Math::Vector3 vel;					// 速度
 	LWP::Math::Vector3 euler;				// オイラー角
 	float multiply;
@@ -31,7 +34,6 @@ struct ParticleData {
 	float currentTime = 0;					// 経過フレーム
 	int type;
 	bool isAlive = true;
-	//std::function<void(ParticleData&, LWP::Primitive::IPlane&)> updateFunc;
 };
 // Particleを発生させる
 struct Emitter {

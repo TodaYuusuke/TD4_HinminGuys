@@ -5,7 +5,7 @@
 class Rings : public IParticles {
 public:
 	// コンストラクタ
-	Rings(Player* player, FollowCamera* followCamera);
+	Rings(const std::string& texName);
 	// デストラクタ
 	~Rings() override = default;
 

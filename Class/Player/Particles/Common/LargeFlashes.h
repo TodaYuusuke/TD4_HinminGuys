@@ -5,7 +5,7 @@
 class LargeFlashes : public IParticles {
 public:
 	// コンストラクタ
-	LargeFlashes(Player* player, FollowCamera* followCamera);
+	LargeFlashes(FollowCamera* followCamera, const std::string& texName);
 	// デストラクタ
 	~LargeFlashes() override = default;
 

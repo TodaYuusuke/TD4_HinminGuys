@@ -13,7 +13,7 @@ public:
 
 public:
 	// コンストラクタ
-	LargeFlash(Player* player, FollowCamera* followCamera);
+	LargeFlash(FollowCamera* followCamera, const std::string& texName);
 	// デストラクタ
 	~LargeFlash() override = default;
 
