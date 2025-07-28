@@ -236,6 +236,9 @@ private: // メンバ変数
 	// 受付終了で遷移したかどうかのトリガー
 	bool isReceptEndTrigger_ = false;
 
+	// 斬撃エフェクタ
+	SlashEffector slashEffector_;
+
 #pragma region エディタ用変数
 
 	// 保存先ファイル名

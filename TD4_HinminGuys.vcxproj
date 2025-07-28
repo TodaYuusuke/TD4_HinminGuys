@@ -154,6 +154,7 @@
     <ClCompile Include="Class\Particles\AttackHit\Children\AttackHitParticle.cpp" />
     <ClCompile Include="Class\Particles\Common\AuraParticles.cpp" />
     <ClCompile Include="Class\Particles\Common\Children\AuraParticle.cpp" />
+    <ClCompile Include="Class\Particles\SlashEffect\SlashEffector.cpp" />
     <ClCompile Include="Class\UI\EchoMotion.cpp" />
     <ClCompile Include="Class\Camera\CameraSystems.cpp" />
     <ClCompile Include="Class\Audio\AudioPlayer.cpp" />
@@ -280,6 +281,7 @@
     <ClInclude Include="Class\Particles\AttackHit\Children\AttackHitParticle.h" />
     <ClInclude Include="Class\Particles\Common\AuraParticles.h" />
     <ClInclude Include="Class\Particles\Common\Children\AuraParticle.h" />
+    <ClInclude Include="Class\Particles\SlashEffect\SlashEffector.h" />
     <ClInclude Include="Class\UI\EchoMotion.h" />
     <ClInclude Include="Class\Camera\CameraSystems.h" />
     <ClInclude Include="Class\Audio\AudioPlayer.h" />
