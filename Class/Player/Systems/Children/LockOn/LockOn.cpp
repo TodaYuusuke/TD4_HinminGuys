@@ -35,7 +35,6 @@ void LockOn::Initialize() {
 	guideLockOnUI_.anchorPoint = lockOnUI_.defaultAnchorPoint;
 	guideLockOnUI_.worldTF.scale = { 0.25f,0.25f,0.25f };
 	guideLockOnUI_.isActive = false;
-	guideLockOnUI_.Init();
 	// jsonで保存している値
 	//CreateJsonFIle();
 }
@@ -72,7 +71,7 @@ void LockOn::Update() {
 		}
 
 		// 座標
-		guideLockOnUI_.worldTF.translation = enemy->GetWorldTF()->GetWorldPosition() + Vector3{ 0.15f,1.3f,0.0f };
+		guideLockOnUI_.worldTF.translation = enemy->GetWorldTF()->GetWorldPosition() + Vector3{ 0.1f,1.2f,0.0f };
 		break;
 	}
 	// 敵がいないなら消す
