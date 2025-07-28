@@ -130,6 +130,7 @@ void Chain::DebugGui() {
 }
 
 void Chain::Reset() {
+	isActive_ = false;
 	pointMassList_.clear();
 	chainNodeList_.clear();
 }

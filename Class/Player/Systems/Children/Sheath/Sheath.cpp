@@ -81,8 +81,6 @@ void Sheath::Initialize() {
 }
 
 void Sheath::Update() {
-	if (!isActive_) { return; }
-
 	// オーラ
 	auraParticles_->Update();
 
@@ -90,6 +88,8 @@ void Sheath::Update() {
 	chain_->SetStartPos(player_->GetSwordModel()->GetJointWorldPosition("Grip")); 
 	chain_->SetEndPos(sheathModel_.GetJointWorldPosition("Sheath"));
 	chain_->Update();
+
+	if (!isActive_) { return; }
 
 	// 状態
 	state_->Update();
@@ -114,7 +114,7 @@ void Sheath::Reset() {
 	eventOrders_[(int)SheathState::kThrow].Reset();
 	eventOrders_[(int)SheathState::kCollect].Reset();
 	eventOrders_[(int)SheathState::kBreak].Reset();
-	eventOrders_[(int)SheathState::kInvinsible].Reset();
+	eventOrders_[(int)SheathState::kInvinsible].Reset(); 
 	state_->Reset();
 	// 移動速度
 	velocity_ = { 0.0f,0.0f,0.0f };
