@@ -39,6 +39,12 @@ void ChainNode::InverseUpdate() {
 		p1.velocity += CalcPointMassVel(p0, p1);
 		p1.model.worldTF.translation += p1.velocity;
 	}
+
+	Vector3 dir = Vector3{ 0,0,1 } * Matrix4x4::CreateRotateXYZMatrix(p1.model.worldTF.rotation);
+	Vector3 c2c = (p0.model.worldTF.GetWorldPosition() - p1.model.worldTF.GetWorldPosition()).Normalize();
+	p1.model.worldTF.rotation = Quaternion::CreateFromAxisAngle(Vector3{ 0,0,1 }, p1.euler.x) * Quaternion::CreateFromAxisAngle(Vector3{ 1,0,0 }, p1.euler.y);
+	p1.model.worldTF.rotation = Quaternion::CreateFromAxisAngle(Vector3{ 0,1,0 }, p1.euler.z) * p1.model.worldTF.rotation;
+	p1.model.worldTF.rotation = Quaternion::DirectionToDirection(Vector3{0,0,1}, c2c) * p1.model.worldTF.rotation;
 }
 
 void ChainNode::CreateJsonData() {

@@ -5,6 +5,7 @@
 struct PointMass {
 	LWP::Resource::RigidModel model;
 	LWP::Math::Vector3 velocity;
+	LWP::Math::Vector3 euler;
 	LWP::Math::Vector3 acceleration;
 	LWP::Math::Vector3 force;       // 積算された外力
 	float mass = 1.0f;				// 質量
