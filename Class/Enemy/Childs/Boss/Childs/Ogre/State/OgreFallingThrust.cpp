@@ -23,7 +23,8 @@ void Ogre::FallingThrustFinalize([[maybe_unused]] const States& pre) {
 void Ogre::FallingThrustInit([[maybe_unused]] const States& pre)
 {
 
-	SetAnimation("Idle", true);
+	animation_.Play("FallAttack", 0.6f)
+		.Loop(false);
 	//もしノックバックしたら待機に戻る
 	preState_ = States::kIdle;
 	//球で実装

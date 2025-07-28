@@ -15,6 +15,7 @@ void Saiji::AttackFinalize([[maybe_unused]] const States& pre) {
 	//待機ステートの待機時間セット
 	stateParameter_.idleParameter.countStandTime = stateParameter_.idleParameter.standTime +
 		LWP::Utility::Random::GenerateFloat(0.0f, 1.0f);
+	animation_.GetPlayBackSpeed() = 1.0f;
 
 }
 

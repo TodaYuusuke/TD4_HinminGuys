@@ -12,6 +12,7 @@ void Ogre::DeadInit(const States& pre)
 
 	animation_.Play("Idle", 0.2f)
 		.Loop(false);
+	animation_.GetPlayBackSpeed() = 1.0f;
 
 }
 

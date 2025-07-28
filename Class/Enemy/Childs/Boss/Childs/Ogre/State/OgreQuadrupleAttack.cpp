@@ -26,11 +26,13 @@ void Ogre::QuadrupleAttackFinalize([[maybe_unused]] const States& pre) {
 void Ogre::QuadrupleAttackInit([[maybe_unused]] const States& pre)
 {
 
-	SetAnimation("LightAttack1", false);
-	//もしノックバックしたら待機に戻る
-	preState_ = States::kIdle;
 	//カウントリセット
 	GetQuadrupleAttack().currentAttackCount = 0;
+	//アニメーションセット
+	animation_.Play(GetQuadrupleAttack().nextAttackName[GetQuadrupleAttack().currentAttackCount], 0.2f)
+		.Loop(false);
+	//もしノックバックしたら待機に戻る
+	preState_ = States::kIdle;
 
 	//AABBで攻撃判定実装
 	aabbAttackCollider_.worldTF.translation = GetQuadrupleAttack().multipleAttackData[GetQuadrupleAttack().currentAttackCount].attackPosition;
@@ -117,11 +119,9 @@ void Ogre::QuadrupleAttackUpdate([[maybe_unused]] std::optional<States>& req, [[
 			GetQuadrupleAttack().currentAttackCount++;
 			//カウントが最大攻撃回数以下なら、次の攻撃をセット
 			if (GetQuadrupleAttack().currentAttackCount < GetQuadrupleAttack().kMaxAttackCount) {
-				//次の攻撃の名前
-				std::string nextAttackName = "LightAttack";
-				nextAttackName += std::to_string(GetQuadrupleAttack().currentAttackCount + 1);
 				//アニメーションセット
-				SetAnimation(nextAttackName, false);
+				animation_.Play(GetQuadrupleAttack().nextAttackName[GetQuadrupleAttack().currentAttackCount], 0.2f)
+					.Loop(false);
 
 				//攻撃判定をセット
 				aabbAttackCollider_.worldTF.translation = GetQuadrupleAttack().multipleAttackData[GetQuadrupleAttack().currentAttackCount].attackPosition;

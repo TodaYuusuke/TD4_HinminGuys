@@ -28,7 +28,7 @@ Ogre::~Ogre()
 void Ogre::Initialize(Player* player, const Vector3& position, LWP::Object::Camera* camera,
 	EnemyManager* manager)
 {
-	model_.LoadShortPath("player/Player_Simple.gltf");
+	model_.LoadShortPath("Ogre/Orga_IK.gltf");
 	cautionQuad_.LoadShortPath("BothPlane.obj");
 	cautionCircle_.LoadShortPath("BothPlane.obj");
 	cautionQuad_.materials["Texturematerial"].texture = LWP::Resource::LoadTexture("caution_square.png");
@@ -42,8 +42,8 @@ void Ogre::Initialize(Player* player, const Vector3& position, LWP::Object::Came
 	type_ = EnemyType::kOgre;
 	attackType_ = AttackType::kShort;
 	//アニメーションロード
-	animation_.LoadFullPath("resources/model/player/Player_Simple.gltf", &model_);
-	swordModel_.LoadShortPath("player/SimpleWeapon.gltf");
+	animation_.LoadFullPath("resources/model/Ogre/Orga_IK.gltf", &model_);
+	swordModel_.LoadShortPath("Ogre/Weapon.gltf");
 	model_.materials["Material"].color = { 1.0f,0.0f,0.0f,1.0f };
 	SetPlayer(player);
 	camera_ = camera;

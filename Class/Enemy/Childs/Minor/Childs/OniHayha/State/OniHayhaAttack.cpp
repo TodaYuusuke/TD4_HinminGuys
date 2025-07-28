@@ -14,6 +14,7 @@ void OniHayha::AttackFinalize([[maybe_unused]] const States& pre) {
 	isAttackPhase_ = false;
 	//待機ステートの待機時間セット
 	stateParameter_.idleParameter.countStandTime = stateParameter_.idleParameter.standTime;
+	animation_.GetPlayBackSpeed() = 1.0f;
 
 }
 

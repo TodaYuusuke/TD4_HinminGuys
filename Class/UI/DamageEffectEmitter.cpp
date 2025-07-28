@@ -10,7 +10,7 @@ float DamageEffect::widthSpacing = 24.0f;
 void DamageEffectEmitter::Initialize() {
 
 	effects_.clear();
-
+	currentZValue_ = 10.0f;
 	// 初期化
 	json_.Init("DamageEffectEmitter.json");
 
@@ -55,6 +55,7 @@ void DamageEffectEmitter::Update() {
 			for (int32_t i = 0; LWP::Primitive::SequenceSprite& sprite : effect.sprites) {
 
 				sprite.worldTF.translation = (effect.position) * viewProjectionViewport;
+				sprite.worldTF.translation.z = effect.zValue;
 				sprite.worldTF.translation.x += DamageEffect::widthSpacing * float(i);
 
 				//消える時の演出
@@ -121,6 +122,7 @@ void DamageEffectEmitter::AddEffect(const float& damage, const LWP::Math::Vector
 	effects_.back().digit = int(std::log10(int(damage))) + 1;
 	//ポジションを保持
 	effects_.back().position = position;
+	effects_.back().zValue = currentZValue_;
 	effects_.back().damage = damage;
 	effects_.back().remainingDisplayTime = DamageEffect::maxDisplayTime;
 
@@ -162,5 +164,7 @@ void DamageEffectEmitter::AddEffect(const float& damage, const LWP::Math::Vector
 		dividedNum = dividedNum % divisionNum;
 
 	}
+
+	currentZValue_ -= 0.001f;
 
 }

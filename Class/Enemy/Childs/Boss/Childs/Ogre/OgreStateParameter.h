@@ -213,6 +213,8 @@ namespace OgreState {
 		int32_t currentAttackCount = 0;
 		//攻撃発生時間に関するデータ
 		std::array<AttackData, kMaxAttackCount> multipleAttackData{};
+		//次の攻撃モーション名
+		std::array<std::string, kMaxAttackCount> nextAttackName{ "Slash", "RushSlash", "Slash", "RotatingSlash" };
 		//移動方向
 		LWP::Math::Vector3 attackDirection{};
 		//攻撃の強さ

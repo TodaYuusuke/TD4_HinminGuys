@@ -20,7 +20,8 @@ void Ogre::IdleFinalize([[maybe_unused]] const States& pre) {
 void Ogre::IdleInit([[maybe_unused]] const States& pre)
 {
 
-	SetAnimation("Idle", true);
+	animation_.Play("Idle", 0.6f)
+		.Loop(true);
 	preState_ = States::kIdle;
 
 }
