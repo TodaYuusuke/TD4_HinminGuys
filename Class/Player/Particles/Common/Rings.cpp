@@ -5,9 +5,8 @@ using namespace LWP::Math;
 using namespace LWP::Utility;
 using namespace LWP::Utility::Interpolation;
 
-Rings::Rings(Player* player, FollowCamera* followCamera) {
-	player_ = player;
-	followCamera_ = followCamera;
+Rings::Rings(const std::string& texName) {
+	texName_ = texName;
 }
 
 void Rings::Initialize() {
@@ -41,7 +40,7 @@ void Rings::SetJsonData(LWP::Utility::JsonIO& json) {
 
 void Rings::Add(int value) {
 	for (int i = 0; i < value; i++) {
-		Ring* p = new Ring(player_, followCamera_);
+		Ring* p = new Ring(texName_);
 		p->SetRingJsonData(jsonData_);
 		p->Create(emitterPos_);
 		particles_.push_back(p);

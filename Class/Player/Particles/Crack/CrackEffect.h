@@ -1,25 +1,35 @@
 #pragma once
-#include "IParticles.h"
-#include "Children/DustCloud.h"
+#include "../Common/IParticles.h"
+#include "../Common/DustClouds.h"
+#include "../AttackHit/Children/AttackHitParticle.h"
+#include "Children/CrackPlane.h"
 
-class DustClouds : public IParticles {
+class CrackEffect : public IParticles {
+public:
+	struct CrackEffectJsonData {
+		AttackHitParticle::AttackHitParticleJsonData rockParticle;
+		CrackPlane::CrackPlaneJsonData crackPlane;
+		int smokeCount;
+		int rockParticleCount;
+	};
+
 public:
 	// コンストラクタ
-	DustClouds(const std::string& texName);
+	CrackEffect(const std::string& texName);
 	// デストラクタ
-	~DustClouds() override = default;
+	~CrackEffect() override = default;
 
 	/// <summary>
 	/// 初期化
 	/// </summary>
 	void Initialize() override;
 	/// <summary>
-	/// 更新処理
+	/// 更新処理A
 	/// </summary>
 	void Update() override;
 
 	/// <summary>
-	/// Jsonで保存した調整項目()
+	/// Jsonで保存した調整項目
 	/// </summary>
 	void JsonDebugGui();
 
@@ -34,18 +44,18 @@ public:
 	/// パーティクルを生成
 	/// </summary>
 	/// <param name="value">生成する個数</param>
-	void Add(int value, const LWP::Math::Vector3& pos);
+	void Add(const LWP::Math::Vector3& pos);
 
 private:
 	// 使用するなら(多分あまり使わない)
 	LWP::Utility::JsonIO json_;
 
+	// 土煙
+	std::unique_ptr<DustClouds> dustClouds_;
+
 	// パーティクル
-	std::list<DustCloud*> particles_;
+	std::list<IParticle*> particles_;
 
 	// 調整項目
-	DustCloud::DustCloudJsonData jsonData_;
-
-	// 生成角度
-	LWP::Math::Vector3 shotRotate_;
+	CrackEffectJsonData jsonData_;
 };

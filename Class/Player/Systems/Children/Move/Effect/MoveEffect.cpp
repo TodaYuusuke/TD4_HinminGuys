@@ -156,25 +156,7 @@ void MoveEffect::CreateDustCloud(ParticleData& particle, LWP::Math::Vector3 pos)
 }
 
 void MoveEffect::CreateDustClouds(LWP::Math::Vector3 pos) {
-	//// 発生地点
-	//emitterPos_ = pos;
 
-	//// パーティクル発生
-	//particles_.splice(particles_.end(), Emission(pos, createRotateY_));
-
-	//// 使用するテクスチャ設定
-	//for (std::list<ParticleData>::iterator particleIterator = particles_.begin(); particleIterator != particles_.end();) {
-	//	switch ((*particleIterator).type) {
-	//		// 円
-	//	case (int)ParticleType::kCircle:
-	//		//(*particleIterator).billboard.material.texture = LWP::Resource::LoadTexture("Effect/Particle.png");
-	//		break;
-	//	}
-	//	// ライティングなし
-	//	(*particleIterator).billboard.material.enableLighting = false;
-
-	//	particleIterator++;
-	//}
 }
 
 std::list<ParticleData> MoveEffect::Emission(LWP::Math::Vector3 pos, float& createRotateY) {

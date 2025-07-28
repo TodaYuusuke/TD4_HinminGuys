@@ -13,7 +13,7 @@ public:
 
 public:
 	// コンストラクタ
-	ShortFlash(Player* player, FollowCamera* followCamera);
+	ShortFlash(FollowCamera* followCamera, const std::string& texName);
 	// デストラクタ
 	~ShortFlash() override = default;
 

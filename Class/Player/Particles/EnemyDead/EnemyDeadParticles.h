@@ -1,13 +1,13 @@
 #pragma once
-#include "IParticles.h"
-#include "Children/DustCloud.h"
+#include "../Common/IParticles.h"
+#include "Children/EnemyDeadParticle.h"
 
-class DustClouds : public IParticles {
+class EnemyDeadParticles : public IParticles {
 public:
 	// コンストラクタ
-	DustClouds(const std::string& texName);
+	EnemyDeadParticles(const std::string& texName);
 	// デストラクタ
-	~DustClouds() override = default;
+	~EnemyDeadParticles() override = default;
 
 	/// <summary>
 	/// 初期化
@@ -34,18 +34,20 @@ public:
 	/// パーティクルを生成
 	/// </summary>
 	/// <param name="value">生成する個数</param>
-	void Add(int value, const LWP::Math::Vector3& pos);
+	void Add(int value);
+	/// <summary>
+	/// 場所を指定してパーティクルを生成
+	/// </summary>
+	/// <param name="value">生成する個数</param>
+	void Add(int value, LWP::Math::Vector3 pos);
 
 private:
 	// 使用するなら(多分あまり使わない)
 	LWP::Utility::JsonIO json_;
 
 	// パーティクル
-	std::list<DustCloud*> particles_;
+	std::list<EnemyDeadParticle*> particles_;
 
 	// 調整項目
-	DustCloud::DustCloudJsonData jsonData_;
-
-	// 生成角度
-	LWP::Math::Vector3 shotRotate_;
+	EnemyDeadParticle::EnemyDeadParticleJsonData jsonData_;
 };

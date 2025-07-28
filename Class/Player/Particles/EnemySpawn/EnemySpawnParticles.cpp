@@ -1,19 +1,23 @@
-#include "DustClouds.h"
-#include <numbers>
+#include "EnemySpawnParticles.h"
+
 using namespace LWP;
 using namespace LWP::Math;
 using namespace LWP::Utility;
 using namespace LWP::Utility::Interpolation;
 
-DustClouds::DustClouds(const std::string& texName) {
+EnemySpawnParticles::EnemySpawnParticles(const std::string& texName) {
 	texName_ = texName;
 }
 
-void DustClouds::Initialize() {}
+void EnemySpawnParticles::Initialize() {}
 
-void DustClouds::Update() {
+void EnemySpawnParticles::Update() {
+	if (isActive_) {
+		Add(count_);
+	}
+
 	// 削除
-	particles_.remove_if([](DustCloud* data) {
+	particles_.remove_if([](EnemySpawnParticle* data) {
 		if (!data->GetParticleData().isAlive) {
 			delete data;
 			return true;
@@ -22,17 +26,17 @@ void DustClouds::Update() {
 		});
 
 	// 各パーティクルの更新
-	for (std::list<DustCloud*>::iterator it = particles_.begin(); it != particles_.end();) {
+	for (std::list<EnemySpawnParticle*>::iterator it = particles_.begin(); it != particles_.end();) {
 		(*it)->Update();
 		it++;
 	}
 }
 
-void DustClouds::JsonDebugGui() {
+void EnemySpawnParticles::JsonDebugGui() {
 	json_.DebugGUI();
 }
 
-void DustClouds::SetJsonData(LWP::Utility::JsonIO& json) {
+void EnemySpawnParticles::SetJsonData(LWP::Utility::JsonIO& json) {
 	json.BeginGroup("RandomValueMinMax");
 	// 速度
 	json.BeginGroup("Velocity");
@@ -44,35 +48,31 @@ void DustClouds::SetJsonData(LWP::Utility::JsonIO& json) {
 	json.AddValue<float>("Max", &jsonData_.scaleLimit.max);
 	json.AddValue<float>("Min", &jsonData_.scaleLimit.min);
 	json.EndGroup();
-	// 白さ具合
-	json.BeginGroup("White");
-	json.AddValue<int>("Max", &jsonData_.whiteLimit.max);
-	json.AddValue<int>("Min", &jsonData_.whiteLimit.min);
-	json.EndGroup();
-	// 透明度
-	json.BeginGroup("Alpha");
-	json.AddValue<int>("Max", &jsonData_.alphaLimit.max);
-	json.AddValue<int>("Min", &jsonData_.alphaLimit.min);
-	json.EndGroup();
 
 	json.EndGroup();
 
-	// 初速
-	json.AddValue<Vector3>("FirstVelocity", &jsonData_.firstVel);
+	// 色
+	json.AddValue<LWP::Utility::Color>("Color", &jsonData_.color);
+
+	// 生成しない範囲
+	json.AddValue<float>("CreateCircleRange", &jsonData_.createRange);
 	// 重力加速度
 	json.AddValue<float>("Acceleration", &jsonData_.acceleration);
+	// 初速
+	json.AddValue<Vector3>("FirstVelocity", &jsonData_.firstVel);
 	// 速度倍率
 	json.AddValue<float>("Multiply", &jsonData_.multiply);
-	// 速度減衰率
-	json.AddValue<float>("DamplingRate", &jsonData_.dampingRate);
 
 	// パーティクルが存在できる時間
 	json.AddValue<float>("ElapseTime", &jsonData_.maxElapseTime);
+
+	// 一度に生成する個数
+	json.AddValue<int>("Count", &count_);
 }
 
-void DustClouds::SetJsonData() {
-	json_.Init("DustClouds.json");
-	json_.BeginGroup("DustCloud");
+void EnemySpawnParticles::SetJsonData() {
+	json_.Init("EnemySpawnParticles.json");
+	json_.BeginGroup("EnemySpawnParticle");
 	json_.BeginGroup("RandomValueMinMax");
 	// 速度
 	json_.BeginGroup("Velocity");
@@ -84,46 +84,46 @@ void DustClouds::SetJsonData() {
 	json_.AddValue<float>("Max", &jsonData_.scaleLimit.max);
 	json_.AddValue<float>("Min", &jsonData_.scaleLimit.min);
 	json_.EndGroup();
-	// 白さ具合
-	json_.BeginGroup("White");
-	json_.AddValue<int>("Max", &jsonData_.whiteLimit.max);
-	json_.AddValue<int>("Min", &jsonData_.whiteLimit.min);
-	json_.EndGroup();
-	// 透明度
-	json_.BeginGroup("Alpha");
-	json_.AddValue<int>("Max", &jsonData_.alphaLimit.max);
-	json_.AddValue<int>("Min", &jsonData_.alphaLimit.min);
-	json_.EndGroup();
 
 	json_.EndGroup();
 
-	// 初速
-	json_.AddValue<Vector3>("FirstVelocity", &jsonData_.firstVel);
+	// 色
+	json_.AddValue<LWP::Utility::Color>("Color", &jsonData_.color);
+
+	// 生成しない範囲
+	json_.AddValue<float>("CreateCircleRange", &jsonData_.createRange);
 	// 重力加速度
 	json_.AddValue<float>("Acceleration", &jsonData_.acceleration);
+	// 初速
+	json_.AddValue<Vector3>("FirstVelocity", &jsonData_.firstVel);
 	// 速度倍率
 	json_.AddValue<float>("Multiply", &jsonData_.multiply);
-	// 速度減衰率
-	json_.AddValue<float>("DamplingRate", &jsonData_.dampingRate);
 
 	// パーティクルが存在できる時間
 	json_.AddValue<float>("ElapseTime", &jsonData_.maxElapseTime);
+
+	// 一度に生成する個数
+	json_.AddValue<int>("Count", &count_);
 
 	json_.EndGroup();
 
 	json_.CheckJsonFile();
 }
 
-void DustClouds::Add(int value, const Vector3& pos) {
-	for (int i = 0; i < value; i++) {
-		DustCloud* p = new DustCloud(texName_);
-		p->SetDustCloudJsonData(jsonData_);
-		// 角度指定
-		p->SetShotRotate(shotRotate_);
-		p->Create(pos);
-		particles_.push_back(p);
+void EnemySpawnParticles::Start(const bool& isActive, const LWP::Math::Vector3& pos) {
+	isActive_ = isActive;
+	emitterPos_ = pos;
+}
 
-		shotRotate_.y += (float)std::numbers::pi * 2.0f / value;
+void EnemySpawnParticles::Finish() {
+	isActive_ = false;
+}
+
+void EnemySpawnParticles::Add(int value) {
+	for (int i = 0; i < value; i++) {
+		EnemySpawnParticle* p = new EnemySpawnParticle(texName_);
+		p->SetEnemySpawnParticleJsonData(jsonData_);
+		p->Create(emitterPos_);
+		particles_.push_back(p);
 	}
-	shotRotate_ = { 0,0,0 };
 }

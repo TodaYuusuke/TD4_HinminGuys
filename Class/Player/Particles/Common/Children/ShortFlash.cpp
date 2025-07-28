@@ -7,9 +7,9 @@ using namespace LWP::Math;
 using namespace LWP::Utility;
 using namespace LWP::Utility::Interpolation;
 
-ShortFlash::ShortFlash(Player* player, FollowCamera* followCamera) {
-	player_ = player;
+ShortFlash::ShortFlash(FollowCamera* followCamera, const std::string& texName) {
 	followCamera_ = followCamera;
+	texName_ = texName;
 }
 
 void ShortFlash::Update() {
@@ -30,7 +30,7 @@ void ShortFlash::Create(const LWP::Math::Vector3& pos) {
 	//particle.type = (int)ParticleType::kShortFlash;
 	// ビルボード生成
 	plane_.anchorPoint = { 0.5f, 0.5f };
-	plane_.material.texture = LWP::Resource::LoadTexture("Effect/Spark.png");
+	plane_.material.texture = LWP::Resource::LoadTexture(texName_);
 
 	// 角度(オイラー角で算出)
 	Vector3 dist = (followCamera_->GetCamera()->worldTF.GetWorldPosition() - plane_.worldTF.GetWorldPosition()).Normalize();

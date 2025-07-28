@@ -1,19 +1,19 @@
-#include "DustClouds.h"
-#include <numbers>
+#include "EnemyDeadParticles.h"
+
 using namespace LWP;
 using namespace LWP::Math;
 using namespace LWP::Utility;
 using namespace LWP::Utility::Interpolation;
 
-DustClouds::DustClouds(const std::string& texName) {
+EnemyDeadParticles::EnemyDeadParticles(const std::string& texName) {
 	texName_ = texName;
 }
 
-void DustClouds::Initialize() {}
+void EnemyDeadParticles::Initialize() {}
 
-void DustClouds::Update() {
+void EnemyDeadParticles::Update() {
 	// 削除
-	particles_.remove_if([](DustCloud* data) {
+	particles_.remove_if([](EnemyDeadParticle* data) {
 		if (!data->GetParticleData().isAlive) {
 			delete data;
 			return true;
@@ -22,17 +22,17 @@ void DustClouds::Update() {
 		});
 
 	// 各パーティクルの更新
-	for (std::list<DustCloud*>::iterator it = particles_.begin(); it != particles_.end();) {
+	for (std::list<EnemyDeadParticle*>::iterator it = particles_.begin(); it != particles_.end();) {
 		(*it)->Update();
 		it++;
 	}
 }
 
-void DustClouds::JsonDebugGui() {
+void EnemyDeadParticles::JsonDebugGui() {
 	json_.DebugGUI();
 }
 
-void DustClouds::SetJsonData(LWP::Utility::JsonIO& json) {
+void EnemyDeadParticles::SetJsonData(LWP::Utility::JsonIO& json) {
 	json.BeginGroup("RandomValueMinMax");
 	// 速度
 	json.BeginGroup("Velocity");
@@ -44,35 +44,24 @@ void DustClouds::SetJsonData(LWP::Utility::JsonIO& json) {
 	json.AddValue<float>("Max", &jsonData_.scaleLimit.max);
 	json.AddValue<float>("Min", &jsonData_.scaleLimit.min);
 	json.EndGroup();
-	// 白さ具合
-	json.BeginGroup("White");
-	json.AddValue<int>("Max", &jsonData_.whiteLimit.max);
-	json.AddValue<int>("Min", &jsonData_.whiteLimit.min);
-	json.EndGroup();
-	// 透明度
-	json.BeginGroup("Alpha");
-	json.AddValue<int>("Max", &jsonData_.alphaLimit.max);
-	json.AddValue<int>("Min", &jsonData_.alphaLimit.min);
-	json.EndGroup();
 
 	json.EndGroup();
 
-	// 初速
-	json.AddValue<Vector3>("FirstVelocity", &jsonData_.firstVel);
+	// 色
+	json.AddValue<LWP::Utility::Color>("Color", &jsonData_.color);
+
 	// 重力加速度
 	json.AddValue<float>("Acceleration", &jsonData_.acceleration);
 	// 速度倍率
 	json.AddValue<float>("Multiply", &jsonData_.multiply);
-	// 速度減衰率
-	json.AddValue<float>("DamplingRate", &jsonData_.dampingRate);
 
 	// パーティクルが存在できる時間
 	json.AddValue<float>("ElapseTime", &jsonData_.maxElapseTime);
 }
 
-void DustClouds::SetJsonData() {
-	json_.Init("DustClouds.json");
-	json_.BeginGroup("DustCloud");
+void EnemyDeadParticles::SetJsonData() {
+	json_.Init("EnemyDeadParticles.json");
+	json_.BeginGroup("EnemyDeadParticle");
 	json_.BeginGroup("RandomValueMinMax");
 	// 速度
 	json_.BeginGroup("Velocity");
@@ -84,27 +73,16 @@ void DustClouds::SetJsonData() {
 	json_.AddValue<float>("Max", &jsonData_.scaleLimit.max);
 	json_.AddValue<float>("Min", &jsonData_.scaleLimit.min);
 	json_.EndGroup();
-	// 白さ具合
-	json_.BeginGroup("White");
-	json_.AddValue<int>("Max", &jsonData_.whiteLimit.max);
-	json_.AddValue<int>("Min", &jsonData_.whiteLimit.min);
-	json_.EndGroup();
-	// 透明度
-	json_.BeginGroup("Alpha");
-	json_.AddValue<int>("Max", &jsonData_.alphaLimit.max);
-	json_.AddValue<int>("Min", &jsonData_.alphaLimit.min);
-	json_.EndGroup();
 
 	json_.EndGroup();
 
-	// 初速
-	json_.AddValue<Vector3>("FirstVelocity", &jsonData_.firstVel);
+	// 色
+	json_.AddValue<LWP::Utility::Color>("Color", &jsonData_.color);
+
 	// 重力加速度
 	json_.AddValue<float>("Acceleration", &jsonData_.acceleration);
 	// 速度倍率
 	json_.AddValue<float>("Multiply", &jsonData_.multiply);
-	// 速度減衰率
-	json_.AddValue<float>("DamplingRate", &jsonData_.dampingRate);
 
 	// パーティクルが存在できる時間
 	json_.AddValue<float>("ElapseTime", &jsonData_.maxElapseTime);
@@ -114,16 +92,16 @@ void DustClouds::SetJsonData() {
 	json_.CheckJsonFile();
 }
 
-void DustClouds::Add(int value, const Vector3& pos) {
+void EnemyDeadParticles::Add(int value) {
 	for (int i = 0; i < value; i++) {
-		DustCloud* p = new DustCloud(texName_);
-		p->SetDustCloudJsonData(jsonData_);
-		// 角度指定
-		p->SetShotRotate(shotRotate_);
-		p->Create(pos);
+		EnemyDeadParticle* p = new EnemyDeadParticle(texName_);
+		p->SetEnemyDeadParticleJsonData(jsonData_);
+		p->Create(emitterPos_);
 		particles_.push_back(p);
-
-		shotRotate_.y += (float)std::numbers::pi * 2.0f / value;
 	}
-	shotRotate_ = { 0,0,0 };
+}
+
+void EnemyDeadParticles::Add(int value, LWP::Math::Vector3 pos) {
+	emitterPos_ = pos;
+	Add(value);
 }

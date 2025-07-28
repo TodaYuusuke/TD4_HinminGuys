@@ -1,4 +1,4 @@
-#include "Spark.h"
+#include "AttackHitParticle.h"
 #include "../../../Math/MathFunctions.h"
 
 using namespace LWP;
@@ -6,11 +6,11 @@ using namespace LWP::Math;
 using namespace LWP::Utility;
 using namespace LWP::Utility::Interpolation;
 
-Spark::Spark(const std::string& texName) {
+AttackHitParticle::AttackHitParticle(const std::string& texName) {
 	texName_ = texName;
 }
 
-void Spark::Update() {
+void AttackHitParticle::Update() {
 	if (particleData_.currentTime >= particleData_.lifeTime) {
 		particleData_.isAlive = false;
 		return;
@@ -23,7 +23,7 @@ void Spark::Update() {
 	particleData_.currentTime++;
 }
 
-void Spark::Create(const LWP::Math::Vector3& pos) {
+void AttackHitParticle::Create(const LWP::Math::Vector3& pos) {
 	// パーティクルの種類
 	//particle.type = (int)ParticleType::kLine;
 
@@ -33,8 +33,7 @@ void Spark::Create(const LWP::Math::Vector3& pos) {
 
 	// 速度
 	Vector3 vel = LWP::Utility::Random::GenerateVector3(jsonData_.velLimit.min, jsonData_.velLimit.max);
-	particleData_.vel = vel;
-	particleData_.vel.y += jsonData_.firstVel.y;
+	particleData_.vel = vel + jsonData_.firstVel;
 	// 生存可能時間
 	particleData_.lifeTime = jsonData_.maxElapseTime * 60.0f;
 	particleData_.currentTime = 0;
@@ -43,27 +42,24 @@ void Spark::Create(const LWP::Math::Vector3& pos) {
 	// 色
 	plane_.material.color = jsonData_.color;
 	// 座標
-	plane_.worldTF.translation = pos + jsonData_.createRange * vel.Normalize();
+	plane_.worldTF.translation = pos;
 	// 大きさ
-	Vector3 scale = LWP::Utility::Random::GenerateVector3(jsonData_.scaleLimit.min, jsonData_.scaleLimit.max);
-	plane_.worldTF.scale = scale;
-	// 速度
-	plane_.velocity = particleData_.vel + (jsonData_.createRange * vel.Normalize()).Normalize();
+	float scale = LWP::Utility::Random::GenerateFloat(jsonData_.scaleLimit.min, jsonData_.scaleLimit.max);
+	randomScale_ = {
+		scale,
+		scale,
+		scale
+	};
+	plane_.worldTF.scale = randomScale_;
 #pragma endregion
 }
 
-void Spark::UpdateParticle() {
+void AttackHitParticle::UpdateParticle() {
 	// 重力加速
-	particleData_.vel.y += jsonData_.acceleration.y * jsonData_.multiply;
+	particleData_.vel.y += jsonData_.acceleration * jsonData_.multiply;
 
 	// 移動処理
 	plane_.worldTF.translation += particleData_.vel;
-
-	// 速度減速
-	//particleData_.vel = Exponential(particleData_.vel, Vector3{ 0.0f, 0.0f, 0.0f }, 0.01f);
-
-	// stretchビルボードの計算のために速度を代入
-	plane_.velocity = particleData_.vel;
 
 	// 色のイージング
 	int alpha = LerpF((float)jsonData_.color.A, 0.0f, particleData_.currentTime / particleData_.lifeTime);

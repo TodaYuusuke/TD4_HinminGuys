@@ -1,13 +1,13 @@
 #pragma once
-#include "IParticles.h"
-#include "Children/DustCloud.h"
+#include "../Common/IParticles.h"
+#include "Children/EnemySpawnParticle.h"
 
-class DustClouds : public IParticles {
+class EnemySpawnParticles : public IParticles {
 public:
 	// コンストラクタ
-	DustClouds(const std::string& texName);
+	EnemySpawnParticles(const std::string& texName);
 	// デストラクタ
-	~DustClouds() override = default;
+	~EnemySpawnParticles() override = default;
 
 	/// <summary>
 	/// 初期化
@@ -29,23 +29,40 @@ public:
 	/// <param name="json"></param>
 	void SetJsonData(LWP::Utility::JsonIO& json) override;
 	void SetJsonData();
+	/// <summary>
+	/// 生成をするかを設定
+	/// </summary>
+	/// <param name="isActive"></param>
+	void Start(const bool& isActive, const LWP::Math::Vector3& pos);
+	/// <summary>
+	/// オーラの生成終了
+	/// </summary>
+	void Finish();
 
+private:
 	/// <summary>
 	/// パーティクルを生成
 	/// </summary>
 	/// <param name="value">生成する個数</param>
-	void Add(int value, const LWP::Math::Vector3& pos);
+	void Add(int value);
+
+public:
+	bool GetIsStart() { return isActive_; }
+
+private:
+	// 一度に生成する個数
+	int count_;
 
 private:
 	// 使用するなら(多分あまり使わない)
 	LWP::Utility::JsonIO json_;
 
 	// パーティクル
-	std::list<DustCloud*> particles_;
+	std::list<EnemySpawnParticle*> particles_;
 
 	// 調整項目
-	DustCloud::DustCloudJsonData jsonData_;
+	EnemySpawnParticle::EnemySpawnParticleJsonData jsonData_;
 
-	// 生成角度
-	LWP::Math::Vector3 shotRotate_;
+	// 生成するか
+	bool isActive_ = false;
 };

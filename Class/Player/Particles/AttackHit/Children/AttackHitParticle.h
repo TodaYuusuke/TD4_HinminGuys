@@ -1,28 +1,25 @@
 #pragma once
 #include <Adapter.h>
-#include "IParticle.h"
+#include "../../Common/Children/IParticle.h"
 
 class FollowCamera;
-class Spark : public IParticle {
+class AttackHitParticle : public IParticle {
 public:
-	struct SparkJsonData {
+	struct AttackHitParticleJsonData {
 		LimitVec3 velLimit;
-		LimitVec3 scaleLimit;
-		LimitF kelvinLimit = { 1000.0f, 3000.0f };
+		LimitF scaleLimit;
 		LWP::Utility::Color color = { 255,255 ,255 ,255 };
 		LWP::Math::Vector3 firstVel;
-		LWP::Math::Vector3 acceleration;
-		float createRange = 0.0f;
-		float multiply;
-		float maxElapseTime;								// パーティクルが存在できる時間
-		LWP::Math::Vector3 maxScale = { 1.0f,1.0f,1.0f };	// 大きい閃光の最大サイズ
+		float acceleration;
+		float multiply = 1.0f;
+		float maxElapseTime;
 	};
 
 public:
 	// コンストラクタ
-	Spark(const std::string& texName);
+	AttackHitParticle(const std::string& texName);
 	// デストラクタ
-	~Spark() override = default;
+	~AttackHitParticle() override = default;
 
 	/// <summary>
 	/// 更新処理
@@ -42,17 +39,20 @@ private:
 
 public:// アクセサ
 #pragma region Getter
-	SparkJsonData GetSparkJsonData() { return jsonData_; }
+	AttackHitParticleJsonData GetAttackHitParticleJsonData() { return jsonData_; }
 #pragma endregion
 
 #pragma region Setter
-	void SetSparkJsonData(SparkJsonData data) { jsonData_ = data; }
+	void SetAttackHitParticleJsonData(AttackHitParticleJsonData data) { jsonData_ = data; }
 #pragma endregion
 
 private:
 	// ビルボード
-	LWP::Primitive::NormalStretchedBillboard plane_;
+	LWP::Primitive::NormalBillboard2D plane_;
 
 	// 外部で調整するデータ
-	SparkJsonData jsonData_;
+	AttackHitParticleJsonData jsonData_;
+
+	// ランダムスケール
+	LWP::Math::Vector3 randomScale_;
 };

@@ -5,7 +5,7 @@
 class Sparks : public IParticles {
 public:
 	// コンストラクタ
-	Sparks(Player* player, FollowCamera* followCamera);
+	Sparks(const std::string& texName);
 	// デストラクタ
 	~Sparks() override = default;
 

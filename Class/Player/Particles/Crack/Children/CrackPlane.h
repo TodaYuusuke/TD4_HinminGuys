@@ -1,21 +1,20 @@
 #pragma once
 #include <Adapter.h>
-#include "IParticle.h"
+#include "../../Common/Children/IParticle.h"
 
 class FollowCamera;
-class Ring : public IParticle {
+class CrackPlane : public IParticle {
 public:
-	struct RingJsonData {
+	struct CrackPlaneJsonData {
+		LWP::Math::Vector3 scale = { 1,1,1 };
 		float maxElapseTime;	// パーティクルが存在できる時間
-		// 大きい閃光の最大サイズ
-		LWP::Math::Vector3 maxScale = { 1.0f,1.0f,1.0f };
 	};
 
 public:
 	// コンストラクタ
-	Ring(const std::string& texName);
+	CrackPlane(const std::string& texName);
 	// デストラクタ
-	~Ring() override = default;
+	~CrackPlane() override = default;
 
 	/// <summary>
 	/// 更新処理
@@ -35,17 +34,17 @@ private:
 
 public:// アクセサ
 #pragma region Getter
-	RingJsonData GetRingJsonData() { return jsonData_; }
+	CrackPlaneJsonData GetCrackPlaneJsonData() { return jsonData_; }
 #pragma endregion
 
 #pragma region Setter
-	void SetRingJsonData(RingJsonData data) { jsonData_ = data; }
+	void SetCrackPlaneJsonData(CrackPlaneJsonData data) { jsonData_ = data; }
 #pragma endregion
 
 private:
 	// ビルボード
-	LWP::Primitive::NormalBillboard2D plane_;
+	LWP::Primitive::NormalSurface plane_;
 
 	// 外部で調整するデータ
-	RingJsonData jsonData_;
+	CrackPlaneJsonData jsonData_;
 };

@@ -13,12 +13,13 @@ public:
 		LWP::Math::Vector3 firstVel;
 		float acceleration;
 		float multiply;
+		float dampingRate;
 		float maxElapseTime;								// パーティクルが存在できる時間
 	};
 
 public:
 	// コンストラクタ
-	DustCloud(Player* player, FollowCamera* followCamera, const std::string& texName);
+	DustCloud(const std::string& texName);
 	// デストラクタ
 	~DustCloud() override = default;
 

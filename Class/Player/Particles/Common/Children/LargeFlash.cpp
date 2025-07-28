@@ -7,9 +7,9 @@ using namespace LWP::Math;
 using namespace LWP::Utility;
 using namespace LWP::Utility::Interpolation;
 
-LargeFlash::LargeFlash(Player* player, FollowCamera* followCamera) {
-	player_ = player;
+LargeFlash::LargeFlash(FollowCamera* followCamera, const std::string& texName) {
 	followCamera_ = followCamera;
+	texName_ = texName;
 }
 
 void LargeFlash::Update() {
@@ -31,7 +31,7 @@ void LargeFlash::Create(const LWP::Math::Vector3& pos) {
 
 	// ビルボード生成
 	plane_.anchorPoint = { 0.5f, 0.5f };
-	plane_.material.texture = LWP::Resource::LoadTexture("Effect/Spark.png");
+	plane_.material.texture = LWP::Resource::LoadTexture(texName_);
 	plane_.worldTF.rotation *= LWP::Math::Quaternion::CreateFromAxisAngle(LWP::Math::Vector3{ 0, 0, 1 }, 0.2f);
 
 	// 角度
@@ -39,7 +39,7 @@ void LargeFlash::Create(const LWP::Math::Vector3& pos) {
 	Vector3 radian = {
 		0.0f,
 		std::atan2(dist.x, dist.z) + LWP::Utility::Random::GenerateFloat(LWP::Utility::DegreeToRadian(-30.0f),LWP::Utility::DegreeToRadian(30.0f)),
-		LWP::Utility::Random::GenerateFloat(LWP::Utility::DegreeToRadian(60.0f), LWP::Utility::DegreeToRadian(120.0f))
+		LWP::Utility::Random::GenerateFloat(LWP::Utility::DegreeToRadian(60.0f), LWP::Utility::DegreeToRadian(120.0f)) + 3.14f / 2.0f
 	};
 	particleData_.euler = radian;
 	// 生存可能時間

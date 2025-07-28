@@ -5,7 +5,7 @@
 class ShortFlashes : public IParticles {
 public:
 	// コンストラクタ
-	ShortFlashes(Player* player, FollowCamera* followCamera);
+	ShortFlashes(FollowCamera* followCamera, const std::string& texName);
 	// デストラクタ
 	~ShortFlashes() override = default;
 

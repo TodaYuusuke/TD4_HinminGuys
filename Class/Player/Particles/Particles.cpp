@@ -21,12 +21,20 @@ Particles::Particles(Player* player, FollowCamera* followCamera) {
 
 
 
-	largeFlashes_ = std::make_unique<LargeFlashes>(player_, followCamera_);
-	shortFlashes_ = std::make_unique<ShortFlashes>(player_, followCamera_);
-	rings_ = std::make_unique<Rings>(player_, followCamera_);
-	sparks_ = std::make_unique<Sparks>(player_, followCamera_);
+	largeFlashes_ = std::make_unique<LargeFlashes>(followCamera_, "Effect/Spark.png");
+	shortFlashes_ = std::make_unique<ShortFlashes>(followCamera_, "Effect/Spark.png");
+	rings_ = std::make_unique<Rings>("Effect/CircleParticle.png");
+	sparks_ = std::make_unique<Sparks>("Effect/Spark.png");
 	floatParticle_ = std::make_unique<FloatParticle>(player_);
 	floatParticle_->model.LoadCube();
+	enemySpawnParticles_ = std::make_unique<EnemySpawnParticles>("Effect/Rock.png");
+	enemySpawnParticles_->Initialize();
+	enemyDeadParticles_ = std::make_unique<EnemyDeadParticles>("Effect/Particle.png");
+	enemyDeadParticles_->Initialize();
+	attackHitEffect_ = std::make_unique<AttackHitEffect>();
+	attackHitEffect_->Initialize();
+	crackEffect_ = std::make_unique<CrackEffect>("EffectCrack.png");
+	crackEffect_->Initialize();
 }
 
 void Particles::Initialize() {
@@ -39,7 +47,10 @@ void Particles::Update() {
 	shortFlashes_->Update();
 	rings_->Update();
 	sparks_->Update();
-
+	enemySpawnParticles_->Update();
+	enemyDeadParticles_->Update();
+	attackHitEffect_->Update();
+	crackEffect_->Update();
 
 	parryEffect_->Update();
 	dustClouds_->Update();
@@ -81,6 +92,18 @@ void Particles::CreateJsonData() {
 	json_.BeginGroup("FloatParticle");
 	floatParticle_->SetJsonData(json_);
 	json_.EndGroup();
+	json_.BeginGroup("EnemySpawnParticle");
+	enemySpawnParticles_->SetJsonData(json_);
+	json_.EndGroup();
+	json_.BeginGroup("EnemyDeadParticle");
+	enemyDeadParticles_->SetJsonData(json_);
+	json_.EndGroup();
+	json_.BeginGroup("AttackHitEffect");
+	attackHitEffect_->SetJsonData(json_);
+	json_.EndGroup();
+	json_.BeginGroup("CrackEffect");
+	crackEffect_->SetJsonData(json_);
+	json_.EndGroup();
 
 	json_.CheckJsonFile();
 }
@@ -120,6 +143,23 @@ void Particles::DebugGui() {
 	}
 	if (ImGui::Button("Create Float Particle")) {
 		floatParticle_->Add(10, debugEmitterPos_);
+	}
+	if (ImGui::Button("Create Spawn Particle")) {
+		if (!enemySpawnParticles_->GetIsStart()) {
+			enemySpawnParticles_->Start(true, debugEmitterPos_);
+		}
+		else {
+			enemySpawnParticles_->Finish();
+		}
+	}
+	if (ImGui::Button("Create Dead Particle")) {
+		enemyDeadParticles_->Add(5, debugEmitterPos_);
+	}
+	if (ImGui::Button("Create Attack Hit Effect")) {
+		attackHitEffect_->Add(debugEmitterPos_);
+	}
+	if (ImGui::Button("Create Crack Effect")) {
+		crackEffect_->Add(debugEmitterPos_);
 	}
 
 	// パーティクルの詳細
