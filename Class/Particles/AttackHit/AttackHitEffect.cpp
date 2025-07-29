@@ -137,12 +137,5 @@ void AttackHitEffect::Add(const Vector3& pos) {
 		p->Create(pos);
 		particles_.push_back(p);
 	}
-	// 火花
-	/*for (int i = 0; i < jsonData_.sparkCount; i++) {
-		Spark* p = new Spark("Effect/Spark.png");
-		p->SetSparkJsonData(jsonData_.spark);
-		p->Create(pos);
-		particles_.push_back(p);
-	}*/
 	sparks_->Add(jsonData_.sparkCount, pos);
 }
