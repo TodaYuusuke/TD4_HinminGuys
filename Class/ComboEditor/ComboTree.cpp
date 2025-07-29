@@ -26,6 +26,9 @@ void ComboTree::Init(const std::string& fileName, LWP::Resource::SkinningModel* 
 	animModel_ = model;
 	anim_ = anim;
 
+	// 斬撃エフェクターの親子付け対象を設定
+	//slashEffector_.SetParentTF(&animModel_->worldTF);
+
 	// 無操作状態のコンボの初期化
 	rootCombo_.Init("Neutral");
 	editingCombo_ = &rootCombo_;

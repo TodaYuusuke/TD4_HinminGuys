@@ -31,7 +31,7 @@ public:	// コンストラクタ等
 	/// <summary>
 	/// デストラクタ
 	/// </summary>
-	~SlashEffector() = default;
+	~SlashEffector();
 
 public: // メンバ関数
 
@@ -54,6 +54,19 @@ public: // メンバ関数
 	/// </summary>
 	void DebugGUI();
 
+public: // アクセッサ等
+
+	/// <summary>
+	/// 親子付けする対象のワールドトランスフォームのセッター
+	/// </summary>
+	/// <param name="tf">親子付け対象</param>
+	void SetParentTF(LWP::Object::TransformQuat* tf) { parentTF = tf; }
+
+	/// <summary>
+	/// 親子付け対象のワールドトランスフォームを削除する関数
+	/// </summary>
+	void DeleteParentTF() { parentTF = nullptr; }
+
 private: // メンバ変数
 
 	// 斬撃エフェクト
@@ -65,6 +78,9 @@ private: // メンバ変数
 	LWP::Math::Vector2 frameSize_ = { 0.0f, 0.0f };
 	// 最大フレーム数
 	int maxFrame_ = 0;
+
+	// 親子付け対象ワールドトランスフォーム
+	LWP::Object::TransformQuat* parentTF = nullptr;
 
 	#pragma region デバッグ用変数
 

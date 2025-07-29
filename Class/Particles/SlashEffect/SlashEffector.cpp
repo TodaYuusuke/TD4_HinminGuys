@@ -15,6 +15,15 @@ SlashEffector::SlashEffector(const std::string& tex, const LWP::Math::Vector2& s
 	effects_.clear();
 }
 
+SlashEffector::~SlashEffector()
+{
+	// エフェクトとプレーンの明示的な削除
+	effects_.remove_if([](SlashEffectData* e) {
+		delete e->plane;
+		return true;
+	});
+}
+
 void SlashEffector::Update()
 {
 	// 終了フラグのたったエフェクトを削除
@@ -48,7 +57,12 @@ void SlashEffector::Create(const LWP::Math::Vector3& pos, const LWP::Math::Quate
 	// テクスチャ読み込み
 	effect->plane = new LWP::Primitive::SequenceSurface();
 	effect->plane->LoadTexture(texName_);
+
 	// 座標設定
+	if (parentTF != nullptr) {
+		// 親子付け対象がいる場合生成する平面を親子付けする
+		effect->plane->worldTF.Parent(parentTF);
+	}
 	effect->plane->worldTF.translation = pos;
 	effect->plane->worldTF.rotation = rotate;
 	effect->plane->worldTF.scale = scale;
