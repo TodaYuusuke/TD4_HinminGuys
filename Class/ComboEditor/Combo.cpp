@@ -41,11 +41,21 @@ void Combo::Init(const std::string& name)
 	name_ = name;
 }
 
-void Combo::Start(LWP::Resource::SkinningModel* model, LWP::Resource::Animation* anim, LWP::Object::Collision* collider)
+void Combo::Start(LWP::Resource::SkinningModel* model, LWP::Resource::Animation* anim, LWP::Object::Collision* collider, SlashEffector* effector)
 {
 	// 判定用タイマー開始
 	attackDecisionTimer_.Start(attackStartTime_);		// 攻撃判定
 	attackAssistTimer_.Start(attackAssistStartTime_);	// 攻撃アシスト判
+
+	if (startSlashEffectTime_ > 0.0f) {  // 斬撃エフェクトの再生開始時間
+		// 斬撃エフェクトの開始秒数が0秒以上の場合タイマーを開始
+		slashEffectTimer_.Start(startSlashEffectTime_); 
+	}
+	else if(playSlashEffectTime_ > 0.0f){ // 0秒以下の場合
+		// タイマーをアクティブ状態にしておく
+		slashEffectTimer_.SetIsActive(true);
+	}
+
 	if (stifnessTime_ > 0.0f) { // 硬直時間
 		// 硬直秒数が0秒以上の場合タイマーを開始する
 		stifnessTimer_.Start(stifnessTime_);
@@ -74,6 +84,9 @@ void Combo::Start(LWP::Resource::SkinningModel* model, LWP::Resource::Animation*
 		// 再生速度指定
 		anim->GetPlayBackSpeed() = animSpeed_;
 	}
+
+	// エフェクターの取得
+	slashEffector_ = effector;
 }
 
 void Combo::Update(LWP::Resource::SkinningModel* model, LWP::Resource::Animation* anim, LWP::Object::Collision* collider, LWP::Object::Collider::Sphere* shape)
@@ -88,6 +101,12 @@ void Combo::Update(LWP::Resource::SkinningModel* model, LWP::Resource::Animation
 	if (attackAssistTimer_.GetIsActive()) {
 		// 攻撃アシスト判定に関する更新
 		AttackAssistUpdate();
+	}
+
+	// 斬撃エフェクト用タイマーが動作している場合のみ更新を行う
+	if (slashEffectTimer_.GetIsActive()) {
+		// 攻撃アシスト判定に関する更新
+		SlashEffectUpdate(model);
 	}
 
 	// 硬直時間タイマーが動作している場合のみ更新を行う
@@ -253,7 +272,12 @@ void Combo::AddValue(LWP::Utility::JsonIO& json)
 		.AddValue("AttackEndTime", &attackEnableTime_)							// 判定有効時間
 		.AddValue("FollowJointName", &followJointName_)							// 追従するジョイント名
 		.AddValue("AttackColliderOffset", &attackColliderOffset_)				// オフセット
-		.AddValue("AttackColliderRadius", &attackColliderRadius_)					// コライダーのサイズ
+		.AddValue("AttackColliderRadius", &attackColliderRadius_)				// コライダーのサイズ
+		.AddValue("StartSlashEffectTime", &startSlashEffectTime_)				// 斬撃エフェクトの開始時間
+		.AddValue("SlashEffectOffset", &slashEffectOffset_)						// 斬撃エフェクトのオフセット
+		.AddValue("SlashEffectRotate", &slashEffectRotate_)						// 斬撃エフェクトの回転角
+		.AddValue("SlashEffectScale", &slashEffectScale_)						// 斬撃エフェクトのスケール
+		.AddValue("PlaySlashEffectTime", &playSlashEffectTime_)					// 斬撃エフェクトの再生時間
 		.AddValue("Damage", &damage_)											// 攻撃のダメージ量
 		.AddValue("HitStopTime", &hitStopTime_)									// ヒットストップ秒数
 		.AddValue("NockbackStrength", &nockbackStrength_)						// ノックバック強さ
@@ -399,6 +423,29 @@ void Combo::AttackAssistUpdate()
 			// 攻撃判定タイマーを非アクティブに
 			attackAssistTimer_.SetIsActive(false);
 		}
+	}
+}
+
+void Combo::SlashEffectUpdate(LWP::Resource::SkinningModel* model)
+{
+	// タイマーの更新
+	slashEffectTimer_.Update();
+
+	// タイマー終了時
+	if (slashEffectTimer_.GetIsFinish()) {
+		// 生成座標を求める
+		Math::Vector3 GeneratePos{};
+		GeneratePos = slashEffectOffset_;
+
+		// クォータニオンをラジアンに変換する
+		Math::Quaternion GenerateRotate{};
+		GenerateRotate = Math::Quaternion::CreateFromAxisAngle({ 1.0f, 0.0f, 0.0f }, slashEffectRotate_.x) * Math::Quaternion::CreateFromAxisAngle({ 0.0f, 1.0f, 0.0f }, slashEffectRotate_.y) * Math::Quaternion::CreateFromAxisAngle({ 0.0f, 0.0f, 1.0f }, slashEffectRotate_.z);
+
+		// 斬撃エフェクトを生成する
+		slashEffector_->Create(GeneratePos, GenerateRotate, slashEffectScale_, playSlashEffectTime_, slashEffectOffset_);
+
+		// タイマーを非アクティブ状態に
+		slashEffectTimer_.SetIsActive(false);
 	}
 }
 
@@ -591,6 +638,24 @@ void Combo::AttackSettings()
 
 	// 移動量の指定
 	ImGui::DragFloat3("AssistMoveAmount", &attackAssistMoveAmount_.x);
+
+	ImGui::Unindent();
+	ImGui::NewLine();
+
+	// 斬撃エフェクトの設定
+	ImGui::SeparatorText("SlashEffect Settings");
+
+	ImGui::Indent();
+
+	// 斬撃エフェクトの開始時間
+	ImGui::DragFloat("StartSlashEffectTime", &startSlashEffectTime_, 0.01f, 0.0f);
+	// 斬撃エフェクト演出時間
+	ImGui::DragFloat("PlaySlashEffectTime", &playSlashEffectTime_, 0.01f, 0.0f);
+
+	// オフセットの設定
+	ImGui::DragFloat3("SlashEffectOffset", &slashEffectOffset_.x);
+	ImGui::DragFloat3("SlashEffectRotate", &slashEffectRotate_.x);
+	ImGui::DragFloat3("SlashEffectScale", &slashEffectScale_.x);
 
 	ImGui::Unindent();
 	ImGui::NewLine();

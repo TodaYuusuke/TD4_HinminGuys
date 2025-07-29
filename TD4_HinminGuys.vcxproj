@@ -154,6 +154,7 @@
     <ClCompile Include="Class\Particles\AttackHit\Children\AttackHitParticle.cpp" />
     <ClCompile Include="Class\Particles\Common\AuraParticles.cpp" />
     <ClCompile Include="Class\Particles\Common\Children\AuraParticle.cpp" />
+    <ClCompile Include="Class\Particles\SlashEffect\SlashEffector.cpp" />
     <ClCompile Include="Class\UI\EchoMotion.cpp" />
     <ClCompile Include="Class\Enemy\Childs\Boss\Childs\Ogre\State\OgreSpawn.cpp" />
     <ClCompile Include="Class\Enemy\Childs\Minor\Childs\OniHayha\State\OniHayhaSpawn.cpp" />
@@ -287,6 +288,7 @@
     <ClInclude Include="Class\Particles\AttackHit\Children\AttackHitParticle.h" />
     <ClInclude Include="Class\Particles\Common\AuraParticles.h" />
     <ClInclude Include="Class\Particles\Common\Children\AuraParticle.h" />
+    <ClInclude Include="Class\Particles\SlashEffect\SlashEffector.h" />
     <ClInclude Include="Class\UI\EchoMotion.h" />
     <ClInclude Include="Class\World\World.h" />
    <ClInclude Include="Class\Camera\CameraSystems.h" />
