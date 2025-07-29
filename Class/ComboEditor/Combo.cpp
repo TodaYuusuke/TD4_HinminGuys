@@ -439,7 +439,7 @@ void Combo::SlashEffectUpdate(LWP::Resource::SkinningModel* model)
 
 		// クォータニオンをラジアンに変換する
 		Math::Quaternion GenerateRotate{};
-		Math::Quaternion GenerateRotate = Math::Quaternion::CreateFromAxisAngle({ 1.0f, 0.0f, 0.0f }, slashEffectRotate_.x) * Math::Quaternion::CreateFromAxisAngle({ 0.0f, 1.0f, 0.0f }, slashEffectRotate_.y) * Math::Quaternion::CreateFromAxisAngle({ 0.0f, 0.0f, 1.0f }, slashEffectRotate_.z);
+		GenerateRotate = Math::Quaternion::CreateFromAxisAngle({ 1.0f, 0.0f, 0.0f }, slashEffectRotate_.x) * Math::Quaternion::CreateFromAxisAngle({ 0.0f, 1.0f, 0.0f }, slashEffectRotate_.y) * Math::Quaternion::CreateFromAxisAngle({ 0.0f, 0.0f, 1.0f }, slashEffectRotate_.z);
 
 		// 斬撃エフェクトを生成する
 		slashEffector_->Create(GeneratePos, GenerateRotate, slashEffectScale_, playSlashEffectTime_, slashEffectOffset_);
