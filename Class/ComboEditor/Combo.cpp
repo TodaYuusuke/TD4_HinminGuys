@@ -440,9 +440,12 @@ void Combo::SlashEffectUpdate(LWP::Resource::SkinningModel* model)
 		GeneratePos = model->worldTF.GetWorldPosition() + (slashEffectOffset_ * rotMat);
 
 		// クォータニオンをラジアンに変換する
-		LWP::Math::Quaternion GenerateRotate{};
-		Math::Vector3 direction = Math::Vector3{ 0.0f, 0.0f, 1.0f } * LWP::Math::Matrix4x4::CreateRotateXYZMatrix(model->worldTF.rotation);
-		GenerateRotate = Math::Quaternion::CreateFromAxisAngle({1.0f, 0.0f, 0.0f}, slashEffectRotate_.x) * Math::Quaternion::CreateFromAxisAngle({ 0.0f, 1.0f, 0.0f }, slashEffectRotate_.y) * Math::Quaternion::CreateFromAxisAngle({ 0.0f, 0.0f, 1.0f }, slashEffectRotate_.z);
+		Math::Quaternion GenerateRotate{};
+		Math::Quaternion direction = model->worldTF.rotation;
+		Math::Quaternion Rotate = Math::Quaternion::CreateFromAxisAngle({1.0f, 0.0f, 0.0f}, slashEffectRotate_.x) * Math::Quaternion::CreateFromAxisAngle({ 0.0f, 1.0f, 0.0f }, slashEffectRotate_.y) * Math::Quaternion::CreateFromAxisAngle({ 0.0f, 0.0f, 1.0f }, slashEffectRotate_.z);
+		// クォータニオンを求める
+		GenerateRotate = direction * Rotate;
+
 		// 斬撃エフェクトを生成する
 		slashEffector_->Create(GeneratePos, GenerateRotate, slashEffectScale_, playSlashEffectTime_);
 
