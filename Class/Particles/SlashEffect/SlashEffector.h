@@ -13,6 +13,7 @@ private: // サブクラス
 	/// </summary>
 	struct SlashEffectData {
 		LWP::Primitive::SequenceSurface* plane; // 平面本体
+		LWP::Math::Vector3 offset;				// 親子付け時に使用するオフセット値
 		LWP::Utility::DeltaTimer aliveTimer;	// 生存時間タイマー
 		int frame			= 0;				// フレーム
 		bool isEnd			= false;			// 終了トリガー
@@ -47,7 +48,8 @@ public: // メンバ関数
 	/// <param name="rotate">回転角</param>
 	/// <param name="scale">大きさ</param>
 	/// <param name="playTime">再生秒数</param>
-	void Create(const LWP::Math::Vector3& pos, const LWP::Math::Quaternion& rotate, const LWP::Math::Vector3& scale , const float playTime);
+	/// <param name="offset">（任意）親子付け時のオフセット値</param>
+	void Create(const LWP::Math::Vector3& pos, const LWP::Math::Quaternion& rotate, const LWP::Math::Vector3& scale, const float playTime, const LWP::Math::Vector3& offset = {0.0f, 0.0f, 0.0f});
 
 	/// <summary>
 	/// デバッグ用GUI関数

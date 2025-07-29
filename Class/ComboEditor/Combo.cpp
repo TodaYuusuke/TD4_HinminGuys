@@ -435,19 +435,14 @@ void Combo::SlashEffectUpdate(LWP::Resource::SkinningModel* model)
 	if (slashEffectTimer_.GetIsFinish()) {
 		// 生成座標を求める
 		Math::Vector3 GeneratePos{};
-		// 回転行列を求める
-		Math::Matrix4x4 rotMat = Math::Matrix4x4::CreateRotateXYZMatrix(model->worldTF.rotation);
-		GeneratePos = model->worldTF.GetWorldPosition() + (slashEffectOffset_ * rotMat);
+		GeneratePos = slashEffectOffset_;
 
 		// クォータニオンをラジアンに変換する
 		Math::Quaternion GenerateRotate{};
-		Math::Quaternion direction = model->worldTF.rotation;
-		Math::Quaternion Rotate = Math::Quaternion::CreateFromAxisAngle({1.0f, 0.0f, 0.0f}, slashEffectRotate_.x) * Math::Quaternion::CreateFromAxisAngle({ 0.0f, 1.0f, 0.0f }, slashEffectRotate_.y) * Math::Quaternion::CreateFromAxisAngle({ 0.0f, 0.0f, 1.0f }, slashEffectRotate_.z);
-		// クォータニオンを求める
-		GenerateRotate = direction * Rotate;
+		Math::Quaternion GenerateRotate = Math::Quaternion::CreateFromAxisAngle({ 1.0f, 0.0f, 0.0f }, slashEffectRotate_.x) * Math::Quaternion::CreateFromAxisAngle({ 0.0f, 1.0f, 0.0f }, slashEffectRotate_.y) * Math::Quaternion::CreateFromAxisAngle({ 0.0f, 0.0f, 1.0f }, slashEffectRotate_.z);
 
 		// 斬撃エフェクトを生成する
-		slashEffector_->Create(GeneratePos, GenerateRotate, slashEffectScale_, playSlashEffectTime_);
+		slashEffector_->Create(GeneratePos, GenerateRotate, slashEffectScale_, playSlashEffectTime_, slashEffectOffset_);
 
 		// タイマーを非アクティブ状態に
 		slashEffectTimer_.SetIsActive(false);

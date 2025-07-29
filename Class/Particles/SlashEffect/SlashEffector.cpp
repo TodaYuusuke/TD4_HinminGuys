@@ -40,6 +40,12 @@ void SlashEffector::Update()
 		// タイマーが終了状態であればエフェクトを終了状態に
 		if (e->aliveTimer.GetIsFinish()) { e->isEnd = true; }
 
+		// 親子付け対象がいる場合
+		if (parentTF != nullptr) {
+			// オフセット値に基づいて座標を調整する
+			e->plane->worldTF.translation = e->offset;
+		}
+
 		// インデックスを調整
 		e->plane->index = e->frame;
 		// タイマー更新
@@ -49,7 +55,7 @@ void SlashEffector::Update()
 	}
 }
 
-void SlashEffector::Create(const LWP::Math::Vector3& pos, const LWP::Math::Quaternion& rotate, const LWP::Math::Vector3& scale, const float playTime)
+void SlashEffector::Create(const LWP::Math::Vector3& pos, const LWP::Math::Quaternion& rotate, const LWP::Math::Vector3& scale, const float playTime, const LWP::Math::Vector3& offset)
 {
 	// エフェクトデータ生成
 	SlashEffectData* effect = new SlashEffectData();
@@ -59,10 +65,8 @@ void SlashEffector::Create(const LWP::Math::Vector3& pos, const LWP::Math::Quate
 	effect->plane->LoadTexture(texName_);
 
 	// 座標設定
-	if (parentTF != nullptr) {
-		// 親子付け対象がいる場合生成する平面を親子付けする
-		effect->plane->worldTF.Parent(parentTF);
-	}
+	if(parentTF != nullptr){ effect->plane->worldTF.Parent(parentTF); }
+
 	effect->plane->worldTF.translation = pos;
 	effect->plane->worldTF.rotation = rotate;
 	effect->plane->worldTF.scale = scale;
@@ -70,6 +74,9 @@ void SlashEffector::Create(const LWP::Math::Vector3& pos, const LWP::Math::Quate
 	effect->plane->SetSplitSize(frameSize_);
 	// 生存時間タイマー開始
 	effect->aliveTimer.Start(playTime);
+
+	// オフセット値の取得
+	effect->offset = offset;
 
 	// 生成したエフェクトデータを配列に追加する
 	effects_.emplace_back(std::move(effect));
