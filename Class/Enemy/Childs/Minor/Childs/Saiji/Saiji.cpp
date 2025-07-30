@@ -74,7 +74,7 @@ void Saiji::Initialize(Player* player, const Vector3& position, LWP::Object::Cam
 		//コライダーを一時的にオフ、クールタイム設定
 		collider_.isActive = false;
 		//プレイヤーから取得してくる
-		invincibleTime_ = 0.2f;
+		invincibleTime_ = player_->GetSystemManager()->GetComboTree()->GetHitStopTime();
 
 
 		//ダメージの加算値(テスト用)

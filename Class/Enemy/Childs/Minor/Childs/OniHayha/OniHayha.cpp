@@ -83,7 +83,7 @@ void OniHayha::Initialize(Player* player, const Vector3& position, LWP::Object::
 		//コライダーを一時的にオフ、クールタイム設定
 		collider_.isActive = false;
 		//プレイヤーから取得してくる
-		invincibleTime_ = 0.2f;
+		invincibleTime_ = player_->GetSystemManager()->GetComboTree()->GetHitStopTime();
 
 		//ダメージの加算値(テスト用)
 		int plusDamage = LWP::Utility::Random::GenerateInt(0, 1000);

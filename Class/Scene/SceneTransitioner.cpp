@@ -13,6 +13,8 @@ void SceneTransitioner::Initialize(IScene* scene)
 {
 	scene_ = scene;
 	sprite.material.color = { 0.0f,0.0f,0.0f,0.0f };
+	sprite.anchorPoint = { 0.5f,0.5f };
+	sprite.worldTF.translation = { LWP::Info::GetWindowWidthF() * 0.5f, LWP::Info::GetWindowHeightF() * 0.5f, -1.0f };
 	sprite.worldTF.scale = { LWP::Info::GetWindowWidthF() * 0.01f,LWP::Info::GetWindowHeightF() * 0.01f,1.0f};
 }
 
