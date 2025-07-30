@@ -68,6 +68,11 @@ public:// パーティクル生成
 	/// <param name="pos"></param>
 	void CreateParryParticle(const LWP::Math::Vector3& pos);
 	/// <summary>
+	/// パリィ時の足元に発生するパーティクル生成開始
+	/// </summary>
+	/// <param name="pos"></param>
+	void CreateFootSparks(LWP::Math::Vector3 pos);
+	/// <summary>
 	/// 回避時のパーティクル生成
 	/// </summary>
 	/// <param name="pos"></param>

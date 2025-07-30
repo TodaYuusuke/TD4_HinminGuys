@@ -28,12 +28,11 @@ protected:
 
 public:// アクセサ
 #pragma region Getter
-	//ParticleJsonData GetJsonData() { return jsonData_; }
 	ParticleData GetParticleData() { return particleData_; }
 #pragma endregion
 
 #pragma region Setter
-	//void SetJsonData(ParticleJsonData data) { jsonData_ = data; }
+	void SetParticleData(ParticleData data) { particleData_ = data; }
 	/// <summary>
 	/// 使用するテクスチャの名前
 	/// </summary>
@@ -44,7 +43,6 @@ public:// アクセサ
 protected:// 外部から受け取る変数
 	Player* player_;
 	FollowCamera* followCamera_;
-	//ParticleJsonData jsonData_;
 
 protected:
 	ParticleData particleData_;

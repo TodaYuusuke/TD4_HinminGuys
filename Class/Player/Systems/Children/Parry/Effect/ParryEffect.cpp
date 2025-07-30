@@ -12,10 +12,11 @@ ParryEffect::ParryEffect(Player* player, FollowCamera* followCamera) {
 	player_ = player;
 	followCamera_ = followCamera;
 
-	largeFlashes_ = std::make_unique<LargeFlashes>(followCamera_,"Effect/Spark.png");
-	shortFlashes_ = std::make_unique<ShortFlashes>(followCamera_,"Effect/Spark.png");
+	largeFlashes_ = std::make_unique<LargeFlashes>(followCamera_, "Effect/Spark.png");
+	shortFlashes_ = std::make_unique<ShortFlashes>(followCamera_, "Effect/Spark.png");
 	rings_ = std::make_unique<Rings>("Effect/CircleParticle.png");
 	sparks_ = std::make_unique<Sparks>("Effect/Spark.png");
+	footSparks_ = std::make_unique<Sparks>("Effect/Spark.png");
 }
 
 void ParryEffect::Initialize() {}
@@ -25,17 +26,37 @@ void ParryEffect::Update() {
 	shortFlashes_->Update();
 	rings_->Update();
 	sparks_->Update();
+
+	// パーティクル生成
+	if (isJust_) {
+		if (currentFrame_ >= dirayFootSparksTime * 60.0f) {
+			ParticleData data;
+			data.dirVec = (Vector3{ 0,0,-1 } *Matrix4x4::CreateRotateXYZMatrix(player_->GetQuat())).Normalize() * 0.2f;
+			footSparks_->SetParticleData(data);
+			CreateFootSparks(player_->GetModel()->GetJointWorldPosition("Foot.R"));
+		}
+		currentFrame_ += HitStopController::GetInstance()->GetDeltaTime();
+	}
+	if (currentFrame_ >= (dirayFootSparksTime + maxFootSparksTime) * 60.0f) {
+		currentFrame_ = 0.0f;
+		isJust_ = false;
+	}
+	// 足元の火花
+	footSparks_->Update();
 }
 
 void ParryEffect::DebugGui() {
+	ImGui::Checkbox("IsFootSparks", &isJust_);
 	// パーティクル数
 	//jsonData_.count = lineParticleCount + circleParticleCount;
 	//DebugGUI();
 }
 
-void ParryEffect::CreateJustParticles(Vector3 pos) {
+void ParryEffect::CreateJustParticles(const Vector3& pos) {
 	// 発生地点
 	emitterPos_ = pos;
+
+	isJust_ = true;
 
 	// 大きい閃光
 	largeFlashes_->Add(3, emitterPos_);
@@ -47,7 +68,7 @@ void ParryEffect::CreateJustParticles(Vector3 pos) {
 	sparks_->Add(50, emitterPos_);
 }
 
-void ParryEffect::CreateGoodParticles(Vector3 pos) {
+void ParryEffect::CreateGoodParticles(const Vector3& pos) {
 	// 発生地点
 	emitterPos_ = pos;
 
@@ -55,6 +76,14 @@ void ParryEffect::CreateGoodParticles(Vector3 pos) {
 	shortFlashes_->Add(12, emitterPos_);
 	// 火花
 	sparks_->Add(50, emitterPos_);
+}
+
+void ParryEffect::CreateFootSparks(const Vector3& pos) {
+	// 発生地点
+	emitterPos_ = pos;
+
+	// 火花
+	footSparks_->Add(maxFootSparkCount, emitterPos_);
 }
 
 void ParryEffect::SetJsonData(LWP::Utility::JsonIO& json) {
@@ -69,5 +98,12 @@ void ParryEffect::SetJsonData(LWP::Utility::JsonIO& json) {
 	json.EndGroup();
 	json.BeginGroup("Spark");
 	sparks_->SetJsonData(json);
+	json.EndGroup();
+
+	json.BeginGroup("FootSparks");
+	footSparks_->SetJsonData(json);
+	json.AddValue<float>("CreateTime", &maxFootSparksTime);
+	json.AddValue<float>("DelayTime", &dirayFootSparksTime);
+	json.AddValue<int>("Count", &maxFootSparkCount);
 	json.EndGroup();
 }

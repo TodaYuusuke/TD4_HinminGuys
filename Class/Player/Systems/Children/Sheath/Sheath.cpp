@@ -38,17 +38,8 @@ Sheath::Sheath(LWP::Object::Camera* camera, Player* player) {
 		[this](LWP::Object::Collision* hitTarget) {
 			// 鞘が破壊されているなら処理しない
 			if (isBreak_) { return; }
-			if (!hitTargetNames_.empty()) { return; }
+			if (!hitTargetNames_.empty()) { return; }// 一度誰かと衝突したことがあるなら早期リターン
 			hitTargetNames_.push_back(hitTarget->name);
-			//// 一度当たった相手なら処理しない
-			//bool isReturn = false;
-			//for (std::string& hitTargetName : hitTargetNames_) {
-			//	if (hitTargetName == hitTarget->name) { 
-			//		isReturn = true;
-			//		break;
-			//	}
-			//}
-			//if (isReturn) { return; }
 
 			// 鞘のゲージを減少
 			player_->TakeSheathDamage(player_->GetParameter()->GetCurrentSheathDamageStrength());

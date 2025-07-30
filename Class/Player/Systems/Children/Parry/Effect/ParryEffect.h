@@ -41,11 +41,16 @@ public:// 演出開始
 	/// <summary>
 	/// ジャストパリィパーティクル生成開始
 	/// </summary>
-	void CreateJustParticles(LWP::Math::Vector3 pos);
+	void CreateJustParticles(const LWP::Math::Vector3& pos);
 	/// <summary>
 	/// 弱パリィパーティクル生成開始
 	/// </summary>
-	void CreateGoodParticles(LWP::Math::Vector3 pos);
+	void CreateGoodParticles(const LWP::Math::Vector3& pos);
+	/// <summary>
+	/// パリィ時の足元に発生するパーティクル生成開始
+	/// </summary>
+	/// <param name="pos"></param>
+	void CreateFootSparks(const LWP::Math::Vector3& pos);
 
 public:// Getter, Setter
 #pragma region Getter
@@ -60,9 +65,20 @@ public:// Getter, Setter
 	void SetJsonData(LWP::Utility::JsonIO& json);
 #pragma endregion
 
+public:
+	// 足元に出る火花の時間
+	float maxFootSparksTime = 0.5f;
+	float dirayFootSparksTime = 0.15f;
+	int maxFootSparkCount = 1;
+
 private:
 	std::unique_ptr<LargeFlashes> largeFlashes_;
 	std::unique_ptr<ShortFlashes> shortFlashes_;
 	std::unique_ptr<Rings> rings_;
 	std::unique_ptr<Sparks> sparks_;
+
+	// 足元に出すパーティクル
+	std::unique_ptr<Sparks> footSparks_;
+	float currentFrame_;
+	bool isJust_ = false;
 };

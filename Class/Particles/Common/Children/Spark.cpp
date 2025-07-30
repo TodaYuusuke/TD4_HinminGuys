@@ -33,7 +33,7 @@ void Spark::Create(const LWP::Math::Vector3& pos) {
 
 	// 速度
 	Vector3 vel = LWP::Utility::Random::GenerateVector3(jsonData_.velLimit.min, jsonData_.velLimit.max);
-	particleData_.vel = vel;
+	particleData_.vel = vel + particleData_.dirVec;
 	particleData_.vel.y += jsonData_.firstVel.y;
 	// 生存可能時間
 	particleData_.lifeTime = jsonData_.maxElapseTime * 60.0f;
@@ -65,7 +65,7 @@ void Spark::UpdateParticle() {
 	//particleData_.vel = Exponential(particleData_.vel, Vector3{ 0.0f, 0.0f, 0.0f }, 0.01f);
 
 	// stretchビルボードの計算のために速度を代入
-	plane_.velocity = particleData_.vel * 100.0f;
+	plane_.velocity = particleData_.vel * 100.0f + particleData_.dirVec;
 
 	// スケールのイージング
 	Vector3 scale = Lerp(maxScale_, Vector3{ 0.0f,0.0f,0.0f }, particleData_.currentTime / particleData_.lifeTime);

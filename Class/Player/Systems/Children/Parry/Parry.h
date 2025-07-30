@@ -1,5 +1,6 @@
 #pragma once
 #include "../../ISystem.h"
+#include "../../../../Particles/Common/Sparks.h"
 
 struct ParryJsonData {
 	// パリィ発動までにかかる時間[秒]
@@ -176,6 +177,9 @@ private:// jsonで保存する値
 private:
 	// アクションイベント集(無敵に関するものだけ)
 	std::map<int, EventOrder> eventOrders_;
+
+	// 火花
+	std::unique_ptr<Sparks> spraks_;
 
 	// パリィできた攻撃をしてきた相手の座標
 	LWP::Math::Vector3 parryTargetPos_;

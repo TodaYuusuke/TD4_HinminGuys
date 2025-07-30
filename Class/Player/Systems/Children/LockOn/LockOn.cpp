@@ -59,21 +59,17 @@ void LockOn::Update() {
 
 	// ロックオンされる敵にUI表示
 	for (IEnemy* enemy : *enemies_) {
-		// ロックオン可能状態の敵じゃないならスキップ
-		if (!enemy->GetIsLocked()) { continue; }
-
-		// ロックオン中ではないなら消す
 		if (!lockOnEnemy_) {
 			guideLockOnUI_.isActive = true;
+			// 座標
+			guideLockOnUI_.worldTF.translation = enemy->GetWorldTF()->GetWorldPosition() + Vector3{ 0.1f,1.2f,0.0f };
 		}
 		else {
 			guideLockOnUI_.isActive = false;
 		}
-
-		// 座標
-		guideLockOnUI_.worldTF.translation = enemy->GetWorldTF()->GetWorldPosition() + Vector3{ 0.1f,1.2f,0.0f };
 		break;
 	}
+
 	// 敵がいないなら消す
 	if (enemies_->empty()) {
 		guideLockOnUI_.isActive = false;

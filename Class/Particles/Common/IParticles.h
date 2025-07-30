@@ -25,11 +25,18 @@ public:
 	virtual void SetJsonData(LWP::Utility::JsonIO& json) = 0;
 
 public:
+#pragma region Getter
+	ParticleData GetParticleData() { return particleData_; }
+#pragma endregion
+
+#pragma region Setter
+	void SetParticleData(ParticleData data) { particleData_ = data; }
 	/// <summary>
 	/// 使用するテクスチャの名前
 	/// </summary>
 	/// <param name="name"></param>
 	void SetTexName(const std::string& name) { texName_ = name; }
+#pragma endregion
 
 protected:// 外部から受け取る変数
 	Player* player_;
@@ -38,6 +45,8 @@ protected:// 外部から受け取る変数
 protected:
 	// json
 	LWP::Utility::JsonIO json_;
+
+	ParticleData particleData_;
 
 	// 使用するテクスチャの名前
 	std::string texName_;

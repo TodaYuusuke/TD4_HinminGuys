@@ -201,6 +201,10 @@ void Particles::CreateParryParticle(const LWP::Math::Vector3& pos) {
 	}
 }
 
+void Particles::CreateFootSparks(LWP::Math::Vector3 pos) {
+	parryEffect_->CreateFootSparks(pos);
+}
+
 void Particles::CreateEvasionParticle(const LWP::Math::Vector3& pos) {
 	evasionEffect_->Add(evasionEffect_->GetParticleJsonData().count, pos);
 }
