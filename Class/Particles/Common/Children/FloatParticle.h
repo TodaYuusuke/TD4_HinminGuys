@@ -10,6 +10,8 @@ class Player;
 class FloatParticle : public LWP::Object::Particle {
 public:
 	struct FloatParticleData {
+		LWP::Math::Vector3 euler;	
+		float rotateDir;
 		float height;				// 浮く高さ
 		float amplitude;			// 振幅
 		float currentFrame;

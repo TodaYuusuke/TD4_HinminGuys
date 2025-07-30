@@ -3,6 +3,7 @@
 #include <list>
 #include "../Condition/ConditionList.h"
 #include "../DeltaTimer/DeltaTimer.h"
+#include "../Particles/SlashEffect/SlashEffector.h"
 
 /// <summary>
 /// コンボクラス
@@ -39,7 +40,8 @@ public: // メンバ関数
 	/// <param name="model">モデル</param>
 	/// <param name="anim">アニメーション</param>
 	/// <param name="collider">コライダー</param>
-	void Start(LWP::Resource::SkinningModel* model, LWP::Resource::Animation* anim, LWP::Object::Collision* collider);
+	/// <param name="effector">斬撃エフェクター</param>
+	void Start(LWP::Resource::SkinningModel* model, LWP::Resource::Animation* anim, LWP::Object::Collision* collider, SlashEffector* effector);
 
 	/// <summary>
 	/// 更新関数
@@ -256,6 +258,12 @@ private: // プライベートなメンバ関数
 	void AttackAssistUpdate();
 
 	/// <summary>
+	/// 斬撃エフェクト関連の更新
+	/// </summary>
+	/// <param name="model">モデル</param>
+	void SlashEffectUpdate(LWP::Resource::SkinningModel* model);
+
+	/// <summary>
 	/// 硬直時間関係の更新
 	/// </summary>
 	void StifnessTimeUpdate();
@@ -357,6 +365,21 @@ private: // メンバ変数
 	LWP::Utility::DeltaTimer attackAssistTimer_{};
 	// 攻撃アシストの有効フラグ
 	bool isAttackAssistActive_ = false;
+
+	// 斬撃エフェクタのポインタ
+	SlashEffector* slashEffector_ = nullptr;
+	// 斬撃エフェクトの開始秒数
+	float startSlashEffectTime_ = 0.0f;
+	// 斬撃エフェクト用のタイマー
+	LWP::Utility::DeltaTimer slashEffectTimer_{};
+	// 斬撃エフェクトのオフセット
+	LWP::Math::Vector3 slashEffectOffset_{ 0.0f, 0.5f, 0.0f };
+	// 斬撃エフェクトの回転角
+	LWP::Math::Vector3 slashEffectRotate_ = { 0.0f, 0.0f, 0.0f };
+	// 斬撃エフェクトのスケール
+	LWP::Math::Vector3 slashEffectScale_ = { 0.5f, 0.5f, 0.5f };
+	// 斬撃エフェクト再生秒数
+	float playSlashEffectTime_ = 0.0f;
 
 	// 硬直時間
 	float stifnessTime_ = 0.0f;

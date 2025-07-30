@@ -3,7 +3,9 @@
 using namespace LWP::Utility::Condition;
 using namespace LWP;
 
-ComboTree::ComboTree() : sphere_(collider_.SetBroadShape(LWP::Object::Collider::Sphere()))
+ComboTree::ComboTree() : 
+	sphere_(collider_.SetBroadShape(LWP::Object::Collider::Sphere())),
+	slashEffector_("Effect/SwordSlash.png", {256.0f, 256.0f}, 26)
 {
 
 }
@@ -24,6 +26,9 @@ void ComboTree::Init(const std::string& fileName, LWP::Resource::SkinningModel* 
 	animModel_ = model;
 	anim_ = anim;
 
+	// 斬撃エフェクターの親子付け対象を設定
+	slashEffector_.SetParentTF(&animModel_->worldTF);
+
 	// 無操作状態のコンボの初期化
 	rootCombo_.Init("Neutral");
 	editingCombo_ = &rootCombo_;
@@ -38,7 +43,7 @@ void ComboTree::Init(const std::string& fileName, LWP::Resource::SkinningModel* 
 	// 現在コンボのリセット
 	nowCombo_->Init();
 	// 現在コンボのスタート
-	nowCombo_->Start(animModel_, anim_, &collider_);
+	nowCombo_->Start(animModel_, anim_, &collider_, &slashEffector_);
 }
 
 void ComboTree::Update()
@@ -66,7 +71,7 @@ void ComboTree::Update()
 		nowCombo_->Init();
 		nowCombo_ = nextCombo_;
 		nextCombo_ = nullptr;
-		nowCombo_->Start(animModel_, anim_, &collider_);
+		nowCombo_->Start(animModel_, anim_, &collider_, &slashEffector_);
 		return;
 	}
 
@@ -80,7 +85,7 @@ void ComboTree::Update()
 		
 		nowCombo_->Init();
 		nowCombo_ = &rootCombo_;
-		nowCombo_->Start(animModel_, anim_, &collider_);
+		nowCombo_->Start(animModel_, anim_, &collider_, &slashEffector_);
 	}
 }
 
@@ -148,9 +153,6 @@ void ComboTree::DebugGUI()
 		ImGui::Text("Please Change EditMode!");
 		// 編集モードを有効にするボタンを表示させる
 		if (ImGui::Button("Enable EditMode")) {
-			// 編集コンボを無操作状態コンボにする
-			editingCombo_ = &rootCombo_;
-
 			// 現在のコンボを強制的に初期化
 			nowCombo_->Init();
 			// 現在コンボを強制的に無操作状態のコンボに
@@ -198,7 +200,7 @@ void ComboTree::ResetCombo()
 	nowCombo_->Init();
 	// 現在コンボを無操作状態にリセットする
 	nowCombo_ = &rootCombo_;
-	nowCombo_->Start(animModel_, anim_, &collider_);
+	nowCombo_->Start(animModel_, anim_, &collider_, &slashEffector_);
 }
 
 void ComboTree::SetColliderMaskFrag(uint32_t maskID, uint32_t hitID)

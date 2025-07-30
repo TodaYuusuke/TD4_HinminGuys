@@ -107,6 +107,12 @@ void Throw::Reset() {
 	player_->GetSystemManager()->GetSheathAttackCollision().isActive = false;
 	(*eventOrders_)[(int)Sheath::SheathState::kThrow].Reset();
 
+	// 残像トレイル
+	ghostTrail_->Reset();
+
+	// 鎖
+	sheathSystem_->GetChain()->Reset();
+
 	velocity_ = { 0,0,0 };
 	start_ = { 0,0,0 };
 	end_ = { 0,0,0 };
@@ -127,8 +133,7 @@ void Throw::CheckThrowState() {
 	else if ((*eventOrders_)[(int)Sheath::SheathState::kThrow].GetCurrentTimeEvent().name == "ThrowFinishTime") {
 		// 鎖生成
 		if (!sheathSystem_->GetIsSheathModelActive()) {
-			sheathSystem_->chain_->SetIsActive(isActive_);
-			sheathSystem_->chain_->Reset();
+			sheathSystem_->chain_->SetIsActive(isActive_);	
 			sheathSystem_->chain_->Initialize();
 
 			// 残像生成

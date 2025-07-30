@@ -1,9 +1,14 @@
 #include "SheathGauge.h"
+#include "../../Math/MathFunctions.h"
 
 SheathGauge::SheathGauge() {
 	// 鞘ゲージ画像の背景作成(BackGroundは長すぎるのでBGにしてます)
 	sprite_["SheathBarBG"].LoadTexture("UI/Gauge/SheathBar/SheathBarBase.png");
 	sprite_["SheathBarBG"].isActive = true;
+	// ゲージ減少時の後追いするゲージ
+	sprite_["SheathBarDecriment"].LoadTexture("UI/Gauge/SheathBar/SheathBarGauge.png");
+	sprite_["SheathBarDecriment"].isActive = true;
+	sprite_["SheathBarDecriment"].material.color = { 50,50,50,255 };
 	// 鞘ゲージ画像を作成
 	sprite_["SheathBar"].LoadTexture("UI/Gauge/SheathBar/SheathBarGauge.png");
 	sprite_["SheathBar"].isActive = true;
@@ -34,7 +39,11 @@ SheathGauge::SheathGauge() {
 
 	maxSize_ = sprite_["SheathBar"].material.texture.t.GetSize();
 	sprite_["SheathBar"].clipRect.max = maxSize_;
+	sprite_["SheathBarDecriment"].clipRect.max = maxSize_;
 	sprite_["SheathBarBG"].clipRect.max = maxSize_;
+
+	sprite_["SheathBarDecriment"].worldTF = sprite_["SheathBar"].worldTF;
+	sprite_["SheathBarDecriment"].anchorPoint = sprite_["SheathBar"].anchorPoint;
 	// HPを最大値にする
 	value_ = maxValue_;
 }
@@ -52,6 +61,11 @@ void SheathGauge::Update() {
 
 	// HPバーの長さ計算
 	ColGaugeSize("SheathBar");
+
+	// ゲージ増加中はしない
+	if (!isIncrease_) {
+		sprite_["SheathBarDecriment"].clipRect.max.x = MathFunc::ExponentialInterpolateF(sprite_["SheathBarDecriment"].clipRect.max.x, sprite_["SheathBar"].clipRect.max.x, 0.05f);
+	}
 }
 
 void SheathGauge::DebugGUI() {

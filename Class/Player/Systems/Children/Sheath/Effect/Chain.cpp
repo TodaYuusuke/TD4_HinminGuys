@@ -28,8 +28,22 @@ void Chain::Initialize() {
 			.force{0, 0, 0},
 			.isFixed = (i == 0 || i == segmentCount - 1) // 最初の1つを固定
 		};
-		pointMass.model.LoadCube();
-		pointMass.model.worldTF.scale = { 0.05f,0.05f,0.05f };  // 大きさ
+		pointMass.model.LoadShortPath("chain/Chain.gltf");
+		pointMass.model.worldTF.scale = { 1.05f,1.05f,1.05f };  // 大きさ
+		if (i % 2 == 0) {
+			pointMass.euler = {
+				0.0f,
+				0.0f,
+				3.14f / 2.0f
+			};
+		}
+		else {
+			pointMass.euler = {
+				0.0f,
+				3.14f / 2.0f,
+				3.14f / 2.0f
+			};
+		}
 		// 始点
 		if (pointMass.isFixed && i == 0) {
 			pointMass.model.worldTF.translation = startPos_;  // 位置
@@ -116,6 +130,7 @@ void Chain::DebugGui() {
 }
 
 void Chain::Reset() {
+	isActive_ = false;
 	pointMassList_.clear();
 	chainNodeList_.clear();
 }

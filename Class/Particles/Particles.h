@@ -8,11 +8,12 @@
 #include "Common/Rings.h"
 #include "Common/Sparks.h"
 #include "Common/DustClouds.h"
+#include "Common/Children/FloatParticle.h"
 #include "EnemySpawn/EnemySpawnParticles.h"
 #include "EnemyDead/EnemyDeadParticles.h"
 #include "AttackHit/AttackHitEffect.h"
 #include "Crack/CrackEffect.h"
-#include "Common/Children/FloatParticle.h"
+
 
 class FollowCamera;
 /// <summary>
@@ -76,6 +77,38 @@ public:// パーティクル生成
 	/// </summary>
 	/// <param name="pos"></param>
 	void CreateMoveParticle(const LWP::Math::Vector3& pos);
+	/// <summary>
+	/// 浮遊パーティクル生成
+	/// </summary>
+	/// <param name="value"></param>
+	/// <param name="pos"></param>
+	void CreateFloatParticles(const int& value, const LWP::Math::Vector3& pos) { floatParticle_->Add(value, pos); }
+	/// <summary>
+	/// 敵出現パーティクル生成
+	/// </summary>
+	/// <param name="pos"></param>
+	void CreateEnemySpawnParticles(const LWP::Math::Vector3& pos) { enemySpawnParticles_->Start(true, pos); }
+	/// <summary>
+	/// 敵出現パーティクル生成終了
+	/// </summary>
+	void FinishEnemySpawnParticles() { enemySpawnParticles_->Finish(); }
+	/// <summary>
+	/// 敵死亡パーティクル生成
+	/// </summary>
+	/// <param name="value"></param>
+	/// <param name="pos"></param>
+	void CreateEnemyDeadParticles(const int& value, const LWP::Math::Vector3& pos) { enemyDeadParticles_->Add(value, pos); }
+	/// <summary>
+	/// 攻撃ヒット時のパーティクル生成
+	/// </summary>
+	/// <param name="value"></param>
+	/// <param name="pos"></param>
+	void CreateAttackHitEffect(const LWP::Math::Vector3& pos) { attackHitEffect_->Add(pos); }
+	/// <summary>
+	/// 重攻撃時のパーティクル生成
+	/// </summary>
+	/// <param name="pos"></param>
+	void CreateCrackEffect(const LWP::Math::Vector3& pos) { crackEffect_->Add(pos); }
 
 #pragma region Getter
 	/// <summary>
@@ -87,9 +120,9 @@ public:// パーティクル生成
 	/// 浮遊パーティクルを取得
 	/// </summary>
 	/// <returns></returns>
-	FloatParticle* GetFloatParticle() { return floatParticle_.get(); }
+	FloatParticle* GetFloatParticles() { return floatParticle_.get(); }
 	/// <summary>
-	/// 出現パーティクル取得
+	/// 敵出現パーティクル取得
 	/// </summary>
 	/// <returns></returns>
 	EnemySpawnParticles* GetEnemySpawnParticles() { return enemySpawnParticles_.get(); }

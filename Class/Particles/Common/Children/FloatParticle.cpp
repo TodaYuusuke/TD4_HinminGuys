@@ -1,5 +1,6 @@
 #include "FloatParticle.h"
 #include "../../../Player/Player.h"
+#include <numbers>
 
 using namespace LWP;
 using namespace LWP::Math;
@@ -16,6 +17,8 @@ void FloatParticle::Generate(LWP::Object::Particle::Data& data) {
 	// パーティクルの浮く高さをランダムで設定
 	datas_[data.idNumber].amplitude = LWP::Utility::Random::GenerateFloat(jsonData_.amplitudeLimit.min, jsonData_.amplitudeLimit.max);
 	datas_[data.idNumber].height = LWP::Utility::Random::GenerateFloat(jsonData_.heightLimit.min, jsonData_.heightLimit.max);
+	datas_[data.idNumber].euler = LWP::Utility::Random::GenerateVector3(Vector3{ 0.0f, 0.0f,0.0f }, Vector3{(float)std::numbers::pi * 2.0f, 0.1f, (float)std::numbers::pi * 2.0f });
+	datas_[data.idNumber].rotateDir = LWP::Utility::Random::GenerateFloat(-0.2f, 0.2f);
 
 	// 座標
 	float posMin = jsonData_.posLimit.min;
@@ -42,6 +45,12 @@ bool FloatParticle::UpdateParticle(LWP::Object::Particle::Data& data) {
 
 	// 移動状態の確認と更新
 	StateUpdate(data);
+
+	// 角度
+	datas_[data.idNumber].euler.x += 0.1f * datas_[data.idNumber].rotateDir;
+	datas_[data.idNumber].euler.z += 0.1f * datas_[data.idNumber].rotateDir;
+	data.m.worldTF.rotation = LWP::Math::Quaternion::CreateFromAxisAngle(Vector3{ 0,0,1 }, datas_[data.idNumber].euler.z) * LWP::Math::Quaternion::CreateFromAxisAngle(Vector3{ 1,0,0 }, datas_[data.idNumber].euler.x);
+	data.m.worldTF.rotation = LWP::Math::Quaternion::CreateFromAxisAngle(Vector3{ 0,1,0 }, datas_[data.idNumber].euler.y) * data.m.worldTF.rotation;
 
 	data.m.worldTF.translation += data.velocity;
 	return false;

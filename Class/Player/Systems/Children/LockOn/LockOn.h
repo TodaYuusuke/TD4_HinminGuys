@@ -19,7 +19,10 @@ public:// 構造体
 	struct LockOnData {
 		IEnemy* enemyData;					// 敵の情報
 		LockOnUI ui;
-
+		LWP::Math::Vector3 start;
+		LWP::Math::Vector3 end;
+		float currentFrame;
+		float maxEasingFrame;
 		// 同じ敵をロックオンしようとしているかを判別するときに使う
 		bool operator==(IEnemy* other)const {
 			return enemyData == other;

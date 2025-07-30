@@ -183,6 +183,11 @@ public:// Getter, Setter
 	/// </summary>
 	/// <returns></returns>
 	AuraParticles* GetAuraParticles() { return auraParticles_.get(); }
+	/// <summary>
+	/// 鎖の取得
+	/// </summary>
+	/// <returns></returns>
+	Chain* GetChain() { return chain_.get(); }
 
 	/// <summary>
 	/// 最終的な鞘ゲージ減少量を取得

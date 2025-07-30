@@ -46,6 +46,11 @@ public: // メンバ関数
 	void Update();
 
 	/// <summary>
+	/// 軌跡エフェクタの更新関数
+	/// </summary>
+	void EffectorUpdate() { slashEffector_.Update(); }
+
+	/// <summary>
 	/// デバッグのImGuiを表示する関数
 	/// </summary>
 	void DebugGUI();
@@ -235,6 +240,9 @@ private: // メンバ変数
 
 	// 受付終了で遷移したかどうかのトリガー
 	bool isReceptEndTrigger_ = false;
+
+	// 斬撃エフェクタ
+	SlashEffector slashEffector_;
 
 #pragma region エディタ用変数
 
