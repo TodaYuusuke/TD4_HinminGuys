@@ -135,6 +135,9 @@ void SystemManager::Update() {
 	// 現在稼働しているシステムの更新
 	CurrentSystemUpdate();
 
+	// コンボツリーの軌跡エフェクタの更新
+	comboTree_->EffectorUpdate();
+
 	// 機能の切り替え条件
 	SwitchCurrentSystem();
 
