@@ -48,9 +48,6 @@ void ComboTree::Init(const std::string& fileName, LWP::Resource::SkinningModel* 
 
 void ComboTree::Update()
 {
-	// 斬撃エフェクタの更新
-	slashEffector_.Update();
-
 	// 受付終了遷移確認トリガーをリセット
 	isReceptEndTrigger_ = false;
 

@@ -46,6 +46,11 @@ public: // メンバ関数
 	void Update();
 
 	/// <summary>
+	/// 軌跡エフェクタの更新関数
+	/// </summary>
+	void EffectorUpdate() { slashEffector_.Update(); }
+
+	/// <summary>
 	/// デバッグのImGuiを表示する関数
 	/// </summary>
 	void DebugGUI();
