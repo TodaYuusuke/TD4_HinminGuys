@@ -79,7 +79,4 @@ private: // ** これより先に必要な処理や変数を記述 ** //
 	//オーディオ再生クラス
 	BGMPlayer bgmPlayer_;
 	SEPlayer sePlayer_;
-
-
-	//TestBillboard testBillboard_;
 };

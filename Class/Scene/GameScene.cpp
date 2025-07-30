@@ -66,6 +66,7 @@ void GameScene::Initialize() {
 	player_.Initialize();
 	player_.SetSEPlayer(&sePlayer_);
 	player_.SetParticles(&particles_);
+	player_.SetWorld(&world_);
 
 	//ダメージエフェクトエミッターを生成
 	damageEffectEmitter_.Initialize();
