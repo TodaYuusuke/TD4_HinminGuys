@@ -123,6 +123,8 @@ void Player::DebugGUI() {
 void Player::TakeDamage(const float& damageValue) {
 	// 自機が無敵中ならダメージ判定をとらない
 	if (!collider_.isActive) { return; }
+	particles_->CreateAttackHitEffect(model_.worldTF.GetWorldPosition() + Vector3{ 0.0f, 0.5f, 0.0f });
+
 	// 全ての機能をリセット
 	Reset();
 	// HPゲージ変動

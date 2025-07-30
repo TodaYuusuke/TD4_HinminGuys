@@ -3,14 +3,14 @@
         "Group :Circle": {
             "Color :Color": [
                 255,
-                165,
-                112,
+                143,
+                0,
                 255
             ],
             "Group :RandomValueMinMax": {
                 "Group :Scale": {
-                    "float :Max": 0.10000000149011612,
-                    "float :Min": 0.09000000357627869
+                    "float :Max": 0.03099999949336052,
+                    "float :Min": 0.029999999329447746
                 },
                 "Group :Velocity": {
                     "Vector3 :Max": [
@@ -20,20 +20,24 @@
                     ],
                     "Vector3 :Min": [
                         -0.10000000149011612,
-                        -0.10000000149011612,
+                        0.0,
                         -0.10000000149011612
                     ]
                 }
             },
             "Vector3 :First": [
                 0.0,
-                0.029999999329447746,
+                0.019999999552965164,
                 0.0
             ],
-            "float :Acceleration": -0.009999999776482582,
+            "float :Acceleration": -0.004999999888241291,
             "float :ElapseTime": 1.0,
             "float :Multiply": 1.0,
-            "int32_t :Count": 0
+            "int32_t :Count": 30
+        },
+        "Group :CreatePosOffset": {
+            "float :Max": 0.5,
+            "float :Min": -0.5
         },
         "Group :Spark": {
             "Color :Color": [
@@ -369,7 +373,7 @@
         "Group :ShortFlash": {
             "Vector3 :MaxScale": [
                 2.0,
-                3.0,
+                2.0,
                 1.0
             ],
             "float :ElapseTime": 0.5
