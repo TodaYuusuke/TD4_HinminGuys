@@ -39,7 +39,8 @@ UIManager::UIManager(Player* player) {
 		guideUI_[i].coolTimeFilter.isActive = false;
 		guideUI_[i].coolTimeFilter.worldTF.Parent(&guideUI_[i].sprite.worldTF);
 
-		guideUI_[i].coolTimeFilterSplitSize = { 150.0f, 150.0f };
+		guideUI_[i].coolTimeFilterSplitSize = guideUI_[i].coolTimeFilter.material.texture.t.GetSize();
+		guideUI_[i].coolTimeFilter.clipRect.max = guideUI_[i].coolTimeFilterSplitSize;
 	}
 
 	// jsonの値を保存
@@ -134,6 +135,8 @@ void UIManager::Update() {
 
 void UIManager::DebugGUI() {
 	json_.DebugGUI();
+
+	guideUI_[0].coolTimeFilter.DebugGUI();
 
 	sheathGauge_.DebugGUI();
 
