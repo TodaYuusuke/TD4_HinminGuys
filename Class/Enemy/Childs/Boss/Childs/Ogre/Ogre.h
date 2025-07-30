@@ -107,8 +107,8 @@ private:
 	OgreState::StateParameter& configParameter_;
 
 	//警告用のプレーンテクスチャ
-	LWP::Resource::RigidModel cautionQuad_;
-	LWP::Resource::RigidModel cautionCircle_;
+	LWP::Primitive::NormalSurface cautionQuad_;
+	LWP::Primitive::NormalSurface cautionCircle_;
 
 	// 刀モデル
 	SkinningModel swordModel_;

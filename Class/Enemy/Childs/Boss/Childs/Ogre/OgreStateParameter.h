@@ -137,8 +137,10 @@ namespace OgreState {
 	struct FallingThrust {
 		//攻撃発生時間に関するデータ
 		AttackData attackData{};
+		//ジャンプ前待機時間
+		float jumpWaitingTime = 0.2f;
 		//ジャンプ時間
-		float jumpingTime = 0.5f;
+		float jumpingTime = 0.3f;
 		//ジャンプ後待機時間
 		float fallWaitingTime = 0.5f;
 		//落下時間
@@ -183,8 +185,12 @@ namespace OgreState {
 		float leaveDistance = 5.0f;
 		//プレイヤーを切り捨てる時の超過距離
 		float overDistance = 2.0f;
+		//地面に潜る前の待機時間
+		float diveWaitingTime = 1.5f;
 		//地面に隠れる時間
-		float divingTime = 2.0f;
+		float divingTime = 0.5f;
+		//潜る速度
+		float diveSpeed = 3.0f;
 		//隠れた後の待機時間
 		float stealthWaitingTime = 1.0f;
 		//攻撃中の待機時間
@@ -227,6 +233,14 @@ namespace OgreState {
 	struct HitReactionParameter {
 		//減衰
 		float decay = 0.95f;
+	};
+
+	/// <summary>
+	/// 死亡時のパラメータ
+	/// </summary>
+	struct DeadParameter {
+		//後ろに下がる速度
+		float stepBackSpeed = 0.5f;
 	};
 
 	/// <summary>

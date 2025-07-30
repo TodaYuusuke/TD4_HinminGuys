@@ -68,18 +68,30 @@ void Saiji::AttackUpdate([[maybe_unused]] std::optional<States>& req, [[maybe_un
 	if (animation_.GetProgress() > stateParameter_.attackParameter.endAcceptTime and aabbAttackCollider_.isActive) {
 		isAttack_ = false;
 		aabbAttackCollider_.isActive = false;
+
+# ifdef _DEBUG
 		aabbAttack_.isShowWireFrame = false;
+#endif // _DEBUG
+		
 	}
 	//開始と終了時間の間だけ判定を付ける
 	else if (animation_.GetProgress() >= stateParameter_.attackParameter.startAcceptTime and
 		animation_.GetProgress() <= stateParameter_.attackParameter.endAcceptTime) {
 		aabbAttackCollider_.isActive = true;
+
+# ifdef _DEBUG
 		aabbAttack_.isShowWireFrame = true;
+#endif // _DEBUG
+		
 	}
 	//開始時間未満も判定を付けない
 	else if(animation_.GetProgress() < stateParameter_.attackParameter.startAcceptTime) {
 		aabbAttackCollider_.isActive = false;
+
+# ifdef _DEBUG
 		aabbAttack_.isShowWireFrame = false;
+#endif // _DEBUG
+		
 	}
 
 	//攻撃が終了した時

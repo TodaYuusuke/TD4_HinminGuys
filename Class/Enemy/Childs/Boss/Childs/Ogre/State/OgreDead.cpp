@@ -10,7 +10,7 @@ void Ogre::DeadFinalize(const States& pre)
 void Ogre::DeadInit(const States& pre)
 {
 
-	animation_.Play("Idle", 0.2f)
+	animation_.Play("Dead", 0.2f)
 		.Loop(false);
 	animation_.GetPlayBackSpeed() = 1.0f;
 

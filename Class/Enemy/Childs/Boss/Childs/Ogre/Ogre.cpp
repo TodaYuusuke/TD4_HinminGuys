@@ -29,15 +29,13 @@ void Ogre::Initialize(Player* player, const Vector3& position, LWP::Object::Came
 	EnemyManager* manager)
 {
 	model_.LoadShortPath("Ogre/Orga_IK.gltf");
-	cautionQuad_.LoadShortPath("BothPlane.obj");
-	cautionCircle_.LoadShortPath("BothPlane.obj");
-	cautionQuad_.materials["Texturematerial"].texture = LWP::Resource::LoadTexture("caution_square.png");
-	cautionCircle_.materials["Texturematerial"].texture = LWP::Resource::LoadTexture("caution_circle.png");
-	cautionQuad_.worldTF.translation.y = 0.5f;
-	cautionQuad_.materials["Texturematerial"].enableLighting = false;
+	cautionQuad_.LoadTexture("caution_square.png");
+	cautionCircle_.LoadTexture("caution_circle.png");
+	cautionQuad_.worldTF.translation.y = 0.1f;
+	cautionQuad_.worldTF.rotation = Quaternion::ConvertEuler(Vector3{ 1.57f, 0.0f,0.0f });
 	cautionQuad_.isActive = false;
-	cautionCircle_.worldTF.translation.y = 1.0f;
-	cautionCircle_.materials["Texturematerial"].enableLighting = false;
+	cautionCircle_.worldTF.translation.y = 0.2f;
+	cautionCircle_.worldTF.rotation = Quaternion::ConvertEuler(Vector3{ 1.57f, 0.0f,0.0f });
 	cautionCircle_.isActive = false;
 	type_ = EnemyType::kOgre;
 	attackType_ = AttackType::kShort;
@@ -200,7 +198,7 @@ void Ogre::CreateColliders()
 	sphereCollider_.mask.SetBelongFrag(GetAttack());
 	// 当たり判定をとる対象のマスクを設定
 	sphereCollider_.mask.SetHitFrag(GetPlayer() | GetParry());
-	sphere_.isShowWireFrame = false;
+	
 	sphereCollider_.stayLambda = [this](LWP::Object::Collision* hitTarget) {
 		hitTarget;
 		player_->TakeDamage(parameter_.attackParameter.attackValue);
@@ -214,13 +212,18 @@ void Ogre::CreateColliders()
 	aabbAttackCollider_.mask.SetBelongFrag(GetAttack());
 	// 当たり判定をとる対象のマスクを設定
 	aabbAttackCollider_.mask.SetHitFrag(GetPlayer() | GetParry());
-	aabbAttack_.isShowWireFrame = false;
+	
 	aabbAttackCollider_.stayLambda = [this](LWP::Object::Collision* hitTarget) {
 		hitTarget;
 		player_->TakeDamage(parameter_.attackParameter.attackValue);
 		//判定をオフにする
 		//swordCollider_.isActive = false;
 		};
+
+#ifdef _DEBUG
+	sphere_.isShowWireFrame = false;
+	aabbAttack_.isShowWireFrame = false;
+#endif // _DEBUG
 
 }
 

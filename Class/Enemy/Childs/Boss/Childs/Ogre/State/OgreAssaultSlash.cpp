@@ -14,6 +14,7 @@ void Ogre::AssaultSlashFinalize([[maybe_unused]] const States& pre) {
 	currentMotionSpeed_ = 1.0f;
 	isAttack_ = false;
 	isAttackPhase_ = false;
+	animation_.GetPlayBackSpeed() = 1.0f;
 	//強攻撃終了時の抽選処理
 	EndHeavyAttack();
 	SetPosition({ GetPosition().x, 0.0f, GetPosition().z });
@@ -55,19 +56,28 @@ void Ogre::AssaultSlashUpdate([[maybe_unused]] std::optional<States>& req, [[may
 	//待機中の場合
 	if (GetAssaultSlash().isWaiting) {
 
-		//潜っている途中はY座標を下げる
-		if (GetAssaultSlash().currentTime < GetAssaultSlash().divingTime) {
+		//ロックオン不可
+		if (player_) {
+			player_->GetSystemManager()->GetLockOnSystem()->Reset();
+		}
 
-			SetPosition(GetPosition() - Vector3{ 0.0f, currentMotionSpeed_ * LWP::Info::GetDeltaTimeF(), 0.0f });
+		//潜っている途中はY座標を下げる
+		if (GetAssaultSlash().currentTime >= GetAssaultSlash().diveWaitingTime and 
+			GetAssaultSlash().currentTime < GetAssaultSlash().diveWaitingTime + GetAssaultSlash().divingTime) {
+
+			SetPosition(GetPosition() - Vector3{ 0.0f, currentMotionSpeed_ * GetAssaultSlash().diveSpeed * LWP::Info::GetDeltaTimeF(), 0.0f });
 
 		}
 
 		//合計待機時間を超えたらラッシュ状態に入る
-		if (GetAssaultSlash().currentTime >= GetAssaultSlash().divingTime + GetAssaultSlash().stealthWaitingTime) {
+		if (GetAssaultSlash().currentTime >= GetAssaultSlash().diveWaitingTime + GetAssaultSlash().divingTime + GetAssaultSlash().stealthWaitingTime) {
 			//ラッシュフラグオン
 			GetAssaultSlash().isRush = true;
 			//待機フラグオフ
 			GetAssaultSlash().isWaiting = false;
+			//モーションリセット
+			animation_.Play("RushSlash", 0.2f)
+				.Loop(false);
 			//ワープ先セット
 			SetAssaultSlashWarpPosition();
 
@@ -77,6 +87,11 @@ void Ogre::AssaultSlashUpdate([[maybe_unused]] std::optional<States>& req, [[may
 	}
 	//突撃中の場合
 	else if (GetAssaultSlash().isRush) {
+
+		//ロックオン不可
+		if (player_) {
+			player_->GetSystemManager()->GetLockOnSystem()->Reset();
+		}
 
 		//パリィエフェクトが発生していないかつ、エフェクトの発生時間を超過したらパリィエフェクト発動
 		if (not isActivationParryEffect_ and
@@ -91,7 +106,9 @@ void Ogre::AssaultSlashUpdate([[maybe_unused]] std::optional<States>& req, [[may
 			currentMotionSpeed_ = 0.1f;
 			animation_.GetPlayBackSpeed() = currentMotionSpeed_;
 			aabbAttackCollider_.isActive = false;
+#ifdef _DEBUG
 			aabbAttack_.isShowWireFrame = false;
+#endif // _DEBUG
 		}
 		//パリィエフェクトが終わったら通常スピードで判定をオンにする
 		else if (IsExitParryEffect()) {
@@ -101,20 +118,30 @@ void Ogre::AssaultSlashUpdate([[maybe_unused]] std::optional<States>& req, [[may
 
 		//待機中
 		if (GetAssaultSlash().currentTime < GetAssaultSlash().waitingTime) {
-
+			//アニメーション一時停止
+			animation_.Pause();
 			//当たり判定オフ
 			aabbAttackCollider_.isActive = false;
+#ifdef _DEBUG
 			aabbAttack_.isShowWireFrame = false;
+#endif // _DEBUG
 		}
 
 		//待機時間を超えたら突進
 		if (GetAssaultSlash().currentTime >= GetAssaultSlash().waitingTime) {
-			//イージングでポジション補間
-			SetPosition(LWP::Utility::Interpolation::Lerp(GetAssaultSlash().attackStartPosition, GetAssaultSlash().attackEndPosition,
+			//アニメーション再開
+			animation_.Resume();
+			animation_.GetPlayBackSpeed() = 2.0f;
+
+
+			//イージングでポジション補間(壁貫通)
+			UnlimitedSetPosition(LWP::Utility::Interpolation::Lerp(GetAssaultSlash().attackStartPosition, GetAssaultSlash().attackEndPosition,
 				((GetAssaultSlash().currentTime - GetAssaultSlash().waitingTime) / GetAssaultSlash().assaultTime)));
 			//当たり判定オン
 			aabbAttackCollider_.isActive = true;
+#ifdef _DEBUG
 			aabbAttack_.isShowWireFrame = true;
+#endif // _DEBUG
 		}
 
 		//時間経過後
@@ -134,9 +161,12 @@ void Ogre::AssaultSlashUpdate([[maybe_unused]] std::optional<States>& req, [[may
 			}
 			//攻撃が終わったら後隙の時間に移行
 			else {
+				animation_.GetPlayBackSpeed() = 1.0f;
 				//当たり判定オフ
 				aabbAttackCollider_.isActive = false;
+#ifdef _DEBUG
 				aabbAttack_.isShowWireFrame = false;
+#endif // _DEBUG
 				//ポジションを終わりにセット
 				SetPosition(GetAssaultSlash().attackEndPosition);
 				//ラッシュフラグオフ
@@ -173,17 +203,29 @@ void Ogre::SetAssaultSlashWarpPosition()
 {
 
 	//ワープ先の方向
-	LWP::Math::Vector3 moveDrection{};
-	//八方向からランダム選出
-	int32_t randomNum = LWP::Utility::Random::GenerateInt(0, 7);
-	float radian = 45.0f * float(randomNum) * (3.1415f / 180.0f);
-	moveDrection = { cosf(radian), 0.0f, sinf(radian) };
+	LWP::Math::Vector3 moveDirection{};
+
+	//五回目の攻撃の場合
+	if (GetAssaultSlash().currentAttackCount >= GetAssaultSlash().maxAttackCount - 2) {
+		//中心座標とプレイヤーの座標から移動方向を計算
+		moveDirection = Vector3{ 0.0f,0.0f,0.0f } + GetPlayerPosition();
+		moveDirection = moveDirection.Normalize();
+
+	}
+	//四回目までの場合
+	else {
+		//八方向からランダム選出
+		int32_t randomNum = LWP::Utility::Random::GenerateInt(0, 7);
+		float radian = 45.0f * float(randomNum) * (3.1415f / 180.0f);
+		moveDirection = { cosf(radian), 0.0f, sinf(radian) };
+	}
+	
 	//現在のプレイヤーの座標を元としてmoveDirectionを足す
-	SetPosition(GetPlayerPosition() + moveDrection * GetAssaultSlash().leaveDistance);
+	UnlimitedSetPosition(GetPlayerPosition() + moveDirection * GetAssaultSlash().leaveDistance);
 	//開始地点設定
-	GetAssaultSlash().attackStartPosition = GetPlayerPosition() + moveDrection * GetAssaultSlash().leaveDistance;
+	GetAssaultSlash().attackStartPosition = GetPosition();
 	//終了地点設定。反対方向のため、-をかける
-	GetAssaultSlash().attackEndPosition = GetPlayerPosition() + moveDrection * -GetAssaultSlash().overDistance;
+	GetAssaultSlash().attackEndPosition = GetPlayerPosition() + moveDirection * -GetAssaultSlash().overDistance;
 	//時間リセット
 	GetAssaultSlash().currentTime = 0.0f;
 	//プレイヤーの向きに回転
