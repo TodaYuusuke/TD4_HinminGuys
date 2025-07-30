@@ -60,7 +60,9 @@ void Ogre::RotatingSlashUpdate([[maybe_unused]] std::optional<States>& req, [[ma
 		currentMotionSpeed_ = 0.1f;
 		animation_.GetPlayBackSpeed() = currentMotionSpeed_;
 		sphereCollider_.isActive = false;
+#ifdef _DEBUG
 		sphere_.isShowWireFrame = false;
+#endif // _DEBUG
 	}
 	//パリィエフェクトが終わったら通常スピードで判定をオンにする
 	else if (IsExitParryEffect()) {
@@ -72,18 +74,24 @@ void Ogre::RotatingSlashUpdate([[maybe_unused]] std::optional<States>& req, [[ma
 	if (animation_.GetProgress() > GetRotatingSlash().attackData.endAcceptTime and
 		sphereCollider_.isActive) {
 		sphereCollider_.isActive = false;
+#ifdef _DEBUG
 		sphere_.isShowWireFrame = false;
+#endif // _DEBUG
 	}
 	//開始と終了時間の間だけ判定を付ける
 	else if (animation_.GetProgress() >= GetRotatingSlash().attackData.startAcceptTime and
 		animation_.GetProgress() <= GetRotatingSlash().attackData.endAcceptTime) {
 		sphereCollider_.isActive = true;
+#ifdef _DEBUG
 		sphere_.isShowWireFrame = true;
+#endif // _DEBUG
 	}
 	//開始時間未満も判定を付けない
 	else {
 		sphereCollider_.isActive = false;
+#ifdef _DEBUG
 		sphere_.isShowWireFrame = false;
+#endif // _DEBUG
 	}
 
 	//攻撃が終了した時

@@ -70,7 +70,9 @@ void Ogre::QuadrupleAttackUpdate([[maybe_unused]] std::optional<States>& req, [[
 			currentMotionSpeed_ = 0.1f;
 			animation_.GetPlayBackSpeed() = currentMotionSpeed_;
 			aabbAttackCollider_.isActive = false;
+#ifdef _DEBUG
 			aabbAttack_.isShowWireFrame = false;
+#endif // _DEBUG
 		}
 		//パリィエフェクトが終わったら通常スピードで判定をオンにする
 		else if (IsExitParryEffect()) {
@@ -82,13 +84,17 @@ void Ogre::QuadrupleAttackUpdate([[maybe_unused]] std::optional<States>& req, [[
 		if (animation_.GetProgress() > GetQuadrupleAttack().multipleAttackData[GetQuadrupleAttack().currentAttackCount].endAcceptTime and
 			aabbAttackCollider_.isActive) {
 			aabbAttackCollider_.isActive = false;
+#ifdef _DEBUG
 			aabbAttack_.isShowWireFrame = false;
+#endif // _DEBUG
 		}
 		//開始と終了時間の間だけ判定を付ける
 		else if (animation_.GetProgress() >= GetQuadrupleAttack().multipleAttackData[GetQuadrupleAttack().currentAttackCount].startAcceptTime and
 			animation_.GetProgress() <= GetQuadrupleAttack().multipleAttackData[GetQuadrupleAttack().currentAttackCount].endAcceptTime) {
 			aabbAttackCollider_.isActive = true;
+#ifdef _DEBUG
 			aabbAttack_.isShowWireFrame = true;
+#endif // _DEBUG
 		}
 		//開始時間未満も判定を付けない
 		else {
@@ -108,7 +114,9 @@ void Ogre::QuadrupleAttackUpdate([[maybe_unused]] std::optional<States>& req, [[
 			}
 
 			aabbAttackCollider_.isActive = false;
+#ifdef _DEBUG
 			aabbAttack_.isShowWireFrame = false;
+#endif // _DEBUG
 		}
 
 		//アニメーションが強制終了時間を超えたら

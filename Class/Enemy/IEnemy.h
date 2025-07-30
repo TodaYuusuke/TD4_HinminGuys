@@ -104,6 +104,8 @@ public:
 	const Vector3& GetPosition() const { return model_.worldTF.translation; }
 	//座標セット
 	void SetPosition(const Vector3& position);
+	//座標セット(範囲制限なし)
+	void UnlimitedSetPosition(const Vector3& position);
 	//回転取得
 	const Quaternion& GetRotation() const { return model_.worldTF.rotation; }
 	//回転セット

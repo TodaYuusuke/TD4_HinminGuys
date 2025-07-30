@@ -17,13 +17,16 @@ void Ogre::FallingThrustFinalize([[maybe_unused]] const States& pre) {
 	//中攻撃終了時の抽選処理
 	EndMediumAttack();
 	sphereCollider_.isActive = false;
+#ifdef _DEBUG
 	sphere_.isShowWireFrame = false;
+#endif // _DEBUG
+
 }
 
 void Ogre::FallingThrustInit([[maybe_unused]] const States& pre)
 {
 
-	animation_.Play("FallAttack", 0.6f)
+	animation_.Play("Jump", 0.2f)
 		.Loop(false);
 	//もしノックバックしたら待機に戻る
 	preState_ = States::kIdle;
@@ -48,7 +51,9 @@ void Ogre::FallingThrustInit([[maybe_unused]] const States& pre)
 	//終点座標をセット
 	GetFallingThrust().endPosition = GetPlayerPosition();
 	sphereCollider_.isActive = false;
+#ifdef _DEBUG
 	sphere_.isShowWireFrame = false;
+#endif // _DEBUG
 	GetFallingThrust().currentTime = 0.0f;
 	cautionCircle_.isActive = true;
 	cautionCircle_.worldTF.scale = {
@@ -79,7 +84,9 @@ void Ogre::FallingThrustUpdate([[maybe_unused]] std::optional<States>& req, [[ma
 		currentMotionSpeed_ = 0.1f;
 		animation_.GetPlayBackSpeed() = currentMotionSpeed_;
 		sphereCollider_.isActive = false;
+#ifdef _DEBUG
 		sphere_.isShowWireFrame = false;
+#endif // _DEBUG
 	}
 	//パリィエフェクトが終わったら通常スピードで判定をオンにする
 	else if (IsExitParryEffect()) {
@@ -87,12 +94,21 @@ void Ogre::FallingThrustUpdate([[maybe_unused]] std::optional<States>& req, [[ma
 		animation_.GetPlayBackSpeed() = currentMotionSpeed_;
 	}
 
+	//ジャンプ前待機時間
+	if (GetFallingThrust().currentTime < GetFallingThrust().jumpWaitingTime) {
+		SetPosition(GetFallingThrust().startPosition);
+	}
 	//ジャンプ中
-	if (GetFallingThrust().currentTime < GetFallingThrust().jumpingTime) {
+	else if (GetFallingThrust().currentTime < GetFallingThrust().jumpingTime) {
 
 		//ジャンプ座標までセット
 		SetPosition(LWP::Utility::Interpolation::Lerp(GetFallingThrust().startPosition, GetFallingThrust().jumpingPosition,
-			GetFallingThrust().currentTime / GetFallingThrust().jumpingTime));
+			(GetFallingThrust().currentTime - GetFallingThrust().jumpWaitingTime) / GetFallingThrust().jumpingTime));
+
+		//ロックオン不可
+		if (player_) {
+			player_->GetSystemManager()->GetLockOnSystem()->Reset();
+		}
 
 	}
 	//ジャンプ後の待機時間
@@ -100,12 +116,18 @@ void Ogre::FallingThrustUpdate([[maybe_unused]] std::optional<States>& req, [[ma
 
 		SetPosition(GetFallingThrust().jumpingPosition);
 
+		//アニメーションが再生中でない場合、次のアニメーションに移行
+		if (not animation_.GetPlaying()) {
+			animation_.Play("FallAttack", 0.2f)
+				.Loop(false);
+		}
+
 	}
 	//落下中
 	else if (GetFallingThrust().currentTime < GetFallingThrust().jumpingTime + GetFallingThrust().fallWaitingTime + 
 		GetFallingThrust().fallingTime) {
 
-		//ジャンプ座標までセット
+		//落下座標までセット
 		SetPosition(LWP::Utility::Interpolation::Lerp(GetFallingThrust().jumpingPosition, GetFallingThrust().endPosition,
 			(GetFallingThrust().currentTime - 
 				GetFallingThrust().jumpingTime - GetFallingThrust().fallWaitingTime) / GetFallingThrust().fallingTime));
@@ -119,11 +141,15 @@ void Ogre::FallingThrustUpdate([[maybe_unused]] std::optional<States>& req, [[ma
 		if (GetFallingThrust().currentTime < GetFallingThrust().jumpingTime + GetFallingThrust().fallWaitingTime +
 			GetFallingThrust().fallingTime + GetFallingThrust().attackTime and not isStartParryEffect_) {
 			sphereCollider_.isActive = true;
+#ifdef _DEBUG
 			sphere_.isShowWireFrame = true;
+#endif // _DEBUG
 		}
 		else {
 			sphereCollider_.isActive = false;
+#ifdef _DEBUG
 			sphere_.isShowWireFrame = false;
+#endif // _DEBUG
 			cautionCircle_.isActive = false;
 		}
 
@@ -135,7 +161,10 @@ void Ogre::FallingThrustUpdate([[maybe_unused]] std::optional<States>& req, [[ma
 		isAttack_ = false;
 		isAttackPhase_ = false;
 		sphereCollider_.isActive = false;
+#ifdef _DEBUG
 		sphere_.isShowWireFrame = false;
+#endif // _DEBUG
+		
 		GetFallingThrust().currentTime = 0.0f;
 		state_.request = States::kIdle;
 		return;

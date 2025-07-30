@@ -39,8 +39,9 @@ IEnemy::IEnemy()
 		}
 
 	}
-
+#ifdef _DEBUG
 	aabbBody_.isShowWireFrame = false;
+#endif // _DEBUG
 
 }
 
@@ -72,6 +73,13 @@ void IEnemy::SetPosition(const Vector3& position)
 		model_.worldTF.translation.x = posizionXZ.x;
 		model_.worldTF.translation.z = posizionXZ.y;
 	}
+
+}
+
+void IEnemy::UnlimitedSetPosition(const Vector3& position)
+{
+
+	model_.worldTF.translation = position;
 
 }
 
