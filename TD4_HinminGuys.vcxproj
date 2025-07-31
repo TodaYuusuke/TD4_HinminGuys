@@ -176,16 +176,6 @@
     <ClCompile Include="Class\Enemy\Childs\Boss\Childs\Ogre\State\OgreQuadrupleAttack.cpp" />
     <ClCompile Include="Class\Enemy\Childs\Boss\Childs\Ogre\State\OgreRotatingSlash.cpp" />
     <ClCompile Include="Class\Enemy\Childs\Boss\Childs\Ogre\State\OgreSwingDownAttack.cpp" />
-    <ClCompile Include="Class\Enemy\Childs\Minor\Childs\Faster\Faster.cpp" />
-    <ClCompile Include="Class\Enemy\Childs\Minor\Childs\Faster\FasterStateParameter.cpp" />
-    <ClCompile Include="Class\Enemy\Childs\Minor\Childs\Faster\State\FasterEvasion.cpp" />
-    <ClCompile Include="Class\Enemy\Childs\Minor\Childs\Faster\State\FasterFollowing.cpp" />
-    <ClCompile Include="Class\Enemy\Childs\Minor\Childs\Faster\State\FasterHitReaction.cpp" />
-    <ClCompile Include="Class\Enemy\Childs\Minor\Childs\Faster\State\FasterAttack.cpp" />
-    <ClCompile Include="Class\Enemy\Childs\Minor\Childs\Faster\State\FasterIdle.cpp" />
-    <ClCompile Include="Class\Enemy\Childs\Minor\Childs\Faster\State\FasterMove.cpp" />
-    <ClCompile Include="Class\Enemy\Childs\Minor\Childs\Faster\State\FasterSpacing.cpp" />
-    <ClCompile Include="Class\Enemy\Childs\Minor\Childs\Faster\State\FasterWaitingForAttack.cpp" />
     <ClCompile Include="Class\Enemy\Childs\Minor\Childs\OniHayha\OniHayha.cpp" />
     <ClCompile Include="Class\Enemy\Childs\Minor\Childs\OniHayha\OniHayhaStateParameter.cpp" />
     <ClCompile Include="Class\Enemy\Childs\Minor\Childs\OniHayha\State\OniHayhaAiming.cpp" />
@@ -301,8 +291,6 @@
     <ClInclude Include="Class\Camera\ICameraSystem.h" />
     <ClInclude Include="Class\Enemy\Childs\Boss\Childs\Ogre\Ogre.h" />
     <ClInclude Include="Class\Enemy\Childs\Boss\Childs\Ogre\OgreStateParameter.h" />
-    <ClInclude Include="Class\Enemy\Childs\Minor\Childs\Faster\Faster.h" />
-    <ClInclude Include="Class\Enemy\Childs\Minor\Childs\Faster\FasterStateParameter.h" />
     <ClInclude Include="Class\Enemy\Childs\Minor\Childs\OniHayha\OniHayha.h" />
     <ClInclude Include="Class\Enemy\Childs\Minor\Childs\OniHayha\OniHayhaStateParameter.h" />
     <ClInclude Include="Class\Enemy\Childs\Minor\Childs\Saiji\SaijiStateParameter.h" />
