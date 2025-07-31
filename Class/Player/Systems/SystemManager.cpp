@@ -135,9 +135,6 @@ void SystemManager::Update() {
 	// 現在稼働しているシステムの更新
 	CurrentSystemUpdate();
 
-	// コンボツリーの軌跡エフェクタの更新
-	comboTree_->EffectorUpdate();
-
 	// 機能の切り替え条件
 	SwitchCurrentSystem();
 
@@ -164,11 +161,16 @@ void SystemManager::Update() {
 	// 鞘が壊れているならオーラを出す
 	if (player_->GetParameter()->GetIsSheathBreak()) {
 		aura_->Start(true, player_->GetModel()->worldTF.GetWorldPosition());
+		comboTree_->GetSlashEffector()->SetColor(Utility::Color(0.25f, 0.5f, 1.0f, 1.0f));
 	}
 	else {
 		// 終了
 		aura_->Finish();
+		comboTree_->GetSlashEffector()->SetColor(Utility::Color(1.0f, 1.0f, 1.0f, 1.0f));
 	}
+	// コンボツリーの軌跡エフェクタの更新
+	comboTree_->EffectorUpdate();
+
 	// 更新処理
 	aura_->Update();
 }
