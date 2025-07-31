@@ -27,6 +27,12 @@ Saiji::~Saiji()
 void Saiji::Initialize(Player* player, const Vector3& position, LWP::Object::Camera* camera,
 	EnemyManager* manager)
 {
+
+#ifdef _DEBUG
+	box_.LoadCube();
+	box_.isActive = false;
+#endif // _DEBUG
+
 	model_.LoadShortPath("Saiji/Saiji_IK.gltf");
 	type_ = EnemyType::kSaiji;
 	attackType_ = AttackType::kShort;

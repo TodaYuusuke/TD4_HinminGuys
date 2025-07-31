@@ -118,8 +118,14 @@ private:
 	//攻撃コライダー(AABB)
 	LWP::Object::Collision aabbAttackCollider_;
 	LWP::Object::Collider::AABB& aabbAttack_;
-	//弾の攻撃方向
-	Vector3 bulletDirection_{};
+
+#ifdef _DEBUG
+
+	//一時コライダー表示用
+	LWP::Resource::RigidModel box_;
+	LWP::Resource::RigidModel tmpSphere_;
+
+#endif // _DEBUG
 
 	//雑魚敵パラメータ
 	OgreState::StateParameter stateParameter_;

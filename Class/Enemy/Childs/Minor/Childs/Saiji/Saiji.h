@@ -88,6 +88,14 @@ private:
 	LWP::Object::Collision aabbAttackCollider_;
 	LWP::Object::Collider::AABB& aabbAttack_;
 
+#ifdef _DEBUG
+
+	//一時コライダー表示用
+	LWP::Resource::RigidModel box_;
+
+#endif // _DEBUG
+
+
 	//雑魚敵パラメータ
 	SaijiState::StateParameter stateParameter_;
 

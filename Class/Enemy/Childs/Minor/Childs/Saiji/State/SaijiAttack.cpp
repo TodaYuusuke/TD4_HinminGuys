@@ -17,6 +17,14 @@ void Saiji::AttackFinalize([[maybe_unused]] const States& pre) {
 		LWP::Utility::Random::GenerateFloat(0.0f, 1.0f);
 	animation_.GetPlayBackSpeed() = 1.0f;
 
+	aabbAttackCollider_.isActive = false;
+
+#ifdef _DEBUG
+	aabbAttack_.isShowWireFrame = false;
+	box_.isActive = false;
+#endif // _DEBUG
+
+
 }
 
 void Saiji::AttackInit([[maybe_unused]] const States& pre)
@@ -38,6 +46,12 @@ void Saiji::AttackInit([[maybe_unused]] const States& pre)
 	};
 	//パリィエフェクトフラグリセット
 	isActivationParryEffect_ = false;
+
+#ifdef _DEBUG
+	box_.worldTF.translation = aabbAttackCollider_.worldTF.GetWorldPosition();
+	box_.worldTF.scale = aabbAttackCollider_.worldTF.scale;
+#endif // _DEBUG
+
 
 	stateParameter_.attackParameter.currentFreezingTime = 0.0f;
 
@@ -71,6 +85,7 @@ void Saiji::AttackUpdate([[maybe_unused]] std::optional<States>& req, [[maybe_un
 
 # ifdef _DEBUG
 		aabbAttack_.isShowWireFrame = false;
+		box_.isActive = false;
 #endif // _DEBUG
 		
 	}
@@ -81,6 +96,7 @@ void Saiji::AttackUpdate([[maybe_unused]] std::optional<States>& req, [[maybe_un
 
 # ifdef _DEBUG
 		aabbAttack_.isShowWireFrame = true;
+		box_.isActive = true;
 #endif // _DEBUG
 		
 	}
@@ -90,6 +106,7 @@ void Saiji::AttackUpdate([[maybe_unused]] std::optional<States>& req, [[maybe_un
 
 # ifdef _DEBUG
 		aabbAttack_.isShowWireFrame = false;
+		box_.isActive = false;
 #endif // _DEBUG
 		
 	}

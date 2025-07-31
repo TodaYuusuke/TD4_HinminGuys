@@ -28,6 +28,15 @@ Ogre::~Ogre()
 void Ogre::Initialize(Player* player, const Vector3& position, LWP::Object::Camera* camera,
 	EnemyManager* manager)
 {
+
+#ifdef _DEBUG
+	box_.LoadCube();
+	tmpSphere_.LoadSphere();
+	box_.isActive = false;
+	tmpSphere_.isActive = false;
+#endif // _DEBUG
+
+
 	model_.LoadShortPath("Ogre/Orga_IK.gltf");
 	cautionQuad_.LoadTexture("caution_square.png");
 	cautionCircle_.LoadTexture("caution_circle.png");
@@ -192,7 +201,7 @@ void Ogre::CreateColliders()
 {
 	
 	// 球の判定生成
-	sphereCollider_.SetFollow(&model_, "Hips");
+	sphereCollider_.SetFollow(&model_.worldTF);
 	sphereCollider_.isActive = false;
 	// 自機の所属しているマスクを設定
 	sphereCollider_.mask.SetBelongFrag(GetAttack());
@@ -206,7 +215,7 @@ void Ogre::CreateColliders()
 		//swordCollider_.isActive = false;
 		};
 	// AABBの判定生成
-	aabbAttackCollider_.SetFollow(&model_, "Hips");
+	aabbAttackCollider_.SetFollow(&model_.worldTF);
 	aabbAttackCollider_.isActive = false;
 	// 自機の所属しているマスクを設定
 	aabbAttackCollider_.mask.SetBelongFrag(GetAttack());
@@ -223,6 +232,8 @@ void Ogre::CreateColliders()
 #ifdef _DEBUG
 	sphere_.isShowWireFrame = false;
 	aabbAttack_.isShowWireFrame = false;
+	box_.worldTF.Parent(&aabbAttackCollider_.worldTF);
+	tmpSphere_.worldTF.Parent(&sphereCollider_.worldTF);
 #endif // _DEBUG
 
 }

@@ -19,7 +19,10 @@ void Ogre::FallingThrustFinalize([[maybe_unused]] const States& pre) {
 	sphereCollider_.isActive = false;
 #ifdef _DEBUG
 	sphere_.isShowWireFrame = false;
+	tmpSphere_.isActive = false;
 #endif // _DEBUG
+
+	model_.worldTF.translation.y = 0.0f;
 
 }
 
@@ -53,6 +56,7 @@ void Ogre::FallingThrustInit([[maybe_unused]] const States& pre)
 	sphereCollider_.isActive = false;
 #ifdef _DEBUG
 	sphere_.isShowWireFrame = false;
+	tmpSphere_.isActive = false;
 #endif // _DEBUG
 	GetFallingThrust().currentTime = 0.0f;
 	cautionCircle_.isActive = true;
@@ -86,6 +90,7 @@ void Ogre::FallingThrustUpdate([[maybe_unused]] std::optional<States>& req, [[ma
 		sphereCollider_.isActive = false;
 #ifdef _DEBUG
 		sphere_.isShowWireFrame = false;
+		tmpSphere_.isActive = false;
 #endif // _DEBUG
 	}
 	//パリィエフェクトが終わったら通常スピードで判定をオンにする
@@ -143,12 +148,14 @@ void Ogre::FallingThrustUpdate([[maybe_unused]] std::optional<States>& req, [[ma
 			sphereCollider_.isActive = true;
 #ifdef _DEBUG
 			sphere_.isShowWireFrame = true;
+			tmpSphere_.isActive = true;
 #endif // _DEBUG
 		}
 		else {
 			sphereCollider_.isActive = false;
 #ifdef _DEBUG
 			sphere_.isShowWireFrame = false;
+			tmpSphere_.isActive = false;
 #endif // _DEBUG
 			cautionCircle_.isActive = false;
 		}
@@ -163,6 +170,7 @@ void Ogre::FallingThrustUpdate([[maybe_unused]] std::optional<States>& req, [[ma
 		sphereCollider_.isActive = false;
 #ifdef _DEBUG
 		sphere_.isShowWireFrame = false;
+		tmpSphere_.isActive = false;
 #endif // _DEBUG
 		
 		GetFallingThrust().currentTime = 0.0f;

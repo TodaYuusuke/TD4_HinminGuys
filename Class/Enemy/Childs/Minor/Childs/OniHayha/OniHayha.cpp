@@ -10,7 +10,7 @@ using namespace OniHayhaState;
 
 OniHayha::OniHayha(OniHayhaState::StateParameter& stateParameter) : 
 	configParameter_(stateParameter),
-	sphere_(bulletCollider_.SetBroadShape(LWP::Object::Collider::Sphere()))
+	capsule_(bulletCollider_.SetBroadShape(LWP::Object::Collider::Capsule()))
 {
 
 	stateParameter_ = stateParameter;
@@ -27,6 +27,14 @@ OniHayha::~OniHayha()
 void OniHayha::Initialize(Player* player, const Vector3& position, LWP::Object::Camera* camera,
 	EnemyManager* manager)
 {
+
+#ifdef _DEBUG
+	tmpSphere_.LoadSphere();
+	tmpSphere_.isActive = false;
+	tmpSphereSecond_.LoadSphere();
+	tmpSphereSecond_.isActive = false;
+#endif // _DEBUG
+
 	model_.LoadShortPath("Oniheihe/Oniheihe_IK.gltf");
 	type_ = EnemyType::kOniHayha;
 	attackType_ = AttackType::kLong;
@@ -36,7 +44,8 @@ void OniHayha::Initialize(Player* player, const Vector3& position, LWP::Object::
 	// 銃モデルをプレイヤーの手に追従させる
 	gunModel_.GetJoint("Grip")->localTF.Parent(&model_, "WeaponAnchor");
 	laserModel_.LoadShortPath("effect/laser.obj");
-	laserModel_.worldTF.Parent(&gunModel_, "Muzzle");
+	laserModel_.worldTF.Parent(&model_.worldTF);
+	laserModel_.worldTF.translation.y = 0.5f;
 	/*laserModel_.worldTF.translation = { 0.0f,1.0f,0.0f };*/
 	laserModel_.materials["Laser"].color.R = (unsigned char)255;
 	laserModel_.isActive = false;
@@ -169,15 +178,25 @@ void OniHayha::CreateBulletCollider()
 
 	// 弾の判定生成
 	bulletCollider_.isActive = false;
+	//ペアレント設定
+	bulletCollider_.SetFollow(&laserModel_.worldTF);
 	// 自機の所属しているマスクを設定
 	bulletCollider_.mask.SetBelongFrag(GetAttack());
 	// 当たり判定をとる対象のマスクを設定
 	bulletCollider_.mask.SetHitFrag(GetPlayer());
-	bulletCollider_.enterLambda = [this](LWP::Object::Collision* hitTarget) {
+	bulletCollider_.stayLambda = [this](LWP::Object::Collision* hitTarget) {
 		hitTarget;
 		player_->TakeDamage(parameter_.attackParameter.attackValue);
 		};
-	sphere_.radius = 0.1f;
+	capsule_.radius = 0.1f;
+
+#ifdef _DEBUG
+
+	tmpSphere_.worldTF.scale = { 0.1f,0.1f,0.1f };
+	tmpSphereSecond_.worldTF.scale = { 0.1f,0.1f,0.1f };
+
+#endif // _DEBUG
+
 
 }
 

@@ -18,6 +18,14 @@ void Ogre::AssaultSlashFinalize([[maybe_unused]] const States& pre) {
 	//強攻撃終了時の抽選処理
 	EndHeavyAttack();
 	SetPosition({ GetPosition().x, 0.0f, GetPosition().z });
+	aabbAttackCollider_.isActive = false;
+#ifdef _DEBUG
+	aabbAttack_.isShowWireFrame = false;
+	box_.isActive = false;
+#endif // _DEBUG
+
+	model_.worldTF.translation.y = 0.0f;
+
 }
 
 void Ogre::AssaultSlashInit([[maybe_unused]] const States& pre)
@@ -108,6 +116,7 @@ void Ogre::AssaultSlashUpdate([[maybe_unused]] std::optional<States>& req, [[may
 			aabbAttackCollider_.isActive = false;
 #ifdef _DEBUG
 			aabbAttack_.isShowWireFrame = false;
+			box_.isActive = false;
 #endif // _DEBUG
 		}
 		//パリィエフェクトが終わったら通常スピードで判定をオンにする
@@ -124,6 +133,7 @@ void Ogre::AssaultSlashUpdate([[maybe_unused]] std::optional<States>& req, [[may
 			aabbAttackCollider_.isActive = false;
 #ifdef _DEBUG
 			aabbAttack_.isShowWireFrame = false;
+			box_.isActive = false;
 #endif // _DEBUG
 		}
 
@@ -141,6 +151,7 @@ void Ogre::AssaultSlashUpdate([[maybe_unused]] std::optional<States>& req, [[may
 			aabbAttackCollider_.isActive = true;
 #ifdef _DEBUG
 			aabbAttack_.isShowWireFrame = true;
+			box_.isActive = true;
 #endif // _DEBUG
 		}
 
@@ -166,6 +177,7 @@ void Ogre::AssaultSlashUpdate([[maybe_unused]] std::optional<States>& req, [[may
 				aabbAttackCollider_.isActive = false;
 #ifdef _DEBUG
 				aabbAttack_.isShowWireFrame = false;
+				box_.isActive = false;
 #endif // _DEBUG
 				//ポジションを終わりにセット
 				SetPosition(GetAssaultSlash().attackEndPosition);

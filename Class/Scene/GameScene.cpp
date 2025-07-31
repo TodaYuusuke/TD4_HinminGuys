@@ -23,6 +23,15 @@ GameScene::~GameScene() {
 
 // 初期化
 void GameScene::Initialize() {
+	
+	//事前読み込み
+	LWP::Resource::LoadModel("resources/model/Saiji/Saiji_IK.gltf");
+	LWP::Resource::LoadModel("resources/model/Oniheihe/Oniheihe_IK.gltf");
+	LWP::Resource::LoadModel("resources/model/Ogre/Orga_IK.gltf");
+	LWP::Resource::LoadModel("resources/model/Saiji/Club.gltf");
+	LWP::Resource::LoadModel("resources/model/Oniheihe/MatchLockGun.gltf");
+	LWP::Resource::LoadModel("resources/model/Ogre/Weapon.gltf");
+
 	// コマンドの登録
 	inputHandler_ = InputHandler::GetInstance();
 	inputHandler_->Initialize();

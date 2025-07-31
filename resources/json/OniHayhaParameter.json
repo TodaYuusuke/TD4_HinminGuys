@@ -7,7 +7,7 @@
         },
         "Group :Attack": {
             "float :BulletSpeed": 100.0,
-            "float :EndAcceptTime": 1.0,
+            "float :EndAcceptTime": 0.30000001192092896,
             "float :StartAcceptTime": 0.10000000149011612
         },
         "Group :HitReaction": {
@@ -19,6 +19,7 @@
         },
         "Group :Retreat": {
             "float :IdleDist": 4.0
-        }
+        },
+        "float :ExtrusionDist": 0.5
     }
 }

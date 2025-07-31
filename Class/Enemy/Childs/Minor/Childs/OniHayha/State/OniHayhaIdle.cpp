@@ -46,6 +46,7 @@ void OniHayha::IdleUpdate([[maybe_unused]] std::optional<States>& req, [[maybe_u
 				//狙い撃ち状態の時間セット
 				stateParameter_.aimingParameter.countAimingTime = stateParameter_.aimingParameter.aimingTime;
 				//狙い撃ち状態に移行
+				isAttack_ = true;
 				state_.request = States::kAiming;
 			}
 			else {
