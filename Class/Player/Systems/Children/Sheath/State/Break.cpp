@@ -22,6 +22,9 @@ Break::Break(Sheath* sheathSystem, Player* player, std::map<int, EventOrder>* ev
 	// 本体のモデルも非表示
 	player_->SetIsSheathModelActive(false);
 
+	// 鞘の攻撃判定多重回避リストの初期化
+	sheathSystem_->ClearHitTargetNames();
+
 	// 鞘破壊状態にする
 	sheathSystem_->SetIsBreak(true);
 	sheathSystem_->SetIsNone(false);

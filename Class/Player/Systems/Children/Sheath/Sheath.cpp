@@ -44,6 +44,8 @@ Sheath::Sheath(LWP::Object::Camera* camera, Player* player) {
 			// 鞘のゲージを減少
 			player_->TakeSheathDamage(player_->GetParameter()->GetCurrentSheathDamageStrength());
 		});
+	// 鞘の当たり判定を演出用の鞘に追従させる
+	player_->GetSystemManager()->GetSheathCollision().worldTF.Parent(&sheathModel_.worldTF);
 
 	// 浮遊パーティクル
 	floatParticle_ = std::make_unique<FloatParticle>(player_);
@@ -173,6 +175,10 @@ void Sheath::DebugGUI() {
 
 		ImGui::DragFloat3("Velocity", &velocity_.x);
 		ImGui::DragFloat3("Radian", &radian_.x);
+		int size = (int)hitTargetNames_.size();
+		ImGui::DragInt("HitTargetNames", &size);
+		bool is = player_->GetSystemManager()->GetSheathCollision().isActive;
+		ImGui::Checkbox("IsSheathCollision", &is);
 
 		ImGui::Checkbox("IsEvasion", &isActive_);
 
