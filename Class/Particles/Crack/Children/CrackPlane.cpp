@@ -48,6 +48,6 @@ void CrackPlane::Create(const LWP::Math::Vector3& pos) {
 void CrackPlane::UpdateParticle() {
 	if (particleData_.currentTime <= particleData_.lifeTime) {
 		// 徐々に透明になる
-		plane_.material.color.A = LerpF(255, 0, Easing::InExpo(particleData_.currentTime / particleData_.lifeTime));
+		plane_.material.color.A = (unsigned char)LerpF(255, 0, Easing::InExpo(particleData_.currentTime / particleData_.lifeTime));
 	}
 }

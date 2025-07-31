@@ -51,7 +51,7 @@ void Chain::Initialize() {
 		// 終点
 		else {
 			Vector3 dir = (endPos_ - startPos_).Normalize();
-			pointMass.model.worldTF.translation = startPos_ - dir * i * segmentLength;
+			pointMass.model.worldTF.translation = startPos_ - dir * (float)i * segmentLength;
 		}
 		pointMassList_.push_back(pointMass);
 

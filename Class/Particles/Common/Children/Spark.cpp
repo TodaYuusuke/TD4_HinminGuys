@@ -71,6 +71,6 @@ void Spark::UpdateParticle() {
 	Vector3 scale = Lerp(maxScale_, Vector3{ 0.0f,0.0f,0.0f }, particleData_.currentTime / particleData_.lifeTime);
 	plane_.worldTF.scale = scale;
 	// 色のイージング
-	int alpha = LerpF((float)jsonData_.color.A, 0.0f, particleData_.currentTime / particleData_.lifeTime);
-	plane_.material.color.A = alpha;
+	int alpha = (int)LerpF((float)jsonData_.color.A, 0.0f, particleData_.currentTime / particleData_.lifeTime);
+	plane_.material.color.A = (unsigned char)alpha;
 }

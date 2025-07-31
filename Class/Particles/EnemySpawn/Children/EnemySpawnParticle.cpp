@@ -42,7 +42,7 @@ void EnemySpawnParticle::Create(const LWP::Math::Vector3& pos) {
 	float scale = LWP::Utility::Random::GenerateFloat(jsonData_.scaleLimit.min, jsonData_.scaleLimit.max);
 	randomScale_ = { scale, scale, scale };
 	// 角度
-	particleData_.euler.z = Random::GenerateFloat(0.0f, std::numbers::pi * 2.0f);
+	particleData_.euler.z = Random::GenerateFloat(0.0f, (float)std::numbers::pi * 2.0f);
 
 #pragma region 平面に反映
 	// 色
@@ -75,5 +75,5 @@ void EnemySpawnParticle::UpdateParticle() {
 	plane_.worldTF.scale = Lerp(randomScale_, Vector3{ 0,0,0 }, particleData_.currentTime / particleData_.lifeTime);
 	// 色のイージング
 	int alpha = (int)LerpF((float)jsonData_.color.A, 0.0f, particleData_.currentTime / particleData_.lifeTime);
-	plane_.material.color.A = alpha;
+	plane_.material.color.A = (unsigned char)alpha;
 }

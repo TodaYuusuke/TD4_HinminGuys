@@ -72,5 +72,5 @@ void AuraParticle::UpdateParticle() {
 
 	// 色のイージング
 	int alpha = (int)LerpF((float)jsonData_.color.A, 0.0f, particleData_.currentTime / particleData_.lifeTime);
-	plane_.material.color.A = alpha;
+	plane_.material.color.A = (unsigned char)alpha;
 }

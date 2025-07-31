@@ -63,6 +63,12 @@ public: // メンバ関数
 public: // アクセッサ等
 
 	/// <summary>
+	/// 斬撃エフェクターのゲッター
+	/// </summary>
+	/// <returns>斬撃エフェクター本体</returns>
+	SlashEffector* GetSlashEffector() { return &slashEffector_; }
+
+	/// <summary>
 	/// コライダーマスクのセッター
 	/// </summary>
 	/// <param name="maskID">マスクするマスクID</param>
