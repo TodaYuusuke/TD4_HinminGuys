@@ -39,7 +39,18 @@ void Ogre::IdleUpdate([[maybe_unused]] std::optional<States>& req, [[maybe_unuse
 
 		//0になったら状態切り替え
 		if (stateParameter_.idleParameter.countStandTime <= 0) {
-			//間合い取り状態に移行
+
+			//スポーンラインを下回った時敵出現
+			if ((parameter_.hp <= parameter_.maxHp * stateParameter_.spawnEnemy.firstSpawnLine and
+				stateParameter_.spawnEnemy.currentCount == 0) or 
+				(parameter_.hp <= parameter_.maxHp * stateParameter_.spawnEnemy.secondSpawnLine and
+					stateParameter_.spawnEnemy.currentCount == 1)) {
+				//スポーン状態に移行
+				state_.request = States::kSpawnEnemy;
+				return;
+			}
+
+			//移動状態に移行
 			state_.request = States::kMove;
 			return;
 		}

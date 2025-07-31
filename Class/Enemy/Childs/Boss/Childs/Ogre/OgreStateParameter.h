@@ -22,6 +22,8 @@ namespace OgreState {
 		kQuadrupleAttack, //四連撃
 		kHitReaction, //ヒット演出
 		kDead, //死亡
+		kSpawnEnemy, //敵追加
+		kVoid, //空白ステート(デバッグ用)
 		kMax, //最大数
 	};
 
@@ -244,6 +246,18 @@ namespace OgreState {
 	};
 
 	/// <summary>
+	/// 敵追加パラメータ
+	/// </summary>
+	struct SpawnEnemy {
+		//現在の追加カウント
+		int32_t currentCount = 0;
+		//一回目のスポーンライン
+		float firstSpawnLine = 0.5f;
+		//二回目のスポーンライン
+		float secondSpawnLine = 0.25f;
+	};
+
+	/// <summary>
 	/// 全てのパラメータ
 	/// </summary>
 	struct StateParameter {
@@ -256,6 +270,8 @@ namespace OgreState {
 		AssaultSlash assaultSlash{};
 		QuadrupleAttack quadrupleAttack{};
 		HitReactionParameter hitReactionParameter{};
+		DeadParameter deadParameter{};
+		SpawnEnemy spawnEnemy{};
 		//押し出し半径
 		float extrusionDist = 1.0f;
 	};

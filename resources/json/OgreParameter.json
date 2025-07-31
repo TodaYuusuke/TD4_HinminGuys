@@ -28,6 +28,7 @@
             "float :FallWaitingTime": 0.5,
             "float :FallingTime": 0.30000001192092896,
             "float :GapTime": 1.0,
+            "float :JumpWaitingTime": 0.20000000298023224,
             "float :JumpingHeight": 10.0,
             "float :JumpingTime": 0.5,
             "float :StartAcceptTime": 0.07999999821186066
@@ -107,8 +108,8 @@
         },
         "Group :SwingDownAttack": {
             "Vector3 :AttackPosition": [
-                -0.5,
                 0.0,
+                1.0,
                 0.5
             ],
             "float :AttackDistance": 0.800000011920929,

@@ -113,6 +113,11 @@ void EnemyManager::Update()
 void EnemyManager::CreateEnemy(const Vector3& position, EnemyType type)
 {
 
+	//敵の数が20体以上なら発生させない
+	if (enemies_.size() >= kMaxEnemyCount_) {
+		return;
+	}
+
 	//プレイヤーが渡されていない場合、エラーメッセージを出す
 	if (not player_) {
 		MessageBox(nullptr, L"Player not set", L"EnemyManager - AddEnemy", 0);

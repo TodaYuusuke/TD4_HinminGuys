@@ -150,6 +150,7 @@
     </Manifest>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Class\Enemy\Childs\Boss\Childs\Ogre\State\OgreSpawnEnemy.cpp" />
     <ClCompile Include="Class\Particles\AttackHit\AttackHitEffect.cpp" />
     <ClCompile Include="Class\Particles\AttackHit\Children\AttackHitParticle.cpp" />
     <ClCompile Include="Class\Particles\Common\AuraParticles.cpp" />
@@ -253,7 +254,7 @@
     <ClCompile Include="Class\Particles\EnemyDead\EnemyDeadParticles.cpp" />
     <ClCompile Include="Class\Particles\Crack\CrackEffect.cpp" />
     <ClCompile Include="Class\Particles\Crack\Children\CrackPlane.cpp" />
-   <ClCompile Include="Class\World\World.cpp" />
+    <ClCompile Include="Class\World\World.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Class\Player\Player.cpp" />
     <ClCompile Include="Class\Player\Systems\Children\Move\Move.cpp" />
@@ -291,7 +292,7 @@
     <ClInclude Include="Class\Particles\SlashEffect\SlashEffector.h" />
     <ClInclude Include="Class\UI\EchoMotion.h" />
     <ClInclude Include="Class\World\World.h" />
-   <ClInclude Include="Class\Camera\CameraSystems.h" />
+    <ClInclude Include="Class\Camera\CameraSystems.h" />
     <ClInclude Include="Class\Audio\AudioPlayer.h" />
     <ClInclude Include="Class\Audio\BGMPlayer.h" />
     <ClInclude Include="Class\Audio\SEPlayer.h" />

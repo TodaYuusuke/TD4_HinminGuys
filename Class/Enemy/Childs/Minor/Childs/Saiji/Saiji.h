@@ -1,6 +1,7 @@
 #pragma once
 #include "../../Minor.h"
 #include "SaijiStateParameter.h"
+#include "../../../../../Particles/SlashEffect/SlashEffector.h"
 
 /// <summary>
 /// ダメだよぉ～才二君

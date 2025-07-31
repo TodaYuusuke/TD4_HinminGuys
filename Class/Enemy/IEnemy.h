@@ -50,6 +50,7 @@ struct EnemyAttackParameter {
 /// 敵の全体パラメータ
 /// </summary>
 struct EnemyParameter {
+	float maxHp = 10.0f; //体力最大値
 	float hp = 10.0f; //体力
 	float speed = 1.0f; //速度
 	EnemyAttackParameter attackParameter; //攻撃パラメータ
@@ -95,7 +96,10 @@ public:
 	//Worldセット
 	void SetWorld(World* world) { world_ = world; }
 	//パラメータをセット
-	void SetParameter(const EnemyParameter& parameter) { parameter_ = parameter; }
+	void SetParameter(const EnemyParameter& parameter) { 
+		parameter_ = parameter;
+		parameter_.hp = parameter_.maxHp;
+	}
 	//死亡フラグ取得
 	bool GetIsDead() const { return isDead_; }
 	//死亡フラグセット

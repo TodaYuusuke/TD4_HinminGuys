@@ -84,7 +84,7 @@ void Ogre::Initialize(Player* player, const Vector3& position, LWP::Object::Came
 		sePlayer_->PlaySE("attack_5.mp3", "hit", 1.0f);
 
 		//ステートをセット(攻撃中はリアクションしない)
-		if (not IsAttackState()) {
+		if (not IsSuperArmorState()) {
 			state_.request = States::kHitReaction;
 			//今後プレイヤーから取得する
 			SetKnockBackValue(1.0f);
@@ -92,8 +92,8 @@ void Ogre::Initialize(Player* player, const Vector3& position, LWP::Object::Came
 
 		//コライダーを一時的にオフ、クールタイム設定
 		collider_.isActive = false;
-		//プレイヤーから取得してくる
-		invincibleTime_ = player_->GetSystemManager()->GetComboTree()->GetHitStopTime();
+		//プレイヤーから取得し、0の場合が無いよう極小のクールタイムを足す
+		invincibleTime_ = player_->GetSystemManager()->GetComboTree()->GetHitStopTime() + 0.01f;
 
 		//ダメージの加算値(テスト用)
 		int plusDamage = LWP::Utility::Random::GenerateInt(0, 1000);
@@ -183,14 +183,15 @@ void Ogre::DebugGUI()
 
 }
 
-bool Ogre::IsAttackState()
+bool Ogre::IsSuperArmorState()
 {
 
 	if (state_.GetCurrentBehavior() == States::kSwingDownAttack or
 		state_.GetCurrentBehavior() == States::kRotatingSlash or
 		state_.GetCurrentBehavior() == States::kFallingThrust or
 		state_.GetCurrentBehavior() == States::kAssaultSlash or
-		state_.GetCurrentBehavior() == States::kQuadrupleAttack) {
+		state_.GetCurrentBehavior() == States::kQuadrupleAttack or
+		state_.GetCurrentBehavior() == States::kSpawnEnemy) {
 		return true;
 	}
 
@@ -280,6 +281,14 @@ void Ogre::AddStateFunc()
 	state_.init[int(States::kSpawn)] = [this](const States& pre) {SpawnInit(pre); };
 	state_.update[int(States::kSpawn)] = [this](std::optional<States>& req, const States& pre) {SpawnUpdate(req, pre); };
 	state_.finalize[int(States::kSpawn)] = [this](const States& pre) {SpawnFinalize(pre); };
+
+	state_.init[int(States::kSpawnEnemy)] = [this](const States& pre) {SpawnEnemyInit(pre); };
+	state_.update[int(States::kSpawnEnemy)] = [this](std::optional<States>& req, const States& pre) {SpawnEnemyUpdate(req, pre); };
+	state_.finalize[int(States::kSpawnEnemy)] = [this](const States& pre) {SpawnEnemyFinalize(pre); };
+
+	state_.init[int(States::kSpawnEnemy)] = [this](const States& pre) {VoidInit(pre); };
+	state_.update[int(States::kSpawnEnemy)] = [this](std::optional<States>& req, const States& pre) {VoidUpdate(req, pre); };
+	state_.finalize[int(States::kSpawnEnemy)] = [this](const States& pre) {VoidFinalize(pre); };
 
 }
 
@@ -380,4 +389,16 @@ void Ogre::EndHeavyAttack()
 		nextAttackState_ = States::kRotatingSlash;
 	}
 
+}
+
+void Ogre::VoidInit(const OgreState::States& pre)
+{
+}
+
+void Ogre::VoidUpdate(std::optional<OgreState::States>& req, const OgreState::States& pre)
+{
+}
+
+void Ogre::VoidFinalize(const OgreState::States& pre)
+{
 }
