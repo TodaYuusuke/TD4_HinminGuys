@@ -12,11 +12,11 @@ private: // サブクラス
 	/// 斬撃エフェクトデータ構造体
 	/// </summary>
 	struct SlashEffectData {
-		LWP::Primitive::SequenceSurface* plane; // 平面本体
-		LWP::Math::Vector3 offset;				// 親子付け時に使用するオフセット値
-		LWP::Utility::DeltaTimer aliveTimer;	// 生存時間タイマー
-		int frame			= 0;				// フレーム
-		bool isEnd			= false;			// 終了トリガー
+		LWP::Primitive::SequenceSurface* plane{};	// 平面本体
+		LWP::Math::Vector3 offset{};				// 親子付け時に使用するオフセット値
+		LWP::Utility::DeltaTimer aliveTimer{};		// 生存時間タイマー
+		int frame			= 0;					// フレーム
+		bool isEnd			= false;				// 終了トリガー
 	};
 
 public:	// コンストラクタ等
@@ -49,8 +49,8 @@ public: // メンバ関数
 	/// <param name="scale">大きさ</param>
 	/// <param name="playTime">再生秒数</param>
 	/// <param name="offset">（任意）親子付け時のオフセット値</param>
-	void Create(const LWP::Math::Vector3& pos, const LWP::Math::Quaternion& rotate, const LWP::Math::Vector3& scale, const float playTime, const LWP::Math::Vector3& offset = {0.0f, 0.0f, 0.0f});
-
+	/// <param name="color">（任意）軌跡の色</param>
+	void Create(const LWP::Math::Vector3& pos, const LWP::Math::Quaternion& rotate, const LWP::Math::Vector3& scale, const float playTime, const LWP::Math::Vector3& offset = { 0.0f, 0.0f, 0.0f }, const LWP::Utility::Color& color = { 255, 255, 255, 255 });;
 	/// <summary>
 	/// デバッグ用GUI関数
 	/// </summary>
@@ -69,6 +69,12 @@ public: // アクセッサ等
 	/// </summary>
 	void DeleteParentTF() { parentTF = nullptr; }
 
+	/// <summary>
+	/// 軌跡色のセッター
+	/// </summary>
+	/// <param name="color">指定する軌跡の色</param>
+	void SetColor(const LWP::Utility::Color& color) { color_ = color; }
+
 private: // メンバ変数
 
 	// 斬撃エフェクト
@@ -83,6 +89,9 @@ private: // メンバ変数
 
 	// 親子付け対象ワールドトランスフォーム
 	LWP::Object::TransformQuat* parentTF = nullptr;
+
+	// 斬撃エフェクトの色
+	LWP::Utility::Color color_{};
 
 	#pragma region デバッグ用変数
 

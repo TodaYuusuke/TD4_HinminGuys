@@ -51,7 +51,7 @@ void Chain::Initialize() {
 		// 終点
 		else {
 			Vector3 dir = (endPos_ - startPos_).Normalize();
-			pointMass.model.worldTF.translation = startPos_ - dir * i * segmentLength;
+			pointMass.model.worldTF.translation = startPos_ - dir * (float)i * segmentLength;
 		}
 		pointMassList_.push_back(pointMass);
 
@@ -96,8 +96,8 @@ void Chain::Update() {
 	}
 
 	for (PointMass& pointMass : pointMassList_) {
-		if (pointMass.model.worldTF.translation.y <= 0.0f) {
-			pointMass.model.worldTF.translation.y = std::clamp<float>(pointMass.model.worldTF.translation.y, 0.0f, 10000.0f);
+		if (pointMass.model.worldTF.translation.y <= 0.1f) {
+			pointMass.model.worldTF.translation.y = std::clamp<float>(pointMass.model.worldTF.translation.y, 0.1f, 10000.0f);
 		}
 	}
 }

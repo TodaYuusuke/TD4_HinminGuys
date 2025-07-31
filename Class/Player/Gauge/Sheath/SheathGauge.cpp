@@ -91,7 +91,7 @@ void SheathGauge::DebugGUI() {
 
 void SheathGauge::StartIncreaseGauge() {
 	// 半透明にする
-	sprite_["SheathBar"].material.color.A = 120.0f;
+	sprite_["SheathBar"].material.color.A = (unsigned char)120.0f;
 	isIncrease_ = true;
 	t_ = 0.0f;
 }
@@ -103,7 +103,7 @@ void SheathGauge::IncreaseGauge() {
 	}
 
 	if (!isIncrease_) { 
-		sprite_["SheathBar"].material.color.A = 255.0f;
+		sprite_["SheathBar"].material.color.A = (unsigned char)255.0f;
 		return; 
 	}
 

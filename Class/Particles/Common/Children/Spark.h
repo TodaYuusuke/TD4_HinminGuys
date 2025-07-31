@@ -55,4 +55,6 @@ private:
 
 	// 外部で調整するデータ
 	SparkJsonData jsonData_;
+
+	LWP::Math::Vector3 maxScale_;
 };

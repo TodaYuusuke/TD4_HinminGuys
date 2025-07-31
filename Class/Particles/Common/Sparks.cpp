@@ -71,6 +71,7 @@ void Sparks::SetJsonData(LWP::Utility::JsonIO& json) {
 void Sparks::Add(int value) {
 	for (int i = 0; i < value; i++) {
 		Spark* p = new Spark(texName_);
+		p->SetParticleData(GetParticleData());
 		p->SetSparkJsonData(jsonData_);
 		p->Create(emitterPos_);
 		particles_.push_back(p);

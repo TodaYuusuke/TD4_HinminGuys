@@ -8,6 +8,7 @@ class AttackHitEffect : public IParticles {
 public:
 	struct AttackHitEffectJsonData {
 		AttackHitParticle::AttackHitParticleJsonData attackHitParticle;
+		LimitF CreatePosOffset;
 		int sparkCount;
 		int attackHitParticleCount;
 	};

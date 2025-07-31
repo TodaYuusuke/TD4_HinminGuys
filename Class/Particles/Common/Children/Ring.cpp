@@ -45,6 +45,6 @@ void Ring::UpdateParticle() {
 		// 徐々に大きくなる
 		plane_.worldTF.scale = Lerp(Vector3{ 0,0,0 }, jsonData_.maxScale, Easing::OutExpo(particleData_.currentTime / particleData_.lifeTime));
 		// 徐々に透明になる
-		plane_.material.color.A = LerpF(255, 0, Easing::OutExpo(particleData_.currentTime / particleData_.lifeTime));
+		plane_.material.color.A = (unsigned char)LerpF(255, 0, Easing::OutExpo(particleData_.currentTime / particleData_.lifeTime));
 	}
 }

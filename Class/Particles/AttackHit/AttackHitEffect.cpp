@@ -39,6 +39,11 @@ void AttackHitEffect::JsonDebugGui() {
 }
 
 void AttackHitEffect::SetJsonData(LWP::Utility::JsonIO& json) {
+	json.BeginGroup("CreatePosOffset");
+	json.AddValue<float>("Max", &jsonData_.CreatePosOffset.max);
+	json.AddValue<float>("Min", &jsonData_.CreatePosOffset.min);
+	json.EndGroup();
+
 #pragma region Spark
 	json.BeginGroup("Spark");
 	sparks_->SetJsonData(json);
@@ -84,6 +89,11 @@ void AttackHitEffect::SetJsonData(LWP::Utility::JsonIO& json) {
 
 void AttackHitEffect::SetJsonData() {
 	json_.Init("AttackHitEffect.json");
+	json_.BeginGroup("CreatePosOffset");
+	json_.AddValue<float>("Max", &jsonData_.CreatePosOffset.max);
+	json_.AddValue<float>("Min", &jsonData_.CreatePosOffset.min);
+	json_.EndGroup();
+
 #pragma region Spark
 	json_.BeginGroup("Spark");
 	sparks_->SetJsonData(json_);
@@ -130,12 +140,19 @@ void AttackHitEffect::SetJsonData() {
 }
 
 void AttackHitEffect::Add(const Vector3& pos) {
+	// 生成時の座標をずらす
+	Vector3 createPos = {
+		LWP::Utility::Random::GenerateFloat(jsonData_.CreatePosOffset.min, jsonData_.CreatePosOffset.max),
+		LWP::Utility::Random::GenerateFloat(jsonData_.CreatePosOffset.min, jsonData_.CreatePosOffset.max),
+		LWP::Utility::Random::GenerateFloat(jsonData_.CreatePosOffset.min, jsonData_.CreatePosOffset.max)
+	};
+
 	// 攻撃ヒット時の丸いパーティクル
 	for (int i = 0; i < jsonData_.attackHitParticleCount; i++) {
 		AttackHitParticle* p = new AttackHitParticle("Effect/Particle.png");
 		p->SetAttackHitParticleJsonData(jsonData_.attackHitParticle);
-		p->Create(pos);
+		p->Create(pos + createPos);
 		particles_.push_back(p);
 	}
-	sparks_->Add(jsonData_.sparkCount, pos);
+	sparks_->Add(jsonData_.sparkCount, pos + createPos);
 }

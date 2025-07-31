@@ -15,6 +15,16 @@ GameScene::GameScene()
 	particles_(&player_, &followCamera_)
 {
 	enemyManager_.Initialize();
+	LWP::Resource::LoadTexture("Effect/Particle.png");
+	LWP::Resource::LoadTexture("Effect/Spark.png");
+	LWP::Resource::LoadTexture("Effect/SwordSlash.png");
+	LWP::Resource::LoadTexture("Effect/CircleParticle.png");
+	LWP::Resource::LoadTexture("Effect/ParryFlash.png");
+	LWP::Resource::LoadTexture("Effect/Rock.png");
+	LWP::Resource::LoadTexture("Effect/Smoke.png");
+	LWP::Resource::LoadTexture("Effect/Crack.png");
+	LWP::Resource::LoadTexture("UI/ButtonUI/LockOn.png");
+	LWP::Resource::LoadTexture("lockOnReticle.png");
 }
 
 GameScene::~GameScene() {
@@ -65,6 +75,7 @@ void GameScene::Initialize() {
 	player_.Initialize();
 	player_.SetSEPlayer(&sePlayer_);
 	player_.SetParticles(&particles_);
+	player_.SetWorld(&world_);
 
 	//ダメージエフェクトエミッターを生成
 	damageEffectEmitter_.Initialize();

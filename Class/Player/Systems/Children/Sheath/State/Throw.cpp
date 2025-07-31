@@ -34,8 +34,6 @@ Throw::Throw(Sheath* sheathSystem, Player* player, std::map<int, EventOrder>* ev
 
 Throw::~Throw() {
 	ghostTrail_.reset();
-	// 浮遊パーティクル生成
-	sheathSystem_->CreateFloatParticle();
 }
 
 void Throw::Initialize() {
@@ -75,6 +73,10 @@ void Throw::Command() {
 		isActive_ = true;
 		sheathSystem_->SetIsActive(true);
 
+		// 鞘の座標
+		// 演出用
+		sheathSystem_->SetSheathPos(player_->GetWorldTF()->GetWorldPosition());
+
 		// 鞘ゲージの減少量設定(鞘自体の攻撃力参照)
 		player_->GetParameter()->sheathDamegeStrength_ = sheathSystem_->jsonData_.sheathAttackValue;
 		// 攻撃力設定
@@ -105,14 +107,17 @@ void Throw::Reset() {
 	sheathSystem_->SetIsActive(false);
 	// 鞘攻撃の当たり判定をなくす
 	player_->GetSystemManager()->GetSheathAttackCollision().isActive = false;
+	// 鞘の当たり判定をなくす
+	player_->GetSystemManager()->GetSheathCollision().isActive = false;
 	(*eventOrders_)[(int)Sheath::SheathState::kThrow].Reset();
+	// 鞘の攻撃判定多重回避リストの初期化
+	sheathSystem_->ClearHitTargetNames();
 
 	// 残像トレイル
 	ghostTrail_->Reset();
 
 	// 鎖
 	sheathSystem_->GetChain()->Reset();
-
 	velocity_ = { 0,0,0 };
 	start_ = { 0,0,0 };
 	end_ = { 0,0,0 };

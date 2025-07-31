@@ -55,7 +55,7 @@ void SlashEffector::Update()
 	}
 }
 
-void SlashEffector::Create(const LWP::Math::Vector3& pos, const LWP::Math::Quaternion& rotate, const LWP::Math::Vector3& scale, const float playTime, const LWP::Math::Vector3& offset)
+void SlashEffector::Create(const Math::Vector3& pos, const Math::Quaternion& rotate, const Math::Vector3& scale, const float playTime, const Math::Vector3& offset, const Utility::Color& color)
 {
 	// エフェクトデータ生成
 	SlashEffectData* effect = new SlashEffectData();
@@ -65,7 +65,7 @@ void SlashEffector::Create(const LWP::Math::Vector3& pos, const LWP::Math::Quate
 	effect->plane->LoadTexture(texName_);
 
 	// 座標設定
-	if(parentTF != nullptr){ effect->plane->worldTF.Parent(parentTF); }
+	if (parentTF != nullptr) { effect->plane->worldTF.Parent(parentTF); }
 
 	effect->plane->worldTF.translation = pos;
 	effect->plane->worldTF.rotation = rotate;
@@ -74,6 +74,14 @@ void SlashEffector::Create(const LWP::Math::Vector3& pos, const LWP::Math::Quate
 	effect->plane->SetSplitSize(frameSize_);
 	// 生存時間タイマー開始
 	effect->aliveTimer.Start(playTime);
+	
+	// 引数のカラーが変更されていない場合エフェクターが指定した色を参照する
+	if (color.GetVector4().x == 1.0f && color.GetVector4().y == 1.0f && color.GetVector4().z == 1.0f && color.GetVector4().w == 1.0f) {
+		effect->plane->material.color = color_;
+	}
+	else {
+		effect->plane->material.color = color;
+	}
 
 	// オフセット値の取得
 	effect->offset = offset;

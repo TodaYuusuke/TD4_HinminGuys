@@ -28,6 +28,7 @@ struct ParticleJsonData {
 struct ParticleData {
 	LWP::Primitive::IPlane* plane;
 	LWP::Math::Vector3 vel;					// 速度
+	LWP::Math::Vector3 dirVec;				// 方向ベクトル
 	LWP::Math::Vector3 euler;				// オイラー角
 	float multiply;
 	float lifeTime;							// 生存時間

@@ -15,6 +15,7 @@
 #include "../Components/HitStopController.h"
 #include "../UI/UIManager.h"
 #include "../Audio/SEPlayer.h"
+#include "../World/World.h"
 #include <memory>
 
 class IEnemy;
@@ -226,6 +227,11 @@ public:// Getter,Setter
 	/// <param name="particles"></param>
 	void SetParticles(Particles* particles) { particles_ = particles; }
 	/// <summary>
+	/// 世界共通のルールをまとめるクラスのアドレスを設定
+	/// </summary>
+	/// <param name="world"></param>
+	void SetWorld(World* world) { world_ = world; }
+	/// <summary>
 	/// 向いている方向を設定
 	/// </summary>
 	/// <param name="quat">向かせる方向(クォータニオン)</param>
@@ -290,6 +296,8 @@ private:// 外部からポインタをもらう変数
 	HitStopController* hitStopController_;
 	// 効果音
 	SEPlayer* SEPlayer_;
+	//世界共通のルールをまとめるクラス
+	World* world_;
 
 private:
 	LWP::Utility::JsonIO json_;

@@ -31,6 +31,8 @@ SwordDrawn::SwordDrawn(Sheath* sheathSystem, Player* player, std::map<int, Event
 
 	// オーラ生成
 	sheathSystem_->GetAuraParticles()->Start(true, sheathSystem_->GetSheathWorldTF()->GetWorldPosition());
+	// 浮遊パーティクル生成
+	sheathSystem_->CreateFloatParticle();
 }
 
 SwordDrawn::~SwordDrawn() {

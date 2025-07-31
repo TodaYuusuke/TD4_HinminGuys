@@ -38,21 +38,14 @@ Sheath::Sheath(LWP::Object::Camera* camera, Player* player) {
 		[this](LWP::Object::Collision* hitTarget) {
 			// 鞘が破壊されているなら処理しない
 			if (isBreak_) { return; }
-			if (!hitTargetNames_.empty()) { return; }
+			if (!hitTargetNames_.empty()) { return; }// 一度誰かと衝突したことがあるなら早期リターン
 			hitTargetNames_.push_back(hitTarget->name);
-			//// 一度当たった相手なら処理しない
-			//bool isReturn = false;
-			//for (std::string& hitTargetName : hitTargetNames_) {
-			//	if (hitTargetName == hitTarget->name) { 
-			//		isReturn = true;
-			//		break;
-			//	}
-			//}
-			//if (isReturn) { return; }
 
 			// 鞘のゲージを減少
 			player_->TakeSheathDamage(player_->GetParameter()->GetCurrentSheathDamageStrength());
 		});
+	// 鞘の当たり判定を演出用の鞘に追従させる
+	player_->GetSystemManager()->GetSheathCollision().worldTF.Parent(&sheathModel_.worldTF);
 
 	// 浮遊パーティクル
 	floatParticle_ = std::make_unique<FloatParticle>(player_);
@@ -88,6 +81,11 @@ void Sheath::Update() {
 	chain_->SetStartPos(player_->GetSwordModel()->GetJointWorldPosition("Grip")); 
 	chain_->SetEndPos(sheathModel_.GetJointWorldPosition("Sheath"));
 	chain_->Update();
+
+	// 鞘破壊されたら鞘モデルを非表示
+	if (player_->GetParameter()->GetIsSheathBreak()) {
+		player_->SetIsSheathModelActive(false);
+	}
 
 	if (!isActive_) { return; }
 
@@ -182,6 +180,10 @@ void Sheath::DebugGUI() {
 
 		ImGui::DragFloat3("Velocity", &velocity_.x);
 		ImGui::DragFloat3("Radian", &radian_.x);
+		int size = (int)hitTargetNames_.size();
+		ImGui::DragInt("HitTargetNames", &size);
+		bool is = player_->GetSystemManager()->GetSheathCollision().isActive;
+		ImGui::Checkbox("IsSheathCollision", &is);
 
 		ImGui::Checkbox("IsEvasion", &isActive_);
 

@@ -222,18 +222,6 @@ void Evasion::CheckEvasionState() {
 			0.0f,
 			false
 		};
-
-		// 入力が何もなかったら後ろに回避
-		if (dir.Length() == 0.0f) {
-			isBackStep_ = true;
-		}
-		else {
-			isBackStep_ = false;
-		}
-
-		if (isBackStep_) {
-			easeData_.end = -1.0f * jsonData_.evasionMovement * Matrix4x4::CreateRotateXYZMatrix(player_->GetSystemManager()->GetQuat());
-		}
 	}
 	// 無敵時間
 	else if (eventOrders_[(int)EventOrderState::kAcceleration].GetCurrentTimeEvent().name == "AccelerationTime") {
@@ -293,10 +281,5 @@ void Evasion::Move() {
 
 	// 移動ベクトルから体の向きを算出
 	// 移動速度からラジアンを求める
-	if (!isBackStep_) {
-		radian_.y = LWP::Utility::GetRadian(LWP::Math::Vector3{ 0,0,1 }, velocity_.Normalize(), LWP::Math::Vector3{ 0,1,0 });
-	}
-	else {
-		radian_.y = LWP::Utility::GetRadian(LWP::Math::Vector3{ 0,0,1 }, -1.0f*velocity_.Normalize(), LWP::Math::Vector3{ 0,1,0 });
-	}
+	radian_.y = LWP::Utility::GetRadian(LWP::Math::Vector3{ 0,0,1 }, velocity_.Normalize(), LWP::Math::Vector3{ 0,1,0 });
 }

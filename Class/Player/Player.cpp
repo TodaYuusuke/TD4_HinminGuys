@@ -123,6 +123,8 @@ void Player::DebugGUI() {
 void Player::TakeDamage(const float& damageValue) {
 	// 自機が無敵中ならダメージ判定をとらない
 	if (!collider_.isActive) { return; }
+	particles_->CreateAttackHitEffect(model_.worldTF.GetWorldPosition() + Vector3{ 0.0f, 0.5f, 0.0f });
+
 	// 全ての機能をリセット
 	Reset();
 	// HPゲージ変動
@@ -173,6 +175,17 @@ void Player::InvinsibleUpdate() {
 }
 
 void Player::LimitMoveArea() {
+	// ステージの移動制限
+	Vector2 posizionXZ = Vector2{ model_.worldTF.translation.x, model_.worldTF.translation.z };
+	float dist = posizionXZ.Length();
+	//制限範囲を超える場合
+	if (dist > world_->GetWorldLimitRadius()) {
+		//中心からの向きを取得し、制限範囲まで伸ばしたところに移動
+		posizionXZ = posizionXZ.Normalize() * world_->GetWorldLimitRadius();
+		model_.worldTF.translation.x = posizionXZ.x;
+		model_.worldTF.translation.z = posizionXZ.y;
+	}
+
 	// 鞘を投げた後鞘を中心に移動制限をかける(円形)
 	if (systemManager_->GetSheathSystem()->GetSheathState()->GetStateName() == "SwordDrawn") {
 		systemManager_->GetSheathSystem()->ClampToCircle(model_.worldTF.translation);
