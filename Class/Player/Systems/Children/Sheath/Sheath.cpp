@@ -82,6 +82,11 @@ void Sheath::Update() {
 	chain_->SetEndPos(sheathModel_.GetJointWorldPosition("Sheath"));
 	chain_->Update();
 
+	// 鞘破壊されたら鞘モデルを非表示
+	if (player_->GetParameter()->GetIsSheathBreak()) {
+		player_->SetIsSheathModelActive(false);
+	}
+
 	if (!isActive_) { return; }
 
 	// 状態
