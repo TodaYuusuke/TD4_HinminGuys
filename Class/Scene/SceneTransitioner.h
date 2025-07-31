@@ -8,6 +8,7 @@ enum class SceneName {
 	kTitle, //タイトル
 	kGameScene, //ゲームシーン
 	kGameOver, //ゲームオーバー
+	kGameClear, //ゲームクリア
 	kMax
 };
 

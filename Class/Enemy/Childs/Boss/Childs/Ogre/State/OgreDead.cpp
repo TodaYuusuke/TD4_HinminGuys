@@ -23,7 +23,8 @@ void Ogre::DeadUpdate(std::optional<States>& req, const States& pre)
 	if (not animation_.GetPlaying()) {
 		//死亡フラグを立てる
 		isDead_ = true;
-
+		//クリアフラグをオンにする
+		enemyManager_->SetIsDefeatedOgre(true);
 	}
 
 }

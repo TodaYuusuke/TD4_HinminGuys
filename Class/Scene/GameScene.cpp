@@ -29,6 +29,9 @@ GameScene::GameScene()
 
 GameScene::~GameScene() {
 	enemyManager_.Finalize();
+	//BGM停止
+	bgmPlayer_.Stop("Battle");
+
 }
 
 // 初期化
@@ -99,7 +102,8 @@ void GameScene::Initialize() {
 
 	//シーン切り替え機能生成
 	sceneTransitioner_.Initialize(this);
-
+	//BGM再生
+	bgmPlayer_.PlayBGM("BattleBGM.mp3", "Battle", 0.5f);
 
 	//testBillboard_.Init();
 }
@@ -108,7 +112,7 @@ void GameScene::Initialize() {
 void GameScene::Update() {
 	//testBillboard_.Update();
 	//シーン遷移が終わった時点でウェーブを開始していない場合、ウェーブを開始
-	if (not sceneTransitioner_.GetIsSceneChange() and not enemyManager_.GetIsDefeatedAllEnemy() and
+	if (not sceneTransitioner_.GetIsSceneChange() and not enemyManager_.GetIsDefeatedOgre() and
 		not enemyManager_.GetIsStartWave()) {
 
 #ifdef _DEBUG
@@ -120,13 +124,13 @@ void GameScene::Update() {
 	}
 
 	//全ての敵が倒されたらシーン遷移する
-	if (enemyManager_.GetIsDefeatedAllEnemy()) {
+	if (enemyManager_.GetIsDefeatedOgre()) {
 		//遷移先をタイトルにセット
-		sceneTransitioner_.SetNextScene(SceneName::kTitle);
+		sceneTransitioner_.SetNextScene(SceneName::kGameClear);
 		sceneTransitioner_.SceneTransitionStart();
 	}
 	//全員倒す前にプレイヤーが死んだ場合、ゲームオーバーに逝こう！
-	else if (not enemyManager_.GetIsDefeatedAllEnemy() and not player_.GetIsAlive()) {
+	else if (not enemyManager_.GetIsDefeatedOgre() and not player_.GetIsAlive()) {
 		//遷移先をゲームオーバーにセット
 		sceneTransitioner_.SetNextScene(SceneName::kGameOver);
 		sceneTransitioner_.SceneTransitionStart();

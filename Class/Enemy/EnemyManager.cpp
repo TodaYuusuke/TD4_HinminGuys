@@ -11,7 +11,7 @@ void EnemyManager::Initialize()
 	//リストをクリア
 	ClearList();
 	spawnPoint_ = { 0.0f,0.0f,0.0f };
-	isDefeatedAllEnemy_ = false;
+	isDefeatedOgre_ = false;
 	isStartWave_ = false;
 
 	saijiParameter_.InitJson();
@@ -414,7 +414,7 @@ void EnemyManager::EndGame()
 	//ウェーブ開始フラグを降ろす
 	isStartWave_ = false;
 	//全ての敵が倒されたフラグを立てる
-	isDefeatedAllEnemy_ = true;
+	isDefeatedOgre_ = true;
 
 }
 

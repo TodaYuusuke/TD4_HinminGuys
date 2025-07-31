@@ -286,9 +286,9 @@ void Ogre::AddStateFunc()
 	state_.update[int(States::kSpawnEnemy)] = [this](std::optional<States>& req, const States& pre) {SpawnEnemyUpdate(req, pre); };
 	state_.finalize[int(States::kSpawnEnemy)] = [this](const States& pre) {SpawnEnemyFinalize(pre); };
 
-	state_.init[int(States::kSpawnEnemy)] = [this](const States& pre) {VoidInit(pre); };
-	state_.update[int(States::kSpawnEnemy)] = [this](std::optional<States>& req, const States& pre) {VoidUpdate(req, pre); };
-	state_.finalize[int(States::kSpawnEnemy)] = [this](const States& pre) {VoidFinalize(pre); };
+	state_.init[int(States::kVoid)] = [this](const States& pre) {VoidInit(pre); };
+	state_.update[int(States::kVoid)] = [this](std::optional<States>& req, const States& pre) {VoidUpdate(req, pre); };
+	state_.finalize[int(States::kVoid)] = [this](const States& pre) {VoidFinalize(pre); };
 
 }
 

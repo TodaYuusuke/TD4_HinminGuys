@@ -58,7 +58,9 @@ public:
 	/// <returns></returns>
 	const EnemyAttackParameter& GetEnemyAttackParameter(const std::string& name) const;
 	//全ての敵が倒されたフラグ
-	bool GetIsDefeatedAllEnemy() const { return isDefeatedAllEnemy_; }
+	bool GetIsDefeatedOgre() const { return isDefeatedOgre_; }
+	//翁雅が倒された時にセットする
+	void SetIsDefeatedOgre(bool flag) { isDefeatedOgre_ = flag; }
 	//ウェーブ開始させる
 	void StartWave();
 	//誰か一人でも攻撃しているかどうか
@@ -139,7 +141,7 @@ private:
 	//ウェーブを開始するかどうか
 	bool isStartWave_ = false;
 	//全ての敵が倒されたフラグ
-	bool isDefeatedAllEnemy_ = false;
+	bool isDefeatedOgre_ = false;
 
 };
 
