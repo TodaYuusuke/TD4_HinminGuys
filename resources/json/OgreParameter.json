@@ -42,6 +42,13 @@
             "float :StealthWaitingTime": 1.0,
             "float :WaitingTime": 0.699999988079071
         },
+        "Group :Dead": {
+            "float :BackEndFirst": 0.20000000298023224,
+            "float :BackEndSecond": 0.3799999952316284,
+            "float :BackStartFirst": 0.125,
+            "float :BackStartSecond": 0.3199999928474426,
+            "float :StepBackSpeed": -1.5
+        },
         "Group :FallingThrust": {
             "Vector3 :AttackPosition": [
                 0.0,

@@ -268,7 +268,15 @@ namespace OgreState {
 	/// </summary>
 	struct DeadParameter {
 		//後ろに下がる速度
-		float stepBackSpeed = 0.5f;
+		float stepBackSpeed = -0.5f;
+		//後退開始
+		float backStartF = 0.15f;
+		//後退終了
+		float backEndF = 0.25f;
+		//後退開始2
+		float backStartS = 0.35f;
+		//後退終了2
+		float backEndS = 0.45f;
 	};
 
 	/// <summary>

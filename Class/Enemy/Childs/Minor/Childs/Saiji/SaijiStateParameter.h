@@ -24,6 +24,24 @@ namespace SaijiState {
 	};
 
 	/// <summary>
+	/// 斬撃エフェクト用設定値
+	/// </summary>
+	struct SlashEffectParam {
+		//生成座標
+		LWP::Math::Vector3 position{};
+		//回転角
+		LWP::Math::Vector3 rotate{};
+		//スケール
+		LWP::Math::Vector3 scale{};
+		//表示時間
+		float playTime = 1.0f;
+		//オフセット
+		LWP::Math::Vector3 offset{};
+		//色
+		LWP::Utility::Color color{};
+	};
+
+	/// <summary>
 	/// 出現パラメータ
 	/// </summary>
 	struct SpawnParameter {

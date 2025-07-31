@@ -113,7 +113,10 @@ public:
 	//回転取得
 	const Quaternion& GetRotation() const { return model_.worldTF.rotation; }
 	//回転セット
-	void SetRotation(const Quaternion& rotation) { model_.worldTF.rotation = rotation; }
+	void SetRotation(const Quaternion& rotation) { 
+		model_.worldTF.rotation = rotation;
+		forward_ = rotation;
+	}
 	//プレイヤーの座標取得
 	Vector3 GetPlayerPosition();
 	//アニメーション切り替え
@@ -206,6 +209,8 @@ protected:
 	World* world_;
 	//敵個別のパラメータ
 	EnemyParameter parameter_;
+	//正面向き
+	Quaternion forward_;
 	//互いに距離を取るときの反発力
 	Vector3 repulsiveForce_{};
 	//ノックバック力
