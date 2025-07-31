@@ -76,6 +76,14 @@ void Ogre::SwingDownAttackUpdate([[maybe_unused]] std::optional<States>& req, [[
 	else if (IsExitParryEffect()) {
 		currentMotionSpeed_ = 1.0f;
 		animation_.GetPlayBackSpeed() = currentMotionSpeed_;
+		//斬撃エフェクト生成
+		Quaternion GenerateRotate{};
+		GenerateRotate = Quaternion::CreateFromAxisAngle({ 1.0f, 0.0f, 0.0f }, GetSwingDownAttack().effectParam.rotate.x)
+			* Quaternion::CreateFromAxisAngle({ 0.0f, 1.0f, 0.0f }, GetSwingDownAttack().effectParam.rotate.y)
+			* Quaternion::CreateFromAxisAngle({ 0.0f, 0.0f, 1.0f }, GetSwingDownAttack().effectParam.rotate.z);
+		slashEffector_.Create(GetSwingDownAttack().effectParam.position, GenerateRotate,
+			GetSwingDownAttack().effectParam.scale, GetSwingDownAttack().effectParam.playTime,
+			GetSwingDownAttack().effectParam.offset, GetSwingDownAttack().effectParam.color);
 	}
 
 	//攻撃受付時間を超過したら判定オフ

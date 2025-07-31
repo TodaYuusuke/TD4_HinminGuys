@@ -123,6 +123,14 @@ void Ogre::AssaultSlashUpdate([[maybe_unused]] std::optional<States>& req, [[may
 		else if (IsExitParryEffect()) {
 			currentMotionSpeed_ = 1.0f;
 			animation_.GetPlayBackSpeed() = currentMotionSpeed_;
+			//斬撃エフェクト生成
+			Quaternion GenerateRotate{};
+			GenerateRotate = Quaternion::CreateFromAxisAngle({ 1.0f, 0.0f, 0.0f }, GetAssaultSlash().effectParam.rotate.x)
+				* Quaternion::CreateFromAxisAngle({ 0.0f, 1.0f, 0.0f }, GetAssaultSlash().effectParam.rotate.y)
+				* Quaternion::CreateFromAxisAngle({ 0.0f, 0.0f, 1.0f }, GetAssaultSlash().effectParam.rotate.z);
+			slashEffector_.Create(GetAssaultSlash().effectParam.position, GenerateRotate,
+				GetAssaultSlash().effectParam.scale, GetAssaultSlash().effectParam.playTime,
+				GetAssaultSlash().effectParam.offset, GetAssaultSlash().effectParam.color);
 		}
 
 		//待機中
@@ -151,7 +159,7 @@ void Ogre::AssaultSlashUpdate([[maybe_unused]] std::optional<States>& req, [[may
 			aabbAttackCollider_.isActive = true;
 #ifdef _DEBUG
 			aabbAttack_.isShowWireFrame = true;
-			box_.isActive = true;
+			box_.isActive = false;
 #endif // _DEBUG
 		}
 

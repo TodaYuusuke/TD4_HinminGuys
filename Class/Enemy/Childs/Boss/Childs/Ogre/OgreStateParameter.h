@@ -28,6 +28,24 @@ namespace OgreState {
 	};
 
 	/// <summary>
+	/// 斬撃エフェクト用設定値
+	/// </summary>
+	struct SlashEffectParam {
+		//生成座標
+		LWP::Math::Vector3 position{};
+		//回転角
+		LWP::Math::Vector3 rotate{};
+		//スケール
+		LWP::Math::Vector3 scale{};
+		//表示時間
+		float playTime = 1.0f;
+		//オフセット
+		LWP::Math::Vector3 offset{};
+		//色
+		LWP::Utility::Color color{};
+	};
+
+	/// <summary>
 	/// 出現パラメータ
 	/// </summary>
 	struct SpawnParameter {
@@ -119,6 +137,8 @@ namespace OgreState {
 		AttackData attackData{};
 		//移動方向
 		LWP::Math::Vector3 attackDirection{};
+		//斬撃エフェクトパラメータ
+		SlashEffectParam effectParam{};
 		//攻撃の強さ
 		AttackStrength attackStrength = AttackStrength::kLight;
 	};
@@ -129,6 +149,8 @@ namespace OgreState {
 	struct RotatingSlash {
 		//攻撃発生時間に関するデータ
 		AttackData attackData{};
+		//斬撃エフェクトパラメータ
+		SlashEffectParam effectParam{};
 		//攻撃の強さ
 		AttackStrength attackStrength = AttackStrength::kLight;
 	};
@@ -171,6 +193,8 @@ namespace OgreState {
 	struct AssaultSlash {
 		//攻撃発生時間に関するデータ
 		AttackData attackData{};
+		//斬撃エフェクトパラメータ
+		SlashEffectParam effectParam{};
 		//攻撃回数
 		int32_t maxAttackCount = 5;
 		//現在の攻撃回数
@@ -221,6 +245,8 @@ namespace OgreState {
 		int32_t currentAttackCount = 0;
 		//攻撃発生時間に関するデータ
 		std::array<AttackData, kMaxAttackCount> multipleAttackData{};
+		//斬撃エフェクトパラメータ
+		std::array<SlashEffectParam, kMaxAttackCount> effectParam{};
 		//次の攻撃モーション名
 		std::array<std::string, kMaxAttackCount> nextAttackName{ "Slash", "RushSlash", "Slash", "RotatingSlash" };
 		//移動方向

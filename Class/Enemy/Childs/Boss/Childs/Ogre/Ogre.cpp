@@ -11,7 +11,8 @@ using namespace OgreState;
 Ogre::Ogre(OgreState::StateParameter& stateParameter) :
 	configParameter_(stateParameter),
 	sphere_(sphereCollider_.SetBroadShape(LWP::Object::Collider::Sphere())),
-	aabbAttack_(aabbAttackCollider_.SetBroadShape(LWP::Object::Collider::AABB()))
+	aabbAttack_(aabbAttackCollider_.SetBroadShape(LWP::Object::Collider::AABB())),
+	slashEffector_("Effect/SwordSlash.png", { 256.0f, 256.0f }, 26)
 {
 
 	stateParameter_ = stateParameter;
@@ -122,6 +123,8 @@ void Ogre::Initialize(Player* player, const Vector3& position, LWP::Object::Came
 		nextAttackState_ = States::kRotatingSlash;
 	}
 
+	slashEffector_.SetParentTF(&model_.worldTF);
+
 }
 
 void Ogre::Update()
@@ -164,6 +167,9 @@ void Ogre::Update()
 	//現在の状態を更新
 	state_.Update();
 
+	//エフェクト更新
+	slashEffector_.Update();
+
 	//反発力リセット
 	repulsiveForce_ = { 0.0f,0.0f,0.0f };
 
@@ -178,6 +184,7 @@ void Ogre::DebugGUI()
 	if (ImGui::TreeNode(std::to_string(ID_).c_str())) {
 		state_.DebugGUI();
 		ImGui::Text(std::to_string(distFromPlayer_).c_str());
+		ImGui::Text("HP: %1.2f", parameter_.hp);
 		ImGui::TreePop();
 	}
 

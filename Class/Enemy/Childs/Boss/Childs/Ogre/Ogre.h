@@ -119,6 +119,9 @@ private:
 	LWP::Primitive::NormalSurface cautionQuad_;
 	LWP::Primitive::NormalSurface cautionCircle_;
 
+	//斬撃エフェクト
+	SlashEffector slashEffector_;
+
 	// 刀モデル
 	SkinningModel swordModel_;
 	//攻撃コライダー(球)

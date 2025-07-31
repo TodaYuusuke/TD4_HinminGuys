@@ -74,6 +74,14 @@ void Ogre::RotatingSlashUpdate([[maybe_unused]] std::optional<States>& req, [[ma
 	else if (IsExitParryEffect()) {
 		currentMotionSpeed_ = 1.0f;
 		animation_.GetPlayBackSpeed() = currentMotionSpeed_;
+		//斬撃エフェクト生成
+		Quaternion GenerateRotate{};
+		GenerateRotate = Quaternion::CreateFromAxisAngle({ 1.0f, 0.0f, 0.0f }, GetRotatingSlash().effectParam.rotate.x)
+			* Quaternion::CreateFromAxisAngle({ 0.0f, 1.0f, 0.0f }, GetRotatingSlash().effectParam.rotate.y)
+			* Quaternion::CreateFromAxisAngle({ 0.0f, 0.0f, 1.0f }, GetRotatingSlash().effectParam.rotate.z);
+		slashEffector_.Create(GetRotatingSlash().effectParam.position, GenerateRotate,
+			GetRotatingSlash().effectParam.scale, GetRotatingSlash().effectParam.playTime,
+			GetRotatingSlash().effectParam.offset, GetRotatingSlash().effectParam.color);
 	}
 
 	//攻撃受付時間を超過したら判定オフ

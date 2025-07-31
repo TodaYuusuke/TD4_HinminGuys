@@ -85,6 +85,14 @@ void Ogre::QuadrupleAttackUpdate([[maybe_unused]] std::optional<States>& req, [[
 		else if (IsExitParryEffect()) {
 			currentMotionSpeed_ = 1.0f;
 			animation_.GetPlayBackSpeed() = currentMotionSpeed_;
+			//斬撃エフェクト生成
+			Quaternion GenerateRotate{};
+			GenerateRotate = Quaternion::CreateFromAxisAngle({ 1.0f, 0.0f, 0.0f }, GetQuadrupleAttack().effectParam[GetQuadrupleAttack().currentAttackCount].rotate.x)
+				* Quaternion::CreateFromAxisAngle({ 0.0f, 1.0f, 0.0f }, GetQuadrupleAttack().effectParam[GetQuadrupleAttack().currentAttackCount].rotate.y)
+				* Quaternion::CreateFromAxisAngle({ 0.0f, 0.0f, 1.0f }, GetQuadrupleAttack().effectParam[GetQuadrupleAttack().currentAttackCount].rotate.z);
+			slashEffector_.Create(GetQuadrupleAttack().effectParam[GetQuadrupleAttack().currentAttackCount].position, GenerateRotate,
+				GetQuadrupleAttack().effectParam[GetQuadrupleAttack().currentAttackCount].scale, GetQuadrupleAttack().effectParam[GetQuadrupleAttack().currentAttackCount].playTime,
+				GetQuadrupleAttack().effectParam[GetQuadrupleAttack().currentAttackCount].offset, GetQuadrupleAttack().effectParam[GetQuadrupleAttack().currentAttackCount].color);
 		}
 
 		//攻撃受付時間を超過したら判定オフ
