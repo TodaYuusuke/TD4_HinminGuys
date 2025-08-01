@@ -9,6 +9,13 @@ DustClouds::DustClouds(const std::string& texName) {
 	texName_ = texName;
 }
 
+DustClouds::~DustClouds() {
+	for (DustCloud* p : particles_) {
+		delete p;
+	}
+	particles_.clear();
+}
+
 void DustClouds::Initialize() {}
 
 void DustClouds::Update() {

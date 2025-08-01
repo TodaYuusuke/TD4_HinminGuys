@@ -9,6 +9,13 @@ EnemyDeadParticles::EnemyDeadParticles(const std::string& texName) {
 	texName_ = texName;
 }
 
+EnemyDeadParticles::~EnemyDeadParticles() {
+	for (EnemyDeadParticle* p : particles_) {
+		delete p;
+	}
+	particles_.clear();
+}
+
 void EnemyDeadParticles::Initialize() {}
 
 void EnemyDeadParticles::Update() {

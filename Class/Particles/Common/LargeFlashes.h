@@ -7,7 +7,7 @@ public:
 	// コンストラクタ
 	LargeFlashes(FollowCamera* followCamera, const std::string& texName);
 	// デストラクタ
-	~LargeFlashes() override = default;
+	~LargeFlashes() override;
 
 	/// <summary>
 	/// 初期化

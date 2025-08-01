@@ -7,6 +7,13 @@ using namespace LWP::Utility::Interpolation;
 
 AuraParticles::AuraParticles() {}
 
+AuraParticles::~AuraParticles() {
+	for (AuraParticle* p : particles_) {
+		delete p;
+	}
+	particles_.clear();
+}
+
 void AuraParticles::Initialize() {
 
 }

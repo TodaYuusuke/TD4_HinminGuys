@@ -7,7 +7,7 @@ public:
 	// コンストラクタ
 	Sparks(const std::string& texName);
 	// デストラクタ
-	~Sparks() override = default;
+	~Sparks() override;
 
 	/// <summary>
 	/// 初期化

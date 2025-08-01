@@ -7,7 +7,7 @@ public:
 	// コンストラクタ
 	DustClouds(const std::string& texName);
 	// デストラクタ
-	~DustClouds() override = default;
+	~DustClouds() override;
 
 	/// <summary>
 	/// 初期化

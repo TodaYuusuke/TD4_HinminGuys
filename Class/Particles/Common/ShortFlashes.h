@@ -7,7 +7,7 @@ public:
 	// コンストラクタ
 	ShortFlashes(FollowCamera* followCamera, const std::string& texName);
 	// デストラクタ
-	~ShortFlashes() override = default;
+	~ShortFlashes() override;
 
 	/// <summary>
 	/// 初期化

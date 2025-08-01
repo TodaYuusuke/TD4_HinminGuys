@@ -39,6 +39,28 @@ Particles::Particles(Player* player, FollowCamera* followCamera) {
 	weakCrackEffect_->Initialize();
 }
 
+Particles::~Particles() {
+	// パリィ
+	parryEffect_.reset();
+	// 回避
+	evasionEffect_.reset();
+	// 移動
+	//MoveEffect> moveEffect_.reset();
+	dustClouds_.reset();
+	largeFlashes_.reset();
+	shortFlashes_.reset();
+	rings_.reset();
+	sparks_.reset();
+	// 浮遊パーティクル
+	floatParticle_.reset();
+	enemySpawnParticles_.reset();
+	enemyDeadParticles_.reset();
+	attackHitEffect_.reset();
+	crackEffect_.reset();
+	// 弱めの攻撃
+	weakCrackEffect_.reset();
+}
+
 void Particles::Initialize() {
 	// JSONデータを作成
 	CreateJsonData();

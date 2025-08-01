@@ -7,7 +7,7 @@ public:
 	// コンストラクタ
 	Rings(const std::string& texName);
 	// デストラクタ
-	~Rings() override = default;
+	~Rings() override;
 
 	/// <summary>
 	/// 初期化

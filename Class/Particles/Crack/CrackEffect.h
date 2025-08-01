@@ -17,7 +17,7 @@ public:
 	// コンストラクタ
 	CrackEffect(const std::string& texName);
 	// デストラクタ
-	~CrackEffect() override = default;
+	~CrackEffect() override;
 
 	/// <summary>
 	/// 初期化

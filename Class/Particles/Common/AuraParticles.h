@@ -7,7 +7,7 @@ public:
 	// コンストラクタ
 	AuraParticles();
 	// デストラクタ
-	~AuraParticles() override = default;
+	~AuraParticles() override;
 
 	/// <summary>
 	/// 初期化

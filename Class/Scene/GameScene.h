@@ -49,7 +49,7 @@ private: // ** これより先に必要な処理や変数を記述 ** //
 	DamageEffectEmitter damageEffectEmitter_;
 
 	// パーティクルの管理クラス
-	Particles particles_;
+	std::unique_ptr<Particles> particles_;
 
 	// 追従カメラ
 	FollowCamera followCamera_;

@@ -10,9 +10,9 @@ public:
 	struct RhombusParticleJsonData {
 		LimitVec3 velLimit;
 		LimitF scaleLimit;
-		LimitInt whiteLimit;
-		LimitInt alphaLimit;
+		LWP::Utility::Color color;
 		LWP::Math::Vector3 firstVel;
+		float creaateRange;
 		float acceleration;
 		float multiply;
 		float dampingRate;

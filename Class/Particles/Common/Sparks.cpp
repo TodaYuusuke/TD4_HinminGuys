@@ -9,6 +9,13 @@ Sparks::Sparks(const std::string& texName) {
 	texName_ = texName;
 }
 
+Sparks::~Sparks() {
+	for (Spark* p : particles_) {
+		delete p;
+	}
+	particles_.clear();
+}
+
 void Sparks::Initialize() {
 
 }

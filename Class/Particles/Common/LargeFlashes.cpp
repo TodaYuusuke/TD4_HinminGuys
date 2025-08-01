@@ -10,6 +10,13 @@ LargeFlashes::LargeFlashes(FollowCamera* followCamera, const std::string& texNam
 	texName_ = texName;
 }
 
+LargeFlashes::~LargeFlashes() {
+	for (LargeFlash* p : particles_) {
+		delete p;
+	}
+	particles_.clear();
+}
+
 void LargeFlashes::Initialize() {
 
 }

@@ -31,7 +31,7 @@ public:
 	// コンストラクタ
 	Particles(Player* player, FollowCamera* followCamera);
 	// デストラクタ
-	~Particles() = default;
+	~Particles();
 
 	/// <summary>
 	/// 初期化

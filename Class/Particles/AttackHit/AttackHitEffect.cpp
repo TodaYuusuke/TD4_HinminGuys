@@ -12,6 +12,13 @@ AttackHitEffect::AttackHitEffect() {
 	sparks_->Initialize();
 }
 
+AttackHitEffect::~AttackHitEffect() {
+	for (AttackHitParticle* p : particles_) {
+		delete p;
+	}
+	particles_.clear();
+}
+
 void AttackHitEffect::Initialize() {}
 
 void AttackHitEffect::Update() {

@@ -9,6 +9,13 @@ EnemySpawnParticles::EnemySpawnParticles(const std::string& texName) {
 	texName_ = texName;
 }
 
+EnemySpawnParticles::~EnemySpawnParticles() {
+	for (EnemySpawnParticle* p : particles_) {
+		delete p;
+	}
+	particles_.clear();
+}
+
 void EnemySpawnParticles::Initialize() {}
 
 void EnemySpawnParticles::Update() {

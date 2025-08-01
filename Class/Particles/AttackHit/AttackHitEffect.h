@@ -17,7 +17,7 @@ public:
 	// コンストラクタ
 	AttackHitEffect();
 	// デストラクタ
-	~AttackHitEffect() override = default;
+	~AttackHitEffect() override;
 
 	/// <summary>
 	/// 初期化

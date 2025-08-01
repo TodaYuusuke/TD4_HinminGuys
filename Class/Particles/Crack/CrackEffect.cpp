@@ -13,6 +13,13 @@ CrackEffect::CrackEffect(const std::string& texName) {
 	dustClouds_->Initialize();
 }
 
+CrackEffect::~CrackEffect() {
+	for (IParticle* p : particles_) {
+		delete p;
+	}
+	particles_.clear();
+}
+
 void CrackEffect::Initialize() {}
 
 void CrackEffect::Update() {

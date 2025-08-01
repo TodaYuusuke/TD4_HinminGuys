@@ -9,6 +9,13 @@ Rings::Rings(const std::string& texName) {
 	texName_ = texName;
 }
 
+Rings::~Rings() {
+	for (Ring* p : particles_) {
+		delete p;
+	}
+	particles_.clear();
+}
+
 void Rings::Initialize() {
 
 }

@@ -10,6 +10,13 @@ ShortFlashes::ShortFlashes(FollowCamera* followCamera, const std::string& texNam
 	texName_ = texName;
 }
 
+ShortFlashes::~ShortFlashes() {
+	for (ShortFlash* p : particles_) {
+		delete p;
+	}
+	particles_.clear();
+}
+
 void ShortFlashes::Initialize() { 
 
 }

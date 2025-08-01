@@ -7,7 +7,7 @@ public:
 	// コンストラクタ
 	EnemySpawnParticles(const std::string& texName);
 	// デストラクタ
-	~EnemySpawnParticles() override = default;
+	~EnemySpawnParticles() override;
 
 	/// <summary>
 	/// 初期化

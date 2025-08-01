@@ -11,8 +11,7 @@ using namespace LWP::Info;
 GameScene::GameScene()
 	: player_(&mainCamera, &enemyManager_, &followCamera_, &uiManager_),
 	followCamera_(&player_, &mainCamera, player_.GetModelPos()),
-	uiManager_(&player_),
-	particles_(&player_, &followCamera_)
+	uiManager_(&player_)
 {
 	enemyManager_.Initialize();
 	LWP::Resource::LoadTexture("Effect/Particle.png");
@@ -48,7 +47,8 @@ void GameScene::Initialize() {
 	uiManager_.Initialize();
 
 	// パーティクルの管理クラス
-	particles_.Initialize();
+	particles_ = std::make_unique<Particles>(&player_, &followCamera_);
+	particles_->Initialize();
 
 	// 敵管理クラス
 	enemyManager_.Initialize();
@@ -65,7 +65,7 @@ void GameScene::Initialize() {
 	// 自機の生成
 	player_.Initialize();
 	player_.SetSEPlayer(&sePlayer_);
-	player_.SetParticles(&particles_);
+	player_.SetParticles(particles_.get());
 	player_.SetWorld(&world_);
 
 	//ダメージエフェクトエミッターを生成
@@ -142,7 +142,7 @@ void GameScene::Update() {
 	damageEffectEmitter_.Update();
 
 	// パーティクル管理クラス
-	particles_.Update();
+	particles_->Update();
 
 	// uiの管理クラス
 	uiManager_.Update();
@@ -169,7 +169,7 @@ void GameScene::DebugGUI() {
 		}
 		// パーティクル管理クラス
 		if (ImGui::BeginTabItem("Particles")) {
-			particles_.DebugGui();
+			particles_->DebugGui();
 			ImGui::EndTabItem();
 		}
 		// キーコンフィグ
