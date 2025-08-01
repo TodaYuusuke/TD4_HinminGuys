@@ -44,6 +44,8 @@ void SystemManager::Initialize() {
 	comboTree_ = new ComboTree();
 	// コンボツリーの初期化
 	comboTree_->Init("Combo.json", player_->GetModel(), player_->GetAnimation());
+	// 効果音プレイヤーのセット
+	comboTree_->SetSEPlayer(player_->GetSEPlayer());
 	// コライダーのマスク設定
 	comboTree_->SetColliderMaskFrag(GameMask::GetAttack(), GameMask::GetEnemy());
 	// 攻撃の判定

@@ -46,14 +46,17 @@
                         "float :HitCoolTime": 1.0,
                         "float :HitStopTime": 0.20000000298023224,
                         "float :NockbackStrength": 0.10000000149011612,
+                        "float :PlaySETime": 0.10000000149011612,
                         "float :PlaySlashEffectTime": 0.30000001192092896,
                         "float :ReceptTime": 3.0,
+                        "float :SEVolume": 1.0,
                         "float :SheathDurabityLoss": 25.0,
                         "float :StartSlashEffectTime": 0.30000001192092896,
                         "float :StifnessTime": 0.75,
                         "float :TransitionTime": 0.10000000149011612,
                         "int32_t :derivationPriority": 0,
                         "string :AnimName": "LightAttack4",
+                        "string :AudioPath": "missingShot/missingShot2.mp3",
                         "string :FollowJointName": ""
                     },
                     "Group :StartConditions|Button|1": {
@@ -98,14 +101,17 @@
                     "float :HitCoolTime": 1.0,
                     "float :HitStopTime": 0.10000000149011612,
                     "float :NockbackStrength": 0.10000000149011612,
+                    "float :PlaySETime": 0.0,
                     "float :PlaySlashEffectTime": 0.0,
                     "float :ReceptTime": 1.5,
+                    "float :SEVolume": 1.0,
                     "float :SheathDurabityLoss": 10.0,
                     "float :StartSlashEffectTime": 0.0,
                     "float :StifnessTime": 0.5,
                     "float :TransitionTime": 0.05000000074505806,
                     "int32_t :derivationPriority": 0,
                     "string :AnimName": "LightAttack3",
+                    "string :AudioPath": "missingShot/missingShot0.mp3",
                     "string :FollowJointName": ""
                 },
                 "Group :StartConditions|Button|1": {
@@ -126,7 +132,7 @@
                 ],
                 "Vector3 :SlashEffectOffset": [
                     0.0,
-                    1.100000023841858,
+                    1.350000023841858,
                     0.25
                 ],
                 "Vector3 :SlashEffectRotate": [
@@ -150,14 +156,17 @@
                 "float :HitCoolTime": 1.0,
                 "float :HitStopTime": 0.10000000149011612,
                 "float :NockbackStrength": 0.10000000149011612,
+                "float :PlaySETime": 0.0,
                 "float :PlaySlashEffectTime": 0.30000001192092896,
                 "float :ReceptTime": 1.25,
+                "float :SEVolume": 1.0,
                 "float :SheathDurabityLoss": 10.0,
                 "float :StartSlashEffectTime": 0.05000000074505806,
                 "float :StifnessTime": 0.5,
                 "float :TransitionTime": 0.05000000074505806,
                 "int32_t :derivationPriority": 0,
                 "string :AnimName": "LightAttack2",
+                "string :AudioPath": "missingShot/missingShot1.mp3",
                 "string :FollowJointName": ""
             },
             "Group :StartConditions|Button|1": {
@@ -178,8 +187,8 @@
             ],
             "Vector3 :SlashEffectOffset": [
                 0.0,
-                1.100000023841858,
-                0.25
+                1.2999999523162842,
+                0.5
             ],
             "Vector3 :SlashEffectRotate": [
                 1.5,
@@ -202,14 +211,17 @@
             "float :HitCoolTime": 1.0,
             "float :HitStopTime": 0.10000000149011612,
             "float :NockbackStrength": 0.10000000149011612,
+            "float :PlaySETime": 0.0,
             "float :PlaySlashEffectTime": 0.4000000059604645,
             "float :ReceptTime": 1.350000023841858,
+            "float :SEVolume": 2.0,
             "float :SheathDurabityLoss": 10.0,
             "float :StartSlashEffectTime": 0.0,
             "float :StifnessTime": 0.5,
             "float :TransitionTime": 0.05000000074505806,
             "int32_t :derivationPriority": 1,
             "string :AnimName": "LightAttack1",
+            "string :AudioPath": "missingShot/missingShot0.mp3",
             "string :FollowJointName": ""
         },
         "Group :StrongCombo1": {
@@ -269,14 +281,17 @@
                     "float :HitCoolTime": 0.5,
                     "float :HitStopTime": 0.10000000149011612,
                     "float :NockbackStrength": 0.10000000149011612,
+                    "float :PlaySETime": 0.0,
                     "float :PlaySlashEffectTime": 0.0,
                     "float :ReceptTime": 1.5,
+                    "float :SEVolume": 1.0,
                     "float :SheathDurabityLoss": 10.0,
                     "float :StartSlashEffectTime": 0.0,
                     "float :StifnessTime": 0.0,
                     "float :TransitionTime": 0.0,
                     "int32_t :derivationPriority": 0,
                     "string :AnimName": "LightAttack4",
+                    "string :AudioPath": "",
                     "string :FollowJointName": ""
                 },
                 "Vector3 :AttackAssistMoveAmount": [
@@ -315,14 +330,17 @@
                 "float :HitCoolTime": 0.5,
                 "float :HitStopTime": 0.10000000149011612,
                 "float :NockbackStrength": 0.10000000149011612,
+                "float :PlaySETime": 0.0,
                 "float :PlaySlashEffectTime": 0.0,
                 "float :ReceptTime": 0.5,
+                "float :SEVolume": 1.0,
                 "float :SheathDurabityLoss": 10.0,
                 "float :StartSlashEffectTime": 0.0,
                 "float :StifnessTime": 1.0,
                 "float :TransitionTime": 0.0,
                 "int32_t :derivationPriority": 0,
                 "string :AnimName": "WeakParry",
+                "string :AudioPath": "",
                 "string :FollowJointName": ""
             },
             "Vector3 :AttackAssistMoveAmount": [
@@ -361,14 +379,17 @@
             "float :HitCoolTime": 0.5,
             "float :HitStopTime": 0.10000000149011612,
             "float :NockbackStrength": 0.10000000149011612,
+            "float :PlaySETime": 0.0,
             "float :PlaySlashEffectTime": 0.0,
             "float :ReceptTime": 0.75,
+            "float :SEVolume": 1.0,
             "float :SheathDurabityLoss": 10.0,
             "float :StartSlashEffectTime": 0.0,
             "float :StifnessTime": 0.0,
             "float :TransitionTime": 0.0,
             "int32_t :derivationPriority": 0,
             "string :AnimName": "Gaurd",
+            "string :AudioPath": "",
             "string :FollowJointName": ""
         },
         "Vector3 :AttackAssistMoveAmount": [
@@ -407,14 +428,17 @@
         "float :HitCoolTime": 0.5,
         "float :HitStopTime": 0.0,
         "float :NockbackStrength": 0.10000000149011612,
+        "float :PlaySETime": 0.0,
         "float :PlaySlashEffectTime": 0.0,
         "float :ReceptTime": 1.0,
+        "float :SEVolume": 1.0,
         "float :SheathDurabityLoss": 10.0,
         "float :StartSlashEffectTime": 0.0,
         "float :StifnessTime": 0.0,
         "float :TransitionTime": 0.0,
         "int32_t :derivationPriority": 0,
         "string :AnimName": "",
+        "string :AudioPath": "",
         "string :FollowJointName": "WeaponAnchor"
     }
 }

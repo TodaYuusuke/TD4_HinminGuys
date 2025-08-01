@@ -41,7 +41,7 @@ void Combo::Init(const std::string& name)
 	name_ = name;
 }
 
-void Combo::Start(LWP::Resource::SkinningModel* model, LWP::Resource::Animation* anim, LWP::Object::Collision* collider, SlashEffector* effector)
+void Combo::Start(LWP::Resource::SkinningModel* model, LWP::Resource::Animation* anim, LWP::Object::Collision* collider, SEPlayer* sePlayer, SlashEffector* effector)
 {
 	// 判定用タイマー開始
 	attackDecisionTimer_.Start(attackStartTime_);		// 攻撃判定
@@ -49,11 +49,20 @@ void Combo::Start(LWP::Resource::SkinningModel* model, LWP::Resource::Animation*
 
 	if (startSlashEffectTime_ > 0.0f) {  // 斬撃エフェクトの再生開始時間
 		// 斬撃エフェクトの開始秒数が0秒以上の場合タイマーを開始
-		slashEffectTimer_.Start(startSlashEffectTime_); 
+		slashEffectTimer_.Start(startSlashEffectTime_);
 	}
-	else if(playSlashEffectTime_ > 0.0f){ // 0秒以下の場合
+	else if (playSlashEffectTime_ > 0.0f) { // 0秒以下の場合
 		// タイマーをアクティブ状態にしておく
 		slashEffectTimer_.SetIsActive(true);
+	}
+
+	if (playSETime_ > 0.0f && audioPath_ != "") {  // 攻撃効果音の再生開始時間
+		// 効果音の再生開始秒数が0秒以上の場合タイマーを開始
+		seTimer_.Start(playSETime_);
+	}
+	else if (audioPath_ != "") { // 何かしらパスが入力されている場合
+		// タイマーをアクティブ状態にしておく
+		seTimer_.SetIsActive(true);
 	}
 
 	if (stifnessTime_ > 0.0f) { // 硬直時間
@@ -85,6 +94,8 @@ void Combo::Start(LWP::Resource::SkinningModel* model, LWP::Resource::Animation*
 		anim->GetPlayBackSpeed() = animSpeed_;
 	}
 
+	// 効果音プレイヤーの取得
+	sePlayer_ = sePlayer;
 	// エフェクターの取得
 	slashEffector_ = effector;
 }
@@ -107,6 +118,11 @@ void Combo::Update(LWP::Resource::SkinningModel* model, LWP::Resource::Animation
 	if (slashEffectTimer_.GetIsActive()) {
 		// 攻撃アシスト判定に関する更新
 		SlashEffectUpdate(model);
+	}
+
+	// 効果音用タイマーが動作している場合のみ更新を行う
+	if (seTimer_.GetIsActive()) {
+		SEUpdate();
 	}
 
 	// 硬直時間タイマーが動作している場合のみ更新を行う
@@ -278,6 +294,9 @@ void Combo::AddValue(LWP::Utility::JsonIO& json)
 		.AddValue("SlashEffectRotate", &slashEffectRotate_)						// 斬撃エフェクトの回転角
 		.AddValue("SlashEffectScale", &slashEffectScale_)						// 斬撃エフェクトのスケール
 		.AddValue("PlaySlashEffectTime", &playSlashEffectTime_)					// 斬撃エフェクトの再生時間
+		.AddValue("AudioPath", &audioPath_)										// 効果音までのファイルパス
+		.AddValue("SEVolume", &seVolume_)										// 効果音音量
+		.AddValue("PlaySETime", &playSETime_)									// 再生するまでの秒数
 		.AddValue("Damage", &damage_)											// 攻撃のダメージ量
 		.AddValue("HitStopTime", &hitStopTime_)									// ヒットストップ秒数
 		.AddValue("HitCoolTime", &hitCoolTime_)									// 命中時クールタイム
@@ -447,6 +466,23 @@ void Combo::SlashEffectUpdate(LWP::Resource::SkinningModel* model)
 
 		// タイマーを非アクティブ状態に
 		slashEffectTimer_.SetIsActive(false);
+	}
+}
+
+void Combo::SEUpdate()
+{
+	// タイマーの更新
+	seTimer_.Update();
+
+	// タイマー終了時
+	if (seTimer_.GetIsFinish()) {
+		// 名前を' / 'で分割する
+		std::vector<std::string> splitName = Utility::Split(audioPath_, '/');
+		// 効果音を再生する
+		sePlayer_->PlaySE(audioPath_, splitName.back(), seVolume_);
+
+		// タイマーを非アクティブ状態に
+		seTimer_.SetIsActive(false);
 	}
 }
 
@@ -659,6 +695,22 @@ void Combo::AttackSettings()
 	ImGui::DragFloat3("SlashEffectOffset", &slashEffectOffset_.x);
 	ImGui::DragFloat3("SlashEffectRotate", &slashEffectRotate_.x);
 	ImGui::DragFloat3("SlashEffectScale", &slashEffectScale_.x);
+
+	ImGui::Unindent();
+	ImGui::NewLine();
+
+	// 再生効果音
+	ImGui::SeparatorText("SE Settings");
+
+	ImGui::Indent();
+
+	// 再生する効果音のパス入力
+	Base::ImGuiManager::InputText("AudioPath", audioPath_);
+	// 再生される効果音の音量
+	ImGui::DragFloat("SEVolume", &seVolume_, 0.01f, 0.0f);
+
+	// 効果音再生までの秒数
+	ImGui::DragFloat("PlayTime", &playSETime_, 0.01f, 0.0f);
 
 	ImGui::Unindent();
 	ImGui::NewLine();

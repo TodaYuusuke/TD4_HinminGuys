@@ -236,6 +236,13 @@ public:// Getter,Setter
 	/// </summary>
 	/// <param name="quat">向かせる方向(クォータニオン)</param>
 	void SetRotate(const LWP::Math::Quaternion& quat) { pCamera_->worldTF.rotation = quat; }
+
+	/// <summary>
+	/// 全てのコライダーの有効状態を切り替えるセッター
+	/// </summary>
+	/// <param name="enable">有効状態</param>
+	void SetAllColliderState(const bool enable);
+
 #pragma region アニメーション
 	/// <summary>
 	/// アニメーションを開始

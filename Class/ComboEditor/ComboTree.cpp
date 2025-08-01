@@ -43,7 +43,7 @@ void ComboTree::Init(const std::string& fileName, LWP::Resource::SkinningModel* 
 	// 現在コンボのリセット
 	nowCombo_->Init();
 	// 現在コンボのスタート
-	nowCombo_->Start(animModel_, anim_, &collider_, &slashEffector_);
+	nowCombo_->Start(animModel_, anim_, &collider_, sePlayer_, &slashEffector_);
 }
 
 void ComboTree::Update()
@@ -71,7 +71,7 @@ void ComboTree::Update()
 		nowCombo_->Init();
 		nowCombo_ = nextCombo_;
 		nextCombo_ = nullptr;
-		nowCombo_->Start(animModel_, anim_, &collider_, &slashEffector_);
+		nowCombo_->Start(animModel_, anim_, &collider_, sePlayer_, &slashEffector_);
 		return;
 	}
 
@@ -85,7 +85,7 @@ void ComboTree::Update()
 		
 		nowCombo_->Init();
 		nowCombo_ = &rootCombo_;
-		nowCombo_->Start(animModel_, anim_, &collider_, &slashEffector_);
+		nowCombo_->Start(animModel_, anim_, &collider_, sePlayer_, &slashEffector_);
 	}
 }
 
@@ -200,7 +200,7 @@ void ComboTree::ResetCombo()
 	nowCombo_->Init();
 	// 現在コンボを無操作状態にリセットする
 	nowCombo_ = &rootCombo_;
-	nowCombo_->Start(animModel_, anim_, &collider_, &slashEffector_);
+	nowCombo_->Start(animModel_, anim_, &collider_, sePlayer_, &slashEffector_);
 }
 
 void ComboTree::SetColliderMaskFrag(uint32_t maskID, uint32_t hitID)

@@ -11,7 +11,8 @@ using namespace LWP::Info;
 GameScene::GameScene()
 	: player_(&mainCamera, &enemyManager_, &followCamera_, &uiManager_),
 	followCamera_(&player_, &mainCamera, player_.GetModelPos()),
-	uiManager_(&player_)
+	uiManager_(&player_),
+	gameSceneManager_(&player_,&enemyManager_, &sceneTransitioner_)
 {
 	enemyManager_.Initialize();
 	LWP::Resource::LoadTexture("Effect/Particle.png");
@@ -63,8 +64,8 @@ void GameScene::Initialize() {
 	followCamera_.Initialize();
 
 	// 自機の生成
-	player_.Initialize();
 	player_.SetSEPlayer(&sePlayer_);
+	player_.Initialize();
 	player_.SetParticles(particles_.get());
 	player_.SetWorld(&world_);
 
@@ -91,13 +92,32 @@ void GameScene::Initialize() {
 	//シーン切り替え機能生成
 	sceneTransitioner_.Initialize(this);
 
-
+	// ゲームシーンマネージャーの初期化
+	gameSceneManager_.Init();
 	//testBillboard_.Init();
 }
 
 // 更新
 void GameScene::Update() {
-	//testBillboard_.Update();
+	
+	// ゲームシーンマネージャの更新
+	gameSceneManager_.Update();
+
+	//SE管理
+	sePlayer_.Update();
+	//BGM管理
+	bgmPlayer_.Update();
+
+	// ゲームが終了状態の場合
+	if (gameSceneManager_.GetIsEndGame()) {
+		#ifdef _DEBUG
+		// デバッグ用のウィンドウ
+		DebugGUI();
+		#endif // _DEBUG
+		// 早期リターン
+		return;
+	}
+
 	//シーン遷移が終わった時点でウェーブを開始していない場合、ウェーブを開始
 	if (not sceneTransitioner_.GetIsSceneChange() and not enemyManager_.GetIsDefeatedAllEnemy() and
 		not enemyManager_.GetIsStartWave()) {
@@ -108,19 +128,6 @@ void GameScene::Update() {
 		enemyManager_.StartWave();
 #endif // _DEBUG
 
-	}
-
-	//全ての敵が倒されたらシーン遷移する
-	if (enemyManager_.GetIsDefeatedAllEnemy()) {
-		//遷移先をタイトルにセット
-		sceneTransitioner_.SetNextScene(SceneName::kTitle);
-		sceneTransitioner_.SceneTransitionStart();
-	}
-	//全員倒す前にプレイヤーが死んだ場合、ゲームオーバーに逝こう！
-	else if (not enemyManager_.GetIsDefeatedAllEnemy() and not player_.GetIsAlive()) {
-		//遷移先をゲームオーバーにセット
-		sceneTransitioner_.SetNextScene(SceneName::kGameOver);
-		sceneTransitioner_.SceneTransitionStart();
 	}
 
 	// 入力されたコマンドを確認
@@ -147,15 +154,8 @@ void GameScene::Update() {
 	// uiの管理クラス
 	uiManager_.Update();
 
-	//SE管理
-	sePlayer_.Update();
-	//BGM管理
-	bgmPlayer_.Update();
-
 	// デバッグ用のウィンドウ
 	DebugGUI();
-
-	sceneTransitioner_.Update();
 }
 
 void GameScene::DebugGUI() {

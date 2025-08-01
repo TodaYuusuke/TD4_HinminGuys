@@ -3,7 +3,7 @@
   <ItemGroup>
     <ClCompile Include="Class\ComboEditor\ComboTree.cpp" />
     <ClCompile Include="Class\Condition\child\Input\ButtonCondition.cpp" />
-    <ClCompile Include="Class\DeltaTimer\DeltaTimer.cpp" />
+    <ClCompile Include="Class\Timer\DeltaTimer.cpp" />
     <ClCompile Include="Class\Scene\GameScene.cpp" />
     <ClCompile Include="Class\ComboEditor\Combo.cpp" />
     <ClCompile Include="Class\Enemy\SpawnData.cpp" />
@@ -34,7 +34,6 @@
     <ClCompile Include="Class\Player\Systems\Children\Sheath\State\Throw.cpp" />
     <ClCompile Include="Class\Player\Systems\Children\Move\State\Dash.cpp" />
     <ClCompile Include="Class\Player\Systems\Children\Damage\DamageResponse.cpp" />
-    <ClCompile Include="Class\Scene\VoidScene.cpp" />
     <ClCompile Include="Class\UI\UIManager.cpp" />
     <ClCompile Include="Class\Camera\State\InputCamera.cpp" />
     <ClCompile Include="Class\Camera\State\ParryCamera.cpp" />
@@ -136,13 +135,16 @@
     <ClCompile Include="Class\Particles\SheathBreak\Children\FlickeringFlash.cpp" />
     <ClCompile Include="Class\Particles\SheathBreak\Children\RhombusParticle.cpp" />
     <ClCompile Include="Class\Particles\SheathBreak\SheathBreakEffect.cpp" />
+    <ClCompile Include="Class\Scene\VoidScene.cpp" />
+    <ClCompile Include="Class\Scene\GameSceneManager.cpp" />
+    <ClCompile Include="Class\Timer\FrameTimer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Class\ComboEditor\ComboTree.h" />
     <ClInclude Include="Class\Condition\child\Input\ButtonCondition.h" />
     <ClInclude Include="Class\Condition\ConditionEnums.h" />
     <ClInclude Include="Class\Condition\ConditionList.h" />
-    <ClInclude Include="Class\DeltaTimer\DeltaTimer.h" />
+    <ClInclude Include="Class\Timer\DeltaTimer.h" />
     <ClInclude Include="Class\ComboEditor\Combo.h" />
     <ClInclude Include="Class\Condition\ICondition.h" />
     <ClInclude Include="Class\Enemy\Childs\Boss\Boss.h" />
@@ -182,7 +184,6 @@
     <ClInclude Include="Class\Player\Systems\Children\Move\State\Dash.h" />
     <ClInclude Include="Class\Player\Command\BanInput.h" />
     <ClInclude Include="Class\Player\Systems\Children\Damage\DamageResponse.h" />
-    <ClInclude Include="Class\Scene\VoidScene.h" />
     <ClInclude Include="Class\UI\UIManager.h" />
     <ClInclude Include="Class\Camera\State\IFollowCameraState.h" />
     <ClInclude Include="Class\Camera\State\InputCamera.h" />
@@ -257,6 +258,9 @@
     <ClInclude Include="Class\Particles\SheathBreak\Children\FlickeringFlash.h" />
     <ClInclude Include="Class\Particles\SheathBreak\Children\RhombusParticle.h" />
     <ClInclude Include="Class\Particles\SheathBreak\SheathBreakEffect.h" />
+    <ClInclude Include="Class\Scene\VoidScene.h" />
+    <ClInclude Include="Class\Scene\GameSceneManager.h" />
+    <ClInclude Include="Class\Timer\FrameTimer.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />
