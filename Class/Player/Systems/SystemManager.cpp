@@ -125,7 +125,7 @@ void SystemManager::Initialize() {
 	aura_ = std::make_unique<AuraParticles>();
 	aura_->Initialize();
 	aura_->SetJsonData();
-	aura_->SetTexName("Effect/Particle.png");
+	aura_->SetTexName("Effect/Smoke.png");
 }
 
 void SystemManager::Update() {
