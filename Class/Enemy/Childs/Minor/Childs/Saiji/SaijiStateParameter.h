@@ -99,7 +99,8 @@ namespace SaijiState {
 		float freezingTime = 1.5f;
 		//現在の硬直時間カウント
 		float currentFreezingTime = 0.0f;
-
+		//斬撃エフェクトパラメータ
+		SlashEffectParam effectParam{};
 	};
 
 	/// <summary>

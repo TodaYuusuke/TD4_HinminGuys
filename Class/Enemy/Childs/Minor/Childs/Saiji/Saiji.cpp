@@ -10,7 +10,8 @@ using namespace SaijiState;
 
 Saiji::Saiji(SaijiState::StateParameter& stateParameter) :
 	configParameter_(stateParameter),
-	aabbAttack_(aabbAttackCollider_.SetBroadShape(LWP::Object::Collider::AABB()))
+	aabbAttack_(aabbAttackCollider_.SetBroadShape(LWP::Object::Collider::AABB())),
+	slashEffector_("Effect/SwordSlash.png", { 256.0f, 256.0f }, 26)
 {
 
 	stateParameter_ = stateParameter;
@@ -101,6 +102,8 @@ void Saiji::Initialize(Player* player, const Vector3& position, LWP::Object::Cam
 	//刀のコライダー生成
 	CreateSwordCollider();
 
+	slashEffector_.SetParentTF(&model_.worldTF);
+
 }
 
 void Saiji::Update()
@@ -142,6 +145,9 @@ void Saiji::Update()
 
 	//現在の状態を更新
 	state_.Update();
+
+	//エフェクト更新
+	slashEffector_.Update();
 
 	//反発力リセット
 	repulsiveForce_ = { 0.0f,0.0f,0.0f };

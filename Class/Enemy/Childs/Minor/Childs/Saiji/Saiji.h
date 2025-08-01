@@ -83,6 +83,9 @@ private:
 	//才二君用のデフォパラメータ設定
 	SaijiState::StateParameter& configParameter_;
 
+	//斬撃エフェクト
+	SlashEffector slashEffector_;
+
 	// 刀モデル
 	SkinningModel swordModel_;
 	//攻撃コライダー(AABB)
