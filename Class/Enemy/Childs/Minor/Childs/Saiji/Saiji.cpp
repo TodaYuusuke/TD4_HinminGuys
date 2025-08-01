@@ -87,6 +87,8 @@ void Saiji::Initialize(Player* player, const Vector3& position, LWP::Object::Cam
 			invincibleTime_ = 1.01f;
 		}
 		else {
+			// 攻撃力
+			player_->GetParameter()->attackStrength_ = player_->GetSystemManager()->GetComboTree()->GetDamage();
 			//プレイヤーから取得し、0の場合が無いよう極小のクールタイムを足す
 			invincibleTime_ = player_->GetSystemManager()->GetComboTree()->GetHitCoolTime() + 0.01f;
 		}

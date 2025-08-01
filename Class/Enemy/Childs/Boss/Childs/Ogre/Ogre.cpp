@@ -99,6 +99,8 @@ void Ogre::Initialize(Player* player, const Vector3& position, LWP::Object::Came
 			invincibleTime_ = 1.01f;
 		}
 		else {
+			// 攻撃力
+			player_->GetParameter()->attackStrength_ = player_->GetSystemManager()->GetComboTree()->GetDamage();
 			//プレイヤーから取得し、0の場合が無いよう極小のクールタイムを足す
 			invincibleTime_ = player_->GetSystemManager()->GetComboTree()->GetHitCoolTime() + 0.01f;
 		}
@@ -106,7 +108,7 @@ void Ogre::Initialize(Player* player, const Vector3& position, LWP::Object::Came
 		//ダメージの倍率
 		float mag = LWP::Utility::Random::GenerateFloat(0.96f, 1.11f);
 
-		float resultDamage = player_->GetParameter()->GetCurrentAttackStrength() * mag;
+		float resultDamage = player_->GetParameter()->attackStrength_ * mag;
 
 		//ダメージエフェクト追加
 		//今後プレイヤーから取得する

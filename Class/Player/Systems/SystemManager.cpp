@@ -81,6 +81,7 @@ void SystemManager::Initialize() {
 	sheathCollision_.worldTF.translation = { 0.0f, 0.0f, 0.0f };
 	sheathCollision_.mask.SetBelongFrag(GameMask::GetAttack());
 	sheathCollision_.mask.SetHitFrag(GameMask::GetEnemy());
+	sheathCollision_.name = "Sheath";
 	// 鞘攻撃判定生成
 	sheathAttackCollision_.SetFollow(player_->GetWorldTF());
 	sheathAttackCollision_.worldTF.translation = { 0.0f, 1.0f, 0.0f };
