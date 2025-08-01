@@ -38,9 +38,11 @@ void EnemyManager::Update()
 	CheckIsSpawn();
 
 	//死亡した敵を削除
-	enemies_.remove_if([](IEnemy* enemy) {
+	enemies_.remove_if([&](IEnemy* enemy) {
 
 		if (enemy->GetIsDead()) {
+			// 死亡演出開始
+			particles_->CreateEnemyDeadParticles(3, Vector3{ enemy->GetPosition().x, 0.0f, enemy->GetPosition().z });
 			delete enemy;
 			return true;
 		}

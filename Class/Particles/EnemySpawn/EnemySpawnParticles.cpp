@@ -1,4 +1,5 @@
 #include "EnemySpawnParticles.h"
+#include "../../Components/HitStopController.h"
 
 using namespace LWP;
 using namespace LWP::Math;
@@ -19,7 +20,7 @@ EnemySpawnParticles::~EnemySpawnParticles() {
 void EnemySpawnParticles::Initialize() {}
 
 void EnemySpawnParticles::Update() {
-	if (isActive_) {
+	if (currentFrame_ > 0.0f) {
 		Add(count_);
 	}
 
@@ -36,6 +37,10 @@ void EnemySpawnParticles::Update() {
 	for (std::list<EnemySpawnParticle*>::iterator it = particles_.begin(); it != particles_.end();) {
 		(*it)->Update();
 		it++;
+	}
+
+	if (currentFrame_ >= 0.0f) {
+		currentFrame_ -= HitStopController::GetInstance()->GetDeltaTime();
 	}
 }
 
@@ -117,13 +122,9 @@ void EnemySpawnParticles::SetJsonData() {
 	json_.CheckJsonFile();
 }
 
-void EnemySpawnParticles::Start(const bool& isActive, const LWP::Math::Vector3& pos) {
-	isActive_ = isActive;
+void EnemySpawnParticles::Start(const float& createTime, const LWP::Math::Vector3& pos) {
+	currentFrame_ = createTime * 60.0f;
 	emitterPos_ = pos;
-}
-
-void EnemySpawnParticles::Finish() {
-	isActive_ = false;
 }
 
 void EnemySpawnParticles::Add(int value) {

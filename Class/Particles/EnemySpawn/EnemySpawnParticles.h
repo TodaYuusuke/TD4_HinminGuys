@@ -19,7 +19,7 @@ public:
 	void Update() override;
 
 	/// <summary>
-	/// Jsonで保存した調整項目()
+	/// Jsonで保存した調整項目
 	/// </summary>
 	void JsonDebugGui();
 
@@ -34,11 +34,7 @@ public:
 	/// 生成をするかを設定
 	/// </summary>
 	/// <param name="isActive"></param>
-	void Start(const bool& isActive, const LWP::Math::Vector3& pos);
-	/// <summary>
-	/// 生成終了
-	/// </summary>
-	void Finish();
+	void Start(const float& createTime, const LWP::Math::Vector3& pos);
 
 	/// <summary>
 	/// jsonで保存する内容の取得
@@ -54,7 +50,8 @@ private:
 	void Add(int value);
 
 public:
-	bool GetIsStart() { return isActive_; }
+	bool GetEmptyParticles() { return particles_.empty(); }
+	float GetCurrentFrame() { return currentFrame_; }
 
 private:
 	// 一度に生成する個数
@@ -70,6 +67,5 @@ private:
 	// 調整項目
 	EnemySpawnParticle::EnemySpawnParticleJsonData jsonData_;
 
-	// 生成するか
-	bool isActive_ = false;
+	float currentFrame_;
 };

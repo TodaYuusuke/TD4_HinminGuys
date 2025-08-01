@@ -9,6 +9,7 @@
 #include "SpawnData.h"
 #include "../UI/DamageEffectEmitter.h"
 #include "ParameterEditor.h"
+#include "../Particles/Particles.h"
 
 class Player;
 class SEPlayer;
@@ -37,6 +38,10 @@ public:
 	void SetWorld(World* world) { world_ = world; }
 	//カメラセット
 	void SetCamera(LWP::Object::Camera* camera) { camera_ = camera; }
+	//パーティクル管理クラスセット
+	void SetParticles(Particles* particles) { particles_ = particles; }
+	//パーティクル管理クラス取得
+	Particles* GetParticles() { return particles_; }
 	//ダメージエフェクトエミッターのセット
 	void SetDamageEffectEmitter(DamageEffectEmitter* emitter) { damageEffectEmitter_ = emitter; }
 	//ダメージエフェクトエミッター取得
@@ -105,6 +110,8 @@ private:
 	DamageEffectEmitter* damageEffectEmitter_;
 	//カメラのポインタ
 	LWP::Object::Camera* camera_ = nullptr;
+	// パーティクル管理クラス
+	Particles* particles_;
 
 	//全ての敵を管理するリスト
 	std::list<IEnemy*> enemies_;

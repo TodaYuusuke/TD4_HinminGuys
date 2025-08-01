@@ -58,6 +58,7 @@ void GameScene::Initialize() {
 	enemyManager_.SetCamera(followCamera_.GetCamera());
 	enemyManager_.SetIsShowSpawnDataModel(false);
 	enemyManager_.SetSEPlayer(&sePlayer_);
+	enemyManager_.SetParticles(particles_.get());
 	enemyManager_.SetWorld(&world_);
 
 	// 追従カメラの生成

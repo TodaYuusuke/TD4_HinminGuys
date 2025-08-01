@@ -92,11 +92,14 @@ public:// パーティクル生成
 	/// 敵出現パーティクル生成
 	/// </summary>
 	/// <param name="pos"></param>
-	void CreateEnemySpawnParticles(const LWP::Math::Vector3& pos) { enemySpawnParticles_->Start(true, pos); }
-	/// <summary>
-	/// 敵出現パーティクル生成終了
-	/// </summary>
-	void FinishEnemySpawnParticles() { enemySpawnParticles_->Finish(); }
+	void CreateEnemySpawnParticles(const float& createTime, const LWP::Math::Vector3& pos) {
+		//EnemySpawnParticles* p = new EnemySpawnParticles("Effect/Rock.png");
+		EnemySpawnParticles* p = new EnemySpawnParticles(*enemySpawnParticles_.get());
+		p->Initialize();
+		p->SetJsonData(enemySpawnParticles_->GetJsonData());
+		p->Start(createTime, pos);
+		spawnParticles_.push_back(p);
+	}
 	/// <summary>
 	/// 敵死亡パーティクル生成
 	/// </summary>
@@ -187,6 +190,7 @@ private:
 	// 浮遊パーティクル
 	std::unique_ptr<FloatParticle> floatParticle_;
 	std::unique_ptr<EnemySpawnParticles> enemySpawnParticles_;
+	std::list<EnemySpawnParticles*> spawnParticles_;
 	std::unique_ptr<EnemyDeadParticles> enemyDeadParticles_;
 	std::unique_ptr<AttackHitEffect> attackHitEffect_;
 	std::unique_ptr<CrackEffect> crackEffect_;

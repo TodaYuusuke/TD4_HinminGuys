@@ -10,6 +10,8 @@ void Saiji::SpawnFinalize(const States& pre)
 
 void Saiji::SpawnInit(const States& pre)
 {
+	// 出現演出開始
+	enemyManager_->GetParticles()->CreateEnemySpawnParticles(stateParameter_.spawnParameter.appearanceTime, Vector3{ model_.worldTF.translation.x, 0.0f, model_.worldTF.translation.z });
 	animation_.Play("Idle", 0.6f)
 		.Loop(true);
 	collider_.isActive = false;

@@ -40,25 +40,22 @@ Particles::Particles(Player* player, FollowCamera* followCamera) {
 }
 
 Particles::~Particles() {
-	// パリィ
 	parryEffect_.reset();
-	// 回避
 	evasionEffect_.reset();
-	// 移動
-	//MoveEffect> moveEffect_.reset();
 	dustClouds_.reset();
 	largeFlashes_.reset();
 	shortFlashes_.reset();
 	rings_.reset();
 	sparks_.reset();
-	// 浮遊パーティクル
 	floatParticle_.reset();
 	enemySpawnParticles_.reset();
 	enemyDeadParticles_.reset();
 	attackHitEffect_.reset();
 	crackEffect_.reset();
-	// 弱めの攻撃
 	weakCrackEffect_.reset();
+	for (EnemySpawnParticles* p : spawnParticles_) {
+		delete p;
+	}
 }
 
 void Particles::Initialize() {
@@ -72,6 +69,16 @@ void Particles::Update() {
 	rings_->Update();
 	sparks_->Update();
 	enemySpawnParticles_->Update();
+	spawnParticles_.remove_if([](EnemySpawnParticles* p) {
+		if (p->GetCurrentFrame() <= 0.0f && p->GetEmptyParticles()) {
+			delete p;
+			return true;
+		}
+		return false;
+		});
+	for (EnemySpawnParticles* p : spawnParticles_) {
+		p->Update();
+	}
 	enemyDeadParticles_->Update();
 	attackHitEffect_->Update();
 	crackEffect_->Update();
@@ -172,12 +179,8 @@ void Particles::DebugGui() {
 		floatParticle_->Add(10, debugEmitterPos_);
 	}
 	if (ImGui::Button("Create Spawn Particle")) {
-		if (!enemySpawnParticles_->GetIsStart()) {
-			enemySpawnParticles_->Start(true, debugEmitterPos_);
-		}
-		else {
-			enemySpawnParticles_->Finish();
-		}
+		//enemySpawnParticles_->Start(60.0f, debugEmitterPos_);
+		CreateEnemySpawnParticles(0.5f, debugEmitterPos_);
 	}
 	if (ImGui::Button("Create Dead Particle")) {
 		enemyDeadParticles_->Add(5, debugEmitterPos_);
