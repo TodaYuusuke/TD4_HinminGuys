@@ -13,7 +13,7 @@ GameScene::GameScene()
 	followCamera_(&player_, &mainCamera, player_.GetModelPos()),
 	uiManager_(&player_),
 	particles_(&player_, &followCamera_),
-	gameSceneManager_(&player_, &enemyManager_)
+	gameSceneManager_(&player_, &enemyManager_, &sceneTransitioner_)
 {
 	enemyManager_.Initialize();
 	LWP::Resource::LoadTexture("Effect/Particle.png");
@@ -103,6 +103,11 @@ void GameScene::Update() {
 	// ゲームシーンマネージャの更新
 	gameSceneManager_.Update();
 
+	//SE管理
+	sePlayer_.Update();
+	//BGM管理
+	bgmPlayer_.Update();
+
 	// ゲームが終了状態の場合
 	if (gameSceneManager_.GetIsEndGame()) {
 		#ifdef _DEBUG
@@ -149,15 +154,8 @@ void GameScene::Update() {
 	// uiの管理クラス
 	uiManager_.Update();
 
-	//SE管理
-	sePlayer_.Update();
-	//BGM管理
-	bgmPlayer_.Update();
-
 	// デバッグ用のウィンドウ
 	DebugGUI();
-
-	sceneTransitioner_.Update();
 }
 
 void GameScene::DebugGUI() {
@@ -227,8 +225,6 @@ void GameScene::DebugGUI() {
 
 		ImGui::EndTabBar();
 	}
-
-	gameSceneManager_.DebugGUI();
 
 	ImGui::End();
 

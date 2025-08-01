@@ -13,7 +13,8 @@ void SceneTransitioner::Initialize(IScene* scene)
 {
 	scene_ = scene;
 	sprite.material.color = { 0.0f,0.0f,0.0f,0.0f };
-	sprite.worldTF.scale = { LWP::Info::GetWindowWidthF() * 0.01f,LWP::Info::GetWindowHeightF() * 0.01f,1.0f};
+	sprite.worldTF.scale = { LWP::Info::GetWindowWidthF(),LWP::Info::GetWindowHeightF(),1.0f};
+	sprite.worldTF.translation = { 0.0f, 0.0f, -10.0f };
 }
 
 void SceneTransitioner::Update()

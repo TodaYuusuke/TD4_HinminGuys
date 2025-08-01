@@ -1,10 +1,13 @@
 #include "GameSceneManager.h"
 
-GameSceneManager::GameSceneManager(Player* player, EnemyManager* enemyManager)
+using namespace LWP;
+
+GameSceneManager::GameSceneManager(Player* player, EnemyManager* enemyManager, SceneTransitioner* sceneTransitioner)
 {
 	// ポインタの取得
-	player_ = player;
-	enemyManager_ = enemyManager;
+	player_				= player;
+	enemyManager_		= enemyManager;
+	sceneTransitioner_	= sceneTransitioner;
 }
 
 void GameSceneManager::Init()
@@ -22,6 +25,7 @@ void GameSceneManager::Init()
 	resultSprite_.isActive = false;
 	// ボタンスプライト
 	buttonSprite_.isActive = false;
+	buttonSprite_.material.color.A = 0;
 
 	// タイマーのアクティブ状態のリセット
 	timer_.SetIsActive(false);
@@ -29,8 +33,21 @@ void GameSceneManager::Init()
 
 void GameSceneManager::Update()
 {
+	// シーン遷移管理マネージャの更新
+	sceneTransitioner_->Update();
+
 	// ゲームが終了状態で無ければ
 	if (!isEndGame_) { 
+		// escキーが押された場合
+		if (LWP::Input::Keyboard::GetTrigger(DIK_ESCAPE)) {
+			// 強制的にタイトルへ戻す
+			sceneTransitioner_->SetNextScene(SceneName::kTitle);
+			sceneTransitioner_->SceneTransitionStart();
+
+			// 早期リターンでこの後の処理をスキップ
+			return;
+		}
+
 		// ゲームの進行状態チェック
 		GameStateCheck();
 		// 早期リターン
@@ -41,6 +58,10 @@ void GameSceneManager::Update()
 	if (timer_.GetIsActive()) {
 		// 終了演出
 		EndStaging();
+	}
+	else { // タイマーが非有効時
+		// 終了確認
+		EndCheck();
 	}
 }
 
@@ -120,6 +141,7 @@ void GameSceneManager::EndStaging()
 
 	// 背景スプライトの透明度を徐々に下げる
 	fadeSprite_.material.color.A = static_cast<unsigned char>(LWP::Utility::Interp::LerpF(0.0f, 225.0f, LWP::Utility::Easing::InOutQuart(timer_.GetProgress())));
+	buttonSprite_.material.color.A = static_cast<unsigned char>(LWP::Utility::Interp::LerpF(0.0f, 255.0f, LWP::Utility::Easing::InQuart(timer_.GetProgress())));
 
 	// 勝利状態で処理を切り替える
 	if (isWin_) {
@@ -132,9 +154,35 @@ void GameSceneManager::EndStaging()
 		resultSprite_.material.color.A = static_cast<unsigned char>(LWP::Utility::Interp::LerpF(0.0f, 255.0f, LWP::Utility::Easing::InOutQuart(timer_.GetProgress())));
 	}
 
-	// タイマー終了時
-	if (timer_.GetIsFinish()) {
+	// タイマー終了時、またはAボタン押下時
+	if (timer_.GetIsFinish() || LWP::Input::Controller::GetTrigger(XINPUT_GAMEPAD_A)) {
+		// 強制的にパラメーター設定
+		fadeSprite_.material.color.A = 225;
+		resultSprite_.worldTF.translation.x = LWP::Info::GetWindowWidthF() / 2.0f;
+		resultSprite_.worldTF.scale.y = 1.0f;
+		resultSprite_.material.color.A = 255;
+		buttonSprite_.material.color.A = 255;
+
 		// タイマーの有効状態切り替え
 		timer_.SetIsActive(false);
+	}
+}
+
+void GameSceneManager::EndCheck()
+{
+	// Aボタン押下時、シーン遷移を行う
+	if (LWP::Input::Controller::GetTrigger(XINPUT_GAMEPAD_A)) {
+		// 勝利フラグの状態によって処理を変更する
+		if (isWin_) { // 勝利
+			sceneTransitioner_->SetNextScene(SceneName::kTitle);
+			sceneTransitioner_->SceneTransitionStart();
+		}
+		else { // 敗北
+			sceneTransitioner_->SetNextScene(SceneName::kGameScene);
+			sceneTransitioner_->SceneTransitionStart();
+		}
+
+		// デルタタイムの値を元に戻す
+		LWP::Info::SetDeltaTimeMultiply(1.0f);
 	}
 }

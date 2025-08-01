@@ -2,6 +2,7 @@
 #include <Adapter.h>
 #include "../Player/Player.h"
 #include "../Enemy/EnemyManager.h"
+#include "SceneTransitioner.h"
 #include "../Timer/FrameTimer.h"
 
 /// <summary>
@@ -20,7 +21,8 @@ public: // コンストラクタ
 	/// </summary>
 	/// <param name="player">プレイヤー実体</param>
 	/// <param name="enemyManager">敵の管理マネージャ</param>
-	GameSceneManager(Player* player, EnemyManager* enemyManager);
+	/// <param name="sceneTransitioner">シーン遷移マネージャ</param>
+	GameSceneManager(Player* player, EnemyManager* enemyManager, SceneTransitioner* sceneTransitioner);
 
 	/// <summary>
 	/// デストラクタ
@@ -56,6 +58,11 @@ private: // その他関数群
 	/// </summary>
 	void EndStaging();
 
+	/// <summary>
+	/// 終了確認関数
+	/// </summary>
+	void EndCheck();
+
 public: // アクセッサ等
 
 	/// <summary>
@@ -70,6 +77,8 @@ private: // メンバ変数
 	Player* player_ = nullptr;
 	// 敵管理マネージャ本体
 	EnemyManager* enemyManager_ = nullptr;
+	// シーン遷移マネージャ本体
+	SceneTransitioner* sceneTransitioner_ = nullptr;
 
 	// ゲーム終了フラグ
 	bool isEndGame_ = false;
