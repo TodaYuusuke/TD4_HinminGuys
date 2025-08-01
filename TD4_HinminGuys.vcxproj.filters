@@ -128,6 +128,14 @@
     <ClCompile Include="Class\Enemy\Childs\Minor\Childs\OniHayha\State\OniHayhaDead.cpp" />
     <ClCompile Include="Class\Enemy\Childs\Minor\Childs\Saiji\State\SaijiDead.cpp" />
     <ClCompile Include="Class\Enemy\Childs\Boss\Childs\Ogre\State\OgreDead.cpp" />
+    <ClCompile Include="Class\Particles\SlashEffect\SlashEffector.cpp" />
+    <ClCompile Include="Class\Enemy\Childs\Boss\Childs\Ogre\State\OgreSpawn.cpp" />
+    <ClCompile Include="Class\Enemy\Childs\Minor\Childs\OniHayha\State\OniHayhaSpawn.cpp" />
+    <ClCompile Include="Class\Enemy\Childs\Minor\Childs\Saiji\State\SaijiSpawn.cpp" />
+    <ClCompile Include="Class\World\World.cpp" />
+    <ClCompile Include="Class\Particles\SheathBreak\Children\FlickeringFlash.cpp" />
+    <ClCompile Include="Class\Particles\SheathBreak\Children\RhombusParticle.cpp" />
+    <ClCompile Include="Class\Particles\SheathBreak\SheathBreakEffect.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Class\ComboEditor\ComboTree.h" />
@@ -244,6 +252,11 @@
     <ClInclude Include="Class\Particles\EnemyDead\EnemyDeadParticles.h" />
     <ClInclude Include="Class\Particles\Crack\CrackEffect.h" />
     <ClInclude Include="Class\Particles\Crack\Children\CrackPlane.h" />
+    <ClInclude Include="Class\Particles\SlashEffect\SlashEffector.h" />
+    <ClInclude Include="Class\World\World.h" />
+    <ClInclude Include="Class\Particles\SheathBreak\Children\FlickeringFlash.h" />
+    <ClInclude Include="Class\Particles\SheathBreak\Children\RhombusParticle.h" />
+    <ClInclude Include="Class\Particles\SheathBreak\SheathBreakEffect.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />

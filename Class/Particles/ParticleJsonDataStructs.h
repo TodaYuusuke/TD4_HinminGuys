@@ -26,10 +26,10 @@ struct ParticleJsonData {
 
 // 各パーティクルの情報
 struct ParticleData {
-	LWP::Primitive::IPlane* plane;
 	LWP::Math::Vector3 vel;					// 速度
 	LWP::Math::Vector3 dirVec;				// 方向ベクトル
 	LWP::Math::Vector3 euler;				// オイラー角
+	LWP::Math::Vector3 scale;				// 大きさ
 	float multiply;
 	float lifeTime;							// 生存時間
 	float currentTime = 0;					// 経過フレーム

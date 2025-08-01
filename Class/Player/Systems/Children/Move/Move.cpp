@@ -217,8 +217,10 @@ void Move::EffectFootOnGround() {
 		pos.y = 0.0f;
 		player_->GetParticles()->CreateMoveParticle(pos);
 
+		// ランダムで選択
+		int audioNum = Utility::Random::GenerateInt(0, (int)SE::move.size() - 1);
 		// 効果音再生
-		player_->PlaySE(SE::move[0].fileName, SE::move[0].name, SE::move[0].volume);
+		player_->PlaySE(SE::move[audioNum].fileName, SE::move[audioNum].name, SE::move[audioNum].volume);
 	}
 	// 右足
 	else if (footState_ == FootState::kRight && preFootState_ != FootState::kRight) {
@@ -227,8 +229,10 @@ void Move::EffectFootOnGround() {
 		pos.y = 0.0f;
 		player_->GetParticles()->CreateMoveParticle(pos);
 
+		// ランダムで選択
+		int audioNum = Utility::Random::GenerateInt(0, (int)SE::move.size() - 1);
 		// 効果音再生
-		player_->PlaySE(SE::move[0].fileName, SE::move[0].name, SE::move[0].volume);
+		player_->PlaySE(SE::move[audioNum].fileName, SE::move[audioNum].name, SE::move[audioNum].volume);
 	}
 
 	preFootState_ = footState_;

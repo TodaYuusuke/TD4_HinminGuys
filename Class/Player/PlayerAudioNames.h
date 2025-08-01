@@ -14,18 +14,18 @@ struct PlayerAudioPlayData {
 namespace PlayerAudio {
 	namespace SE {
 		// 移動時の音
-		inline PlayerAudioPlayData move[5] = {
+		inline std::array<PlayerAudioPlayData, 5> move = { {
 			{ "footSteps/footsteps0.mp3", "footSteps0", 1.0f },
 			{ "footSteps/footsteps1.mp3", "footSteps1", 1.0f },
 			{ "footSteps/footsteps2.mp3", "footSteps2", 1.0f },
 			{ "footSteps/footsteps3.mp3", "footSteps3", 1.0f },
 			{ "footSteps/footsteps4.mp3", "footSteps4", 1.0f }
-		};
+		} };
 		// 剣を振る
-		inline PlayerAudioPlayData attackSwing[3] = {
+		inline std::array<PlayerAudioPlayData, 3> attackSwing = { {
 			{ "missingShot/missingShot0.mp3","missingShot0", 1.0f },
 			{ "missingShot/missingShot1.mp3","missingShot1", 1.0f },
 			{ "missingShot/missingShot2.mp3","missingShot2", 1.0f }
-		};
+		} };
 	};
 };

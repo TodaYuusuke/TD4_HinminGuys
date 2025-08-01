@@ -33,8 +33,10 @@ Particles::Particles(Player* player, FollowCamera* followCamera) {
 	enemyDeadParticles_->Initialize();
 	attackHitEffect_ = std::make_unique<AttackHitEffect>();
 	attackHitEffect_->Initialize();
-	crackEffect_ = std::make_unique<CrackEffect>("EffectCrack.png");
+	crackEffect_ = std::make_unique<CrackEffect>("Effect/Crack.png");
 	crackEffect_->Initialize();
+	weakCrackEffect_ = std::make_unique<CrackEffect>("Effect/Crack.png");
+	weakCrackEffect_->Initialize();
 }
 
 void Particles::Initialize() {
@@ -51,6 +53,7 @@ void Particles::Update() {
 	enemyDeadParticles_->Update();
 	attackHitEffect_->Update();
 	crackEffect_->Update();
+	weakCrackEffect_->Update();
 	parryEffect_->Update();
 	dustClouds_->Update();
 
@@ -102,6 +105,9 @@ void Particles::CreateJsonData() {
 	json_.EndGroup();
 	json_.BeginGroup("CrackEffect");
 	crackEffect_->SetJsonData(json_);
+	json_.EndGroup();
+	json_.BeginGroup("WeakCrackEffect");
+	weakCrackEffect_->SetJsonData(json_);
 	json_.EndGroup();
 
 	json_.CheckJsonFile();
@@ -159,6 +165,9 @@ void Particles::DebugGui() {
 	}
 	if (ImGui::Button("Create Crack Effect")) {
 		crackEffect_->Add(debugEmitterPos_);
+	}
+	if (ImGui::Button("Create Weak Crack Effect")) {
+		weakCrackEffect_->Add(debugEmitterPos_);
 	}
 
 	// パーティクルの詳細

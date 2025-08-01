@@ -253,7 +253,8 @@
     <ClCompile Include="Class\Particles\EnemyDead\EnemyDeadParticles.cpp" />
     <ClCompile Include="Class\Particles\Crack\CrackEffect.cpp" />
     <ClCompile Include="Class\Particles\Crack\Children\CrackPlane.cpp" />
-   <ClCompile Include="Class\World\World.cpp" />
+    <ClCompile Include="Class\World\World.cpp" />
+    <ClCompile Include="Class\Particles\SheathBreak\Children\FlickeringFlash.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Class\Player\Player.cpp" />
     <ClCompile Include="Class\Player\Systems\Children\Move\Move.cpp" />
@@ -282,6 +283,8 @@
     <ClCompile Include="Class\Particles\Common\ShortFlashes.cpp" />
     <ClCompile Include="Class\Particles\Common\Rings.cpp" />
     <ClCompile Include="Class\Particles\Common\Sparks.cpp" />
+    <ClCompile Include="Class\Particles\SheathBreak\Children\RhombusParticle.cpp" />
+    <ClCompile Include="Class\Particles\SheathBreak\SheathBreakEffect.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Class\Particles\AttackHit\AttackHitEffect.h" />
@@ -291,7 +294,7 @@
     <ClInclude Include="Class\Particles\SlashEffect\SlashEffector.h" />
     <ClInclude Include="Class\UI\EchoMotion.h" />
     <ClInclude Include="Class\World\World.h" />
-   <ClInclude Include="Class\Camera\CameraSystems.h" />
+    <ClInclude Include="Class\Camera\CameraSystems.h" />
     <ClInclude Include="Class\Audio\AudioPlayer.h" />
     <ClInclude Include="Class\Audio\BGMPlayer.h" />
     <ClInclude Include="Class\Audio\SEPlayer.h" />
@@ -400,6 +403,9 @@
     <ClInclude Include="Class\Particles\EnemyDead\EnemyDeadParticles.h" />
     <ClInclude Include="Class\Particles\Crack\CrackEffect.h" />
     <ClInclude Include="Class\Particles\Crack\Children\CrackPlane.h" />
+    <ClInclude Include="Class\Particles\SheathBreak\Children\FlickeringFlash.h" />
+    <ClInclude Include="Class\Particles\SheathBreak\Children\RhombusParticle.h" />
+    <ClInclude Include="Class\Particles\SheathBreak\SheathBreakEffect.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />
