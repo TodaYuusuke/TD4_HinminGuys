@@ -63,8 +63,8 @@ void GameScene::Initialize() {
 	followCamera_.Initialize();
 
 	// 自機の生成
-	player_.Initialize();
 	player_.SetSEPlayer(&sePlayer_);
+	player_.Initialize();
 	player_.SetParticles(&particles_);
 	player_.SetWorld(&world_);
 
