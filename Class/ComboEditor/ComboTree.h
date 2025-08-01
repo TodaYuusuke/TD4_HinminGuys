@@ -69,6 +69,12 @@ public: // アクセッサ等
 	SlashEffector* GetSlashEffector() { return &slashEffector_; }
 
 	/// <summary>
+	/// 効果音プレイヤーのセッター
+	/// </summary>
+	/// <param name="sePlayer">効果音プレイヤー</param>
+	void SetSEPlayer(SEPlayer* sePlayer) { sePlayer_ = sePlayer; }
+
+	/// <summary>
 	/// コライダーマスクのセッター
 	/// </summary>
 	/// <param name="maskID">マスクするマスクID</param>
@@ -110,6 +116,12 @@ public: // アクセッサ等
 	/// </summary>
 	/// <returns>ヒットストップ秒数</returns>
 	float GetHitStopTime() { return nowCombo_->GetHitStopTime(); }
+
+	/// <summary>
+	/// 攻撃命中時のクールタイムゲッター
+	/// </summary>
+	/// <returns>命中時のクールタイム</returns>
+	float GetHitCoolTime() { return nowCombo_->GetHitCoolTime(); }
 
 	/// <summary>
 	/// 現在コンボのノックバック強さゲッター
@@ -235,6 +247,9 @@ private: // メンバ変数
 	// コライダー
 	LWP::Object::Collision collider_;
 	LWP::Object::Collider::Sphere& sphere_;
+
+	// 効果音再生クラス
+	SEPlayer* sePlayer_ = nullptr;
 
 	// 現在のコンボ
 	Combo* nowCombo_ = nullptr;

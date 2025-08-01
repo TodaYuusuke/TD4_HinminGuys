@@ -4,6 +4,7 @@
 #include "../Condition/ConditionList.h"
 #include "../DeltaTimer/DeltaTimer.h"
 #include "../Particles/SlashEffect/SlashEffector.h"
+#include "../Audio/SEPlayer.h"
 
 /// <summary>
 /// コンボクラス
@@ -40,8 +41,9 @@ public: // メンバ関数
 	/// <param name="model">モデル</param>
 	/// <param name="anim">アニメーション</param>
 	/// <param name="collider">コライダー</param>
+	/// <param name="sePlayer">効果音プレイヤー</param>
 	/// <param name="effector">斬撃エフェクター</param>
-	void Start(LWP::Resource::SkinningModel* model, LWP::Resource::Animation* anim, LWP::Object::Collision* collider, SlashEffector* effector);
+	void Start(LWP::Resource::SkinningModel* model, LWP::Resource::Animation* anim, LWP::Object::Collision* collider, SEPlayer* sePlayer, SlashEffector* effector);
 
 	/// <summary>
 	/// 更新関数
@@ -81,7 +83,7 @@ public: // メンバ関数
 	void ReceptTimerGUI() { receptTimer_.DebugGUI("ReceptTimer_"); }
 
 public: // アクセッサ等
-	
+
 	/// <summary>
 	/// 無操作状態のコンボであるかのセッター
 	/// </summary>
@@ -128,6 +130,12 @@ public: // アクセッサ等
 	/// </summary>
 	/// <returns>ヒットストップ秒数</returns>
 	float GetHitStopTime() { return hitStopTime_; }
+
+	/// <summary>
+	/// 攻撃命中時のクールタイムゲッター
+	/// </summary>
+	/// <returns>命中時のクールタイム</returns>
+	float GetHitCoolTime() { return hitCoolTime_; }
 
 	/// <summary>
 	/// ノックバック強さゲッター
@@ -264,6 +272,11 @@ private: // プライベートなメンバ関数
 	void SlashEffectUpdate(LWP::Resource::SkinningModel* model);
 
 	/// <summary>
+	/// 効果音関連の更新関数
+	/// </summary>
+	void SEUpdate();
+
+	/// <summary>
 	/// 硬直時間関係の更新
 	/// </summary>
 	void StifnessTimeUpdate();
@@ -310,6 +323,9 @@ private: // プライベートなメンバ関数
 
 private: // メンバ変数
 
+	// 効果音再生クラス
+	SEPlayer* sePlayer_ = nullptr;
+
 	// コンボの名称
 	std::string name_ = "";
 
@@ -350,6 +366,8 @@ private: // メンバ変数
 	float damage_ = 1.0f;
 	// 攻撃のヒットストップ秒数
 	float hitStopTime_ = 0.1f;
+	// 命中時の攻撃のヒットクールタイム
+	float hitCoolTime_ = 0.5f;
 	// ノックバック強さ
 	float nockbackStrength_ = 0.1f;
 	// 命中時の鞘の耐久値減少量
@@ -380,6 +398,15 @@ private: // メンバ変数
 	LWP::Math::Vector3 slashEffectScale_ = { 0.5f, 0.5f, 0.5f };
 	// 斬撃エフェクト再生秒数
 	float playSlashEffectTime_ = 0.0f;
+
+	// 攻撃効果音までのパス
+	std::string audioPath_ = "";
+	// 再生音量
+	float seVolume_ = 1.0f;
+	// 攻撃効果音用タイマー
+	LWP::Utility::DeltaTimer seTimer_{};
+	// 攻撃効果音再生までの秒数
+	float playSETime_ = 0.0f;
 
 	// 硬直時間
 	float stifnessTime_ = 0.0f;
