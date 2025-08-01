@@ -114,6 +114,11 @@ public:// パーティクル生成
 	/// </summary>
 	/// <param name="pos"></param>
 	void CreateCrackEffect(const LWP::Math::Vector3& pos) { crackEffect_->Add(pos); }
+	/// <summary>
+	/// 雑魚敵の重攻撃時のパーティクル生成
+	/// </summary>
+	/// <param name="pos"></param>
+	void CreateWeakCrackEffect(const LWP::Math::Vector3& pos) { weakCrackEffect_->Add(pos); }
 
 #pragma region Getter
 	/// <summary>
@@ -146,6 +151,11 @@ public:// パーティクル生成
 	/// </summary>
 	/// <returns></returns>
 	CrackEffect* GetCrackEffect() { return crackEffect_.get(); }
+	/// <summary>
+	/// 雑魚敵の重攻撃時のパーティクル取得
+	/// </summary>
+	/// <returns></returns>
+	CrackEffect* GetWeakCrackEffect() { return weakCrackEffect_.get(); }
 #pragma endregion
 
 #pragma region Setter
@@ -180,6 +190,8 @@ private:
 	std::unique_ptr<EnemyDeadParticles> enemyDeadParticles_;
 	std::unique_ptr<AttackHitEffect> attackHitEffect_;
 	std::unique_ptr<CrackEffect> crackEffect_;
+	// 弱めの攻撃
+	std::unique_ptr<CrackEffect> weakCrackEffect_;
 
 
 

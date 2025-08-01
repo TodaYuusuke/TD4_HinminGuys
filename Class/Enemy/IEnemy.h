@@ -57,6 +57,7 @@ struct EnemyParameter {
 	//代入演算子
 	EnemyParameter& operator=(const EnemyParameter& other) {
 
+		maxHp = other.maxHp;
 		hp = other.hp;
 		speed = other.speed;
 		attackParameter = other.attackParameter;

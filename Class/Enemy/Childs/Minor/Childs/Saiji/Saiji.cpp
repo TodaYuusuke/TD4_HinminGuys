@@ -80,20 +80,29 @@ void Saiji::Initialize(Player* player, const Vector3& position, LWP::Object::Cam
 
 		//コライダーを一時的にオフ、クールタイム設定
 		collider_.isActive = false;
-		//プレイヤーから取得し、0の場合が無いよう極小のクールタイムを足す
-		invincibleTime_ = player_->GetSystemManager()->GetComboTree()->GetHitCoolTime() + 0.01f;
 
+		//鞘の場合、専用のクールタイム設定
+		if (hitTarget->name == "Sheath") {
+			//クールタイム設定
+			invincibleTime_ = 1.01f;
+		}
+		else {
+			//プレイヤーから取得し、0の場合が無いよう極小のクールタイムを足す
+			invincibleTime_ = player_->GetSystemManager()->GetComboTree()->GetHitCoolTime() + 0.01f;
+		}
 
-		//ダメージの加算値(テスト用)
-		int plusDamage = LWP::Utility::Random::GenerateInt(0, 1000);
+		//ダメージの倍率
+		float mag = LWP::Utility::Random::GenerateFloat(0.96f, 1.11f);
+
+		float resultDamage = player_->GetParameter()->GetCurrentAttackStrength() * mag;
 
 		//ダメージエフェクト追加
 		//今後プレイヤーから取得する
-		enemyManager_->GetDamageEffectEmitter().AddEffect(float(plusDamage),
+		enemyManager_->GetDamageEffectEmitter().AddEffect(resultDamage,
 			model_.GetJointWorldPosition("UpperBody"));
 
 		//ダメージを受ける
-		TakeDamage(player_->GetSystemManager()->GetComboTree()->GetDamage());
+		TakeDamage(resultDamage);
 
 		};
 	
@@ -163,6 +172,7 @@ void Saiji::DebugGUI()
 	if (ImGui::TreeNode(std::to_string(ID_).c_str())) {
 		state_.DebugGUI();
 		ImGui::Text(std::to_string(distFromPlayer_).c_str());
+		ImGui::Text("HP: %1.2f", parameter_.hp);
 		ImGui::TreePop();
 	}
 

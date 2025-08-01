@@ -1,18 +1,18 @@
 {
     "Group :EnemyParameters": {
         "Group :Ogre": {
-            "float :AttackValue": 10.0,
+            "float :AttackValue": 100.0,
             "float :HP": 10000.0,
             "float :KnockbackValue": 0.5
         },
         "Group :OniHayha": {
-            "float :AttackValue": 10.0,
-            "float :HP": 10.0,
+            "float :AttackValue": 50.0,
+            "float :HP": 650.0,
             "float :KnockbackValue": 0.5
         },
         "Group :Saiji": {
-            "float :AttackValue": 10.0,
-            "float :HP": 10.0,
+            "float :AttackValue": 50.0,
+            "float :HP": 670.0,
             "float :KnockbackValue": 0.5
         },
         "float :ParryEffectOccurTime": 0.10000000149011612

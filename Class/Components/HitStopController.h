@@ -32,6 +32,7 @@ public:// Getter, Setter
 	void Start(const float& time, const float& multiply = 0.2f) {
 		SetHitStopTime(time);
 		LWP::Info::SetDeltaTimeMultiply(multiply);
+		isFinish_ = false;
 	}
 #pragma region Getter
 	/// <summary>

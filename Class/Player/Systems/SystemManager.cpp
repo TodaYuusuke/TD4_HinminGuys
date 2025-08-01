@@ -63,7 +63,7 @@ void SystemManager::Initialize() {
 		// ヒットストップの設定
 		HitStopController::GetInstance()->Start(comboTree_->GetHitStopTime(), 0.0f);
 		};
-	comboTree_->AddCollisionLamda(LWP::Utility::ComboEnum::ENTER, attackOnHitFunc_);
+	comboTree_->AddCollisionLamda(LWP::Utility::ComboEnum::STAY, attackOnHitFunc_);
 
 	// パリィ判定生成
 	parryAABB_.min = { -1.0f, -1.0f, -1.0f };
@@ -87,6 +87,7 @@ void SystemManager::Initialize() {
 	sheathAttackCollision_.isActive = false;
 	sheathAttackCollision_.mask.SetBelongFrag(GameMask::GetAttack());
 	sheathAttackCollision_.mask.SetHitFrag(GameMask::GetEnemy());
+	sheathAttackCollision_.name = "Sheath";
 
 #pragma region json用
 	// 被弾機能
@@ -127,7 +128,7 @@ void SystemManager::Initialize() {
 	aura_ = std::make_unique<AuraParticles>();
 	aura_->Initialize();
 	aura_->SetJsonData();
-	aura_->SetTexName("Effect/Particle.png");
+	aura_->SetTexName("Effect/Smoke.png");
 }
 
 void SystemManager::Update() {

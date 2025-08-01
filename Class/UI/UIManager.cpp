@@ -136,8 +136,6 @@ void UIManager::Update() {
 void UIManager::DebugGUI() {
 	json_.DebugGUI();
 
-	guideUI_[0].coolTimeFilter.DebugGUI();
-
 	sheathGauge_.DebugGUI();
 
 	hp_.DebugGUI();
