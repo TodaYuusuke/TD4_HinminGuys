@@ -130,6 +130,12 @@ public: // アクセッサ等
 	float GetHitStopTime() { return hitStopTime_; }
 
 	/// <summary>
+	/// 攻撃命中時のクールタイムゲッター
+	/// </summary>
+	/// <returns>命中時のクールタイム</returns>
+	float GetHitCoolTime() { return hitCoolTime_; }
+
+	/// <summary>
 	/// ノックバック強さゲッター
 	/// </summary>
 	/// <returns>ノックバック強さ</returns>
@@ -350,6 +356,8 @@ private: // メンバ変数
 	float damage_ = 1.0f;
 	// 攻撃のヒットストップ秒数
 	float hitStopTime_ = 0.1f;
+	// 命中時の攻撃のヒットクールタイム
+	float hitCoolTime_ = 0.5f;
 	// ノックバック強さ
 	float nockbackStrength_ = 0.1f;
 	// 命中時の鞘の耐久値減少量

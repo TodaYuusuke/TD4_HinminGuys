@@ -112,6 +112,12 @@ public: // アクセッサ等
 	float GetHitStopTime() { return nowCombo_->GetHitStopTime(); }
 
 	/// <summary>
+	/// 攻撃命中時のクールタイムゲッター
+	/// </summary>
+	/// <returns>命中時のクールタイム</returns>
+	float GetHitCoolTime() { return nowCombo_->GetHitCoolTime(); }
+
+	/// <summary>
 	/// 現在コンボのノックバック強さゲッター
 	/// </summary>
 	/// <returns>ノックバック強さ</returns>
