@@ -39,6 +39,11 @@ public: // メンバ関数
 	/// </summary>
 	void Update();
 
+	/// <summary>
+	/// デバッグ用GUI関数
+	/// </summary>
+	void DebugGUI();
+
 private: // その他関数群
 
 	/// <summary>

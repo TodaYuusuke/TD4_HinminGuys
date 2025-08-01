@@ -228,6 +228,8 @@ void GameScene::DebugGUI() {
 		ImGui::EndTabBar();
 	}
 
+	gameSceneManager_.DebugGUI();
+
 	ImGui::End();
 
 	// コンボのデバッグGUIの表示

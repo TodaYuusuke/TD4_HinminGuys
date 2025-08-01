@@ -16,6 +16,7 @@ void GameSceneManager::Init()
 	// フェード演出用スプライト
 	fadeSprite_.material.color = { 0.0f, 0.0f, 0.0f, 0.0f };
 	fadeSprite_.worldTF.scale = { LWP::Info::GetWindowWidthF(),LWP::Info::GetWindowHeightF(), 1.0f };
+	fadeSprite_.worldTF.translation = { LWP::Info::GetWindowWidthF(),LWP::Info::GetWindowHeightF(), -1.25f };
 	fadeSprite_.isActive = false;
 	// リザルト文字用スプライト
 	resultSprite_.isActive = false;
@@ -36,8 +37,16 @@ void GameSceneManager::Update()
 		return; 
 	}
 
-	// 終了演出
-	EndStaging();
+	// タイマーが有効状態のときのみ更新する
+	if (timer_.GetIsActive()) {
+		// 終了演出
+		EndStaging();
+	}
+}
+
+void GameSceneManager::DebugGUI()
+{
+	timer_.DebugGUI("GameSceneManagerTimer");
 }
 
 void GameSceneManager::GameStateCheck()
@@ -79,7 +88,11 @@ void GameSceneManager::GameStateCheck()
 		buttonSprite_.LoadTexture("Result/Exit.png");
 
 		// 座標設定
-		resultSprite_.worldTF.translation = { (LWP::Info::GetWindowWidthF() / 2.0f), (LWP::Info::GetWindowHeightF() / 5.0f), 1.0f };
+		resultSprite_.worldTF.translation = { LWP::Info::GetWindowWidthF() * -2.0f, (LWP::Info::GetWindowHeightF() / 5.0f), -2.5f };
+		resultSprite_.worldTF.scale = { 1.0f, 0.0f, 1.0f };
+
+		// 演出用タイマーを指定秒数で開始
+		timer_.Start(2.0f);
 	}
 	else {
 		// テクスチャ読み込み
@@ -87,15 +100,41 @@ void GameSceneManager::GameStateCheck()
 		buttonSprite_.LoadTexture("Result/Retry.png");
 
 		// 座標設定
-		resultSprite_.worldTF.translation = { (LWP::Info::GetWindowWidthF() / 2.0f), (LWP::Info::GetWindowHeightF() / 5.0f), 1.0f };
+		resultSprite_.worldTF.translation = { (LWP::Info::GetWindowWidthF() / 2.0f), (LWP::Info::GetWindowHeightF() / 5.0f), -2.5f };
+		// 透明度設定
+		resultSprite_.material.color = { 1.0f, 1.0f, 1.0f, 0.0f };
+
+		// 演出用タイマーを指定秒数で開始
+		timer_.Start(3.0f);
 	}
 
 	// ボタンスプライト座標設定
-	buttonSprite_.worldTF.translation = { (LWP::Info::GetWindowWidthF() / 2.0f), (LWP::Info::GetWindowHeightF() / 1.25f), 1.0f };
+	buttonSprite_.worldTF.translation = { (LWP::Info::GetWindowWidthF() / 2.0f), (LWP::Info::GetWindowHeightF() / 1.25f), -2.5f };
 
 }
 
 void GameSceneManager::EndStaging()
 {
-	
+	// タイマー更新
+	timer_.Update();
+
+	// 背景スプライトの透明度を徐々に下げる
+	fadeSprite_.material.color.A = static_cast<unsigned char>(LWP::Utility::Interp::LerpF(0.0f, 225.0f, LWP::Utility::Easing::InOutQuart(timer_.GetProgress())));
+
+	// 勝利状態で処理を切り替える
+	if (isWin_) {
+		// 補間で各種パラメーターを動かす
+		resultSprite_.worldTF.translation.x = LWP::Utility::Interp::LerpF(LWP::Info::GetWindowWidthF() * -2.0f, LWP::Info::GetWindowWidthF() / 2.0f, LWP::Utility::Easing::InOutExpo(timer_.GetProgress()));
+		resultSprite_.worldTF.scale.y = LWP::Utility::Interp::LerpF(0.0f, 1.0f, LWP::Utility::Easing::OutExpo(timer_.GetProgress()));
+	}
+	else {
+		// 補間で各種パラメーターを動かす
+		resultSprite_.material.color.A = static_cast<unsigned char>(LWP::Utility::Interp::LerpF(0.0f, 255.0f, LWP::Utility::Easing::InOutQuart(timer_.GetProgress())));
+	}
+
+	// タイマー終了時
+	if (timer_.GetIsFinish()) {
+		// タイマーの有効状態切り替え
+		timer_.SetIsActive(false);
+	}
 }
