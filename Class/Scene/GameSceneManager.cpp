@@ -124,8 +124,8 @@ void GameSceneManager::EndStaging()
 	// 勝利状態で処理を切り替える
 	if (isWin_) {
 		// 補間で各種パラメーターを動かす
-		resultSprite_.worldTF.translation.x = LWP::Utility::Interp::LerpF(LWP::Info::GetWindowWidthF() * -2.0f, LWP::Info::GetWindowWidthF() / 2.0f, LWP::Utility::Easing::InOutExpo(timer_.GetProgress()));
-		resultSprite_.worldTF.scale.y = LWP::Utility::Interp::LerpF(0.0f, 1.0f, LWP::Utility::Easing::OutExpo(timer_.GetProgress()));
+		resultSprite_.worldTF.translation.x = LWP::Utility::Interp::LerpF(LWP::Info::GetWindowWidthF() * -2.0f, LWP::Info::GetWindowWidthF() / 2.0f, LWP::Utility::Easing::InOutQuint(timer_.GetProgress()));
+		resultSprite_.worldTF.scale.y = LWP::Utility::Interp::LerpF(0.0f, 1.0f, LWP::Utility::Easing::InOutQuart(timer_.GetProgress()));
 	}
 	else {
 		// 補間で各種パラメーターを動かす
