@@ -75,6 +75,12 @@ public: // アクセッサ等
 	void SetSEPlayer(SEPlayer* sePlayer) { sePlayer_ = sePlayer; }
 
 	/// <summary>
+	/// 攻撃判定コライダーのゲッター
+	/// </summary>
+	/// <returns>攻撃判定コライダー</returns>
+	LWP::Object::Collision* GetCollider() { return &collider_; }
+
+	/// <summary>
 	/// コライダーマスクのセッター
 	/// </summary>
 	/// <param name="maskID">マスクするマスクID</param>

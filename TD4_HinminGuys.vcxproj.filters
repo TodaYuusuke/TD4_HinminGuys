@@ -3,7 +3,7 @@
   <ItemGroup>
     <ClCompile Include="Class\ComboEditor\ComboTree.cpp" />
     <ClCompile Include="Class\Condition\child\Input\ButtonCondition.cpp" />
-    <ClCompile Include="Class\DeltaTimer\DeltaTimer.cpp" />
+    <ClCompile Include="Class\Timer\DeltaTimer.cpp" />
     <ClCompile Include="Class\Scene\GameScene.cpp" />
     <ClCompile Include="Class\ComboEditor\Combo.cpp" />
     <ClCompile Include="Class\Enemy\SpawnData.cpp" />
@@ -34,7 +34,6 @@
     <ClCompile Include="Class\Player\Systems\Children\Sheath\State\Throw.cpp" />
     <ClCompile Include="Class\Player\Systems\Children\Move\State\Dash.cpp" />
     <ClCompile Include="Class\Player\Systems\Children\Damage\DamageResponse.cpp" />
-    <ClCompile Include="Class\Scene\VoidScene.cpp" />
     <ClCompile Include="Class\UI\UIManager.cpp" />
     <ClCompile Include="Class\Camera\State\InputCamera.cpp" />
     <ClCompile Include="Class\Camera\State\ParryCamera.cpp" />
@@ -128,13 +127,21 @@
     <ClCompile Include="Class\Enemy\Childs\Minor\Childs\OniHayha\State\OniHayhaDead.cpp" />
     <ClCompile Include="Class\Enemy\Childs\Minor\Childs\Saiji\State\SaijiDead.cpp" />
     <ClCompile Include="Class\Enemy\Childs\Boss\Childs\Ogre\State\OgreDead.cpp" />
+    <ClCompile Include="Class\Particles\SlashEffect\SlashEffector.cpp" />
+    <ClCompile Include="Class\Enemy\Childs\Boss\Childs\Ogre\State\OgreSpawn.cpp" />
+    <ClCompile Include="Class\Enemy\Childs\Minor\Childs\OniHayha\State\OniHayhaSpawn.cpp" />
+    <ClCompile Include="Class\Enemy\Childs\Minor\Childs\Saiji\State\SaijiSpawn.cpp" />
+    <ClCompile Include="Class\World\World.cpp" />
+    <ClCompile Include="Class\Scene\VoidScene.cpp" />
+    <ClCompile Include="Class\Scene\GameSceneManager.cpp" />
+    <ClCompile Include="Class\Timer\FrameTimer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Class\ComboEditor\ComboTree.h" />
     <ClInclude Include="Class\Condition\child\Input\ButtonCondition.h" />
     <ClInclude Include="Class\Condition\ConditionEnums.h" />
     <ClInclude Include="Class\Condition\ConditionList.h" />
-    <ClInclude Include="Class\DeltaTimer\DeltaTimer.h" />
+    <ClInclude Include="Class\Timer\DeltaTimer.h" />
     <ClInclude Include="Class\ComboEditor\Combo.h" />
     <ClInclude Include="Class\Condition\ICondition.h" />
     <ClInclude Include="Class\Enemy\Childs\Boss\Boss.h" />
@@ -174,7 +181,6 @@
     <ClInclude Include="Class\Player\Systems\Children\Move\State\Dash.h" />
     <ClInclude Include="Class\Player\Command\BanInput.h" />
     <ClInclude Include="Class\Player\Systems\Children\Damage\DamageResponse.h" />
-    <ClInclude Include="Class\Scene\VoidScene.h" />
     <ClInclude Include="Class\UI\UIManager.h" />
     <ClInclude Include="Class\Camera\State\IFollowCameraState.h" />
     <ClInclude Include="Class\Camera\State\InputCamera.h" />
@@ -244,6 +250,11 @@
     <ClInclude Include="Class\Particles\EnemyDead\EnemyDeadParticles.h" />
     <ClInclude Include="Class\Particles\Crack\CrackEffect.h" />
     <ClInclude Include="Class\Particles\Crack\Children\CrackPlane.h" />
+    <ClInclude Include="Class\Particles\SlashEffect\SlashEffector.h" />
+    <ClInclude Include="Class\World\World.h" />
+    <ClInclude Include="Class\Scene\VoidScene.h" />
+    <ClInclude Include="Class\Scene\GameSceneManager.h" />
+    <ClInclude Include="Class\Timer\FrameTimer.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />

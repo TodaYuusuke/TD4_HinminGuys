@@ -204,3 +204,13 @@ void Player::CreateParryParticle(const LWP::Math::Vector3& pos) {
 void Player::CreateEvasionParticle(const LWP::Math::Vector3& pos) {
 	particles_->CreateEvasionParticle(pos);
 }
+
+void Player::SetAllColliderState(const bool enable)
+{
+	// 角コライダーの状態切り替え
+	collider_.isActive = enable;
+	systemManager_->GetParryCollision().isActive = enable;
+	systemManager_->GetSheathAttackCollision().isActive = enable;
+	systemManager_->GetSheathCollision().isActive = enable;
+	systemManager_->GetComboTree()->GetCollider()->isActive = enable;
+}

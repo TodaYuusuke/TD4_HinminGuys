@@ -1,6 +1,6 @@
 #pragma once
 #include "Adapter.h"
-#include "../../DeltaTimer/DeltaTimer.h"
+#include "../../Timer/DeltaTimer.h"
 
 /// <summary>
 /// 斬撃管理エフェクト管理

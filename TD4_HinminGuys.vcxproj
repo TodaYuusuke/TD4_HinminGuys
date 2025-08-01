@@ -150,11 +150,13 @@
     </Manifest>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Class\Timer\FrameTimer.cpp" />
     <ClCompile Include="Class\Particles\AttackHit\AttackHitEffect.cpp" />
     <ClCompile Include="Class\Particles\AttackHit\Children\AttackHitParticle.cpp" />
     <ClCompile Include="Class\Particles\Common\AuraParticles.cpp" />
     <ClCompile Include="Class\Particles\Common\Children\AuraParticle.cpp" />
     <ClCompile Include="Class\Particles\SlashEffect\SlashEffector.cpp" />
+    <ClCompile Include="Class\Scene\VoidScene.cpp" />
     <ClCompile Include="Class\UI\EchoMotion.cpp" />
     <ClCompile Include="Class\Enemy\Childs\Boss\Childs\Ogre\State\OgreSpawn.cpp" />
     <ClCompile Include="Class\Enemy\Childs\Minor\Childs\OniHayha\State\OniHayhaSpawn.cpp" />
@@ -205,7 +207,7 @@
     <ClCompile Include="Class\Player\Systems\Children\Sheath\State\Break.cpp" />
     <ClCompile Include="Class\ComboEditor\ComboTree.cpp" />
     <ClCompile Include="Class\Condition\child\Input\ButtonCondition.cpp" />
-    <ClCompile Include="Class\DeltaTimer\DeltaTimer.cpp" />
+    <ClCompile Include="Class\Timer\DeltaTimer.cpp" />
     <ClCompile Include="Class\Enemy\SpawnData.cpp" />
     <ClCompile Include="Class\Scene\GameOver.cpp" />
     <ClCompile Include="Class\Scene\GameScene.cpp" />
@@ -231,7 +233,6 @@
     <ClCompile Include="Class\Player\Systems\Children\Sheath\State\Collect.cpp" />
     <ClCompile Include="Class\Player\Systems\Children\Move\State\Dash.cpp" />
     <ClCompile Include="Class\Player\Systems\Children\Damage\DamageResponse.cpp" />
-    <ClCompile Include="Class\Scene\VoidScene.cpp" />
     <ClCompile Include="Class\Camera\State\InputCamera.cpp" />
     <ClCompile Include="Class\Camera\State\LockOnCamera.cpp" />
     <ClCompile Include="Class\UI\DamageEffectEmitter.cpp" />
@@ -253,7 +254,8 @@
     <ClCompile Include="Class\Particles\EnemyDead\EnemyDeadParticles.cpp" />
     <ClCompile Include="Class\Particles\Crack\CrackEffect.cpp" />
     <ClCompile Include="Class\Particles\Crack\Children\CrackPlane.cpp" />
-   <ClCompile Include="Class\World\World.cpp" />
+    <ClCompile Include="Class\World\World.cpp" />
+    <ClCompile Include="Class\Scene\GameSceneManager.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Class\Player\Player.cpp" />
     <ClCompile Include="Class\Player\Systems\Children\Move\Move.cpp" />
@@ -284,14 +286,16 @@
     <ClCompile Include="Class\Particles\Common\Sparks.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Class\Timer\FrameTimer.h" />
     <ClInclude Include="Class\Particles\AttackHit\AttackHitEffect.h" />
     <ClInclude Include="Class\Particles\AttackHit\Children\AttackHitParticle.h" />
     <ClInclude Include="Class\Particles\Common\AuraParticles.h" />
     <ClInclude Include="Class\Particles\Common\Children\AuraParticle.h" />
     <ClInclude Include="Class\Particles\SlashEffect\SlashEffector.h" />
+    <ClInclude Include="Class\Scene\VoidScene.h" />
     <ClInclude Include="Class\UI\EchoMotion.h" />
     <ClInclude Include="Class\World\World.h" />
-   <ClInclude Include="Class\Camera\CameraSystems.h" />
+    <ClInclude Include="Class\Camera\CameraSystems.h" />
     <ClInclude Include="Class\Audio\AudioPlayer.h" />
     <ClInclude Include="Class\Audio\BGMPlayer.h" />
     <ClInclude Include="Class\Audio\SEPlayer.h" />
@@ -316,7 +320,7 @@
     <ClInclude Include="Class\Condition\child\Input\ButtonCondition.h" />
     <ClInclude Include="Class\Condition\ConditionEnums.h" />
     <ClInclude Include="Class\Condition\ConditionList.h" />
-    <ClInclude Include="Class\DeltaTimer\DeltaTimer.h" />
+    <ClInclude Include="Class\Timer\DeltaTimer.h" />
     <ClInclude Include="Class\ComboEditor\Combo.h" />
     <ClInclude Include="Class\Condition\ICondition.h" />
     <ClInclude Include="Class\Enemy\Childs\Boss\Boss.h" />
@@ -347,7 +351,6 @@
     <ClInclude Include="Class\Player\Systems\Children\Sheath\Sheath.h" />
     <ClInclude Include="Class\Player\Systems\SystemManager.h" />
     <ClInclude Include="Class\Player\Systems\Children\Evasion\Evasion.h" />
-    <ClInclude Include="Class\Scene\VoidScene.h" />
     <ClInclude Include="Class\TestCollider.h" />
     <ClInclude Include="Class\GameMask.h" />
     <ClInclude Include="Class\Player\Systems\Children\Move\State\Idle.h" />
@@ -400,6 +403,7 @@
     <ClInclude Include="Class\Particles\EnemyDead\EnemyDeadParticles.h" />
     <ClInclude Include="Class\Particles\Crack\CrackEffect.h" />
     <ClInclude Include="Class\Particles\Crack\Children\CrackPlane.h" />
+    <ClInclude Include="Class\Scene\GameSceneManager.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />

@@ -1,6 +1,6 @@
 #pragma once
 #include "../../ICondition.h"
-#include "../../../DeltaTimer/DeltaTimer.h"
+#include "../../../Timer/DeltaTimer.h"
 
 namespace LWP::Utility {
 

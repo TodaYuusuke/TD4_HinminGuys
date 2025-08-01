@@ -2,7 +2,7 @@
 #include <Adapter.h>
 #include <list>
 #include "../Condition/ConditionList.h"
-#include "../DeltaTimer/DeltaTimer.h"
+#include "../Timer/DeltaTimer.h"
 #include "../Particles/SlashEffect/SlashEffector.h"
 #include "../Audio/SEPlayer.h"
 
