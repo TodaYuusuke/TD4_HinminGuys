@@ -149,6 +149,8 @@ void Throw::CheckThrowState() {
 			followCamera_->StartFovEasing(followCamera_->GetCamera()->fov, 110.0f, 20.0f, 60.0f);
 			// 音再生
 			player_->PlaySE(PlayerAudio::SE::Sheath::throwSheath.fileName, PlayerAudio::SE::Sheath::throwSheath.name, PlayerAudio::SE::Sheath::throwSheath.volume);
+			// 鎖の音再生
+			player_->PlaySE(PlayerAudio::SE::Sheath::swingChain.fileName, PlayerAudio::SE::Sheath::swingChain.name, PlayerAudio::SE::Sheath::swingChain.volume);
 		}
 
 		// 鞘判定をとれるようにする

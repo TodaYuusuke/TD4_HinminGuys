@@ -155,6 +155,8 @@ void Collect::CollectMove() {
 			followCamera_->StartFovEasing(followCamera_->GetCamera()->fov, 70.0f, 5.0f, 40.0f);
 			// 音再生
 			player_->PlaySE(PlayerAudio::SE::Sheath::returnSheath.fileName, PlayerAudio::SE::Sheath::returnSheath.name, PlayerAudio::SE::Sheath::returnSheath.volume);
+			// 鎖の音再生
+			player_->PlaySE(PlayerAudio::SE::Sheath::swingChain.fileName, PlayerAudio::SE::Sheath::swingChain.name, PlayerAudio::SE::Sheath::swingChain.volume);
 		}
 		// 攻撃判定を出す
 		player_->GetSystemManager()->GetSheathAttackCollision().isActive = true;

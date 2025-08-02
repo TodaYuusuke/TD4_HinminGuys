@@ -38,7 +38,7 @@ namespace PlayerAudio {
 			};
 			// 鎖
 			inline PlayerAudioPlayData swingChain = {
-				"player/sheath/swingingChain.mp3","swingingChain", 1.0f
+				"player/sheath/swingingChain.mp3","swingingChain", 0.6f
 			};
 		};
 		namespace Parry {

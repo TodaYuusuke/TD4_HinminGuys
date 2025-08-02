@@ -37,5 +37,5 @@ public:
 	void Reset();
 
 private:
-
+	float currentChainSoundFrame_;
 };
