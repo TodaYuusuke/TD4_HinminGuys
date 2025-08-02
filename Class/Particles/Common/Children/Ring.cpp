@@ -34,6 +34,8 @@ void Ring::Create(const LWP::Math::Vector3& pos) {
 	plane_.worldTF.translation = pos;
 	// 大きさ
 	plane_.worldTF.scale = { 0,0,0 };
+	// 色
+	plane_.material.color = jsonData_.color;
 
 	// 生存可能時間
 	particleData_.lifeTime = jsonData_.maxElapseTime * 60.0f;

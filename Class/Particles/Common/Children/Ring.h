@@ -6,6 +6,7 @@ class FollowCamera;
 class Ring : public IParticle {
 public:
 	struct RingJsonData {
+		LWP::Utility::Color color = { 255,255,255,255 };
 		float maxElapseTime;	// パーティクルが存在できる時間
 		// 大きい閃光の最大サイズ
 		LWP::Math::Vector3 maxScale = { 1.0f,1.0f,1.0f };

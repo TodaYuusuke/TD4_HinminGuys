@@ -55,16 +55,6 @@
     <ClCompile Include="Class\Enemy\Childs\Minor\Childs\Saiji\State\SaijiAttack.cpp" />
     <ClCompile Include="Class\Enemy\Childs\Minor\Childs\Saiji\State\SaijiIdle.cpp" />
     <ClCompile Include="Class\Enemy\Childs\Minor\Childs\Saiji\State\SaijiMove.cpp" />
-    <ClCompile Include="Class\Enemy\Childs\Minor\Childs\Faster\Faster.cpp" />
-    <ClCompile Include="Class\Enemy\Childs\Minor\Childs\Faster\State\FasterFollowing.cpp" />
-    <ClCompile Include="Class\Enemy\Childs\Minor\Childs\Faster\State\FasterWaitingForAttack.cpp" />
-    <ClCompile Include="Class\Enemy\Childs\Minor\Childs\Faster\State\FasterMove.cpp" />
-    <ClCompile Include="Class\Enemy\Childs\Minor\Childs\Faster\State\FasterSpacing.cpp" />
-    <ClCompile Include="Class\Enemy\Childs\Minor\Childs\Faster\State\FasterIdle.cpp" />
-    <ClCompile Include="Class\Enemy\Childs\Minor\Childs\Faster\State\FasterAttack.cpp" />
-    <ClCompile Include="Class\Enemy\Childs\Minor\Childs\Faster\State\FasterHitReaction.cpp" />
-    <ClCompile Include="Class\Enemy\Childs\Minor\Childs\Faster\State\FasterEvasion.cpp" />
-    <ClCompile Include="Class\Enemy\Childs\Minor\Childs\Faster\FasterStateParameter.cpp" />
     <ClCompile Include="Class\Enemy\Childs\Minor\Childs\OniHayha\OniHayha.cpp" />
     <ClCompile Include="Class\Enemy\Childs\Minor\Childs\OniHayha\OniHayhaStateParameter.cpp" />
     <ClCompile Include="Class\Enemy\Childs\Minor\Childs\OniHayha\State\OniHayhaAttack.cpp" />
@@ -138,6 +128,11 @@
     <ClCompile Include="Class\Scene\VoidScene.cpp" />
     <ClCompile Include="Class\Scene\GameSceneManager.cpp" />
     <ClCompile Include="Class\Timer\FrameTimer.cpp" />
+    <ClCompile Include="Class\Particles\BossDead\BossDeadParticles.cpp" />
+    <ClCompile Include="Class\Enemy\Childs\Boss\Childs\Ogre\State\OgreSpawnEnemy.cpp" />
+    <ClCompile Include="Class\Scene\GameClear.cpp" />
+    <ClCompile Include="Class\Particles\BossDead\Children\DeadSmoke.cpp" />
+    <ClCompile Include="Class\Particles\SheathBreak\Children\NoticeCircle.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Class\ComboEditor\ComboTree.h" />
@@ -201,9 +196,7 @@
     <ClInclude Include="Class\UI\DamageEffectEmitter.h" />
     <ClInclude Include="Class\Enemy\Childs\Minor\Childs\Saiji\SaijiStateParameter.h" />
     <ClInclude Include="Class\Enemy\Childs\Minor\Childs\Saiji\Saiji.h" />
-    <ClInclude Include="Class\Enemy\Childs\Minor\Childs\Faster\Faster.h" />
     <ClInclude Include="Class\Enemy\Childs\Minor\Minor.h" />
-    <ClInclude Include="Class\Enemy\Childs\Minor\Childs\Faster\FasterStateParameter.h" />
     <ClInclude Include="Class\Enemy\Childs\Minor\Childs\OniHayha\OniHayha.h" />
     <ClInclude Include="Class\Enemy\Childs\Minor\Childs\OniHayha\OniHayhaStateParameter.h" />
     <ClInclude Include="Class\Enemy\ParameterEditor.h" />
@@ -261,6 +254,10 @@
     <ClInclude Include="Class\Scene\VoidScene.h" />
     <ClInclude Include="Class\Scene\GameSceneManager.h" />
     <ClInclude Include="Class\Timer\FrameTimer.h" />
+    <ClInclude Include="Class\Particles\BossDead\BossDeadParticles.h" />
+    <ClInclude Include="Class\Scene\GameClear.h" />
+    <ClInclude Include="Class\Particles\BossDead\Children\DeadSmoke.h" />
+    <ClInclude Include="Class\Particles\SheathBreak\Children\NoticeCircle.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />

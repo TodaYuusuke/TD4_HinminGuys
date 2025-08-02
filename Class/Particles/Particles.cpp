@@ -39,6 +39,9 @@ Particles::Particles(Player* player, FollowCamera* followCamera) {
 	crackEffect_->Initialize();
 	weakCrackEffect_ = std::make_unique<CrackEffect>("Effect/Crack.png");
 	weakCrackEffect_->Initialize();
+
+	sheathBreakEffect_ = std::make_unique<SheathBreakEffect>(followCamera_);
+	sheathBreakEffect_->Initialize();
 }
 
 Particles::~Particles() {
@@ -56,6 +59,7 @@ Particles::~Particles() {
 	attackHitEffect_.reset();
 	crackEffect_.reset();
 	weakCrackEffect_.reset();
+	sheathBreakEffect_.reset();
 	for (EnemySpawnParticles* p : spawnParticles_) {
 		delete p;
 	}
@@ -87,6 +91,7 @@ void Particles::Update() {
 	attackHitEffect_->Update();
 	crackEffect_->Update();
 	weakCrackEffect_->Update();
+	sheathBreakEffect_->Update();
 	parryEffect_->Update();
 	dustClouds_->Update();
 
@@ -145,6 +150,9 @@ void Particles::CreateJsonData() {
 	json_.BeginGroup("WeakCrackEffect");
 	weakCrackEffect_->SetJsonData(json_);
 	json_.EndGroup();
+	json_.BeginGroup("SheathBreakEffect");
+	sheathBreakEffect_->SetJsonData(json_);
+	json_.EndGroup();
 
 	json_.CheckJsonFile();
 }
@@ -202,6 +210,9 @@ void Particles::DebugGui() {
 	}
 	if (ImGui::Button("Create Weak Crack Effect")) {
 		weakCrackEffect_->Add(debugEmitterPos_);
+	}
+	if (ImGui::Button("Create SheathBreak Effect")) {
+		sheathBreakEffect_->Add(debugEmitterPos_);
 	}
 
 	// パーティクルの詳細
