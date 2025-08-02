@@ -56,7 +56,7 @@
                         "float :TransitionTime": 0.10000000149011612,
                         "int32_t :derivationPriority": 0,
                         "string :AnimName": "LightAttack4",
-                        "string :AudioPath": "missingShot/missingShot2.mp3",
+                        "string :AudioPath": "player/missingShot/missingShot2.mp3",
                         "string :FollowJointName": ""
                     },
                     "Group :StartConditions|Button|1": {
@@ -111,7 +111,7 @@
                     "float :TransitionTime": 0.05000000074505806,
                     "int32_t :derivationPriority": 0,
                     "string :AnimName": "LightAttack3",
-                    "string :AudioPath": "missingShot/missingShot0.mp3",
+                    "string :AudioPath": "player/missingShot/missingShot0.mp3",
                     "string :FollowJointName": ""
                 },
                 "Group :StartConditions|Button|1": {
@@ -166,7 +166,7 @@
                 "float :TransitionTime": 0.05000000074505806,
                 "int32_t :derivationPriority": 0,
                 "string :AnimName": "LightAttack2",
-                "string :AudioPath": "missingShot/missingShot1.mp3",
+                "string :AudioPath": "player/missingShot/missingShot1.mp3",
                 "string :FollowJointName": ""
             },
             "Group :StartConditions|Button|1": {
@@ -221,7 +221,7 @@
             "float :TransitionTime": 0.05000000074505806,
             "int32_t :derivationPriority": 1,
             "string :AnimName": "LightAttack1",
-            "string :AudioPath": "missingShot/missingShot0.mp3",
+            "string :AudioPath": "player/missingShot/missingShot0.mp3",
             "string :FollowJointName": ""
         },
         "Group :StrongCombo1": {
