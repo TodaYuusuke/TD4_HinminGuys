@@ -8,7 +8,8 @@ using namespace LWP;
 using namespace LWP::Math;
 using namespace LWP::Utility;
 
-SwordDrawn::SwordDrawn(Sheath* sheathSystem, Player* player, std::map<int, EventOrder>* eventOrders) {
+SwordDrawn::SwordDrawn(FollowCamera* followCamera, Sheath* sheathSystem, Player* player, std::map<int, EventOrder>* eventOrders) {
+	followCamera_ = followCamera;
 	sheathSystem_ = sheathSystem;
 	player_ = player;
 	eventOrders_ = eventOrders;
@@ -62,7 +63,7 @@ void SwordDrawn::Update() {
 }
 
 void SwordDrawn::Command() {
-	sheathSystem_->ChangeState(new Collect(sheathSystem_, player_, eventOrders_));
+	sheathSystem_->ChangeState(new Collect(followCamera_, sheathSystem_, player_, eventOrders_));
 }
 
 void SwordDrawn::AnimCommand()

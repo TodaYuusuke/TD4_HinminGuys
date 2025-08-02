@@ -5,12 +5,14 @@
 #include "../../../../Command/InputHandler.h"
 #include "../../../../../Components/HitStopController.h"
 #include "../../../../Math/MathFunctions.h"
+#include "../../../../../Camera/FollowCamera.h"
 
 using namespace LWP;
 using namespace LWP::Math;
 using namespace LWP::Resource;
 
-Throw::Throw(Sheath* sheathSystem, Player* player, std::map<int, EventOrder>* eventOrders) {
+Throw::Throw(FollowCamera* followCamera, Sheath* sheathSystem, Player* player, std::map<int, EventOrder>* eventOrders) {
+	followCamera_ = followCamera;
 	sheathSystem_ = sheathSystem;
 	player_ = player;
 	// コマンドの登録
@@ -56,7 +58,7 @@ void Throw::Update() {
 		// 鞘判定をとらない
 		player_->GetSystemManager()->GetSheathCollision().isActive = false;
 		// 鞘なし状態に移行
-		sheathSystem_->ChangeState(new SwordDrawn(sheathSystem_, player_, eventOrders_));
+		sheathSystem_->ChangeState(new SwordDrawn(followCamera_, sheathSystem_, player_, eventOrders_));
 		return;
 	}
 }
@@ -140,9 +142,10 @@ void Throw::CheckThrowState() {
 		if (!sheathSystem_->GetIsSheathModelActive()) {
 			sheathSystem_->chain_->SetIsActive(isActive_);	
 			sheathSystem_->chain_->Initialize();
-
 			// 残像生成
 			ghostTrail_->SetIsActive(true);
+			// 追従カメラの視野角をあげる
+			followCamera_->StartFovEasing(followCamera_->GetCamera()->fov, 110.0f, 20.0f, 60.0f);
 		}
 
 		// 鞘判定をとれるようにする

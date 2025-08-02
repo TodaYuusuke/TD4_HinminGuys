@@ -10,6 +10,9 @@ FollowCamera::FollowCamera(Player* player, LWP::Object::Camera* camera, LWP::Mat
 	player_ = player;
 	camera_ = camera;
 	targetPos_ = targetPos;
+
+	// 視野角イージング機能
+	fovSystem_ = std::make_unique<FovSystem>(camera_->fov);
 }
 
 void FollowCamera::Initialize() {
@@ -77,6 +80,9 @@ void FollowCamera::Update() {
 	interTarget_ = LWP::Utility::Interpolation::Lerp(interTarget_, player_->GetWorldTF()->GetWorldPosition(), interTargetRate);
 	// カメラの座標を決定
 	camera_->worldTF.translation = shakeOffset_ + interTarget_ + (kTargetDist * LWP::Math::Matrix4x4::CreateRotateXYZMatrix(camera_->worldTF.rotation));
+
+	// 視野角のイージング
+	FovUpdate();
 }
 
 void FollowCamera::DebugGUI() {
@@ -133,6 +139,14 @@ void FollowCamera::CheckState() {
 	preStateName_ = state_->GetStateName();
 }
 
+void FollowCamera::FovUpdate() {
+	fovSystem_->Update();
+
+	if (fovSystem_->GetIsActive()) {
+		camera_->fov = fovSystem_->GetCurrentFov();
+	}
+}
+
 void FollowCamera::ClampAngle(float& target, LWP::Math::Vector3 distance, float minLimitAngle, float maxLimitAngle) {
 	// ターゲットとカメラの角度を求める
 	float limitX = std::acos(LWP::Math::Vector3::Dot({ 0,1,0 }, distance));
@@ -149,4 +163,8 @@ void FollowCamera::ClampAngle(float& target, LWP::Math::Vector3 distance, float 
 void FollowCamera::ChangeState(IFollowCameraState* pState) {
 	delete state_;
 	state_ = pState;
+}
+
+void FollowCamera::StartFovEasing(const float& currentFov, const float& goalFov, const float& endFrame, const float& returnStayFrame) {
+	fovSystem_->Start(currentFov, goalFov, endFrame, returnStayFrame);
 }

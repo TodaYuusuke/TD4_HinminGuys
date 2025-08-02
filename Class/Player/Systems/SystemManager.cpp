@@ -1,6 +1,7 @@
 #include "SystemManager.h"
 #include "../../Enemy/EnemyManager.h"
 #include "../Player.h"
+#include "../../Camera/FollowCamera.h"
 
 using namespace LWP;
 using namespace LWP::Math;
@@ -33,7 +34,7 @@ void SystemManager::Initialize() {
 	lockOnSystem_->SetEnemyList(enemyManager_->GetEnemyListPtr());
 	lockOnSystem_->SetFollowCamera(followCamera_);
 	// 鞘機能
-	sheathSystem_ = std::make_unique<Sheath>(pCamera_, player_);
+	sheathSystem_ = std::make_unique<Sheath>(followCamera_, pCamera_, player_);
 	sheathSystem_->CreateJsonFIle();
 	sheathSystem_->Initialize();
 
@@ -62,6 +63,11 @@ void SystemManager::Initialize() {
 
 		// ヒットストップの設定
 		HitStopController::GetInstance()->Start(comboTree_->GetHitStopTime(), 0.0f);
+
+		// 四段目の攻撃の時に当てたらカメラを近づける
+		if (player_->GetAnimation()->GetPlaying("LightAttack4") && !followCamera_->GetFovSystem()->GetIsActive()) {
+			followCamera_->StartFovEasing(90.0f, 70.0f, 20.0f, 10.0f);
+		}
 		};
 	comboTree_->AddCollisionLamda(LWP::Utility::ComboEnum::STAY, attackOnHitFunc_);
 
@@ -291,7 +297,7 @@ void SystemManager::CreateSheathSystem(ISystem*& system) {
 	if (system) { delete system; }
 
 	// 鞘機能
-	Sheath* sheathSystem = new Sheath(pCamera_, player_);
+	Sheath* sheathSystem = new Sheath(followCamera_, pCamera_, player_);
 	sheathSystem->SetJsonData(sheathSystem_->GetJsonData());
 	sheathSystem->Initialize();
 	sheathSystem->Command();

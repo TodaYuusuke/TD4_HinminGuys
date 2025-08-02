@@ -1,6 +1,7 @@
 #pragma once
 #include "../Adapter/Adapter.h"
 #include "State/IFollowCameraState.h"
+#include "FovSystem.h"
 #include <numbers>
 
 class Player;
@@ -47,6 +48,11 @@ public:
 	/// </summary>
 	void CheckState();
 
+	/// <summary>
+	/// 視野角の更新処理
+	/// </summary>
+	void FovUpdate();
+
 public:
 	/// <summary>
 	/// 角度制限の処理
@@ -63,7 +69,15 @@ public:
 	/// <param name="pState"></param>
 	void ChangeState(IFollowCameraState* pState);
 
-public:// Getter,Setter
+public:// アクセサ
+	/// <summary>
+	/// Fovイージング開始
+	/// </summary>
+	/// <param name="currentFov">現在のFov</param>
+	/// <param name="goalFov">目標のFov</param>
+	/// <param name="endFrame">終了時間</param>
+	void StartFovEasing(const float& currentFov, const float& goalFov, const float& endFrame, const float& returnStayFrame);
+
 #pragma region Getter
 	/// <summary>
 	/// カメラのアドレスを取得
@@ -75,6 +89,11 @@ public:// Getter,Setter
 	/// </summary>
 	/// <returns></returns>
 	LockOnData GetLockOnData() { return lockOnData_; }
+	/// <summary>
+	/// Fovをイージングする機能を取得
+	/// </summary>
+	/// <returns></returns>
+	FovSystem* GetFovSystem() { return fovSystem_.get(); }
 	/// <summary>
 	/// 線形補間をしていない純粋なカメラ座標を取得
 	/// </summary>
@@ -139,10 +158,6 @@ public:// Getter,Setter
 		lockOnData_.isLocked = false;
 	}
 
-	//void StartFov(const float& fov, const float& time) { goalFov_ = fov; }
-
-	//void FinishFov() {/* goalFov_ = ; */}
-
 public:// jsonで保存する値
 	// 追従対象との距離
 	LWP::Math::Vector3 kTargetDist = { 0.0f,0.0f,-20.0f };
@@ -204,6 +219,8 @@ private:
 	Player* player_;
 
 private:
+	std::unique_ptr<FovSystem> fovSystem_;
+
 	// カメラの状態
 	IFollowCameraState* state_;
 	std::string preStateName_;

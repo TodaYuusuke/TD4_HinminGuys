@@ -250,6 +250,7 @@
     <ClCompile Include="Class\Particles\SheathBreak\Children\FlickeringFlash.cpp" />
     <ClCompile Include="Class\Scene\GameSceneManager.cpp" />
     <ClCompile Include="Class\Particles\BossDead\Children\DeadSmoke.cpp" />
+    <ClCompile Include="Class\Camera\FovSystem.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Class\Player\Player.cpp" />
     <ClCompile Include="Class\Player\Systems\Children\Move\Move.cpp" />
@@ -405,6 +406,7 @@
     <ClInclude Include="Class\Scene\GameSceneManager.h" />
     <ClInclude Include="Class\Particles\BossDead\Children\DeadSmoke.h" />
     <ClInclude Include="Class\Particles\SheathBreak\Children\NoticeCircle.h" />
+    <ClInclude Include="Class\Camera\FovSystem.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />

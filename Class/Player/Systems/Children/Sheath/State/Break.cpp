@@ -4,7 +4,8 @@
 #include "Throw.h"
 #include "../../../../Command/InputHandler.h"
 
-Break::Break(Sheath* sheathSystem, Player* player, std::map<int, EventOrder>* eventOrders) {
+Break::Break(FollowCamera* followCamera, Sheath* sheathSystem, Player* player, std::map<int, EventOrder>* eventOrders) {
+	followCamera_ = followCamera;
 	sheathSystem_ = sheathSystem;
 	player_ = player;
 	// コマンドの登録
@@ -39,7 +40,7 @@ void Break::Update() {
 	// 鞘破壊状態終了
 	if (!player_->GetUIManager()->GetSheathGauge().GetIsIncrease() && !isActive_) {
 		sheathSystem_->Reset();
-		sheathSystem_->ChangeState(new Throw(sheathSystem_, player_, eventOrders_));
+		sheathSystem_->ChangeState(new Throw(followCamera_, sheathSystem_, player_, eventOrders_));
 		return;
 	}
 
@@ -60,7 +61,7 @@ void Break::Update() {
 		if (sheathSystem_->GetNextSystems().empty()) {
 			sheathSystem_->SetNextSystem(SystemState::kMove);
 		}
-		sheathSystem_->ChangeState(new Throw(sheathSystem_, player_, eventOrders_));
+		sheathSystem_->ChangeState(new Throw(followCamera_, sheathSystem_, player_, eventOrders_));
 	}
 }
 
