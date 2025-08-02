@@ -149,23 +149,23 @@ void SystemManager::Update() {
 	SwitchCurrentSystem();
 
 	// 鞘機能(ダメージ中は何もしない)
-	//if (systemState_ != SystemState::kDamage) {
-		sheathSystem_->Update();
-		if (sheathSystem_->GetIsActive() && sheathSystem_->GetSheathState()->GetStateName() != "SwordDrawn") {
-			// 速度
-			velocity_ = sheathSystem_->GetVelocity();
-			// 角度
+	sheathSystem_->Update();
+	if (sheathSystem_->GetIsActive() && sheathSystem_->GetSheathState()->GetStateName() != "SwordDrawn") {
+		// 速度
+		velocity_ = sheathSystem_->GetVelocity();
+		// 角度
+		if (sheathSystem_->GetVelocity().Length() >= 0.3f) {
 			radian_ = sheathSystem_->GetRadian();
 			quat_ = LWP::Math::Quaternion::CreateFromAxisAngle(LWP::Math::Vector3{ 0, 1, 0 }, radian_.y);
 		}
-	//}
+	}
 
 	// 各機能のクールタイムの処理
 	coolTimer_->Update();
 
 	// 無敵処理
 	if (invinsibleTime_ >= 0.0f) {
-		invinsibleTime_-= HitStopController::GetInstance()->GetDeltaTime();
+		invinsibleTime_ -= HitStopController::GetInstance()->GetDeltaTime();
 	}
 
 	// 鞘が壊れているならオーラを出す
@@ -273,6 +273,7 @@ void SystemManager::CreateEvasionSystem(ISystem*& system) {
 	// 回避機能
 	Evasion* evasionSystem = new Evasion(pCamera_, player_);
 	evasionSystem->SetJsonData(evasionSystem_->GetJsonData());
+	evasionSystem->SetRotate(radian_);
 	evasionSystem->Initialize();
 	evasionSystem->Command();
 
@@ -312,6 +313,7 @@ void SystemManager::CreateDamageResponseSystem(ISystem*& system) {
 	// 鞘機能
 	DamageResponse* damageResponse = new DamageResponse(pCamera_, player_);
 	damageResponse->SetJsonData(damageResponse_->GetJsonData());
+	damageResponse->SetRotate(radian_);
 	damageResponse->Initialize();
 	// 無敵開始
 	damageResponse->StartInvinsible();
