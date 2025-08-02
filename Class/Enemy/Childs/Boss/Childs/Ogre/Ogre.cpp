@@ -115,6 +115,9 @@ void Ogre::Initialize(Player* player, const Vector3& position, LWP::Object::Came
 		enemyManager_->GetDamageEffectEmitter().AddEffect(resultDamage,
 			model_.GetJointWorldPosition("UpperBody"));
 
+		// ダメージパーティクル
+		enemyManager_->GetParticles()->CreateAttackHitEffect(model_.worldTF.GetWorldPosition() + Vector3{ 0.0f, 0.5f, 0.0f });
+
 		//ダメージを受ける
 		TakeDamage(resultDamage);
 
