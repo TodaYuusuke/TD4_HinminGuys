@@ -50,12 +50,14 @@ struct EnemyAttackParameter {
 /// 敵の全体パラメータ
 /// </summary>
 struct EnemyParameter {
+	float maxHp = 10.0f; //体力最大値
 	float hp = 10.0f; //体力
 	float speed = 1.0f; //速度
 	EnemyAttackParameter attackParameter; //攻撃パラメータ
 	//代入演算子
 	EnemyParameter& operator=(const EnemyParameter& other) {
 
+		maxHp = other.maxHp;
 		hp = other.hp;
 		speed = other.speed;
 		attackParameter = other.attackParameter;
@@ -95,7 +97,10 @@ public:
 	//Worldセット
 	void SetWorld(World* world) { world_ = world; }
 	//パラメータをセット
-	void SetParameter(const EnemyParameter& parameter) { parameter_ = parameter; }
+	void SetParameter(const EnemyParameter& parameter) { 
+		parameter_ = parameter;
+		parameter_.hp = parameter_.maxHp;
+	}
 	//死亡フラグ取得
 	bool GetIsDead() const { return isDead_; }
 	//死亡フラグセット
@@ -109,7 +114,10 @@ public:
 	//回転取得
 	const Quaternion& GetRotation() const { return model_.worldTF.rotation; }
 	//回転セット
-	void SetRotation(const Quaternion& rotation) { model_.worldTF.rotation = rotation; }
+	void SetRotation(const Quaternion& rotation) { 
+		model_.worldTF.rotation = rotation;
+		forward_ = rotation;
+	}
 	//プレイヤーの座標取得
 	Vector3 GetPlayerPosition();
 	//アニメーション切り替え
@@ -202,6 +210,8 @@ protected:
 	World* world_;
 	//敵個別のパラメータ
 	EnemyParameter parameter_;
+	//正面向き
+	Quaternion forward_;
 	//互いに距離を取るときの反発力
 	Vector3 repulsiveForce_{};
 	//ノックバック力

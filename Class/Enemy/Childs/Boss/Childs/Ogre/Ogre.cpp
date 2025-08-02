@@ -11,7 +11,8 @@ using namespace OgreState;
 Ogre::Ogre(OgreState::StateParameter& stateParameter) :
 	configParameter_(stateParameter),
 	sphere_(sphereCollider_.SetBroadShape(LWP::Object::Collider::Sphere())),
-	aabbAttack_(aabbAttackCollider_.SetBroadShape(LWP::Object::Collider::AABB()))
+	aabbAttack_(aabbAttackCollider_.SetBroadShape(LWP::Object::Collider::AABB())),
+	slashEffector_("Effect/SwordSlash.png", { 256.0f, 256.0f }, 26)
 {
 
 	stateParameter_ = stateParameter;
@@ -28,6 +29,15 @@ Ogre::~Ogre()
 void Ogre::Initialize(Player* player, const Vector3& position, LWP::Object::Camera* camera,
 	EnemyManager* manager)
 {
+
+#ifdef _DEBUG
+	box_.LoadCube();
+	tmpSphere_.LoadSphere();
+	box_.isActive = false;
+	tmpSphere_.isActive = false;
+#endif // _DEBUG
+
+
 	model_.LoadShortPath("Ogre/Orga_IK.gltf");
 	cautionQuad_.LoadTexture("caution_square.png");
 	cautionCircle_.LoadTexture("caution_circle.png");
@@ -75,7 +85,7 @@ void Ogre::Initialize(Player* player, const Vector3& position, LWP::Object::Came
 		sePlayer_->PlaySE("attack_5.mp3", "hit", 1.0f);
 
 		//ステートをセット(攻撃中はリアクションしない)
-		if (not IsAttackState()) {
+		if (not IsSuperArmorState()) {
 			state_.request = States::kHitReaction;
 			//今後プレイヤーから取得する
 			SetKnockBackValue(1.0f);
@@ -83,19 +93,30 @@ void Ogre::Initialize(Player* player, const Vector3& position, LWP::Object::Came
 
 		//コライダーを一時的にオフ、クールタイム設定
 		collider_.isActive = false;
-		//プレイヤーから取得してくる
-		invincibleTime_ = 0.2f;
+		//鞘の場合、専用のクールタイム設定
+		if (hitTarget->name == "Sheath") {
+			//クールタイム設定
+			invincibleTime_ = 1.01f;
+		}
+		else {
+			// 攻撃力
+			player_->GetParameter()->attackStrength_ = player_->GetSystemManager()->GetComboTree()->GetDamage();
+			//プレイヤーから取得し、0の場合が無いよう極小のクールタイムを足す
+			invincibleTime_ = player_->GetSystemManager()->GetComboTree()->GetHitCoolTime() + 0.01f;
+		}
 
-		//ダメージの加算値(テスト用)
-		int plusDamage = LWP::Utility::Random::GenerateInt(0, 1000);
+		//ダメージの倍率
+		float mag = LWP::Utility::Random::GenerateFloat(0.96f, 1.11f);
+
+		float resultDamage = player_->GetParameter()->attackStrength_ * mag;
 
 		//ダメージエフェクト追加
 		//今後プレイヤーから取得する
-		enemyManager_->GetDamageEffectEmitter().AddEffect(float(plusDamage),
+		enemyManager_->GetDamageEffectEmitter().AddEffect(resultDamage,
 			model_.GetJointWorldPosition("UpperBody"));
 
 		//ダメージを受ける
-		TakeDamage(player_->GetSystemManager()->GetComboTree()->GetDamage());
+		TakeDamage(resultDamage);
 
 		};
 
@@ -112,6 +133,8 @@ void Ogre::Initialize(Player* player, const Vector3& position, LWP::Object::Came
 	else {
 		nextAttackState_ = States::kRotatingSlash;
 	}
+
+	slashEffector_.SetParentTF(&model_.worldTF);
 
 }
 
@@ -155,6 +178,9 @@ void Ogre::Update()
 	//現在の状態を更新
 	state_.Update();
 
+	//エフェクト更新
+	slashEffector_.Update();
+
 	//反発力リセット
 	repulsiveForce_ = { 0.0f,0.0f,0.0f };
 
@@ -169,19 +195,21 @@ void Ogre::DebugGUI()
 	if (ImGui::TreeNode(std::to_string(ID_).c_str())) {
 		state_.DebugGUI();
 		ImGui::Text(std::to_string(distFromPlayer_).c_str());
+		ImGui::Text("HP: %1.2f", parameter_.hp);
 		ImGui::TreePop();
 	}
 
 }
 
-bool Ogre::IsAttackState()
+bool Ogre::IsSuperArmorState()
 {
 
 	if (state_.GetCurrentBehavior() == States::kSwingDownAttack or
 		state_.GetCurrentBehavior() == States::kRotatingSlash or
 		state_.GetCurrentBehavior() == States::kFallingThrust or
 		state_.GetCurrentBehavior() == States::kAssaultSlash or
-		state_.GetCurrentBehavior() == States::kQuadrupleAttack) {
+		state_.GetCurrentBehavior() == States::kQuadrupleAttack or
+		state_.GetCurrentBehavior() == States::kSpawnEnemy) {
 		return true;
 	}
 
@@ -192,7 +220,7 @@ void Ogre::CreateColliders()
 {
 	
 	// 球の判定生成
-	sphereCollider_.SetFollow(&model_, "Hips");
+	sphereCollider_.SetFollow(&model_.worldTF);
 	sphereCollider_.isActive = false;
 	// 自機の所属しているマスクを設定
 	sphereCollider_.mask.SetBelongFrag(GetAttack());
@@ -206,7 +234,7 @@ void Ogre::CreateColliders()
 		//swordCollider_.isActive = false;
 		};
 	// AABBの判定生成
-	aabbAttackCollider_.SetFollow(&model_, "Hips");
+	aabbAttackCollider_.SetFollow(&model_.worldTF);
 	aabbAttackCollider_.isActive = false;
 	// 自機の所属しているマスクを設定
 	aabbAttackCollider_.mask.SetBelongFrag(GetAttack());
@@ -223,6 +251,8 @@ void Ogre::CreateColliders()
 #ifdef _DEBUG
 	sphere_.isShowWireFrame = false;
 	aabbAttack_.isShowWireFrame = false;
+	box_.worldTF.Parent(&aabbAttackCollider_.worldTF);
+	tmpSphere_.worldTF.Parent(&sphereCollider_.worldTF);
 #endif // _DEBUG
 
 }
@@ -269,6 +299,14 @@ void Ogre::AddStateFunc()
 	state_.init[int(States::kSpawn)] = [this](const States& pre) {SpawnInit(pre); };
 	state_.update[int(States::kSpawn)] = [this](std::optional<States>& req, const States& pre) {SpawnUpdate(req, pre); };
 	state_.finalize[int(States::kSpawn)] = [this](const States& pre) {SpawnFinalize(pre); };
+
+	state_.init[int(States::kSpawnEnemy)] = [this](const States& pre) {SpawnEnemyInit(pre); };
+	state_.update[int(States::kSpawnEnemy)] = [this](std::optional<States>& req, const States& pre) {SpawnEnemyUpdate(req, pre); };
+	state_.finalize[int(States::kSpawnEnemy)] = [this](const States& pre) {SpawnEnemyFinalize(pre); };
+
+	state_.init[int(States::kVoid)] = [this](const States& pre) {VoidInit(pre); };
+	state_.update[int(States::kVoid)] = [this](std::optional<States>& req, const States& pre) {VoidUpdate(req, pre); };
+	state_.finalize[int(States::kVoid)] = [this](const States& pre) {VoidFinalize(pre); };
 
 }
 
@@ -369,4 +407,16 @@ void Ogre::EndHeavyAttack()
 		nextAttackState_ = States::kRotatingSlash;
 	}
 
+}
+
+void Ogre::VoidInit(const OgreState::States& pre)
+{
+}
+
+void Ogre::VoidUpdate(std::optional<OgreState::States>& req, const OgreState::States& pre)
+{
+}
+
+void Ogre::VoidFinalize(const OgreState::States& pre)
+{
 }

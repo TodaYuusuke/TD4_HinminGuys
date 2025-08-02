@@ -13,9 +13,15 @@ void OniHayha::AttackFinalize([[maybe_unused]] const States& pre) {
 	isAttack_ = false;
 	isAttackPhase_ = false;
 	//待機ステートの待機時間セット
-	stateParameter_.idleParameter.countStandTime = stateParameter_.idleParameter.standTime;
+	stateParameter_.idleParameter.countStandTime = stateParameter_.idleParameter.standTime + LWP::Utility::Random::GenerateFloat(0.0f, 0.5f);
 	animation_.GetPlayBackSpeed() = 1.0f;
-
+	bulletCollider_.isActive = false;
+#ifdef _DEBUG
+	capsule_.isShowWireFrame = false;
+	tmpSphere_.isActive = false;
+	tmpSphereSecond_.isActive = false;
+#endif // _DEBUG
+	capsule_.end = { 0.0f,0.0f,0.0f };
 }
 
 void OniHayha::AttackInit([[maybe_unused]] const States& pre)
@@ -28,8 +34,6 @@ void OniHayha::AttackInit([[maybe_unused]] const States& pre)
 	isAttack_ = true;
 	//パリィエフェクトフラグリセット
 	isActivationParryEffect_ = false;
-	//弾のポジションセット
-	sphere_.position = laserModel_.worldTF.GetWorldPosition();
 	//弾の方向を決める
 	bulletDirection_ = GetPlayerPosition() - GetPosition();
 	bulletDirection_.y = 0.0f;
@@ -63,24 +67,37 @@ void OniHayha::AttackUpdate([[maybe_unused]] std::optional<States>& req, [[maybe
 	}
 
 	//攻撃受付時間を超過したら判定オフ
-	if (animation_.GetProgress() > stateParameter_.attackParameter.endAcceptTime and bulletCollider_.isActive) {
+	if (animation_.GetProgress() > stateParameter_.attackParameter.endAcceptTime) {
 		bulletCollider_.isActive = false;
+#ifdef _DEBUG
+		tmpSphere_.isActive = false;
+		tmpSphereSecond_.isActive = false;
+#endif // _DEBUG
 	}
 	//開始と終了時間の間だけ判定を付ける
 	else if (animation_.GetProgress() >= stateParameter_.attackParameter.startAcceptTime and
 		animation_.GetProgress() <= stateParameter_.attackParameter.endAcceptTime) {
 		bulletCollider_.isActive = true;
 
+		capsule_.end = bulletDirection_ * stateParameter_.attackParameter.bulletSpeed;
+
 		//弾を放ったら攻撃フラグをオフにする
 		isAttack_ = false;
-		//攻撃受付中は決めたベクトルに向かって移動
-		sphere_.position += bulletDirection_ * stateParameter_.attackParameter.bulletSpeed * LWP::Info::GetDeltaTimeF();
-
+#ifdef _DEBUG
+		tmpSphere_.worldTF.translation = bulletCollider_.worldTF.GetWorldPosition();
+		tmpSphere_.isActive = true;
+		tmpSphereSecond_.worldTF.translation = bulletCollider_.worldTF.GetWorldPosition() + capsule_.end;
+		tmpSphereSecond_.isActive = true;
+#endif // _DEBUG
 
 	}
 	//開始時間未満も判定を付けない
 	else {
 		bulletCollider_.isActive = false;
+#ifdef _DEBUG
+		tmpSphere_.isActive = false;
+		tmpSphereSecond_.isActive = false;
+#endif // _DEBUG
 	}
 
 

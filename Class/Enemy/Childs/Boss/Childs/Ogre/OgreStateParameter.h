@@ -22,7 +22,27 @@ namespace OgreState {
 		kQuadrupleAttack, //四連撃
 		kHitReaction, //ヒット演出
 		kDead, //死亡
+		kSpawnEnemy, //敵追加
+		kVoid, //空白ステート(デバッグ用)
 		kMax, //最大数
+	};
+
+	/// <summary>
+	/// 斬撃エフェクト用設定値
+	/// </summary>
+	struct SlashEffectParam {
+		//生成座標
+		LWP::Math::Vector3 position{};
+		//回転角
+		LWP::Math::Vector3 rotate{};
+		//スケール
+		LWP::Math::Vector3 scale{};
+		//表示時間
+		float playTime = 1.0f;
+		//オフセット
+		LWP::Math::Vector3 offset{};
+		//色
+		LWP::Utility::Color color{};
 	};
 
 	/// <summary>
@@ -117,6 +137,8 @@ namespace OgreState {
 		AttackData attackData{};
 		//移動方向
 		LWP::Math::Vector3 attackDirection{};
+		//斬撃エフェクトパラメータ
+		SlashEffectParam effectParam{};
 		//攻撃の強さ
 		AttackStrength attackStrength = AttackStrength::kLight;
 	};
@@ -127,6 +149,8 @@ namespace OgreState {
 	struct RotatingSlash {
 		//攻撃発生時間に関するデータ
 		AttackData attackData{};
+		//斬撃エフェクトパラメータ
+		SlashEffectParam effectParam{};
 		//攻撃の強さ
 		AttackStrength attackStrength = AttackStrength::kLight;
 	};
@@ -169,6 +193,8 @@ namespace OgreState {
 	struct AssaultSlash {
 		//攻撃発生時間に関するデータ
 		AttackData attackData{};
+		//斬撃エフェクトパラメータ
+		SlashEffectParam effectParam{};
 		//攻撃回数
 		int32_t maxAttackCount = 5;
 		//現在の攻撃回数
@@ -219,6 +245,8 @@ namespace OgreState {
 		int32_t currentAttackCount = 0;
 		//攻撃発生時間に関するデータ
 		std::array<AttackData, kMaxAttackCount> multipleAttackData{};
+		//斬撃エフェクトパラメータ
+		std::array<SlashEffectParam, kMaxAttackCount> effectParam{};
 		//次の攻撃モーション名
 		std::array<std::string, kMaxAttackCount> nextAttackName{ "Slash", "RushSlash", "Slash", "RotatingSlash" };
 		//移動方向
@@ -240,7 +268,27 @@ namespace OgreState {
 	/// </summary>
 	struct DeadParameter {
 		//後ろに下がる速度
-		float stepBackSpeed = 0.5f;
+		float stepBackSpeed = -0.5f;
+		//後退開始
+		float backStartF = 0.15f;
+		//後退終了
+		float backEndF = 0.25f;
+		//後退開始2
+		float backStartS = 0.35f;
+		//後退終了2
+		float backEndS = 0.45f;
+	};
+
+	/// <summary>
+	/// 敵追加パラメータ
+	/// </summary>
+	struct SpawnEnemy {
+		//現在の追加カウント
+		int32_t currentCount = 0;
+		//一回目のスポーンライン
+		float firstSpawnLine = 0.5f;
+		//二回目のスポーンライン
+		float secondSpawnLine = 0.25f;
 	};
 
 	/// <summary>
@@ -256,6 +304,8 @@ namespace OgreState {
 		AssaultSlash assaultSlash{};
 		QuadrupleAttack quadrupleAttack{};
 		HitReactionParameter hitReactionParameter{};
+		DeadParameter deadParameter{};
+		SpawnEnemy spawnEnemy{};
 		//押し出し半径
 		float extrusionDist = 1.0f;
 	};

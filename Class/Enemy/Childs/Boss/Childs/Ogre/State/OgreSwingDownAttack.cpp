@@ -16,6 +16,12 @@ void Ogre::SwingDownAttackFinalize([[maybe_unused]] const States& pre) {
 	isAttackPhase_ = false;
 	//弱攻撃終了時の抽選処理
 	EndLightAttack();
+	aabbAttackCollider_.isActive = false;
+#ifdef _DEBUG
+	aabbAttack_.isShowWireFrame = false;
+	box_.isActive = false;
+#endif // _DEBUG
+
 }
 
 void Ogre::SwingDownAttackInit([[maybe_unused]] const States& pre)
@@ -63,12 +69,21 @@ void Ogre::SwingDownAttackUpdate([[maybe_unused]] std::optional<States>& req, [[
 		aabbAttackCollider_.isActive = false;
 #ifdef _DEBUG
 		aabbAttack_.isShowWireFrame = false;
+		box_.isActive = false;
 #endif // _DEBUG
 	}
 	//パリィエフェクトが終わったら通常スピードで判定をオンにする
 	else if (IsExitParryEffect()) {
 		currentMotionSpeed_ = 1.0f;
 		animation_.GetPlayBackSpeed() = currentMotionSpeed_;
+		//斬撃エフェクト生成
+		Quaternion GenerateRotate{};
+		GenerateRotate = Quaternion::CreateFromAxisAngle({ 1.0f, 0.0f, 0.0f }, GetSwingDownAttack().effectParam.rotate.x)
+			* Quaternion::CreateFromAxisAngle({ 0.0f, 1.0f, 0.0f }, GetSwingDownAttack().effectParam.rotate.y)
+			* Quaternion::CreateFromAxisAngle({ 0.0f, 0.0f, 1.0f }, GetSwingDownAttack().effectParam.rotate.z);
+		slashEffector_.Create(GetSwingDownAttack().effectParam.position, GenerateRotate,
+			GetSwingDownAttack().effectParam.scale, GetSwingDownAttack().effectParam.playTime,
+			GetSwingDownAttack().effectParam.offset, GetSwingDownAttack().effectParam.color);
 	}
 
 	//攻撃受付時間を超過したら判定オフ
@@ -77,6 +92,7 @@ void Ogre::SwingDownAttackUpdate([[maybe_unused]] std::optional<States>& req, [[
 		aabbAttackCollider_.isActive = false;
 #ifdef _DEBUG
 		aabbAttack_.isShowWireFrame = false;
+		box_.isActive = false;
 #endif // _DEBUG
 	}
 	//開始と終了時間の間だけ判定を付ける
@@ -85,6 +101,7 @@ void Ogre::SwingDownAttackUpdate([[maybe_unused]] std::optional<States>& req, [[
 		aabbAttackCollider_.isActive = true;
 #ifdef _DEBUG
 		aabbAttack_.isShowWireFrame = true;
+		box_.isActive = true;
 #endif // _DEBUG
 	}
 	//開始時間未満も判定を付けない
@@ -107,6 +124,7 @@ void Ogre::SwingDownAttackUpdate([[maybe_unused]] std::optional<States>& req, [[
 		aabbAttackCollider_.isActive = false;
 #ifdef _DEBUG
 		aabbAttack_.isShowWireFrame = false;
+		box_.isActive = true;
 #endif // _DEBUG
 	}
 

@@ -16,6 +16,11 @@ void Ogre::RotatingSlashFinalize([[maybe_unused]] const States& pre) {
 	isAttackPhase_ = false;
 	//弱攻撃終了時の抽選処理
 	EndLightAttack();
+	sphereCollider_.isActive = false;
+#ifdef _DEBUG
+	sphere_.isShowWireFrame = false;
+	tmpSphere_.isActive = false;
+#endif // _DEBUG
 
 }
 
@@ -62,12 +67,21 @@ void Ogre::RotatingSlashUpdate([[maybe_unused]] std::optional<States>& req, [[ma
 		sphereCollider_.isActive = false;
 #ifdef _DEBUG
 		sphere_.isShowWireFrame = false;
+		tmpSphere_.isActive = false;
 #endif // _DEBUG
 	}
 	//パリィエフェクトが終わったら通常スピードで判定をオンにする
 	else if (IsExitParryEffect()) {
 		currentMotionSpeed_ = 1.0f;
 		animation_.GetPlayBackSpeed() = currentMotionSpeed_;
+		//斬撃エフェクト生成
+		Quaternion GenerateRotate{};
+		GenerateRotate = Quaternion::CreateFromAxisAngle({ 1.0f, 0.0f, 0.0f }, GetRotatingSlash().effectParam.rotate.x)
+			* Quaternion::CreateFromAxisAngle({ 0.0f, 1.0f, 0.0f }, GetRotatingSlash().effectParam.rotate.y)
+			* Quaternion::CreateFromAxisAngle({ 0.0f, 0.0f, 1.0f }, GetRotatingSlash().effectParam.rotate.z);
+		slashEffector_.Create(GetRotatingSlash().effectParam.position, GenerateRotate,
+			GetRotatingSlash().effectParam.scale, GetRotatingSlash().effectParam.playTime,
+			GetRotatingSlash().effectParam.offset, GetRotatingSlash().effectParam.color);
 	}
 
 	//攻撃受付時間を超過したら判定オフ
@@ -76,6 +90,7 @@ void Ogre::RotatingSlashUpdate([[maybe_unused]] std::optional<States>& req, [[ma
 		sphereCollider_.isActive = false;
 #ifdef _DEBUG
 		sphere_.isShowWireFrame = false;
+		tmpSphere_.isActive = false;
 #endif // _DEBUG
 	}
 	//開始と終了時間の間だけ判定を付ける
@@ -84,6 +99,7 @@ void Ogre::RotatingSlashUpdate([[maybe_unused]] std::optional<States>& req, [[ma
 		sphereCollider_.isActive = true;
 #ifdef _DEBUG
 		sphere_.isShowWireFrame = true;
+		tmpSphere_.isActive = true;
 #endif // _DEBUG
 	}
 	//開始時間未満も判定を付けない
@@ -91,6 +107,7 @@ void Ogre::RotatingSlashUpdate([[maybe_unused]] std::optional<States>& req, [[ma
 		sphereCollider_.isActive = false;
 #ifdef _DEBUG
 		sphere_.isShowWireFrame = false;
+		tmpSphere_.isActive = false;
 #endif // _DEBUG
 	}
 

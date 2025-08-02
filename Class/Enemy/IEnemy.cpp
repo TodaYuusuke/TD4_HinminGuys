@@ -162,10 +162,27 @@ void IEnemy::StartParryEffect(const Vector3& position)
 	LWP::Math::Matrix4x4 viewProjectionViewport =
 		camera_->GetViewProjection() *
 		LWP::Math::Matrix4x4::CreateViewportMatrix(0, 0, LWP::Info::GetWindowWidthF(), LWP::Info::GetWindowHeightF(), 0.0f, 1.0f);
+
 	//画像を表示させる
 	for (int32_t i = 0; i < kMaxParryEffect_; i++) {
+
 		parryEffectSprite_[i].isActive = true;
 		parryEffectSprite_[i].worldTF.translation = parryEffectPosition_ * viewProjectionViewport;
+		//画像の描画制限
+		if (parryEffectSprite_[i].worldTF.translation.x > LWP::Info::GetWindowWidthF()) {
+			parryEffectSprite_[i].worldTF.translation.x = LWP::Info::GetWindowWidthF() - 50.0f;
+		}
+		else if (parryEffectSprite_[i].worldTF.translation.x < 0) {
+			parryEffectSprite_[i].worldTF.translation.x = 0 + 50.0f;
+		}
+
+		if (parryEffectSprite_[i].worldTF.translation.y > LWP::Info::GetWindowHeightF()) {
+			parryEffectSprite_[i].worldTF.translation.y = LWP::Info::GetWindowHeightF() - 50.0f;
+		}
+		else if (parryEffectSprite_[i].worldTF.translation.y < 0) {
+			parryEffectSprite_[i].worldTF.translation.y = 0 + 50.0f;
+		}
+
 	}
 
 	parryEffectTime_ = 0.0f;
@@ -203,13 +220,30 @@ void IEnemy::UpdateParryEffect()
 		LWP::Math::Matrix4x4 viewProjectionViewport =
 			camera_->GetViewProjection() *
 			LWP::Math::Matrix4x4::CreateViewportMatrix(0, 0, LWP::Info::GetWindowWidthF(), LWP::Info::GetWindowHeightF(), 0.0f, 1.0f);
-		
+
 		float t = LWP::Utility::Easing::CallFunction(LWP::Utility::Easing::Type::Liner, parryEffectTime_ / maxParryEffectTime_);
 		
 		//画像更新
 		for (int32_t i = 0; i < kMaxParryEffect_; i++) {
+			
 			parryEffectSprite_[i].worldTF.scale = LWP::Utility::Interpolation::Lerp({0.0f,1.0f,0.0f}, {100.0f,0.0f,0.0f}, t);
 			parryEffectSprite_[i].worldTF.translation = parryEffectPosition_ * viewProjectionViewport;
+
+			//画像の描画制限
+			if (parryEffectSprite_[i].worldTF.translation.x > LWP::Info::GetWindowWidthF()) {
+				parryEffectSprite_[i].worldTF.translation.x = LWP::Info::GetWindowWidthF() - 50.0f;
+			}
+			else if (parryEffectSprite_[i].worldTF.translation.x < 0) {
+				parryEffectSprite_[i].worldTF.translation.x = 0 + 50.0f;
+			}
+
+			if (parryEffectSprite_[i].worldTF.translation.y > LWP::Info::GetWindowHeightF()) {
+				parryEffectSprite_[i].worldTF.translation.y = LWP::Info::GetWindowHeightF() - 50.0f;
+			}
+			else if (parryEffectSprite_[i].worldTF.translation.y < 0) {
+				parryEffectSprite_[i].worldTF.translation.y = 0 + 50.0f;
+			}
+
 		}
 
 	}

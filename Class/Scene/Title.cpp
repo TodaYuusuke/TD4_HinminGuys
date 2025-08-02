@@ -13,6 +13,13 @@ void Title::Initialize() {
 
 	// 平行光源を配置(これも一時的に配置)
 	light_.worldTF.translation = { 0,10,0 };
+	//タイトルで事前読み込み
+	LWP::Resource::LoadModel("resources/model/Saiji/Saiji_IK.gltf");
+	LWP::Resource::LoadModel("resources/model/Oniheihe/Oniheihe_IK.gltf");
+	LWP::Resource::LoadModel("resources/model/Ogre/Orga_IK.gltf");
+	LWP::Resource::LoadModel("resources/model/Saiji/Club.gltf");
+	LWP::Resource::LoadModel("resources/model/Oniheihe/MatchLockGun.gltf");
+	LWP::Resource::LoadModel("resources/model/Ogre/Weapon.gltf");
 
 #pragma region フィールドを一時的に生成
 	// 一時的に平面を生成

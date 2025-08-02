@@ -63,7 +63,7 @@ void SystemManager::Initialize() {
 		// ヒットストップの設定
 		HitStopController::GetInstance()->Start(comboTree_->GetHitStopTime(), 0.0f);
 		};
-	comboTree_->AddCollisionLamda(LWP::Utility::ComboEnum::ENTER, attackOnHitFunc_);
+	comboTree_->AddCollisionLamda(LWP::Utility::ComboEnum::STAY, attackOnHitFunc_);
 
 	// パリィ判定生成
 	parryAABB_.min = { -1.0f, -1.0f, -1.0f };
@@ -81,12 +81,14 @@ void SystemManager::Initialize() {
 	sheathCollision_.worldTF.translation = { 0.0f, 0.0f, 0.0f };
 	sheathCollision_.mask.SetBelongFrag(GameMask::GetAttack());
 	sheathCollision_.mask.SetHitFrag(GameMask::GetEnemy());
+	sheathCollision_.name = "Sheath";
 	// 鞘攻撃判定生成
 	sheathAttackCollision_.SetFollow(player_->GetWorldTF());
 	sheathAttackCollision_.worldTF.translation = { 0.0f, 1.0f, 0.0f };
 	sheathAttackCollision_.isActive = false;
 	sheathAttackCollision_.mask.SetBelongFrag(GameMask::GetAttack());
 	sheathAttackCollision_.mask.SetHitFrag(GameMask::GetEnemy());
+	sheathAttackCollision_.name = "Sheath";
 
 #pragma region json用
 	// 被弾機能

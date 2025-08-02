@@ -10,7 +10,8 @@ using namespace SaijiState;
 
 Saiji::Saiji(SaijiState::StateParameter& stateParameter) :
 	configParameter_(stateParameter),
-	aabbAttack_(aabbAttackCollider_.SetBroadShape(LWP::Object::Collider::AABB()))
+	aabbAttack_(aabbAttackCollider_.SetBroadShape(LWP::Object::Collider::AABB())),
+	slashEffector_("Effect/SwordSlash.png", { 256.0f, 256.0f }, 26)
 {
 
 	stateParameter_ = stateParameter;
@@ -27,6 +28,12 @@ Saiji::~Saiji()
 void Saiji::Initialize(Player* player, const Vector3& position, LWP::Object::Camera* camera,
 	EnemyManager* manager)
 {
+
+#ifdef _DEBUG
+	box_.LoadCube();
+	box_.isActive = false;
+#endif // _DEBUG
+
 	model_.LoadShortPath("Saiji/Saiji_IK.gltf");
 	type_ = EnemyType::kSaiji;
 	attackType_ = AttackType::kShort;
@@ -73,20 +80,31 @@ void Saiji::Initialize(Player* player, const Vector3& position, LWP::Object::Cam
 
 		//コライダーを一時的にオフ、クールタイム設定
 		collider_.isActive = false;
-		//プレイヤーから取得してくる
-		invincibleTime_ = 0.2f;
 
+		//鞘の場合、専用のクールタイム設定
+		if (hitTarget->name == "Sheath") {
+			//クールタイム設定
+			invincibleTime_ = 1.01f;
+		}
+		else {
+			// 攻撃力
+			player_->GetParameter()->attackStrength_ = player_->GetSystemManager()->GetComboTree()->GetDamage();
+			//プレイヤーから取得し、0の場合が無いよう極小のクールタイムを足す
+			invincibleTime_ = player_->GetSystemManager()->GetComboTree()->GetHitCoolTime() + 0.01f;
+		}
 
-		//ダメージの加算値(テスト用)
-		int plusDamage = LWP::Utility::Random::GenerateInt(0, 1000);
+		//ダメージの倍率
+		float mag = LWP::Utility::Random::GenerateFloat(0.96f, 1.11f);
+
+		float resultDamage = player_->GetParameter()->GetCurrentAttackStrength() * mag;
 
 		//ダメージエフェクト追加
 		//今後プレイヤーから取得する
-		enemyManager_->GetDamageEffectEmitter().AddEffect(float(plusDamage),
+		enemyManager_->GetDamageEffectEmitter().AddEffect(resultDamage,
 			model_.GetJointWorldPosition("UpperBody"));
 
 		//ダメージを受ける
-		TakeDamage(player_->GetSystemManager()->GetComboTree()->GetDamage());
+		TakeDamage(resultDamage);
 
 		};
 	
@@ -94,6 +112,8 @@ void Saiji::Initialize(Player* player, const Vector3& position, LWP::Object::Cam
 	collider_.name = "Saiji" + std::to_string(ID_);
 	//刀のコライダー生成
 	CreateSwordCollider();
+
+	slashEffector_.SetParentTF(&model_.worldTF);
 
 }
 
@@ -137,6 +157,9 @@ void Saiji::Update()
 	//現在の状態を更新
 	state_.Update();
 
+	//エフェクト更新
+	slashEffector_.Update();
+
 	//反発力リセット
 	repulsiveForce_ = { 0.0f,0.0f,0.0f };
 
@@ -151,6 +174,7 @@ void Saiji::DebugGUI()
 	if (ImGui::TreeNode(std::to_string(ID_).c_str())) {
 		state_.DebugGUI();
 		ImGui::Text(std::to_string(distFromPlayer_).c_str());
+		ImGui::Text("HP: %1.2f", parameter_.hp);
 		ImGui::TreePop();
 	}
 

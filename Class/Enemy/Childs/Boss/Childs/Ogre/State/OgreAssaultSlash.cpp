@@ -18,6 +18,14 @@ void Ogre::AssaultSlashFinalize([[maybe_unused]] const States& pre) {
 	//強攻撃終了時の抽選処理
 	EndHeavyAttack();
 	SetPosition({ GetPosition().x, 0.0f, GetPosition().z });
+	aabbAttackCollider_.isActive = false;
+#ifdef _DEBUG
+	aabbAttack_.isShowWireFrame = false;
+	box_.isActive = false;
+#endif // _DEBUG
+
+	model_.worldTF.translation.y = 0.0f;
+
 }
 
 void Ogre::AssaultSlashInit([[maybe_unused]] const States& pre)
@@ -108,12 +116,21 @@ void Ogre::AssaultSlashUpdate([[maybe_unused]] std::optional<States>& req, [[may
 			aabbAttackCollider_.isActive = false;
 #ifdef _DEBUG
 			aabbAttack_.isShowWireFrame = false;
+			box_.isActive = false;
 #endif // _DEBUG
 		}
 		//パリィエフェクトが終わったら通常スピードで判定をオンにする
 		else if (IsExitParryEffect()) {
 			currentMotionSpeed_ = 1.0f;
 			animation_.GetPlayBackSpeed() = currentMotionSpeed_;
+			//斬撃エフェクト生成
+			Quaternion GenerateRotate{};
+			GenerateRotate = Quaternion::CreateFromAxisAngle({ 1.0f, 0.0f, 0.0f }, GetAssaultSlash().effectParam.rotate.x)
+				* Quaternion::CreateFromAxisAngle({ 0.0f, 1.0f, 0.0f }, GetAssaultSlash().effectParam.rotate.y)
+				* Quaternion::CreateFromAxisAngle({ 0.0f, 0.0f, 1.0f }, GetAssaultSlash().effectParam.rotate.z);
+			slashEffector_.Create(GetAssaultSlash().effectParam.position, GenerateRotate,
+				GetAssaultSlash().effectParam.scale, GetAssaultSlash().effectParam.playTime,
+				GetAssaultSlash().effectParam.offset, GetAssaultSlash().effectParam.color);
 		}
 
 		//待機中
@@ -124,6 +141,7 @@ void Ogre::AssaultSlashUpdate([[maybe_unused]] std::optional<States>& req, [[may
 			aabbAttackCollider_.isActive = false;
 #ifdef _DEBUG
 			aabbAttack_.isShowWireFrame = false;
+			box_.isActive = false;
 #endif // _DEBUG
 		}
 
@@ -141,6 +159,7 @@ void Ogre::AssaultSlashUpdate([[maybe_unused]] std::optional<States>& req, [[may
 			aabbAttackCollider_.isActive = true;
 #ifdef _DEBUG
 			aabbAttack_.isShowWireFrame = true;
+			box_.isActive = false;
 #endif // _DEBUG
 		}
 
@@ -166,6 +185,7 @@ void Ogre::AssaultSlashUpdate([[maybe_unused]] std::optional<States>& req, [[may
 				aabbAttackCollider_.isActive = false;
 #ifdef _DEBUG
 				aabbAttack_.isShowWireFrame = false;
+				box_.isActive = false;
 #endif // _DEBUG
 				//ポジションを終わりにセット
 				SetPosition(GetAssaultSlash().attackEndPosition);

@@ -1,6 +1,7 @@
 #pragma once
 #include "../../Minor.h"
 #include "SaijiStateParameter.h"
+#include "../../../../../Particles/SlashEffect/SlashEffector.h"
 
 /// <summary>
 /// ダメだよぉ～才二君
@@ -82,11 +83,22 @@ private:
 	//才二君用のデフォパラメータ設定
 	SaijiState::StateParameter& configParameter_;
 
+	//斬撃エフェクト
+	SlashEffector slashEffector_;
+
 	// 刀モデル
 	SkinningModel swordModel_;
 	//攻撃コライダー(AABB)
 	LWP::Object::Collision aabbAttackCollider_;
 	LWP::Object::Collider::AABB& aabbAttack_;
+
+#ifdef _DEBUG
+
+	//一時コライダー表示用
+	LWP::Resource::RigidModel box_;
+
+#endif // _DEBUG
+
 
 	//雑魚敵パラメータ
 	SaijiState::StateParameter stateParameter_;

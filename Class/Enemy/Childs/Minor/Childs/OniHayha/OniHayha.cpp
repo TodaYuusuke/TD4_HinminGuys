@@ -10,7 +10,7 @@ using namespace OniHayhaState;
 
 OniHayha::OniHayha(OniHayhaState::StateParameter& stateParameter) : 
 	configParameter_(stateParameter),
-	sphere_(bulletCollider_.SetBroadShape(LWP::Object::Collider::Sphere()))
+	capsule_(bulletCollider_.SetBroadShape(LWP::Object::Collider::Capsule()))
 {
 
 	stateParameter_ = stateParameter;
@@ -27,6 +27,14 @@ OniHayha::~OniHayha()
 void OniHayha::Initialize(Player* player, const Vector3& position, LWP::Object::Camera* camera,
 	EnemyManager* manager)
 {
+
+#ifdef _DEBUG
+	tmpSphere_.LoadSphere();
+	tmpSphere_.isActive = false;
+	tmpSphereSecond_.LoadSphere();
+	tmpSphereSecond_.isActive = false;
+#endif // _DEBUG
+
 	model_.LoadShortPath("Oniheihe/Oniheihe_IK.gltf");
 	type_ = EnemyType::kOniHayha;
 	attackType_ = AttackType::kLong;
@@ -36,7 +44,8 @@ void OniHayha::Initialize(Player* player, const Vector3& position, LWP::Object::
 	// 銃モデルをプレイヤーの手に追従させる
 	gunModel_.GetJoint("Grip")->localTF.Parent(&model_, "WeaponAnchor");
 	laserModel_.LoadShortPath("effect/laser.obj");
-	laserModel_.worldTF.Parent(&gunModel_, "Muzzle");
+	laserModel_.worldTF.Parent(&model_.worldTF);
+	laserModel_.worldTF.translation.y = 0.5f;
 	/*laserModel_.worldTF.translation = { 0.0f,1.0f,0.0f };*/
 	laserModel_.materials["Laser"].color.R = (unsigned char)255;
 	laserModel_.isActive = false;
@@ -82,19 +91,30 @@ void OniHayha::Initialize(Player* player, const Vector3& position, LWP::Object::
 
 		//コライダーを一時的にオフ、クールタイム設定
 		collider_.isActive = false;
-		//プレイヤーから取得してくる
-		invincibleTime_ = 0.2f;
+		//鞘の場合、専用のクールタイム設定
+		if (hitTarget->name == "Sheath") {
+			//クールタイム設定
+			invincibleTime_ = 1.01f;
+		}
+		else {
+			// 攻撃力
+			player_->GetParameter()->attackStrength_ = player_->GetSystemManager()->GetComboTree()->GetDamage();
+			//プレイヤーから取得し、0の場合が無いよう極小のクールタイムを足す
+			invincibleTime_ = player_->GetSystemManager()->GetComboTree()->GetHitCoolTime() + 0.01f;
+		}
 
-		//ダメージの加算値(テスト用)
-		int plusDamage = LWP::Utility::Random::GenerateInt(0, 1000);
+		//ダメージの倍率
+		float mag = LWP::Utility::Random::GenerateFloat(0.96f, 1.11f);
+
+		float resultDamage = player_->GetParameter()->GetCurrentAttackStrength() * mag;
 
 		//ダメージエフェクト追加
 		//今後プレイヤーから取得する
-		enemyManager_->GetDamageEffectEmitter().AddEffect(float(plusDamage),
+		enemyManager_->GetDamageEffectEmitter().AddEffect(resultDamage,
 			model_.GetJointWorldPosition("UpperBody"));
 
 		//ダメージを受ける
-		TakeDamage(player_->GetSystemManager()->GetComboTree()->GetDamage());
+		TakeDamage(resultDamage);
 
 		};
 	
@@ -159,6 +179,7 @@ void OniHayha::DebugGUI()
 	if (ImGui::TreeNode(std::to_string(ID_).c_str())) {
 		state_.DebugGUI();
 		ImGui::Text(std::to_string(distFromPlayer_).c_str());
+		ImGui::Text("HP: %1.2f", parameter_.hp);
 		ImGui::TreePop();
 	}
 
@@ -169,15 +190,25 @@ void OniHayha::CreateBulletCollider()
 
 	// 弾の判定生成
 	bulletCollider_.isActive = false;
+	//ペアレント設定
+	bulletCollider_.SetFollow(&laserModel_.worldTF);
 	// 自機の所属しているマスクを設定
 	bulletCollider_.mask.SetBelongFrag(GetAttack());
 	// 当たり判定をとる対象のマスクを設定
 	bulletCollider_.mask.SetHitFrag(GetPlayer());
-	bulletCollider_.enterLambda = [this](LWP::Object::Collision* hitTarget) {
+	bulletCollider_.stayLambda = [this](LWP::Object::Collision* hitTarget) {
 		hitTarget;
 		player_->TakeDamage(parameter_.attackParameter.attackValue);
 		};
-	sphere_.radius = 0.1f;
+	capsule_.radius = 0.1f;
+
+#ifdef _DEBUG
+
+	tmpSphere_.worldTF.scale = { 0.1f,0.1f,0.1f };
+	tmpSphereSecond_.worldTF.scale = { 0.1f,0.1f,0.1f };
+
+#endif // _DEBUG
+
 
 }
 

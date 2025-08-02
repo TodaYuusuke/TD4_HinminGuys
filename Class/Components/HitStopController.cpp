@@ -41,8 +41,8 @@ void HitStopController::Update() {
 
 	// クールタイムが終了している
 	if (currentFrame_ <= 0.0f) {
-		// デルタタイムの係数初期化
-		if (!isFinish_) {
+		// デルタタイムの係数初期化(追記:デルタタイムが0.0f以下の場合もセット)
+		if (!isFinish_ or LWP::Info::GetDeltaTimeF() <= 0.0f) {
 			SetDeltaTimeMultiply(1.0f);
 		}
 		isFinish_ = true;

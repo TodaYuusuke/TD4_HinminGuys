@@ -1,19 +1,53 @@
 {
     "Group :OgreParameter": {
         "Group :AssaultSlash": {
+            "Color :EffectColor": [
+                92,
+                0,
+                0,
+                255
+            ],
             "Vector3 :AttackPosition": [
                 0.0,
                 0.0,
                 0.5
             ],
+            "Vector3 :EffectOffset": [
+                0.0,
+                0.800000011920929,
+                0.0
+            ],
+            "Vector3 :EffectPosition": [
+                0.0,
+                1.0,
+                0.0
+            ],
+            "Vector3 :EffectRotate": [
+                1.5700000524520874,
+                0.0,
+                1.0
+            ],
+            "Vector3 :EffectScale": [
+                2.0,
+                2.0,
+                2.0
+            ],
             "float :AssaultTime": 0.30000001192092896,
             "float :AttackScale": 1.600000023841858,
             "float :DivingTime": 2.0,
+            "float :EffectPlayTime": 0.5,
             "float :GapTime": 3.0,
             "float :LeaveDistance": 10.0,
             "float :OverDistance": 3.0,
             "float :StealthWaitingTime": 1.0,
             "float :WaitingTime": 0.699999988079071
+        },
+        "Group :Dead": {
+            "float :BackEndFirst": 0.20000000298023224,
+            "float :BackEndSecond": 0.3799999952316284,
+            "float :BackStartFirst": 0.125,
+            "float :BackStartSecond": 0.3199999928474426,
+            "float :StepBackSpeed": -1.5
         },
         "Group :FallingThrust": {
             "Vector3 :AttackPosition": [
@@ -28,6 +62,7 @@
             "float :FallWaitingTime": 0.5,
             "float :FallingTime": 0.30000001192092896,
             "float :GapTime": 1.0,
+            "float :JumpWaitingTime": 0.20000000298023224,
             "float :JumpingHeight": 10.0,
             "float :JumpingTime": 0.5,
             "float :StartAcceptTime": 0.07999999821186066
@@ -47,6 +82,30 @@
             "int32_t :MediumTransitionCount": 1
         },
         "Group :QuadrupleAttack": {
+            "Color :EffectColor1": [
+                92,
+                0,
+                0,
+                255
+            ],
+            "Color :EffectColor2": [
+                92,
+                0,
+                0,
+                255
+            ],
+            "Color :EffectColor3": [
+                92,
+                0,
+                0,
+                255
+            ],
+            "Color :EffectColor4": [
+                92,
+                0,
+                0,
+                255
+            ],
             "Vector3 :AttackPosition1": [
                 0.0,
                 0.0,
@@ -67,6 +126,86 @@
                 0.0,
                 0.5
             ],
+            "Vector3 :EffectOffset1": [
+                0.0,
+                0.800000011920929,
+                0.0
+            ],
+            "Vector3 :EffectOffset2": [
+                0.0,
+                0.800000011920929,
+                0.0
+            ],
+            "Vector3 :EffectOffset3": [
+                0.0,
+                0.800000011920929,
+                0.0
+            ],
+            "Vector3 :EffectOffset4": [
+                0.0,
+                0.800000011920929,
+                0.0
+            ],
+            "Vector3 :EffectPosition1": [
+                0.0,
+                1.0,
+                0.0
+            ],
+            "Vector3 :EffectPosition2": [
+                0.0,
+                1.0,
+                0.0
+            ],
+            "Vector3 :EffectPosition3": [
+                0.0,
+                1.0,
+                0.0
+            ],
+            "Vector3 :EffectPosition4": [
+                0.0,
+                1.0,
+                0.0
+            ],
+            "Vector3 :EffectRotate1": [
+                1.5,
+                -2.5,
+                1.5
+            ],
+            "Vector3 :EffectRotate2": [
+                1.5700000524520874,
+                0.0,
+                1.0
+            ],
+            "Vector3 :EffectRotate3": [
+                1.5,
+                -2.5,
+                1.5
+            ],
+            "Vector3 :EffectRotate4": [
+                1.5700000524520874,
+                0.0,
+                1.0
+            ],
+            "Vector3 :EffectScale1": [
+                2.0,
+                2.0,
+                2.0
+            ],
+            "Vector3 :EffectScale2": [
+                2.0,
+                2.0,
+                2.0
+            ],
+            "Vector3 :EffectScale3": [
+                2.0,
+                2.0,
+                2.0
+            ],
+            "Vector3 :EffectScale4": [
+                2.0,
+                2.0,
+                2.0
+            ],
             "float :AttackDistance1": 1.0,
             "float :AttackDistance2": 1.0,
             "float :AttackDistance3": 1.0,
@@ -75,6 +214,10 @@
             "float :AttackScale2": 1.0,
             "float :AttackScale3": 1.0,
             "float :AttackScale4": 1.0,
+            "float :EffectPlayTime1": 0.30000001192092896,
+            "float :EffectPlayTime2": 0.30000001192092896,
+            "float :EffectPlayTime3": 0.30000001192092896,
+            "float :EffectPlayTime4": 0.5,
             "float :EndAcceptTime1": 0.6000000238418579,
             "float :EndAcceptTime2": 0.75,
             "float :EndAcceptTime3": 0.6000000238418579,
@@ -93,26 +236,80 @@
             "float :StartAcceptTime4": 0.5
         },
         "Group :RotatingSlash": {
+            "Color :EffectColor": [
+                92,
+                0,
+                0,
+                255
+            ],
             "Vector3 :AttackPosition": [
                 0.0,
                 0.0,
                 0.0
             ],
+            "Vector3 :EffectOffset": [
+                0.0,
+                0.800000011920929,
+                0.0
+            ],
+            "Vector3 :EffectPosition": [
+                0.0,
+                1.0,
+                0.0
+            ],
+            "Vector3 :EffectRotate": [
+                1.5700000524520874,
+                0.0,
+                1.0
+            ],
+            "Vector3 :EffectScale": [
+                2.0,
+                2.0,
+                2.0
+            ],
             "float :AttackDistance": 1.0,
             "float :AttackScale": 1.0,
+            "float :EffectPlayTime": 0.5,
             "float :EndAcceptTime": 0.800000011920929,
             "float :EndMotionTime": 1.0,
             "float :MoveSpeed": 1.0,
             "float :StartAcceptTime": 0.5
         },
         "Group :SwingDownAttack": {
+            "Color :EffectColor": [
+                92,
+                0,
+                0,
+                255
+            ],
             "Vector3 :AttackPosition": [
-                -0.5,
                 0.0,
+                1.0,
                 0.5
+            ],
+            "Vector3 :EffectOffset": [
+                0.0,
+                0.800000011920929,
+                0.0
+            ],
+            "Vector3 :EffectPosition": [
+                0.0,
+                1.0,
+                0.0
+            ],
+            "Vector3 :EffectRotate": [
+                1.5,
+                -2.5,
+                1.5
+            ],
+            "Vector3 :EffectScale": [
+                2.0,
+                2.0,
+                2.0
             ],
             "float :AttackDistance": 0.800000011920929,
             "float :AttackScale": 0.5,
+            "float :EffectPlayTime": 0.30000001192092896,
             "float :EndAcceptTime": 0.6000000238418579,
             "float :EndMotionTime": 1.0,
             "float :MoveSpeed": 5.0,

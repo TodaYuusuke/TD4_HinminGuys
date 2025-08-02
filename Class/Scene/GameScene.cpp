@@ -29,10 +29,22 @@ GameScene::GameScene()
 
 GameScene::~GameScene() {
 	enemyManager_.Finalize();
+	//BGM停止
+	bgmPlayer_.Stop("Battle");
+
 }
 
 // 初期化
 void GameScene::Initialize() {
+	
+	//事前読み込み
+	LWP::Resource::LoadModel("resources/model/Saiji/Saiji_IK.gltf");
+	LWP::Resource::LoadModel("resources/model/Oniheihe/Oniheihe_IK.gltf");
+	LWP::Resource::LoadModel("resources/model/Ogre/Orga_IK.gltf");
+	LWP::Resource::LoadModel("resources/model/Saiji/Club.gltf");
+	LWP::Resource::LoadModel("resources/model/Oniheihe/MatchLockGun.gltf");
+	LWP::Resource::LoadModel("resources/model/Ogre/Weapon.gltf");
+
 	// コマンドの登録
 	inputHandler_ = InputHandler::GetInstance();
 	inputHandler_->Initialize();
@@ -95,6 +107,9 @@ void GameScene::Initialize() {
 
 	// ゲームシーンマネージャーの初期化
 	gameSceneManager_.Init();
+	//BGM再生
+	bgmPlayer_.PlayBGM("BattleBGM.mp3", "Battle", 0.5f);
+
 	//testBillboard_.Init();
 }
 
@@ -120,7 +135,7 @@ void GameScene::Update() {
 	}
 
 	//シーン遷移が終わった時点でウェーブを開始していない場合、ウェーブを開始
-	if (not sceneTransitioner_.GetIsSceneChange() and not enemyManager_.GetIsDefeatedAllEnemy() and
+	if (not sceneTransitioner_.GetIsSceneChange() and not enemyManager_.GetIsDefeatedOgre() and
 		not enemyManager_.GetIsStartWave()) {
 
 #ifdef _DEBUG
@@ -129,6 +144,19 @@ void GameScene::Update() {
 		enemyManager_.StartWave();
 #endif // _DEBUG
 
+	}
+
+	//全ての敵が倒されたらシーン遷移する
+	if (enemyManager_.GetIsDefeatedOgre()) {
+		//遷移先をタイトルにセット
+		sceneTransitioner_.SetNextScene(SceneName::kGameClear);
+		sceneTransitioner_.SceneTransitionStart();
+	}
+	//全員倒す前にプレイヤーが死んだ場合、ゲームオーバーに逝こう！
+	else if (not enemyManager_.GetIsDefeatedOgre() and not player_.GetIsAlive()) {
+		//遷移先をゲームオーバーにセット
+		sceneTransitioner_.SetNextScene(SceneName::kGameOver);
+		sceneTransitioner_.SceneTransitionStart();
 	}
 
 	// 入力されたコマンドを確認

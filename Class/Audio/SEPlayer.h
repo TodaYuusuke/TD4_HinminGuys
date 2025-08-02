@@ -20,7 +20,7 @@ public:
 	/// <summary>
 	/// SE再生
 	/// </summary>
-	/// <param name="fileName">読み込むファイルのパス</param>
+	/// <param name="fileName">読み込むファイルのパス("resources/audio/SE/"以降のパス指定)</param>
 	/// <param name="name">データの名前</param>
 	/// <param name="volume">音量</param>
 	void PlaySE(const std::string& fileName, const std::string& name, float volume);

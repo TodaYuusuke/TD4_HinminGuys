@@ -1,6 +1,7 @@
 #pragma once
 #include "../../Boss.h"
 #include "OgreStateParameter.h"
+#include "../../../../../Particles/SlashEffect/SlashEffector.h"
 
 /// <summary>
 /// 翁雅、降臨
@@ -79,6 +80,14 @@ private:
 	void SpawnUpdate(std::optional<OgreState::States>& req, const OgreState::States& pre);
 	void SpawnFinalize(const OgreState::States& pre);
 
+	void SpawnEnemyInit(const OgreState::States& pre);
+	void SpawnEnemyUpdate(std::optional<OgreState::States>& req, const OgreState::States& pre);
+	void SpawnEnemyFinalize(const OgreState::States& pre);
+
+	void VoidInit(const OgreState::States& pre);
+	void VoidUpdate(std::optional<OgreState::States>& req, const OgreState::States& pre);
+	void VoidFinalize(const OgreState::States& pre);
+
 	//各パラメータを個別に取得
 	OgreState::IdleParameter& GetIdleParameter() { return stateParameter_.idleParameter; }
 	OgreState::MoveParameter& GetMoveParameter() { return stateParameter_.moveParameter; }
@@ -91,7 +100,7 @@ private:
 
 #pragma endregion
 	//攻撃ステートかどうか取得
-	bool IsAttackState();
+	bool IsSuperArmorState();
 	//連続突撃時のワープ先指定関数
 	void SetAssaultSlashWarpPosition();
 	//弱攻撃終了時の攻撃抽選
@@ -110,6 +119,9 @@ private:
 	LWP::Primitive::NormalSurface cautionQuad_;
 	LWP::Primitive::NormalSurface cautionCircle_;
 
+	//斬撃エフェクト
+	SlashEffector slashEffector_;
+
 	// 刀モデル
 	SkinningModel swordModel_;
 	//攻撃コライダー(球)
@@ -118,8 +130,14 @@ private:
 	//攻撃コライダー(AABB)
 	LWP::Object::Collision aabbAttackCollider_;
 	LWP::Object::Collider::AABB& aabbAttack_;
-	//弾の攻撃方向
-	Vector3 bulletDirection_{};
+
+#ifdef _DEBUG
+
+	//一時コライダー表示用
+	LWP::Resource::RigidModel box_;
+	LWP::Resource::RigidModel tmpSphere_;
+
+#endif // _DEBUG
 
 	//雑魚敵パラメータ
 	OgreState::StateParameter stateParameter_;

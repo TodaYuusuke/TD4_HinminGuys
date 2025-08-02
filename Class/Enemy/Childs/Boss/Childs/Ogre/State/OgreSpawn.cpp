@@ -25,6 +25,8 @@ void Ogre::SpawnUpdate(std::optional<States>& req, const States& pre)
 	//Y座標だけ移動させる
 	model_.worldTF.translation.y = LWP::Utility::Interpolation::LerpF(stateParameter_.spawnParameter.startY, 0.0f,
 		stateParameter_.spawnParameter.currentTime / stateParameter_.spawnParameter.appearanceTime);
+	//範囲制限用にセット
+	SetPosition(GetPosition());
 
 	//スポーン時間終わるまでカウント
 	if (stateParameter_.spawnParameter.currentTime < stateParameter_.spawnParameter.appearanceTime) {

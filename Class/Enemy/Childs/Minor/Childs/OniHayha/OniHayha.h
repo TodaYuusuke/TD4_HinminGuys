@@ -85,9 +85,18 @@ private:
 	SkinningModel gunModel_;
 	// 弾コライダー
 	LWP::Object::Collision bulletCollider_;
-	LWP::Object::Collider::Sphere& sphere_;
+	LWP::Object::Collider::Capsule& capsule_;
 	//弾の攻撃方向
 	Vector3 bulletDirection_{};
+
+#ifdef _DEBUG
+
+	//一時コライダー表示用
+	LWP::Resource::RigidModel tmpSphere_;
+	//一時コライダー表示用
+	LWP::Resource::RigidModel tmpSphereSecond_;
+
+#endif // _DEBUG
 
 	//雑魚敵パラメータ
 	OniHayhaState::StateParameter stateParameter_;
