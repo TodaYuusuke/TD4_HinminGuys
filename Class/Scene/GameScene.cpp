@@ -95,8 +95,6 @@ void GameScene::Initialize() {
 	// ゲームシーンマネージャーの初期化
 	gameSceneManager_.Init();
 
-	// BGM再生
-	bgmPlayer_.PlayBGM("BattleBGM.mp3", "BattleBGM", 1.0f);
 }
 
 // 更新

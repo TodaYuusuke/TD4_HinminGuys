@@ -14,6 +14,11 @@ GameSceneManager::GameSceneManager(Player* player, EnemyManager* enemyManager, S
 
 void GameSceneManager::Init()
 {
+	// BGM再生
+	bgmPlayer_->PlayBGM("BattleBGM.mp3", "BattleBGM", 1.0f);
+	// 音量設定
+	bgmPlayer_->SetVolume("BattleBGM", bgmVolume_);
+
 	// フラグのリセット
 	isEndGame_ = false;
 
@@ -116,6 +121,11 @@ void GameSceneManager::GameStateCheck()
 
 		// 演出用タイマーを指定秒数で開始
 		timer_.Start(2.0f);
+
+		// 勝利BGMの再生
+		if(clearBGMPath != ""){ bgmPlayer_->PlayBGM(clearBGMPath, "ResultBGM", 1.0f); }
+		// クリア効果音の再生
+		if(clearSEPath != ""){ sePlayer_->PlaySE(clearSEPath, "ResultSE", 1.0f); }
 	}
 	else {
 		// テクスチャ読み込み
@@ -129,6 +139,11 @@ void GameSceneManager::GameStateCheck()
 
 		// 演出用タイマーを指定秒数で開始
 		timer_.Start(3.0f);
+
+		// 敗北BGMの再生
+		if (gameOverBGMPath != "") { bgmPlayer_->PlayBGM(gameOverBGMPath, "ResultBGM", 1.0f); }
+		// 敗北効果音の再生
+		if (gameOverSEPath != "") { sePlayer_->PlaySE(gameOverSEPath, "ResultSE", 1.0f); }
 	}
 
 	// ボタンスプライト座標設定
@@ -146,7 +161,7 @@ void GameSceneManager::EndStaging()
 	buttonSprite_.material.color.A = static_cast<unsigned char>(LWP::Utility::Interp::LerpF(0.0f, 255.0f, timer_.GetProgress()));
 
 	// ゲームBGMの音量を徐々に下げる
-	bgmPlayer_->SetVolume("BattleBGM", LWP::Utility::Interp::LerpF(1.0f, 0.0f, Utility::Easing::InOutQuart(timer_.GetProgress())));
+	bgmPlayer_->SetVolume("BattleBGM", LWP::Utility::Interp::LerpF(bgmVolume_, 0.0f, Utility::Easing::InOutQuart(timer_.GetProgress())));
 
 	// 勝利状態で処理を切り替える
 	if (isWin_) {
@@ -180,6 +195,8 @@ void GameSceneManager::EndCheck()
 	if (LWP::Input::Controller::GetTrigger(XINPUT_GAMEPAD_A)) {
 		// 決定音を鳴らす
 		sePlayer_->PlaySE(decideSound_, "Decide", 1.0f);
+		// リザルトBGMの停止
+		bgmPlayer_->Stop("ResultBGM");
 
 		// 勝利フラグの状態によって処理を変更する
 		if (isWin_) { // 勝利

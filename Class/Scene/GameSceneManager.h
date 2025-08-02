@@ -99,8 +99,18 @@ private: // メンバ変数
 	// 演出用タイマー
 	LWP::Utility::FrameTimer timer_{};
 
+	// クリアBGM
+	std::string clearBGMPath = "";
+	// クリア効果音
+	std::string clearSEPath = "";
+	// ゲームオーバーBGM
+	std::string gameOverBGMPath = "";
+	// ゲームオーバー効果音
+	std::string gameOverSEPath = "";
+	// BGMの初期ボリューム
+	float bgmVolume_ = 1.0f;
+
 	// 決定音までのファイルパス
 	std::string decideSound_ = "system/select.mp3";
-
 };
 

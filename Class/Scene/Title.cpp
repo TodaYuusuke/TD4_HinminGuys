@@ -62,6 +62,11 @@ void Title::Initialize() {
 	UITitleLogo_.isActive = false;
 
 	selectUI_ = SelectUI::kStart;
+
+	// BGMの再生
+	if (bgmPath_ != "") {
+		bgmPlayer_.PlayBGM(bgmPath_, "TitleBGM", 1.0f);
+	}
 }
 
 void Title::Update() {
@@ -79,10 +84,16 @@ void Title::Update() {
 
 			//下キーでEndに移動
 			if (Controller::GetTrigger(XBOX_DPAD_DOWN) || Keyboard::GetTrigger(DIK_DOWN)) {
+				// カーソル移動音を鳴らす
+				sePlayer_.PlaySE(moveSound_, "Move", seVolume_);
 				selectUI_ = SelectUI::kEnd;
 			}
 			//Aボタンでゲームスタート
 			if (Controller::GetTrigger(XBOX_A) || Keyboard::GetTrigger(DIK_SPACE)) {
+				// BGMの停止
+				bgmPlayer_.Stop("TitleBGM");
+				// 決定音を鳴らす
+				sePlayer_.PlaySE(decideSound_, "Decide", seVolume_);
 				sceneTransitioner_.SetNextScene(SceneName::kGameScene);
 				sceneTransitioner_.SceneTransitionStart();
 			}
@@ -95,9 +106,13 @@ void Title::Update() {
 
 			//上キーでStartに移動
 			if (Controller::GetTrigger(XBOX_DPAD_UP) || Keyboard::GetTrigger(DIK_UP)) {
+				// カーソル移動音を鳴らす
+				sePlayer_.PlaySE(moveSound_, "Move", seVolume_);
 				selectUI_ = SelectUI::kStart;
 			}
 			if (Controller::GetTrigger(XBOX_A) || Keyboard::GetTrigger(DIK_SPACE)) {
+				// 終了音を鳴らす
+				sePlayer_.PlaySE(endSound_, "End", seVolume_);
 				LWP::System::ShutDown();
 			}
 
