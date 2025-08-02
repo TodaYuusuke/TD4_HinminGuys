@@ -29,6 +29,7 @@ public:
 	/// </summary>
 	/// <returns></returns>
 	Spark::SparkJsonData GetJsonData() { return jsonData_; }
+	bool GetEmptyParticles() { return particles_.empty(); }
 
 	/// <summary>
 	/// パーティクルを生成

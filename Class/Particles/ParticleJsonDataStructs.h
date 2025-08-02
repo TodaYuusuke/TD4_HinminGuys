@@ -1,6 +1,10 @@
 #pragma once
 #include "Adapter.h"
 
+struct LimitColor {
+	LWP::Utility::Color min;
+	LWP::Utility::Color max;
+};
 struct LimitVec3 {
 	LWP::Math::Vector3 min;
 	LWP::Math::Vector3 max;

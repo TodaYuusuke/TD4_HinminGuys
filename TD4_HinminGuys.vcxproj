@@ -150,6 +150,7 @@
     </Manifest>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Class\Particles\BossDead\BossDeadParticles.cpp" />
     <ClCompile Include="Class\Timer\FrameTimer.cpp" />
     <ClCompile Include="Class\Enemy\Childs\Boss\Childs\Ogre\State\OgreSpawnEnemy.cpp" />
     <ClCompile Include="Class\Particles\AttackHit\AttackHitEffect.cpp" />
@@ -249,6 +250,7 @@
     <ClCompile Include="Class\World\World.cpp" />
     <ClCompile Include="Class\Particles\SheathBreak\Children\FlickeringFlash.cpp" />
     <ClCompile Include="Class\Scene\GameSceneManager.cpp" />
+    <ClCompile Include="Class\Particles\BossDead\Children\DeadSmoke.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Class\Player\Player.cpp" />
     <ClCompile Include="Class\Player\Systems\Children\Move\Move.cpp" />
@@ -281,6 +283,7 @@
     <ClCompile Include="Class\Particles\SheathBreak\SheathBreakEffect.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Class\Particles\BossDead\BossDeadParticles.h" />
     <ClInclude Include="Class\Timer\FrameTimer.h" />
     <ClInclude Include="Class\Particles\AttackHit\AttackHitEffect.h" />
     <ClInclude Include="Class\Particles\AttackHit\Children\AttackHitParticle.h" />
@@ -401,6 +404,7 @@
     <ClInclude Include="Class\Particles\SheathBreak\Children\RhombusParticle.h" />
     <ClInclude Include="Class\Particles\SheathBreak\SheathBreakEffect.h" />
     <ClInclude Include="Class\Scene\GameSceneManager.h" />
+    <ClInclude Include="Class\Particles\BossDead\Children\DeadSmoke.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />

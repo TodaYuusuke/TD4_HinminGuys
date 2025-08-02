@@ -32,10 +32,15 @@ public:
 #pragma region Setter
 	void SetParticleData(ParticleData data) { particleData_ = data; }
 	/// <summary>
-	/// 使用するテクスチャの名前
+	/// 使用するテクスチャの名前の設定
 	/// </summary>
 	/// <param name="name"></param>
 	void SetTexName(const std::string& name) { texName_ = name; }
+	/// <summary>
+	/// 生成座標の設定
+	/// </summary>
+	/// <param name="pos"></param>
+	void SetEmitterPos(const LWP::Math::Vector3& pos) { emitterPos_ = pos; }
 #pragma endregion
 
 protected:// 外部から受け取る変数

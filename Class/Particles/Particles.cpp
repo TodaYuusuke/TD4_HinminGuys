@@ -31,6 +31,8 @@ Particles::Particles(Player* player, FollowCamera* followCamera) {
 	enemySpawnParticles_->Initialize();
 	enemyDeadParticles_ = std::make_unique<EnemyDeadParticles>("Effect/Particle.png");
 	enemyDeadParticles_->Initialize();
+	bossDeadParticles_ = std::make_unique<BossDeadParticles>();
+	bossDeadParticles_->Initialize();
 	attackHitEffect_ = std::make_unique<AttackHitEffect>();
 	attackHitEffect_->Initialize();
 	crackEffect_ = std::make_unique<CrackEffect>("Effect/Crack.png");
@@ -50,6 +52,7 @@ Particles::~Particles() {
 	floatParticle_.reset();
 	enemySpawnParticles_.reset();
 	enemyDeadParticles_.reset();
+	bossDeadParticles_.reset();
 	attackHitEffect_.reset();
 	crackEffect_.reset();
 	weakCrackEffect_.reset();
@@ -80,6 +83,7 @@ void Particles::Update() {
 		p->Update();
 	}
 	enemyDeadParticles_->Update();
+	bossDeadParticles_->Update();
 	attackHitEffect_->Update();
 	crackEffect_->Update();
 	weakCrackEffect_->Update();
@@ -128,6 +132,9 @@ void Particles::CreateJsonData() {
 	json_.EndGroup();
 	json_.BeginGroup("EnemyDeadParticle");
 	enemyDeadParticles_->SetJsonData(json_);
+	json_.EndGroup();
+	json_.BeginGroup("BossDeadParticle");
+	bossDeadParticles_->SetJsonData(json_);
 	json_.EndGroup();
 	json_.BeginGroup("AttackHitEffect");
 	attackHitEffect_->SetJsonData(json_);
@@ -179,11 +186,13 @@ void Particles::DebugGui() {
 		floatParticle_->Add(10, debugEmitterPos_);
 	}
 	if (ImGui::Button("Create Spawn Particle")) {
-		//enemySpawnParticles_->Start(60.0f, debugEmitterPos_);
 		CreateEnemySpawnParticles(0.5f, debugEmitterPos_);
 	}
-	if (ImGui::Button("Create Dead Particle")) {
+	if (ImGui::Button("Create Enemy Dead Particle")) {
 		enemyDeadParticles_->Add(5, debugEmitterPos_);
+	}
+	if (ImGui::Button("Create Boss Dead Particle")) {
+		bossDeadParticles_->Start(1.0f, debugEmitterPos_);
 	}
 	if (ImGui::Button("Create Attack Hit Effect")) {
 		attackHitEffect_->Add(debugEmitterPos_);

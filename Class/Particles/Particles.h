@@ -13,7 +13,7 @@
 #include "EnemyDead/EnemyDeadParticles.h"
 #include "AttackHit/AttackHitEffect.h"
 #include "Crack/CrackEffect.h"
-
+#include "BossDead/BossDeadParticles.h"
 
 class FollowCamera;
 /// <summary>
@@ -93,7 +93,6 @@ public:// パーティクル生成
 	/// </summary>
 	/// <param name="pos"></param>
 	void CreateEnemySpawnParticles(const float& createTime, const LWP::Math::Vector3& pos) {
-		//EnemySpawnParticles* p = new EnemySpawnParticles("Effect/Rock.png");
 		EnemySpawnParticles* p = new EnemySpawnParticles(*enemySpawnParticles_.get());
 		p->Initialize();
 		p->SetJsonData(enemySpawnParticles_->GetJsonData());
@@ -106,6 +105,17 @@ public:// パーティクル生成
 	/// <param name="value"></param>
 	/// <param name="pos"></param>
 	void CreateEnemyDeadParticles(const int& value, const LWP::Math::Vector3& pos) { enemyDeadParticles_->Add(value, pos); }
+	/// <summary>
+	/// ボス死亡パーティクル生成
+	/// </summary>
+	/// <param name="value"></param>
+	/// <param name="pos"></param>
+	void CreateBossDeadParticles(const float& createTime, const LWP::Math::Vector3& pos) { bossDeadParticles_->Start(createTime, pos); }
+	/// <summary>
+	/// ボス死亡パーティクルの生成座標設定
+	/// </summary>
+	/// <param name="pos"></param>
+	void SetBossDeadParticlesPos(const LWP::Math::Vector3& pos) { bossDeadParticles_->SetEmitterPos(pos); }
 	/// <summary>
 	/// 攻撃ヒット時のパーティクル生成
 	/// </summary>
@@ -144,6 +154,11 @@ public:// パーティクル生成
 	/// </summary>
 	/// <returns></returns>
 	EnemyDeadParticles* GetEnemyDeadParticles() { return enemyDeadParticles_.get(); }
+	/// <summary>
+	/// ボス死亡パーティクル取得
+	/// </summary>
+	/// <returns></returns>
+	BossDeadParticles* GetBossDeadParticles() { return bossDeadParticles_.get(); }
 	/// <summary>
 	/// 攻撃が当たった時のパーティクル取得
 	/// </summary>
@@ -189,9 +204,14 @@ private:
 	std::unique_ptr<Sparks> sparks_;
 	// 浮遊パーティクル
 	std::unique_ptr<FloatParticle> floatParticle_;
+
 	std::unique_ptr<EnemySpawnParticles> enemySpawnParticles_;
 	std::list<EnemySpawnParticles*> spawnParticles_;
+
 	std::unique_ptr<EnemyDeadParticles> enemyDeadParticles_;
+	std::unique_ptr<BossDeadParticles> bossDeadParticles_;
+	//std::list<BossDeadParticles*> bossDeadParticles_;
+
 	std::unique_ptr<AttackHitEffect> attackHitEffect_;
 	std::unique_ptr<CrackEffect> crackEffect_;
 	// 弱めの攻撃

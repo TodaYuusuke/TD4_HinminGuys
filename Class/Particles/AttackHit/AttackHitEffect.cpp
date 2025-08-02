@@ -1,5 +1,4 @@
 #include "AttackHitEffect.h"
-
 #include <numbers>
 
 using namespace LWP;

@@ -92,6 +92,111 @@
             "int32_t :Count": 10
         }
     },
+    "Group :BossDeadParticle": {
+        "Group :CreatePosOffset": {
+            "float :Max": 0.5,
+            "float :Min": -0.10000000149011612
+        },
+        "Group :Smoke": {
+            "Group :RandomValueMinMax": {
+                "Group :Color": {
+                    "Color :Max": [
+                        100,
+                        100,
+                        100,
+                        120
+                    ],
+                    "Color :Min": [
+                        40,
+                        0,
+                        0,
+                        255
+                    ]
+                },
+                "Group :Scale": {
+                    "float :Max": 0.5,
+                    "float :Min": 0.30000001192092896
+                },
+                "Group :Velocity": {
+                    "Vector3 :Max": [
+                        0.02500000037252903,
+                        0.0010000000474974513,
+                        0.02500000037252903
+                    ],
+                    "Vector3 :Min": [
+                        -0.02500000037252903,
+                        0.0,
+                        -0.02500000037252903
+                    ]
+                }
+            },
+            "Vector3 :First": [
+                0.0010000000474974513,
+                0.0010000000474974513,
+                0.0010000000474974513
+            ],
+            "float :Acceleration": -0.0007999999797903001,
+            "float :ElapseTime": 1.0,
+            "float :Multiply": 1.0,
+            "int32_t :Count": 1
+        },
+        "Group :Spark": {
+            "Color :Color": [
+                255,
+                255,
+                255,
+                255
+            ],
+            "Group :Frequency": {
+                "float :Max": 0.30000001192092896,
+                "float :Min": 0.20000000298023224
+            },
+            "Group :Kelvin": {
+                "float :Max": 3000.0,
+                "float :Min": 1000.0
+            },
+            "Group :RandomValueMinMax": {
+                "Group :Scale": {
+                    "Vector3 :Max": [
+                        0.5,
+                        1.0,
+                        1.0
+                    ],
+                    "Vector3 :Min": [
+                        0.10000000149011612,
+                        0.5,
+                        0.10000000149011612
+                    ]
+                },
+                "Group :Velocity": {
+                    "Vector3 :Max": [
+                        0.009999999776482582,
+                        0.009999999776482582,
+                        0.009999999776482582
+                    ],
+                    "Vector3 :Min": [
+                        -0.009999999776482582,
+                        -0.009999999776482582,
+                        -0.009999999776482582
+                    ]
+                }
+            },
+            "Vector3 :Acceleration": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "Vector3 :First": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "float :CreateCircleRange": 0.10000000149011612,
+            "float :ElapseTime": 0.20000000298023224,
+            "float :Multiply": 1.0,
+            "int32_t :Count": 15
+        }
+    },
     "Group :CrackEffect": {
         "Group :Circle": {
             "Color :Color": [
