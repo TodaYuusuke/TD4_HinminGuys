@@ -25,6 +25,31 @@ namespace MathFunc {
 		return q;
 	}
 
+	float LerpShortAngle(float a, float b, float t) {
+		// 角度差分を求める
+		float diff = b - a;
+
+		float M_PI = 3.14f;
+
+		diff = std::fmod(diff, 2 * (float)M_PI);
+		if (diff < 2 * (float)-M_PI) {
+			diff += 2 * (float)M_PI;
+		}
+		else if (diff >= 2 * M_PI) {
+			diff -= 2 * (float)M_PI;
+		}
+
+		diff = std::fmod(diff, 2 * (float)M_PI);
+		if (diff < (float)-M_PI) {
+			diff += 2 * (float)M_PI;
+		}
+		else if (diff >= (float)M_PI) {
+			diff -= 2 * (float)M_PI;
+		}
+
+		return LWP::Utility::Interpolation::LerpF(a, diff, t);
+	}
+
 	LWP::Math::Vector3 RotateVector(LWP::Math::Vector3 v, LWP::Math::Vector3 axis, float theta) {
 		Vector3 k = (axis).Normalize();
 		float cosTheta = cos(theta);

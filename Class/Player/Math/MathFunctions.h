@@ -9,6 +9,8 @@ namespace MathFunc {
 	/// <returns></returns>
 	LWP::Math::Quaternion LookRotation(const LWP::Math::Vector3& dirVec);
 
+	float LerpShortAngle(float a, float b, float t);
+
 	/// <summary>
 	/// ベクトルの回転
 	/// </summary>
