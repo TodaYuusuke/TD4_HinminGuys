@@ -140,6 +140,10 @@ void Ogre::FallingThrustUpdate([[maybe_unused]] std::optional<States>& req, [[ma
 		//攻撃発生時間
 		if (GetFallingThrust().currentTime < GetFallingThrust().jumpingTime + GetFallingThrust().fallWaitingTime +
 			GetFallingThrust().fallingTime + GetFallingThrust().attackTime and not isStartParryEffect_) {
+			if (!sphereCollider_.isActive) {
+				// 重攻撃パーティクル生成
+				enemyManager_->GetParticles()->CreateCrackEffect(Vector3{ model_.worldTF.GetWorldPosition().x, 0.0f, model_.worldTF.GetWorldPosition().z });
+			}
 			sphereCollider_.isActive = true;
 #ifdef _DEBUG
 			sphere_.isShowWireFrame = true;

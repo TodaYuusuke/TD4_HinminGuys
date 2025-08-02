@@ -96,6 +96,12 @@ void Saiji::AttackUpdate([[maybe_unused]] std::optional<States>& req, [[maybe_un
 
 	//攻撃が終了した時
 	if (not animation_.GetPlaying()) {
+		// 最初のフレームだけ生成
+		if (stateParameter_.attackParameter.currentFreezingTime <= 0.0f) {
+			// 重攻撃パーティクル生成
+			Vector3 pos = model_.worldTF.GetWorldPosition() + Vector3{ 0,0,1 } * Matrix4x4::CreateRotateXYZMatrix(model_.worldTF.rotation) * 1.2f;
+			enemyManager_->GetParticles()->CreateWeakCrackEffect(Vector3{ pos.x, 0.15f, pos.z });
+		}
 
 		//硬直時間をカウント
 		if (stateParameter_.attackParameter.currentFreezingTime < stateParameter_.attackParameter.freezingTime) {
