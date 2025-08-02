@@ -14,6 +14,9 @@ void Title::Initialize() {
 	// 平行光源を配置(これも一時的に配置)
 	light_.worldTF.translation = { 0,10,0 };
 
+	//レベルロードッツ！！
+	levelData.LoadShortPath("gameScene.json");
+
 #pragma region フィールドを一時的に生成
 	// 一時的に平面を生成
 	plane_.LoadShortPath("field/ground/SimpleStage.gltf");
@@ -25,6 +28,30 @@ void Title::Initialize() {
 	skydome_.worldTF.scale = { 1000.0f,1000.0f ,1000.0f };
 	skydome_.SetAllMaterialLighting(false);
 #pragma endregion
+
+	// カメラ座標の設定
+	mainCamera.worldTF.translation = { 0.0f, 1.0f, -10.0f };
+
+	// プレイヤーモデル生成
+	playerModel_.LoadShortPath("player/Player.gltf");
+	playerAnimation_.LoadFullPath("resources/model/player/Player.gltf", &playerModel_);
+	playerAnimation_.Play("Walk");
+	playerAnimation_.Loop();
+
+	// 刀
+	swordModel_.LoadShortPath("player/Katana.gltf");
+	// 鞘
+	sheathModel_.LoadShortPath("player/Sheath.gltf");
+	// 刀モデルをプレイヤーの手に追従させる
+	swordModel_.GetJoint("Grip")->localTF.Parent(&playerModel_, "WeaponAnchor");
+	// 鞘モデルを刀モデルに追従
+	sheathModel_.GetJoint("Sheath")->localTF.Parent(&swordModel_, "Sheath");
+
+	// プレイヤーモデルをカメラと親子付け
+	playerModel_.worldTF.Parent(&mainCamera.worldTF);
+	// プレイヤーの座標設定
+	playerModel_.worldTF.translation = { -2.0f, -1.0f, 6.5f };
+	playerModel_.worldTF.rotation = { -0.0f, 0.703f, 0.0f, 0.711f };
 
 	//シーン切り替え機能生成
 	sceneTransitioner_.Initialize(this);
@@ -42,6 +69,9 @@ void Title::Update() {
 	///
 	/// 突貫工事なので後で処理をまとめる
 	///
+
+	// カメラを徐々に回転させる
+	mainCamera.worldTF.rotation = LWP::Math::Quaternion::CreateFromAxisAngle(LWP::Math::Vector3{ 0, 1, 0 }, 0.003f) * mainCamera.worldTF.rotation;
 
 	if (not sceneTransitioner_.GetIsSceneChange()) {
 

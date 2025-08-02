@@ -38,6 +38,17 @@ private: // ** これより先に必要な処理や変数を記述 ** //
 	LWP::Resource::RigidModel plane_;
 	// 天球(一時的に作っているので要修正)
 	LWP::Resource::RigidModel skydome_;
+
+	// プレイヤーモデル
+	LWP::Resource::SkinningModel playerModel_;
+	// プレイヤーアニメーション
+	LWP::Resource::Animation playerAnimation_;
+
+	// 刀モデル
+	LWP::Resource::SkinningModel swordModel_;
+	// 鞘モデル
+	LWP::Resource::SkinningModel sheathModel_;
+
 	//ゲームUI
 	GameUI UIStart_;
 	GameUI UIExit_;
