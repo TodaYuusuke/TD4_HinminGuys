@@ -6,6 +6,7 @@
 #include "../../../../../Components/HitStopController.h"
 #include "../../../../Math/MathFunctions.h"
 #include "../../../../../Camera/FollowCamera.h"
+#include "../../../../PlayerAudioNames.h"
 
 using namespace LWP;
 using namespace LWP::Math;
@@ -146,6 +147,8 @@ void Throw::CheckThrowState() {
 			ghostTrail_->SetIsActive(true);
 			// 追従カメラの視野角をあげる
 			followCamera_->StartFovEasing(followCamera_->GetCamera()->fov, 110.0f, 20.0f, 60.0f);
+			// 音再生
+			player_->PlaySE(PlayerAudio::SE::Sheath::throwSheath.fileName, PlayerAudio::SE::Sheath::throwSheath.name, PlayerAudio::SE::Sheath::throwSheath.volume);
 		}
 
 		// 鞘判定をとれるようにする

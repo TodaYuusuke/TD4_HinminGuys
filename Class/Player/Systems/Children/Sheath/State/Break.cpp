@@ -3,6 +3,7 @@
 #include "../Sheath.h"
 #include "Throw.h"
 #include "../../../../Command/InputHandler.h"
+#include "../../../../PlayerAudioNames.h"
 
 Break::Break(FollowCamera* followCamera, Sheath* sheathSystem, Player* player, std::map<int, EventOrder>* eventOrders) {
 	followCamera_ = followCamera;
@@ -116,6 +117,8 @@ void Break::CheckBreakState() {
 		// 無敵時間を設定
 		if (!player_->GetSystemManager()->GetSheathAttackCollision().isActive) {
 			player_->GetSystemManager()->SetInvisibleTime(sheathSystem_->jsonData_.invinsibleFinishTime);
+			// 音再生
+			player_->PlaySE(PlayerAudio::SE::Sheath::returnSheath.fileName, PlayerAudio::SE::Sheath::returnSheath.name, PlayerAudio::SE::Sheath::returnSheath.volume);
 		}
 
 		// 当たり判定を出す

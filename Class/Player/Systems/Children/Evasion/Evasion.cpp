@@ -1,6 +1,7 @@
 #include "Evasion.h"
 #include "../../../Player.h"
 #include "../../../Command/InputConfig.h"
+#include "../../../PlayerAudioNames.h"
 #include <algorithm>       // ← std::max に必要
 
 using namespace LWP;
@@ -140,6 +141,9 @@ void Evasion::Command() {
 
 		// パーティクル生成
 		player_->CreateEvasionParticle(player_->GetWorldTF()->GetWorldPosition());
+
+		// 回避音再生
+		player_->PlaySE(PlayerAudio::SE::Evasion::dashWind.fileName, PlayerAudio::SE::Evasion::dashWind.name, PlayerAudio::SE::Evasion::dashWind.volume);
 	}
 	eventOrder_.Start();
 }

@@ -4,6 +4,7 @@
 #include "Throw.h"
 #include "../../../../Command/InputHandler.h"
 #include "../../../../../Camera/FollowCamera.h"
+#include "../../../../PlayerAudioNames.h"
 
 Collect::Collect(FollowCamera* followCamera, Sheath* sheathSystem, Player* player, std::map<int, EventOrder>* eventOrders) {
 	followCamera_ = followCamera;
@@ -152,6 +153,8 @@ void Collect::CollectMove() {
 			player_->GetSystemManager()->SetInvisibleTime(sheathSystem_->jsonData_.invinsibleFinishTime);
 			// 追従カメラの視野角をあげる
 			followCamera_->StartFovEasing(followCamera_->GetCamera()->fov, 70.0f, 5.0f, 40.0f);
+			// 音再生
+			player_->PlaySE(PlayerAudio::SE::Sheath::returnSheath.fileName, PlayerAudio::SE::Sheath::returnSheath.name, PlayerAudio::SE::Sheath::returnSheath.volume);
 		}
 		// 攻撃判定を出す
 		player_->GetSystemManager()->GetSheathAttackCollision().isActive = true;

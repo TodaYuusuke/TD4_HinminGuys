@@ -132,6 +132,9 @@ void Player::TakeDamage(const float& damageValue) {
 	if (!collider_.isActive) { return; }
 	particles_->CreateAttackHitEffect(model_.worldTF.GetWorldPosition() + Vector3{ 0.0f, 0.5f, 0.0f });
 
+	// ダメージ音
+	SEPlayer_->PlaySE(PlayerAudio::SE::Damage::damage.fileName, PlayerAudio::SE::Damage::damage.name, PlayerAudio::SE::Damage::damage.volume);
+
 	// 全ての機能をリセット
 	Reset();
 	// HPゲージ変動
