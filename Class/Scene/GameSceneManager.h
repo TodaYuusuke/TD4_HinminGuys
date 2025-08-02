@@ -4,16 +4,13 @@
 #include "../Enemy/EnemyManager.h"
 #include "SceneTransitioner.h"
 #include "../Timer/FrameTimer.h"
+#include "../Audio/BGMPlayer.h"
 
 /// <summary>
 /// ゲームシーンの進捗等を管理するマネージャクラス
 /// </summary>
 class GameSceneManager
 {
-private: // サブクラス
-
-	
-
 public: // コンストラクタ
 
 	/// <summary>
@@ -22,7 +19,9 @@ public: // コンストラクタ
 	/// <param name="player">プレイヤー実体</param>
 	/// <param name="enemyManager">敵の管理マネージャ</param>
 	/// <param name="sceneTransitioner">シーン遷移マネージャ</param>
-	GameSceneManager(Player* player, EnemyManager* enemyManager, SceneTransitioner* sceneTransitioner);
+	/// <param name="bgmPlayer">bgm再生クラス</param>
+	/// <param name="sePlayer">効果音再生クラス</param>
+	GameSceneManager(Player* player, EnemyManager* enemyManager, SceneTransitioner* sceneTransitioner, BGMPlayer* bgmPlayer, SEPlayer* sePlayer);
 
 	/// <summary>
 	/// デストラクタ
@@ -80,6 +79,11 @@ private: // メンバ変数
 	// シーン遷移マネージャ本体
 	SceneTransitioner* sceneTransitioner_ = nullptr;
 
+	// BGM再生クラス
+	BGMPlayer* bgmPlayer_ = nullptr;
+	// 効果音再生クラス
+	SEPlayer* sePlayer_ = nullptr;
+
 	// ゲーム終了フラグ
 	bool isEndGame_ = false;
 	// 勝利フラグ
@@ -94,6 +98,9 @@ private: // メンバ変数
 
 	// 演出用タイマー
 	LWP::Utility::FrameTimer timer_{};
+
+	// 決定音までのファイルパス
+	std::string decideSound_ = "system/select.mp3";
 
 };
 

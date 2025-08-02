@@ -2,12 +2,14 @@
 
 using namespace LWP;
 
-GameSceneManager::GameSceneManager(Player* player, EnemyManager* enemyManager, SceneTransitioner* sceneTransitioner)
+GameSceneManager::GameSceneManager(Player* player, EnemyManager* enemyManager, SceneTransitioner* sceneTransitioner, BGMPlayer* bgmPlayer, SEPlayer* sePlayer)
 {
 	// ポインタの取得
-	player_				= player;
-	enemyManager_		= enemyManager;
-	sceneTransitioner_	= sceneTransitioner;
+	player_ = player;
+	enemyManager_ = enemyManager;
+	sceneTransitioner_ = sceneTransitioner;
+	bgmPlayer_ = bgmPlayer;
+	sePlayer_ = sePlayer;
 }
 
 void GameSceneManager::Init()
@@ -59,7 +61,7 @@ void GameSceneManager::Update()
 		// 終了演出
 		EndStaging();
 	}
-	else { // タイマーが非有効時
+	else if(!sceneTransitioner_->GetIsSceneChange()) { // タイマーが非有効で、シーンチェンジ中で無ければ
 		// 終了確認
 		EndCheck();
 	}
@@ -141,7 +143,10 @@ void GameSceneManager::EndStaging()
 
 	// 背景スプライトの透明度を徐々に下げる
 	fadeSprite_.material.color.A = static_cast<unsigned char>(LWP::Utility::Interp::LerpF(0.0f, 225.0f, LWP::Utility::Easing::InOutQuart(timer_.GetProgress())));
-	buttonSprite_.material.color.A = static_cast<unsigned char>(LWP::Utility::Interp::LerpF(0.0f, 255.0f, LWP::Utility::Easing::InQuart(timer_.GetProgress())));
+	buttonSprite_.material.color.A = static_cast<unsigned char>(LWP::Utility::Interp::LerpF(0.0f, 255.0f, timer_.GetProgress()));
+
+	// ゲームBGMの音量を徐々に下げる
+	bgmPlayer_->SetVolume("BattleBGM", LWP::Utility::Interp::LerpF(1.0f, 0.0f, Utility::Easing::InOutQuart(timer_.GetProgress())));
 
 	// 勝利状態で処理を切り替える
 	if (isWin_) {
@@ -162,7 +167,8 @@ void GameSceneManager::EndStaging()
 		resultSprite_.worldTF.scale.y = 1.0f;
 		resultSprite_.material.color.A = 255;
 		buttonSprite_.material.color.A = 255;
-
+		// BGMの強制停止
+		bgmPlayer_->Stop("BattleBGM");
 		// タイマーの有効状態切り替え
 		timer_.SetIsActive(false);
 	}
@@ -172,6 +178,9 @@ void GameSceneManager::EndCheck()
 {
 	// Aボタン押下時、シーン遷移を行う
 	if (LWP::Input::Controller::GetTrigger(XINPUT_GAMEPAD_A)) {
+		// 決定音を鳴らす
+		sePlayer_->PlaySE(decideSound_, "Decide", 1.0f);
+
 		// 勝利フラグの状態によって処理を変更する
 		if (isWin_) { // 勝利
 			sceneTransitioner_->SetNextScene(SceneName::kTitle);

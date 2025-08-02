@@ -13,7 +13,7 @@ GameScene::GameScene()
 	followCamera_(&player_, &mainCamera, player_.GetModelPos()),
 	uiManager_(&player_),
 	particles_(&player_, &followCamera_),
-	gameSceneManager_(&player_, &enemyManager_, &sceneTransitioner_)
+	gameSceneManager_(&player_, &enemyManager_, &sceneTransitioner_, &bgmPlayer_, &sePlayer_)
 {
 	enemyManager_.Initialize();
 	LWP::Resource::LoadTexture("Effect/Particle.png");
@@ -94,7 +94,9 @@ void GameScene::Initialize() {
 
 	// ゲームシーンマネージャーの初期化
 	gameSceneManager_.Init();
-	//testBillboard_.Init();
+
+	// BGM再生
+	bgmPlayer_.PlayBGM("BattleBGM.mp3", "BattleBGM", 1.0f);
 }
 
 // 更新
