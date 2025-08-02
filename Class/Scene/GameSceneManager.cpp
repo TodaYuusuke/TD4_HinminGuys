@@ -73,14 +73,14 @@ void GameSceneManager::DebugGUI()
 void GameSceneManager::GameStateCheck()
 {
 	//全ての敵が倒された場合
-	if (enemyManager_->GetIsDefeatedAllEnemy()) {
+	if (enemyManager_->GetIsDefeatedOgre()) {
 		// 終了状態に
 		isEndGame_ = true;
 		// 勝利状態に
 		isWin_ = true;
 	}
 	//全員倒す前にプレイヤーが死んだ場合
-	else if (not enemyManager_->GetIsDefeatedAllEnemy() and not player_->GetIsAlive()) {
+	else if (not enemyManager_->GetIsDefeatedOgre() and not player_->GetIsAlive()) {
 		// 終了状態に
 		isEndGame_ = true;
 		// 敗北状態に
