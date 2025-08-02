@@ -1,12 +1,12 @@
 #pragma once
 #include "../Adapter/Adapter.h"
+#include "../Audio/SEPlayer.h"
 
 using namespace LWP::Math;
 using namespace LWP::Resource;
 
 class Player;
 class EnemyManager;
-class SEPlayer;
 class World;
 
 /// <summary>

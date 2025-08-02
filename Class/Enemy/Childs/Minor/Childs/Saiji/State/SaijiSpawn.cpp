@@ -17,6 +17,9 @@ void Saiji::SpawnInit(const States& pre)
 	collider_.isActive = false;
 	stateParameter_.spawnParameter.currentTime = 0.0f;
 	model_.worldTF.translation.y = stateParameter_.spawnParameter.startY;
+
+	sePlayer_->PlaySE("enemy/spawn.mp3", "spawn", 0.2f);
+
 }
 
 void Saiji::SpawnUpdate(std::optional<States>& req, const States& pre)

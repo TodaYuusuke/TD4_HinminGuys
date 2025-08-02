@@ -187,6 +187,9 @@ void IEnemy::StartParryEffect(const Vector3& position)
 
 	parryEffectTime_ = 0.0f;
 
+	//SEを鳴らす
+	sePlayer_->PlaySE("enemy/omen.mp3", "omen", 0.5f);
+
 }
 
 void IEnemy::SetKnockBackValue(const float& knockBackValue)
