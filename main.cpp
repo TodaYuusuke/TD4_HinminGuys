@@ -5,7 +5,7 @@
 // Windowsアプリでのエントリーポイント(main関数)
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {	
 #ifdef _DEBUG
-	LWP::System::Run<GameScene>(L"貧民Guys");
+	LWP::System::Run<Title>(L"貧民Guys");
 #else
 	LWP::System::Run<Title>(L"貧民Guys");
 #endif // _DEBUG
