@@ -11,17 +11,18 @@ public:
 		LimitVec3 velLimit;
 		LimitF scaleLimit;
 		LWP::Utility::Color color;
+		LWP::Math::Vector3 maxScale;
 		LWP::Math::Vector3 firstVel;
 		float creaateRange;
 		float acceleration;
 		float multiply;
 		float dampingRate;
-		float maxElapseTime;								// パーティクルが存在できる時間
+		float maxElapseTime;
 	};
 
 public:
 	// コンストラクタ
-	RhombusParticle(const std::string& texName);
+	RhombusParticle(FollowCamera* followCamera, const std::string& texName);
 	// デストラクタ
 	~RhombusParticle() override = default;
 
@@ -61,6 +62,8 @@ private:
 
 	// 外部で調整するデータ
 	RhombusParticleJsonData jsonData_;
+
+	LWP::Math::Vector3 randomScale_;
 
 	// 生成角度
 	LWP::Math::Vector3 shotRotate_;

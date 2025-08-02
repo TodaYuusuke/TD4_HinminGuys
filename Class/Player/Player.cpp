@@ -82,6 +82,13 @@ void Player::Update() {
 
 	// 効果音
 	SEUpdate();
+
+	// 鞘破壊状態になった瞬間に演出開始
+	if (!isPreBreak_ && playerParameter_->GetIsSheathBreak()) {
+		particles_->CreateSheathBreakEffect(model_.worldTF.GetWorldPosition());
+	}
+
+	isPreBreak_ = playerParameter_->GetIsSheathBreak();
 }
 
 void Player::Reset() {

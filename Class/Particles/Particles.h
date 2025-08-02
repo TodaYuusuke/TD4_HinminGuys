@@ -14,6 +14,7 @@
 #include "AttackHit/AttackHitEffect.h"
 #include "Crack/CrackEffect.h"
 #include "BossDead/BossDeadParticles.h"
+#include "SheathBreak/SheathBreakEffect.h"
 
 class FollowCamera;
 /// <summary>
@@ -132,6 +133,11 @@ public:// パーティクル生成
 	/// </summary>
 	/// <param name="pos"></param>
 	void CreateWeakCrackEffect(const LWP::Math::Vector3& pos) { weakCrackEffect_->Add(pos); }
+	/// <summary>
+	/// 鞘破壊時のパーティクル生成
+	/// </summary>
+	/// <param name="pos"></param>
+	void CreateSheathBreakEffect(const LWP::Math::Vector3& pos) { sheathBreakEffect_->Add(pos); }
 
 #pragma region Getter
 	/// <summary>
@@ -174,6 +180,11 @@ public:// パーティクル生成
 	/// </summary>
 	/// <returns></returns>
 	CrackEffect* GetWeakCrackEffect() { return weakCrackEffect_.get(); }
+	/// <summary>
+	/// 鞘破壊時のパーティクル取得
+	/// </summary>
+	/// <returns></returns>
+	SheathBreakEffect* GetSheathBreakEffect() { return sheathBreakEffect_.get(); }
 #pragma endregion
 
 #pragma region Setter
@@ -192,16 +203,13 @@ private:
 	// 回避
 	std::unique_ptr<EvasionEffect> evasionEffect_;
 	// 移動
-	//std::unique_ptr<MoveEffect> moveEffect_;
 	std::unique_ptr<DustClouds> dustClouds_;
-
-
-
 
 	std::unique_ptr<LargeFlashes> largeFlashes_;
 	std::unique_ptr<ShortFlashes> shortFlashes_;
 	std::unique_ptr<Rings> rings_;
 	std::unique_ptr<Sparks> sparks_;
+
 	// 浮遊パーティクル
 	std::unique_ptr<FloatParticle> floatParticle_;
 
@@ -216,6 +224,9 @@ private:
 	std::unique_ptr<CrackEffect> crackEffect_;
 	// 弱めの攻撃
 	std::unique_ptr<CrackEffect> weakCrackEffect_;
+
+	std::unique_ptr<SheathBreakEffect> sheathBreakEffect_;
+
 
 
 

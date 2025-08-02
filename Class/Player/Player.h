@@ -325,6 +325,8 @@ private:
 	// パラメータ
 	std::unique_ptr<PlayerParameter> playerParameter_;
 
+	// 鞘破壊状態か
+	bool isPreBreak_;
 	// いきているか
 	bool isAlive_ = true;
 };

@@ -38,6 +38,9 @@ void Rings::Update() {
 }
 
 void Rings::SetJsonData(LWP::Utility::JsonIO& json) {
+	// 色
+	json.AddValue<Color>("Color", &jsonData_.color);
+
 	// 最大サイズ
 	json.AddValue<Vector3>("MaxScale", &jsonData_.maxScale);
 

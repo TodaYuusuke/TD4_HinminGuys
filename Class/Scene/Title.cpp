@@ -21,6 +21,9 @@ void Title::Initialize() {
 	LWP::Resource::LoadModel("resources/model/Oniheihe/MatchLockGun.gltf");
 	LWP::Resource::LoadModel("resources/model/Ogre/Weapon.gltf");
 
+	//レベルロードッツ！！
+	levelData.LoadShortPath("gameScene.json");
+
 #pragma region フィールドを一時的に生成
 	// 一時的に平面を生成
 	plane_.LoadShortPath("field/ground/SimpleStage.gltf");
@@ -33,6 +36,30 @@ void Title::Initialize() {
 	skydome_.SetAllMaterialLighting(false);
 #pragma endregion
 
+	// カメラ座標の設定
+	mainCamera.worldTF.translation = { 0.0f, 1.0f, -10.0f };
+
+	// プレイヤーモデル生成
+	playerModel_.LoadShortPath("player/Player.gltf");
+	playerAnimation_.LoadFullPath("resources/model/player/Player.gltf", &playerModel_);
+	playerAnimation_.Play("Walk");
+	playerAnimation_.Loop();
+
+	// 刀
+	swordModel_.LoadShortPath("player/Katana.gltf");
+	// 鞘
+	sheathModel_.LoadShortPath("player/Sheath.gltf");
+	// 刀モデルをプレイヤーの手に追従させる
+	swordModel_.GetJoint("Grip")->localTF.Parent(&playerModel_, "WeaponAnchor");
+	// 鞘モデルを刀モデルに追従
+	sheathModel_.GetJoint("Sheath")->localTF.Parent(&swordModel_, "Sheath");
+
+	// プレイヤーモデルをカメラと親子付け
+	playerModel_.worldTF.Parent(&mainCamera.worldTF);
+	// プレイヤーの座標設定
+	playerModel_.worldTF.translation = { -2.0f, -1.0f, 6.5f };
+	playerModel_.worldTF.rotation = { -0.0f, 0.703f, 0.0f, 0.711f };
+
 	//シーン切り替え機能生成
 	sceneTransitioner_.Initialize(this);
 
@@ -42,6 +69,11 @@ void Title::Initialize() {
 	UITitleLogo_.isActive = false;
 
 	selectUI_ = SelectUI::kStart;
+
+	// BGMの再生
+	if (bgmPath_ != "") {
+		bgmPlayer_.PlayBGM(bgmPath_, "TitleBGM", 1.0f);
+	}
 }
 
 void Title::Update() {
@@ -50,16 +82,25 @@ void Title::Update() {
 	/// 突貫工事なので後で処理をまとめる
 	///
 
+	// カメラを徐々に回転させる
+	mainCamera.worldTF.rotation = LWP::Math::Quaternion::CreateFromAxisAngle(LWP::Math::Vector3{ 0, 1, 0 }, 0.003f) * mainCamera.worldTF.rotation;
+
 	if (not sceneTransitioner_.GetIsSceneChange()) {
 
 		if (selectUI_ == SelectUI::kStart) {
 
 			//下キーでEndに移動
 			if (Controller::GetTrigger(XBOX_DPAD_DOWN) || Keyboard::GetTrigger(DIK_DOWN)) {
+				// カーソル移動音を鳴らす
+				sePlayer_.PlaySE(moveSound_, "Move", seVolume_);
 				selectUI_ = SelectUI::kEnd;
 			}
 			//Aボタンでゲームスタート
 			if (Controller::GetTrigger(XBOX_A) || Keyboard::GetTrigger(DIK_SPACE)) {
+				// BGMの停止
+				bgmPlayer_.Stop("TitleBGM");
+				// 決定音を鳴らす
+				sePlayer_.PlaySE(decideSound_, "Decide", seVolume_);
 				sceneTransitioner_.SetNextScene(SceneName::kGameScene);
 				sceneTransitioner_.SceneTransitionStart();
 			}
@@ -72,9 +113,13 @@ void Title::Update() {
 
 			//上キーでStartに移動
 			if (Controller::GetTrigger(XBOX_DPAD_UP) || Keyboard::GetTrigger(DIK_UP)) {
+				// カーソル移動音を鳴らす
+				sePlayer_.PlaySE(moveSound_, "Move", seVolume_);
 				selectUI_ = SelectUI::kStart;
 			}
 			if (Controller::GetTrigger(XBOX_A) || Keyboard::GetTrigger(DIK_SPACE)) {
+				// 終了音を鳴らす
+				sePlayer_.PlaySE(endSound_, "End", seVolume_);
 				LWP::System::ShutDown();
 			}
 

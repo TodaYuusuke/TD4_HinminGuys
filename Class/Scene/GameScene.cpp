@@ -12,7 +12,7 @@ GameScene::GameScene()
 	: player_(&mainCamera, &enemyManager_, &followCamera_, &uiManager_),
 	followCamera_(&player_, &mainCamera, player_.GetModelPos()),
 	uiManager_(&player_),
-	gameSceneManager_(&player_,&enemyManager_, &sceneTransitioner_)
+	gameSceneManager_(&player_,&enemyManager_, &sceneTransitioner_, &bgmPlayer_, &sePlayer_)
 {
 	enemyManager_.Initialize();
 	LWP::Resource::LoadTexture("Effect/Particle.png");

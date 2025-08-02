@@ -1,4 +1,5 @@
 #include "RhombusParticle.h"
+#include "../../../Camera/FollowCamera.h"
 #include "../../../Player/Math/MathFunctions.h"
 
 using namespace LWP;
@@ -6,7 +7,8 @@ using namespace LWP::Math;
 using namespace LWP::Utility;
 using namespace LWP::Utility::Interpolation;
 
-RhombusParticle::RhombusParticle(const std::string& texName) {
+RhombusParticle::RhombusParticle(FollowCamera* followCamera, const std::string& texName) {
+	followCamera_ = followCamera;
 	texName_ = texName;
 }
 
@@ -34,21 +36,17 @@ void RhombusParticle::Create(const LWP::Math::Vector3& pos) {
 
 	// 速度
 	Vector3 vel = LWP::Utility::Random::GenerateVector3(jsonData_.velLimit.min, jsonData_.velLimit.max);
-	Vector3 rot = { 0.0f, shotRotate_.y, 0.0f };
-	Vector3 dir = Vector3{ 0.0f, 0.0f, 1.0f } *Math::Matrix4x4::CreateRotateXYZMatrix(rot);
+	Vector3 dir = Vector3{ 0.0f, 0.0f, 1.0f } * Math::Matrix4x4::CreateRotateXYZMatrix(shotRotate_ + followCamera_->GetRadian());
 	particleData_.vel = vel + dir * jsonData_.multiply;
 	particleData_.vel.y += jsonData_.firstVel.y;
 
 	// 座標
-	Vector3 range = Vector3{ 0.0f, 0.0f, jsonData_.creaateRange } * Math::Matrix4x4::CreateRotateXYZMatrix(rot);
+	Vector3 range = Vector3{ 0.0f, 0.0f, jsonData_.creaateRange } * Math::Matrix4x4::CreateRotateXYZMatrix(shotRotate_ + followCamera_->GetRadian());
 	plane_.worldTF.translation = pos + range;
 	// 大きさ
 	float scale = LWP::Utility::Random::GenerateFloat(jsonData_.scaleLimit.min, jsonData_.scaleLimit.max);
-	plane_.worldTF.scale = {
-		scale,
-		scale,
-		scale
-	};
+	randomScale_ = { scale, scale, scale };
+	plane_.worldTF.scale = randomScale_;
 
 	// 色
 	plane_.material.color = jsonData_.color;
@@ -61,9 +59,11 @@ void RhombusParticle::Create(const LWP::Math::Vector3& pos) {
 void RhombusParticle::UpdateParticle() {
 	particleData_.vel.y += jsonData_.acceleration;
 	// 移動処理
-	plane_.worldTF.translation += particleData_.vel;
+	plane_.worldTF.translation += particleData_.vel * jsonData_.multiply;
 
+	// サイズのイージング
+	plane_.worldTF.scale = Lerp(randomScale_, jsonData_.maxScale, Easing::OutExpo(particleData_.currentTime / particleData_.lifeTime));
 	// 速度減衰
-	particleData_.vel = Exponential(particleData_.vel, Vector3{ 0,0,0 }, jsonData_.dampingRate);
+	//particleData_.vel = Exponential(particleData_.vel, Vector3{ 0,0,0 }, jsonData_.dampingRate);
 }
 

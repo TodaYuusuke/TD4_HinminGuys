@@ -2,16 +2,23 @@
 
 using namespace LWP;
 
-GameSceneManager::GameSceneManager(Player* player, EnemyManager* enemyManager, SceneTransitioner* sceneTransitioner)
+GameSceneManager::GameSceneManager(Player* player, EnemyManager* enemyManager, SceneTransitioner* sceneTransitioner, BGMPlayer* bgmPlayer, SEPlayer* sePlayer)
 {
 	// ポインタの取得
-	player_				= player;
-	enemyManager_		= enemyManager;
-	sceneTransitioner_	= sceneTransitioner;
+	player_ = player;
+	enemyManager_ = enemyManager;
+	sceneTransitioner_ = sceneTransitioner;
+	bgmPlayer_ = bgmPlayer;
+	sePlayer_ = sePlayer;
 }
 
 void GameSceneManager::Init()
 {
+	// BGM再生
+	bgmPlayer_->PlayBGM("BattleBGM.mp3", "BattleBGM", 1.0f);
+	// 音量設定
+	bgmPlayer_->SetVolume("BattleBGM", bgmVolume_);
+
 	// フラグのリセット
 	isEndGame_ = false;
 
@@ -59,7 +66,7 @@ void GameSceneManager::Update()
 		// 終了演出
 		EndStaging();
 	}
-	else { // タイマーが非有効時
+	else if(!sceneTransitioner_->GetIsSceneChange()) { // タイマーが非有効で、シーンチェンジ中で無ければ
 		// 終了確認
 		EndCheck();
 	}
@@ -114,6 +121,11 @@ void GameSceneManager::GameStateCheck()
 
 		// 演出用タイマーを指定秒数で開始
 		timer_.Start(2.0f);
+
+		// 勝利BGMの再生
+		if(clearBGMPath != ""){ bgmPlayer_->PlayBGM(clearBGMPath, "ResultBGM", 1.0f); }
+		// クリア効果音の再生
+		if(clearSEPath != ""){ sePlayer_->PlaySE(clearSEPath, "ResultSE", 1.0f); }
 	}
 	else {
 		// テクスチャ読み込み
@@ -127,6 +139,11 @@ void GameSceneManager::GameStateCheck()
 
 		// 演出用タイマーを指定秒数で開始
 		timer_.Start(3.0f);
+
+		// 敗北BGMの再生
+		if (gameOverBGMPath != "") { bgmPlayer_->PlayBGM(gameOverBGMPath, "ResultBGM", 1.0f); }
+		// 敗北効果音の再生
+		if (gameOverSEPath != "") { sePlayer_->PlaySE(gameOverSEPath, "ResultSE", 1.0f); }
 	}
 
 	// ボタンスプライト座標設定
@@ -141,7 +158,10 @@ void GameSceneManager::EndStaging()
 
 	// 背景スプライトの透明度を徐々に下げる
 	fadeSprite_.material.color.A = static_cast<unsigned char>(LWP::Utility::Interp::LerpF(0.0f, 225.0f, LWP::Utility::Easing::InOutQuart(timer_.GetProgress())));
-	buttonSprite_.material.color.A = static_cast<unsigned char>(LWP::Utility::Interp::LerpF(0.0f, 255.0f, LWP::Utility::Easing::InQuart(timer_.GetProgress())));
+	buttonSprite_.material.color.A = static_cast<unsigned char>(LWP::Utility::Interp::LerpF(0.0f, 255.0f, timer_.GetProgress()));
+
+	// ゲームBGMの音量を徐々に下げる
+	bgmPlayer_->SetVolume("BattleBGM", LWP::Utility::Interp::LerpF(bgmVolume_, 0.0f, Utility::Easing::InOutQuart(timer_.GetProgress())));
 
 	// 勝利状態で処理を切り替える
 	if (isWin_) {
@@ -162,7 +182,8 @@ void GameSceneManager::EndStaging()
 		resultSprite_.worldTF.scale.y = 1.0f;
 		resultSprite_.material.color.A = 255;
 		buttonSprite_.material.color.A = 255;
-
+		// BGMの強制停止
+		bgmPlayer_->Stop("BattleBGM");
 		// タイマーの有効状態切り替え
 		timer_.SetIsActive(false);
 	}
@@ -172,6 +193,11 @@ void GameSceneManager::EndCheck()
 {
 	// Aボタン押下時、シーン遷移を行う
 	if (LWP::Input::Controller::GetTrigger(XINPUT_GAMEPAD_A)) {
+		// 決定音を鳴らす
+		sePlayer_->PlaySE(decideSound_, "Decide", 1.0f);
+		// リザルトBGMの停止
+		bgmPlayer_->Stop("ResultBGM");
+
 		// 勝利フラグの状態によって処理を変更する
 		if (isWin_) { // 勝利
 			sceneTransitioner_->SetNextScene(SceneName::kTitle);

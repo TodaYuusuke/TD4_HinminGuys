@@ -281,8 +281,10 @@
     <ClCompile Include="Class\Particles\Common\Sparks.cpp" />
     <ClCompile Include="Class\Particles\SheathBreak\Children\RhombusParticle.cpp" />
     <ClCompile Include="Class\Particles\SheathBreak\SheathBreakEffect.cpp" />
+    <ClCompile Include="Class\Particles\SheathBreak\Children\NoticeCircle.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Class\Enemy\EnemyAudioNames.h" />
     <ClInclude Include="Class\Particles\BossDead\BossDeadParticles.h" />
     <ClInclude Include="Class\Timer\FrameTimer.h" />
     <ClInclude Include="Class\Particles\AttackHit\AttackHitEffect.h" />
@@ -405,6 +407,7 @@
     <ClInclude Include="Class\Particles\SheathBreak\SheathBreakEffect.h" />
     <ClInclude Include="Class\Scene\GameSceneManager.h" />
     <ClInclude Include="Class\Particles\BossDead\Children\DeadSmoke.h" />
+    <ClInclude Include="Class\Particles\SheathBreak\Children\NoticeCircle.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />

@@ -2,10 +2,12 @@
 #include "../Player/Player.h"
 #include "../GameMask.h"
 #include "../World/World.h"
+#include "EnemyAudioNames.h"
 
 #define UNIT16_MAX 65535
 
 using namespace GameMask;
+using namespace EnemyAudio;
 
 //実体宣言
 uint16_t IEnemy::currentEnemyID_ = 0;
@@ -47,8 +49,8 @@ IEnemy::IEnemy()
 
 IEnemy::~IEnemy()
 {
-	
-	
+
+
 
 }
 
@@ -85,12 +87,12 @@ void IEnemy::UnlimitedSetPosition(const Vector3& position)
 
 Vector3 IEnemy::GetPlayerPosition()
 {
-    return *player_->GetModelPos();
+	return *player_->GetModelPos();
 }
 
 void IEnemy::SetAnimation(const std::string& animName, bool isLoop, float speed)
 {
-    animation_.Play(animName);
+	animation_.Play(animName);
 	animation_.Loop(isLoop);
 	animation_.GetPlayBackSpeed() = speed;
 }
@@ -151,6 +153,55 @@ void IEnemy::RotateTowardsPlayer()
 
 	}
 
+}
+
+void IEnemy::SoundFootOnGround() {
+	// 移動に関連するアニメーションでなければ処理しない
+	if (!animation_.GetPlaying("Walk", LWP::Resource::Animation::TrackType::Main) &&
+		!animation_.GetPlaying("Run", LWP::Resource::Animation::TrackType::Main)  &&
+		!animation_.GetPlaying("RightWalk", LWP::Resource::Animation::TrackType::Blend) &&
+		!animation_.GetPlaying("LeftWalk", LWP::Resource::Animation::TrackType::Blend)
+		) {
+		footState_ = FootState::kNone;
+		currentMoveFrame_ = 0.0f;
+		return;
+	}
+
+	float t = 0.0f;
+	currentMoveFrame_ += HitStopController::GetInstance()->GetDeltaTime();
+	if (animation_.GetPlaying("Run", LWP::Resource::Animation::TrackType::Main) || animation_.GetPlaying("Walk", LWP::Resource::Animation::TrackType::Main)) {
+		t = animation_.GetTotalSeconds(LWP::Resource::Animation::TrackType::Main) / animation_.GetPlayBackSpeed(LWP::Resource::Animation::TrackType::Main) * 60.0f;
+	}
+	else if (animation_.GetPlaying("RightWalk", LWP::Resource::Animation::TrackType::Blend) || animation_.GetPlaying("LeftWalk", LWP::Resource::Animation::TrackType::Blend)) {
+		t = animation_.GetTotalSeconds(LWP::Resource::Animation::TrackType::Blend) / animation_.GetPlayBackSpeed(LWP::Resource::Animation::TrackType::Blend) * 60.0f;
+	}
+
+	// 地面につく足は左足
+	if (t * 0.8 <= currentMoveFrame_) {
+		currentMoveFrame_ += -t;
+		footState_ = FootState::kLeft;
+	}
+	// 地面につく足は右足
+	else if (t * 0.3f <= currentMoveFrame_) {
+		footState_ = FootState::kRight;
+	}
+
+	// 左足
+	if (footState_ == FootState::kLeft && preFootState_ != FootState::kLeft) {
+		// ランダムで選択
+		int audioNum = LWP::Utility::Random::GenerateInt(0, (int)SE::move.size() - 1);
+		// 効果音再生
+		sePlayer_->PlaySE(SE::move[audioNum].fileName, SE::move[audioNum].name, SE::move[audioNum].volume);
+	}
+	// 右足
+	else if (footState_ == FootState::kRight && preFootState_ != FootState::kRight) {
+		// ランダムで選択
+		int audioNum = LWP::Utility::Random::GenerateInt(0, (int)SE::move.size() - 1);
+		// 効果音再生
+		sePlayer_->PlaySE(SE::move[audioNum].fileName, SE::move[audioNum].name, SE::move[audioNum].volume);
+	}
+
+	preFootState_ = footState_;
 }
 
 void IEnemy::StartParryEffect(const Vector3& position)
@@ -225,11 +276,11 @@ void IEnemy::UpdateParryEffect()
 			LWP::Math::Matrix4x4::CreateViewportMatrix(0, 0, LWP::Info::GetWindowWidthF(), LWP::Info::GetWindowHeightF(), 0.0f, 1.0f);
 
 		float t = LWP::Utility::Easing::CallFunction(LWP::Utility::Easing::Type::Liner, parryEffectTime_ / maxParryEffectTime_);
-		
+
 		//画像更新
 		for (int32_t i = 0; i < kMaxParryEffect_; i++) {
-			
-			parryEffectSprite_[i].worldTF.scale = LWP::Utility::Interpolation::Lerp({0.0f,1.0f,0.0f}, {100.0f,0.0f,0.0f}, t);
+
+			parryEffectSprite_[i].worldTF.scale = LWP::Utility::Interpolation::Lerp({ 0.0f,1.0f,0.0f }, { 100.0f,0.0f,0.0f }, t);
 			parryEffectSprite_[i].worldTF.translation = parryEffectPosition_ * viewProjectionViewport;
 
 			//画像の描画制限
