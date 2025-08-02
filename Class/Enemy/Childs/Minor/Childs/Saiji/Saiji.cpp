@@ -169,6 +169,9 @@ void Saiji::Update()
 	//プレイヤーとの距離を計算
 	Vector3 diff = GetPlayerPosition() - GetPosition();
 	distFromPlayer_ = diff.Length();
+
+	// 足音再生
+	SoundFootOnGround();
 }
 
 void Saiji::DebugGUI()

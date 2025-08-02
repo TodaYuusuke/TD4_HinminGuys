@@ -29,6 +29,15 @@ enum class AttackType {
 };
 
 /// <summary>
+/// 足音に使用するステート
+/// </summary>
+enum class FootState {
+	kNone,
+	kLeft,
+	kRight
+};
+
+/// <summary>
 /// 敵の攻撃パラメータ
 /// </summary>
 struct EnemyAttackParameter {
@@ -166,6 +175,11 @@ public:
 	//攻撃タイプ取得
 	const AttackType& GetAttackType() const { return attackType_; }
 
+	/// <summary>
+	/// 足音を鳴らす
+	/// </summary>
+	void SoundFootOnGround();
+
 protected:
 
 	//パリィエフェクト開始
@@ -200,6 +214,12 @@ protected:
 	//パリィエフェクト画像
 	std::array<LWP::Primitive::NormalSprite, kMaxParryEffect_> parryEffectSprite_;
 	
+	// どちらの足が出ているか
+	FootState footState_;
+	FootState preFootState_;
+	// 移動アニメーションの経過フレーム
+	float currentMoveFrame_;
+
 	//プレイヤー情報
 	Player* player_;
 	//敵全体から情報を取るためのポインタ

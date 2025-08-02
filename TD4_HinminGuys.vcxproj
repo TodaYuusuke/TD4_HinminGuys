@@ -284,6 +284,7 @@
     <ClCompile Include="Class\Particles\SheathBreak\Children\NoticeCircle.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Class\Enemy\EnemyAudioNames.h" />
     <ClInclude Include="Class\Particles\BossDead\BossDeadParticles.h" />
     <ClInclude Include="Class\Timer\FrameTimer.h" />
     <ClInclude Include="Class\Particles\AttackHit\AttackHitEffect.h" />
