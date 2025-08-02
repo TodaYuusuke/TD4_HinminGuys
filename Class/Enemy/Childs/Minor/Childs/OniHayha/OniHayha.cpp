@@ -78,7 +78,7 @@ void OniHayha::Initialize(Player* player, const Vector3& position, LWP::Object::
 		hitTarget;
 
 		//SE鳴らす
-		sePlayer_->PlaySE("attack_5.mp3", "hit", 1.0f);
+		sePlayer_->PlaySE("enemy/attack_5.mp3", "hit", 1.0f);
 
 		//ステートをセット(攻撃中はリアクションしない)
 		if (state_.GetCurrentBehavior() != States::kAttack) {
