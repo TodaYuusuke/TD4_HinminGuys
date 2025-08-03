@@ -4,35 +4,34 @@
             "Vector3 :position": [
                 0.0,
                 0.0,
-                0.0
+                10.0
             ],
             "float :delayTime": 0.0,
-            "string :type": "Ogre"
+            "string :type": "Saiji"
         }
     },
     "Group :Wave|0002": {
         "Group :Enemy|1": {
             "Vector3 :position": [
-                1.7000000476837158,
+                2.0,
                 0.0,
-                0.0,
-                10.0
+                12.0
             ],
             "float :delayTime": 0.0,
             "string :type": "Saiji"
         },
         "Group :Enemy|2": {
             "Vector3 :position": [
-                -0.5,
                 0.0,
-                11.0
+                0.0,
+                -10.0
             ],
             "float :delayTime": 0.0,
             "string :type": "Saiji"
         },
         "Group :Enemy|3": {
             "Vector3 :position": [
-                10.0,
+                0.0,
                 0.0,
                 -10.0
             ],
@@ -43,16 +42,16 @@
     "Group :Wave|0003": {
         "Group :Enemy|1": {
             "Vector3 :position": [
-                -10.0,
+                10.0,
                 0.0,
-                0.5
+                10.0
             ],
             "float :delayTime": 0.0,
             "string :type": "Saiji"
         },
         "Group :Enemy|2": {
             "Vector3 :position": [
-                -10.0,
+                10.0,
                 0.0,
                 -10.0
             ],
@@ -61,38 +60,29 @@
         },
         "Group :Enemy|3": {
             "Vector3 :position": [
-                -6.0,
+                -10.0,
                 0.0,
-                6.0
+                10.0
             ],
             "float :delayTime": 0.0,
             "string :type": "Saiji"
         },
         "Group :Enemy|4": {
             "Vector3 :position": [
-                -6.0,
+                -10.0,
                 0.0,
-                -6.0
+                -10.0
             ],
             "float :delayTime": 0.0,
             "string :type": "Saiji"
         },
         "Group :Enemy|5": {
             "Vector3 :position": [
-                -4.0,
                 0.0,
-                -4.0
-            ],
-            "float :delayTime": 0.0,
-            "string :type": "Saiji"
-        },
-        "Group :Enemy|6": {
-            "Vector3 :position": [
-                4.0,
                 0.0,
-                -4.0
+                0.0
             ],
-            "float :delayTime": 0.0,
+            "float :delayTime": 3.0,
             "string :type": "Saiji"
         }
     },
@@ -206,7 +196,7 @@
                 0.0,
                 0.0
             ],
-            "float :delayTime": 0.0,
+            "float :delayTime": 5.0,
             "string :type": "OniHayha"
         }
     },
@@ -303,25 +293,25 @@
                 10.0
             ],
             "float :delayTime": 0.0,
-            "string :type": "Saiji"
+            "string :type": "OniHayha"
         },
         "Group :Enemy|2": {
-            "Vector3 :position": [
-                0.5,
-                0.0,
-                11.0
-            ],
-            "float :delayTime": 0.0,
-            "string :type": "Saiji"
-        },
-        "Group :Enemy|3": {
             "Vector3 :position": [
                 -0.5,
                 0.0,
                 11.0
             ],
             "float :delayTime": 0.0,
-            "string :type": "Saiji"
+            "string :type": "OniHayha"
+        },
+        "Group :Enemy|3": {
+            "Vector3 :position": [
+                0.5,
+                0.0,
+                11.0
+            ],
+            "float :delayTime": 0.0,
+            "string :type": "OniHayha"
         },
         "Group :Enemy|4": {
             "Vector3 :position": [
@@ -334,7 +324,7 @@
         },
         "Group :Enemy|5": {
             "Vector3 :position": [
-                1.0,
+                -1.0,
                 0.0,
                 12.0
             ],
@@ -343,7 +333,7 @@
         },
         "Group :Enemy|6": {
             "Vector3 :position": [
-                -1.0,
+                1.0,
                 0.0,
                 12.0
             ],
