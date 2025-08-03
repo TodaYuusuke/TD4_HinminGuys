@@ -97,6 +97,13 @@ UIManager::UIManager(Player* player) {
 	guideUI_[2].sprite.worldTF = guideUI_[1].sprite.worldTF;
 }
 
+UIManager::~UIManager() {
+	for (EchoMotion* ui : afterimageUI_) {
+		delete ui;
+	}
+	afterimageUI_.clear();
+}
+
 void UIManager::Initialize() {
 
 }

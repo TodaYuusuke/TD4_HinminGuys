@@ -19,7 +19,7 @@ public:
 	// コンストラクタ
 	UIManager(Player* player);
 	// デストラクタ
-	~UIManager() = default;
+	~UIManager();
 
 	/// <summary>
 	/// 初期化
