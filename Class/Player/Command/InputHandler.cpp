@@ -64,11 +64,11 @@ std::vector<ICommand*> InputHandler::HandleInput(Player& player) {
 		result.push_back(pressAttackCommand_);
 	}
 	// パリィコマンド(鞘を回収できる状態の時はパリィできない)
-	if ((Keyboard::GetTrigger(Command::Key::Parry) || Pad::GetTrigger(Command::GamePad::Parry)) && !player.GetSystemManager()->GetSheathSystem()->GetIsNone()) {
+	if ((Keyboard::GetTrigger(Command::Key::Parry) || Pad::GetTrigger(Command::GamePad::Parry) || Pad::GetTrigger(Command::GamePad::Parry2)) && !player.GetSystemManager()->GetSheathSystem()->GetIsNone()) {
 		result.push_back(pressParryCommand_);
 	}
 	// 回避コマンド
-	if (Keyboard::GetTrigger(Command::Key::Evasion) || Pad::GetTrigger(Command::GamePad::Evasion)) {
+	if (Keyboard::GetTrigger(Command::Key::Evasion) || Pad::GetTrigger(Command::GamePad::Evasion) || Pad::GetTrigger(Command::GamePad::Evasion2)) {
 		result.push_back(pressEvasionCommand_);
 	}
 	// 鞘コマンド
