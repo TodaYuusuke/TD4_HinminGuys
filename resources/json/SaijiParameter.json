@@ -46,12 +46,12 @@
         },
         "Group :Idle": {
             "float :FollowingDist": 6.0,
-            "float :StandTime": 1.0,
-            "float :StartStandTime": 1.0
+            "float :StandTime": 0.699999988079071,
+            "float :StartStandTime": 0.6000000238418579
         },
         "Group :Move": {
             "float :AttackDist": 0.5,
-            "float :DefaultSpeed": 4.0,
+            "float :DefaultSpeed": 4.5,
             "float :RunTime": 2.0
         },
         "Group :Spacing": {
