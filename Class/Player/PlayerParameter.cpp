@@ -45,6 +45,10 @@ void PlayerParameter::CheckMultiply() {
 		defenseMultiply_ = sheathBreakDefenseMultiply;
 	}
 	else {
+		if (isBreak_) {
+			player_->SetIsSheathModelActive(true);
+		}
+
 		isBreak_ = false;
 		// 移動速度
 		moveSpeedMultiply_ = 1.0f;

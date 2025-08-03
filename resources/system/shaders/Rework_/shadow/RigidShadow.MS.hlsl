@@ -19,7 +19,7 @@ void main(
         uint32_t vertexIndex = GetVertexIndex(meshlet, gtid, mUniqueVertexIndices);
         // 出力する頂点のデータを求める
         outVerts[gtid].position = mul(mul(mVertices[vertexIndex].position, iWorldTransform[gid].m), cViewProjection.m);
-    }   
+    }
     if (gtid < meshlet.PrimCount) {
         // プリミティブ情報のインデックス情報を取得し、出力するプリミティブを求める
         outIndices[gtid] = GetPrimitive(meshlet, gtid, mPrimitiveIndices);

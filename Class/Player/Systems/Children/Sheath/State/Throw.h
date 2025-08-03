@@ -53,7 +53,7 @@ private:
 	//std::array<LWP::Resource::SkinningModel, 5> sheathModels_;
 
 	// 鞘の残像
-	std::unique_ptr<GhostTrail> ghostTrail_;
+	//std::unique_ptr<GhostTrail> ghostTrail_;
 
 	LWP::Math::Vector3 velocity_;
 	LWP::Math::Vector3 start_;
