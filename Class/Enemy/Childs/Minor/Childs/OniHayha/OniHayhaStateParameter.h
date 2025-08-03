@@ -60,6 +60,10 @@ namespace OniHayhaState {
 		float freezingTime = 1.5f;
 		//現在の硬直時間カウント
 		float currentFreezingTime = 0.0f;
+		//SEを鳴らすタイミング
+		float sePlayTime = 0.13f;
+		//SEがなったかどうかフラグ
+		bool isPlayedSE = false;
 	};
 
 	/// <summary>

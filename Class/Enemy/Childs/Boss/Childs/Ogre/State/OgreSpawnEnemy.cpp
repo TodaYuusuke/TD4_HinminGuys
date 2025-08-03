@@ -26,10 +26,19 @@ void Ogre::SpawnEnemyInit(const States& pre)
 		stateParameter_.spawnEnemy.currentCount++;
 	}
 
+	stateParameter_.spawnEnemy.isPlayedSE = false;
+
 }
 
 void Ogre::SpawnEnemyUpdate(std::optional<States>& req, const States& pre)
 {
+
+	//SEを鳴らす時間に到達したら鳴らす
+	if (animation_.GetProgress() >= stateParameter_.spawnEnemy.sePlayTime and 
+		not stateParameter_.spawnEnemy.isPlayedSE) {
+		sePlayer_->PlaySE("enemy/ogre/piercing.mp3", "piercing", 0.5f);
+		stateParameter_.spawnEnemy.isPlayedSE = true;
+	}
 
 	//アニメーションが終了した時
 	if (not animation_.GetPlaying()) {

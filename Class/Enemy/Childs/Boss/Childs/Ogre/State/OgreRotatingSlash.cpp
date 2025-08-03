@@ -46,6 +46,7 @@ void Ogre::RotatingSlashInit([[maybe_unused]] const States& pre)
 	//攻撃フラグオン
 	isAttack_ = true;
 	isAttackPhase_ = true;
+	GetRotatingSlash().attackData.isPlayedSE = false;
 
 }
 
@@ -82,6 +83,13 @@ void Ogre::RotatingSlashUpdate([[maybe_unused]] std::optional<States>& req, [[ma
 		slashEffector_.Create(GetRotatingSlash().effectParam.position, GenerateRotate,
 			GetRotatingSlash().effectParam.scale, GetRotatingSlash().effectParam.playTime,
 			GetRotatingSlash().effectParam.offset, GetRotatingSlash().effectParam.color);
+	}
+
+	//SEを鳴らす時間に到達したら鳴らす
+	if (animation_.GetProgress() >= GetRotatingSlash().attackData.sePlayTime and
+		not GetRotatingSlash().attackData.isPlayedSE) {
+		sePlayer_->PlaySE(GetRotatingSlash().attackData.seFilePath, "attack3", 0.5f);
+		GetRotatingSlash().attackData.isPlayedSE = true;
 	}
 
 	//攻撃受付時間を超過したら判定オフ

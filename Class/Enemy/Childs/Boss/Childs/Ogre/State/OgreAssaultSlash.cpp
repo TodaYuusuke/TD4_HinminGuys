@@ -54,6 +54,13 @@ void Ogre::AssaultSlashInit([[maybe_unused]] const States& pre)
 	//攻撃フラグオン
 	isAttack_ = true;
 	isAttackPhase_ = true;
+	//SE発生フラグリセット
+	GetAssaultSlash().attackData.isPlayedSE = false;
+
+	// 出現演出開始
+	enemyManager_->GetParticles()->CreateEnemySpawnParticles(
+		stateParameter_.spawnParameter.appearanceTime, Vector3{ model_.worldTF.translation.x, 0.0f, model_.worldTF.translation.z });
+
 }
 
 void Ogre::AssaultSlashUpdate([[maybe_unused]] std::optional<States>& req, [[maybe_unused]] const States& pre)
@@ -67,6 +74,13 @@ void Ogre::AssaultSlashUpdate([[maybe_unused]] std::optional<States>& req, [[may
 		//ロックオン不可
 		if (player_) {
 			player_->GetSystemManager()->GetLockOnSystem()->Reset();
+		}
+
+		//SEを鳴らす時間に到達したら鳴らす
+		if (GetAssaultSlash().currentTime >= GetAssaultSlash().startSEPlayTime and
+			not GetAssaultSlash().attackData.isPlayedSE) {
+			sePlayer_->PlaySE("enemy/ogre/piercing.mp3", "piercing", 0.5f);
+			GetAssaultSlash().attackData.isPlayedSE = true;
 		}
 
 		//潜っている途中はY座標を下げる
@@ -131,6 +145,13 @@ void Ogre::AssaultSlashUpdate([[maybe_unused]] std::optional<States>& req, [[may
 			slashEffector_.Create(GetAssaultSlash().effectParam.position, GenerateRotate,
 				GetAssaultSlash().effectParam.scale, GetAssaultSlash().effectParam.playTime,
 				GetAssaultSlash().effectParam.offset, GetAssaultSlash().effectParam.color);
+		}
+
+		//SEを鳴らす時間に到達したら鳴らす
+		if (GetAssaultSlash().currentTime >= GetAssaultSlash().attackData.sePlayTime and
+			not GetAssaultSlash().attackData.isPlayedSE) {
+			sePlayer_->PlaySE(GetAssaultSlash().attackData.seFilePath, "attack2", 0.5f);
+			GetAssaultSlash().attackData.isPlayedSE = true;
 		}
 
 		//待機中
@@ -250,5 +271,7 @@ void Ogre::SetAssaultSlashWarpPosition()
 	GetAssaultSlash().currentTime = 0.0f;
 	//プレイヤーの向きに回転
 	RotateTowardsPlayer();
+
+	GetAssaultSlash().attackData.isPlayedSE = false;
 
 }

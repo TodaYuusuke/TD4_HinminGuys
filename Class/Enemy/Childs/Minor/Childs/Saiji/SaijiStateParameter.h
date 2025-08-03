@@ -101,6 +101,10 @@ namespace SaijiState {
 		float currentFreezingTime = 0.0f;
 		//斬撃エフェクトパラメータ
 		SlashEffectParam effectParam{};
+		//SEを鳴らすタイミング
+		float sePlayTime = 0.13f;
+		//SEがなったかどうかフラグ
+		bool isPlayedSE = false;
 	};
 
 	/// <summary>

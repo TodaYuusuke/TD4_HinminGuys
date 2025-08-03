@@ -139,6 +139,16 @@ void Ogre::Initialize(Player* player, const Vector3& position, LWP::Object::Came
 
 	slashEffector_.SetParentTF(&model_.worldTF);
 
+	//SE名前設定
+	GetSwingDownAttack().attackData.seFilePath = "enemy/ogre/bossAttack1.mp3";
+	GetRotatingSlash().attackData.seFilePath = "enemy/ogre/bossAttack3.mp3";
+	GetFallingThrust().attackData.seFilePath = "enemy/ogre/bossAttack1.mp3";
+	GetAssaultSlash().attackData.seFilePath = "enemy/ogre/bossAttack2.mp3";
+	GetQuadrupleAttack().multipleAttackData[0].seFilePath = "enemy/ogre/bossAttack1.mp3";
+	GetQuadrupleAttack().multipleAttackData[1].seFilePath = "enemy/ogre/bossAttack2.mp3";
+	GetQuadrupleAttack().multipleAttackData[2].seFilePath = "enemy/ogre/bossAttack1.mp3";
+	GetQuadrupleAttack().multipleAttackData[3].seFilePath = "enemy/ogre/bossAttack3.mp3";
+
 }
 
 void Ogre::Update()

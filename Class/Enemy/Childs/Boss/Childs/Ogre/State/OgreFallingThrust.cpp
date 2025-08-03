@@ -66,6 +66,8 @@ void Ogre::FallingThrustInit([[maybe_unused]] const States& pre)
 		GetFallingThrust().attackData.attackScale
 	};
 	cautionCircle_.worldTF.translation = GetPlayerPosition() + Vector3{ 0.0f,0.1f,0.0f };
+	//SE発生フラグリセット
+	GetFallingThrust().attackData.isPlayedSE = false;
 
 }
 
@@ -104,7 +106,13 @@ void Ogre::FallingThrustUpdate([[maybe_unused]] std::optional<States>& req, [[ma
 		SetPosition(GetFallingThrust().startPosition);
 	}
 	//ジャンプ中
-	else if (GetFallingThrust().currentTime < GetFallingThrust().jumpingTime) {
+	else if (GetFallingThrust().currentTime < GetFallingThrust().jumpWaitingTime + GetFallingThrust().jumpingTime) {
+
+		//SEを鳴らす時間に到達したら鳴らす
+		if (not GetFallingThrust().attackData.isPlayedSE) {
+			sePlayer_->PlaySE("enemy/ogre/jump.mp3", "jump", 0.5f);
+			GetFallingThrust().attackData.isPlayedSE = true;
+		}
 
 		//ジャンプ座標までセット
 		SetPosition(LWP::Utility::Interpolation::Lerp(GetFallingThrust().startPosition, GetFallingThrust().jumpingPosition,
@@ -117,7 +125,8 @@ void Ogre::FallingThrustUpdate([[maybe_unused]] std::optional<States>& req, [[ma
 
 	}
 	//ジャンプ後の待機時間
-	else if (GetFallingThrust().currentTime < GetFallingThrust().jumpingTime + GetFallingThrust().fallWaitingTime) {
+	else if (GetFallingThrust().currentTime < GetFallingThrust().jumpWaitingTime +
+		GetFallingThrust().jumpingTime + GetFallingThrust().fallWaitingTime) {
 
 		SetPosition(GetFallingThrust().jumpingPosition);
 
@@ -127,23 +136,35 @@ void Ogre::FallingThrustUpdate([[maybe_unused]] std::optional<States>& req, [[ma
 				.Loop(false);
 		}
 
+		GetFallingThrust().attackData.isPlayedSE = false;
+
 	}
 	//落下中
-	else if (GetFallingThrust().currentTime < GetFallingThrust().jumpingTime + GetFallingThrust().fallWaitingTime + 
+	else if (GetFallingThrust().currentTime < GetFallingThrust().jumpWaitingTime + 
+		GetFallingThrust().jumpingTime + GetFallingThrust().fallWaitingTime +
 		GetFallingThrust().fallingTime) {
 
 		//落下座標までセット
 		SetPosition(LWP::Utility::Interpolation::Lerp(GetFallingThrust().jumpingPosition, GetFallingThrust().endPosition,
-			(GetFallingThrust().currentTime - 
+			(GetFallingThrust().currentTime - GetFallingThrust().jumpWaitingTime - 
 				GetFallingThrust().jumpingTime - GetFallingThrust().fallWaitingTime) / GetFallingThrust().fallingTime));
 
 	}
 	//落下後
-	else if (GetFallingThrust().currentTime < GetFallingThrust().jumpingTime + GetFallingThrust().fallWaitingTime + 
+	else if (GetFallingThrust().currentTime < GetFallingThrust().jumpWaitingTime + 
+		GetFallingThrust().jumpingTime + GetFallingThrust().fallWaitingTime +
 		GetFallingThrust().fallingTime + GetFallingThrust().gapTime) {
 
+		//SEを鳴らす時間に到達したら鳴らす
+		if (GetFallingThrust().currentTime >= GetFallingThrust().attackData.sePlayTime and
+			not GetFallingThrust().attackData.isPlayedSE) {
+			sePlayer_->PlaySE(GetFallingThrust().attackData.seFilePath, "attack2", 0.5f);
+			GetFallingThrust().attackData.isPlayedSE = true;
+		}
+
 		//攻撃発生時間
-		if (GetFallingThrust().currentTime < GetFallingThrust().jumpingTime + GetFallingThrust().fallWaitingTime +
+		if (GetFallingThrust().currentTime < GetFallingThrust().jumpWaitingTime + 
+			GetFallingThrust().jumpingTime + GetFallingThrust().fallWaitingTime +
 			GetFallingThrust().fallingTime + GetFallingThrust().attackTime and not isStartParryEffect_) {
 			if (!sphereCollider_.isActive) {
 				// 重攻撃パーティクル生成

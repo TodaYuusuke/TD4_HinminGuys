@@ -54,6 +54,7 @@ void Saiji::AttackInit([[maybe_unused]] const States& pre)
 
 
 	stateParameter_.attackParameter.currentFreezingTime = 0.0f;
+	stateParameter_.attackParameter.isPlayedSE = false;
 
 }
 
@@ -84,6 +85,13 @@ void Saiji::AttackUpdate([[maybe_unused]] std::optional<States>& req, [[maybe_un
 		slashEffector_.Create(stateParameter_.attackParameter.effectParam.position, GenerateRotate,
 			stateParameter_.attackParameter.effectParam.scale, stateParameter_.attackParameter.effectParam.playTime,
 			stateParameter_.attackParameter.effectParam.offset, stateParameter_.attackParameter.effectParam.color);
+	}
+
+	//SEを鳴らす時間に到達したら鳴らす
+	if (animation_.GetProgress() >= stateParameter_.attackParameter.sePlayTime and
+		not stateParameter_.attackParameter.isPlayedSE) {
+		sePlayer_->PlaySE("enemy/saiji/swingingClub.mp3", "club", 0.5f);
+		stateParameter_.attackParameter.isPlayedSE = true;
 	}
 
 	//攻撃受付時間を超過したら判定オフ

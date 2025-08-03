@@ -46,6 +46,8 @@ void Ogre::QuadrupleAttackInit([[maybe_unused]] const States& pre)
 		GetQuadrupleAttack().multipleAttackData[GetQuadrupleAttack().currentAttackCount].attackScale,
 		GetQuadrupleAttack().multipleAttackData[GetQuadrupleAttack().currentAttackCount].attackScale
 	};
+	//SE発生フラグリセット
+	GetQuadrupleAttack().multipleAttackData[GetQuadrupleAttack().currentAttackCount].isPlayedSE = false;
 	//エフェクトフラグリセット
 	isActivationParryEffect_ = false;
 	//移動方向を決める
@@ -93,6 +95,13 @@ void Ogre::QuadrupleAttackUpdate([[maybe_unused]] std::optional<States>& req, [[
 			slashEffector_.Create(GetQuadrupleAttack().effectParam[GetQuadrupleAttack().currentAttackCount].position, GenerateRotate,
 				GetQuadrupleAttack().effectParam[GetQuadrupleAttack().currentAttackCount].scale, GetQuadrupleAttack().effectParam[GetQuadrupleAttack().currentAttackCount].playTime,
 				GetQuadrupleAttack().effectParam[GetQuadrupleAttack().currentAttackCount].offset, GetQuadrupleAttack().effectParam[GetQuadrupleAttack().currentAttackCount].color);
+		}
+
+		//SEを鳴らす時間に到達したら鳴らす
+		if (animation_.GetProgress() >= GetQuadrupleAttack().multipleAttackData[GetQuadrupleAttack().currentAttackCount].sePlayTime and
+			not GetQuadrupleAttack().multipleAttackData[GetQuadrupleAttack().currentAttackCount].isPlayedSE) {
+			sePlayer_->PlaySE(GetQuadrupleAttack().multipleAttackData[GetQuadrupleAttack().currentAttackCount].seFilePath, "attack", 0.5f);
+			GetQuadrupleAttack().multipleAttackData[GetQuadrupleAttack().currentAttackCount].isPlayedSE = true;
 		}
 
 		//攻撃受付時間を超過したら判定オフ
@@ -160,6 +169,8 @@ void Ogre::QuadrupleAttackUpdate([[maybe_unused]] std::optional<States>& req, [[
 				aabbAttackCollider_.isActive = false;
 				//パリィエフェクトの発生リセット
 				isActivationParryEffect_ = false;
+				//SE発生フラグリセット
+				GetQuadrupleAttack().multipleAttackData[GetQuadrupleAttack().currentAttackCount].isPlayedSE = false;
 				//移動方向を決める
 				GetQuadrupleAttack().attackDirection = GetPlayerPosition() - GetPosition();
 				GetQuadrupleAttack().attackDirection = GetQuadrupleAttack().attackDirection.Normalize();

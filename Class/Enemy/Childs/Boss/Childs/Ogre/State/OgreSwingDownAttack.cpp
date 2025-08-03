@@ -48,6 +48,7 @@ void Ogre::SwingDownAttackInit([[maybe_unused]] const States& pre)
 	isAttackPhase_ = true;
 	GetSwingDownAttack().attackDirection = GetPlayerPosition() - GetPosition();
 	GetSwingDownAttack().attackDirection = GetSwingDownAttack().attackDirection.Normalize();
+	GetSwingDownAttack().attackData.isPlayedSE = false;
 
 }
 
@@ -84,6 +85,13 @@ void Ogre::SwingDownAttackUpdate([[maybe_unused]] std::optional<States>& req, [[
 		slashEffector_.Create(GetSwingDownAttack().effectParam.position, GenerateRotate,
 			GetSwingDownAttack().effectParam.scale, GetSwingDownAttack().effectParam.playTime,
 			GetSwingDownAttack().effectParam.offset, GetSwingDownAttack().effectParam.color);
+	}
+
+	//SEを鳴らす時間に到達したら鳴らす
+	if (animation_.GetProgress() >= GetSwingDownAttack().attackData.sePlayTime and
+		not GetSwingDownAttack().attackData.isPlayedSE) {
+		sePlayer_->PlaySE(GetSwingDownAttack().attackData.seFilePath, "attack1", 0.5f);
+		GetSwingDownAttack().attackData.isPlayedSE = true;
 	}
 
 	//攻撃受付時間を超過したら判定オフ

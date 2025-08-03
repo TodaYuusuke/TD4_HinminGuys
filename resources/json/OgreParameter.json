@@ -39,6 +39,8 @@
             "float :GapTime": 3.0,
             "float :LeaveDistance": 10.0,
             "float :OverDistance": 3.0,
+            "float :SEPlayTime": 0.699999988079071,
+            "float :StartSEPlayTime": 1.0,
             "float :StealthWaitingTime": 1.0,
             "float :WaitingTime": 0.699999988079071
         },
@@ -65,6 +67,7 @@
             "float :JumpWaitingTime": 0.20000000298023224,
             "float :JumpingHeight": 10.0,
             "float :JumpingTime": 0.5,
+            "float :SEPlayTime": 1.600000023841858,
             "float :StartAcceptTime": 0.07999999821186066
         },
         "Group :HitReaction": {
@@ -230,6 +233,10 @@
             "float :MoveSpeed2": 3.0,
             "float :MoveSpeed3": 3.0,
             "float :MoveSpeed4": 5.0,
+            "float :SEPlayTime1": 0.5,
+            "float :SEPlayTime2": 0.550000011920929,
+            "float :SEPlayTime3": 0.5,
+            "float :SEPlayTime4": 0.5,
             "float :StartAcceptTime1": 0.4000000059604645,
             "float :StartAcceptTime2": 0.550000011920929,
             "float :StartAcceptTime3": 0.4000000059604645,
@@ -273,7 +280,11 @@
             "float :EndAcceptTime": 0.800000011920929,
             "float :EndMotionTime": 1.0,
             "float :MoveSpeed": 1.0,
+            "float :SEPlayTime": 0.5,
             "float :StartAcceptTime": 0.5
+        },
+        "Group :SpawnEnemy": {
+            "float :SEPlayTime": 0.12999999523162842
         },
         "Group :SwingDownAttack": {
             "Color :EffectColor": [
@@ -313,6 +324,7 @@
             "float :EndAcceptTime": 0.6000000238418579,
             "float :EndMotionTime": 1.0,
             "float :MoveSpeed": 5.0,
+            "float :SEPlayTime": 0.5,
             "float :StartAcceptTime": 0.4000000059604645
         },
         "float :ExtrusionDist": 1.0

@@ -2,6 +2,7 @@
 #include <stdint.h>
 #include <array>
 #include "../Adapter/Adapter.h"
+#include <string>
 ///
 /// それぞれのステートで使用するパラメータをまとめたヘッダー
 /// 
@@ -113,6 +114,8 @@ namespace OgreState {
 	/// 攻撃に関する詳細データ
 	/// </summary>
 	struct AttackData {
+		//SEのファイルパス
+		std::string seFilePath = "";
 		//攻撃判定受付開始時間
 		float startAcceptTime = 0.05f;
 		//攻撃判定受付終了時間
@@ -127,6 +130,10 @@ namespace OgreState {
 		float moveSpeed = 1.0f;
 		//攻撃の間合い
 		float attackDistance = 1.0f;
+		//SEを鳴らすタイミング
+		float sePlayTime = 0.13f;
+		//SEがなったかどうかフラグ
+		bool isPlayedSE = false;
 	};
 
 	/// <summary>
@@ -227,6 +234,8 @@ namespace OgreState {
 		float gapTime = 3.0f;
 		//現在の時間カウント
 		float currentTime = 0.0f;
+		//剣を刺すときのSE発生時間
+		float startSEPlayTime = 0.1f;
 		//待機中かどうか
 		bool isWaiting = false;
 		//突撃中かどうか
@@ -289,6 +298,10 @@ namespace OgreState {
 		float firstSpawnLine = 0.5f;
 		//二回目のスポーンライン
 		float secondSpawnLine = 0.25f;
+		//SEを鳴らすタイミング
+		float sePlayTime = 0.13f;
+		//SEがなったかどうかフラグ
+		bool isPlayedSE = false;
 	};
 
 	/// <summary>

@@ -21,6 +21,15 @@ public:
 	//適用後、強制的に待機状態にさせる
 	void ApplyLatestParameter() override { 
 		stateParameter_ = configParameter_;
+		//SE名前設定
+		GetSwingDownAttack().attackData.seFilePath = "enemy/ogre/bossAttack1.mp3";
+		GetRotatingSlash().attackData.seFilePath = "enemy/ogre/bossAttack3.mp3";
+		GetFallingThrust().attackData.seFilePath = "enemy/ogre/bossAttack1.mp3";
+		GetAssaultSlash().attackData.seFilePath = "enemy/ogre/bossAttack2.mp3";
+		GetQuadrupleAttack().multipleAttackData[0].seFilePath = "enemy/ogre/bossAttack1.mp3";
+		GetQuadrupleAttack().multipleAttackData[1].seFilePath = "enemy/ogre/bossAttack2.mp3";
+		GetQuadrupleAttack().multipleAttackData[2].seFilePath = "enemy/ogre/bossAttack1.mp3";
+		GetQuadrupleAttack().multipleAttackData[3].seFilePath = "enemy/ogre/bossAttack3.mp3";
 		state_.request = OgreState::States::kIdle;
 	}
 

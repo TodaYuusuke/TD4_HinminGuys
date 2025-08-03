@@ -41,6 +41,8 @@ void OniHayha::AttackInit([[maybe_unused]] const States& pre)
 
 	stateParameter_.attackParameter.currentFreezingTime = 0.0f;
 
+	stateParameter_.attackParameter.isPlayedSE = false;
+
 }
 
 void OniHayha::AttackUpdate([[maybe_unused]] std::optional<States>& req, [[maybe_unused]] const States& pre)
@@ -64,6 +66,13 @@ void OniHayha::AttackUpdate([[maybe_unused]] std::optional<States>& req, [[maybe
 	else if(IsExitParryEffect()) {
 		animation_.GetPlayBackSpeed() = 1.0f;
 		laserModel_.isActive = false;
+	}
+
+	//SEを鳴らす時間に到達したら鳴らす
+	if (animation_.GetProgress() >= stateParameter_.attackParameter.sePlayTime and
+		not stateParameter_.attackParameter.isPlayedSE) {
+		sePlayer_->PlaySE("enemy/oniHayha/shot.mp3", "shot", 0.5f);
+		stateParameter_.attackParameter.isPlayedSE = true;
 	}
 
 	//攻撃受付時間を超過したら判定オフ
