@@ -25,9 +25,9 @@ namespace InputConfig {
 		// ゲームパッド
 		namespace GamePad {
 			inline int NormalAttack = XBOX_X;						// 通常攻撃
-			inline int Parry = XBOX_RT;								// パリィ
+			inline int Parry = XBOX_RB;								// パリィ
 			inline int LockOn = XBOX_RSTICK;						// ロックオン
-			inline int Evasion = XBOX_LB | XBOX_RB;					// 回避
+			inline int Evasion =  XBOX_LB;					// 回避
 			inline int Sheath = XBOX_Y;								// 鞘投げor鞘回収
 		};
 	};
