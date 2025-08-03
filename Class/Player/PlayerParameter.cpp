@@ -43,6 +43,9 @@ void PlayerParameter::CheckMultiply() {
 		attackMultiply_ = sheathBreakAttackMultiply;
 		// 防御
 		defenseMultiply_ = sheathBreakDefenseMultiply;
+		
+		// クールタイム開始
+		player_->GetSystemManager()->SetSheathCoolTime(0.0f);
 	}
 	else {
 		if (isBreak_) {
