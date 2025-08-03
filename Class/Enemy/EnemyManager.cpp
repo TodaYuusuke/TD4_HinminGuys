@@ -144,10 +144,10 @@ void EnemyManager::CreateEnemy(const Vector3& position, EnemyType type, float de
 	}
 
 	//初期化してリストに追加
-	enemies_.back()->Initialize(player_, position, camera_, this);
 	enemies_.back()->SetParameter(parameterEditor_.GetParameter(type));
 	enemies_.back()->SetSEPlayer(sePlayer_);
 	enemies_.back()->SetWorld(world_);
+	enemies_.back()->Initialize(player_, position, camera_, this);
 
 }
 

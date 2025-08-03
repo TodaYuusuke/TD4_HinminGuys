@@ -1,0 +1,41 @@
+{
+    "Group :Gauge": {
+        "Group :WorldTransform": {
+            "Vector3 :Scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "Vector3 :Translation": [
+                320.0,
+                1000.0,
+                0.0
+            ]
+        },
+        "Vector2 :AnchorPoint": [
+            0.0,
+            0.5
+        ]
+    },
+    "Group :GaugeBackGround": {
+        "Group :WorldTransform": {
+            "Vector3 :Scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "Vector3 :Translation": [
+                960.0,
+                1000.0,
+                0.0
+            ]
+        },
+        "Vector2 :AnchorPoint": [
+            0.5,
+            0.5
+        ]
+    },
+    "float :DeltaValue": 0.0,
+    "float :MaxHpValue": 10000.0,
+    "float :Multiply": 1.0
+}

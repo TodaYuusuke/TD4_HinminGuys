@@ -121,6 +121,8 @@ void Ogre::Initialize(Player* player, const Vector3& position, LWP::Object::Came
 
 		//ダメージを受ける
 		TakeDamage(resultDamage);
+		hpUI_.SetDeltaValue(resultDamage);
+		hpUI_.Hit();
 
 		};
 
@@ -149,6 +151,13 @@ void Ogre::Initialize(Player* player, const Vector3& position, LWP::Object::Came
 	GetQuadrupleAttack().multipleAttackData[1].seFilePath = "enemy/ogre/bossAttack2.mp3";
 	GetQuadrupleAttack().multipleAttackData[2].seFilePath = "enemy/ogre/bossAttack1.mp3";
 	GetQuadrupleAttack().multipleAttackData[3].seFilePath = "enemy/ogre/bossAttack3.mp3";
+
+	//ボスHPUIのValue設定
+	hpUI_.Initialize();
+	hpUI_.SetMaxValue(parameter_.hp);
+	hpUI_.ResetValue();
+	nameSprite_.LoadTexture("UI/Gauge/BossName.png");
+	nameSprite_.worldTF.translation = { 960.0f,950.0f,0.0f };
 
 }
 
@@ -194,6 +203,7 @@ void Ogre::Update()
 
 	//エフェクト更新
 	slashEffector_.Update();
+	hpUI_.Update();
 
 	//反発力リセット
 	repulsiveForce_ = { 0.0f,0.0f,0.0f };
@@ -213,6 +223,8 @@ void Ogre::DebugGUI()
 		state_.DebugGUI();
 		ImGui::Text(std::to_string(distFromPlayer_).c_str());
 		ImGui::Text("HP: %1.2f", parameter_.hp);
+		hpUI_.DebugGUI();
+		nameSprite_.DebugGUI();
 		ImGui::TreePop();
 	}
 

@@ -2,6 +2,7 @@
 #include "../../Boss.h"
 #include "OgreStateParameter.h"
 #include "../../../../../Particles/SlashEffect/SlashEffector.h"
+#include "BossHP.h"
 
 /// <summary>
 /// 翁雅、降臨
@@ -133,6 +134,11 @@ private:
 
 	// 刀モデル
 	SkinningModel swordModel_;
+
+	//HPUI
+	BossHP hpUI_;
+	LWP::Primitive::NormalSprite nameSprite_;
+
 	//攻撃コライダー(球)
 	LWP::Object::Collision sphereCollider_;
 	LWP::Object::Collider::Sphere& sphere_;

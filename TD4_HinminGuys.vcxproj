@@ -150,6 +150,7 @@
     </Manifest>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Class\Enemy\Childs\Boss\Childs\Ogre\BossHP.cpp" />
     <ClCompile Include="Class\Particles\BossDead\BossDeadParticles.cpp" />
     <ClCompile Include="Class\Timer\FrameTimer.cpp" />
     <ClCompile Include="Class\Enemy\Childs\Boss\Childs\Ogre\State\OgreSpawnEnemy.cpp" />
@@ -284,6 +285,7 @@
     <ClCompile Include="Class\Particles\SheathBreak\Children\NoticeCircle.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Class\Enemy\Childs\Boss\Childs\Ogre\BossHP.h" />
     <ClInclude Include="Class\Enemy\EnemyAudioNames.h" />
     <ClInclude Include="Class\Particles\BossDead\BossDeadParticles.h" />
     <ClInclude Include="Class\Timer\FrameTimer.h" />
