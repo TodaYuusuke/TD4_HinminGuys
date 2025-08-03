@@ -9,7 +9,11 @@ using namespace LWP::Object;
 using namespace LWP::Info;
 
 void Title::Initialize() {
-	//LWP::Window::ChangeFullScreenMode();
+
+#ifndef _DEBUG
+	// リリースではフルスクリーンに
+	LWP::Window::ChangeFullScreenMode();
+#endif // !_DEBUG
 
 	// 平行光源を配置(これも一時的に配置)
 	light_.worldTF.translation = { 0,10,0 };
