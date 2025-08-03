@@ -293,7 +293,7 @@
                 10.0
             ],
             "float :delayTime": 0.0,
-            "string :type": "OniHayha"
+            "string :type": "Saiji"
         },
         "Group :Enemy|2": {
             "Vector3 :position": [
@@ -302,7 +302,7 @@
                 11.0
             ],
             "float :delayTime": 0.0,
-            "string :type": "OniHayha"
+            "string :type": "Saiji"
         },
         "Group :Enemy|3": {
             "Vector3 :position": [
@@ -311,7 +311,7 @@
                 11.0
             ],
             "float :delayTime": 0.0,
-            "string :type": "OniHayha"
+            "string :type": "Saiji"
         },
         "Group :Enemy|4": {
             "Vector3 :position": [

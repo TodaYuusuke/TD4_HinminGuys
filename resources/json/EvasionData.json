@@ -7,7 +7,7 @@
             "Group :GraceTime": {
                 "float :AccelerationTime": 0.10000000149011612,
                 "float :RecoveryTime": 0.0,
-                "float :SwingTime": 0.009999999776482582
+                "float :SwingTime": 0.0
             }
         },
         "Group :Invinsible": {
@@ -25,5 +25,5 @@
     ],
     "float :CoolTime": 0.0,
     "float :FinishTime": 0.20000000298023224,
-    "float :MoveMultiply": 1.0
+    "float :MoveMultiply": 0.699999988079071
 }
