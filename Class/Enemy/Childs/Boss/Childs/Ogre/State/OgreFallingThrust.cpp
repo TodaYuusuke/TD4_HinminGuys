@@ -24,6 +24,9 @@ void Ogre::FallingThrustFinalize([[maybe_unused]] const States& pre) {
 
 	model_.worldTF.translation.y = 0.0f;
 
+	//必要回数リセット
+	needAttackCount_ = 2;
+
 }
 
 void Ogre::FallingThrustInit([[maybe_unused]] const States& pre)
