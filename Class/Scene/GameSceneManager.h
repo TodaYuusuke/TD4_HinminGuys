@@ -100,11 +100,11 @@ private: // メンバ変数
 	LWP::Utility::FrameTimer timer_{};
 
 	// クリアBGM
-	std::string clearBGMPath = "";
+	std::string clearBGMPath = "ClearBGM.mp3";
 	// クリア効果音
 	std::string clearSEPath = "";
 	// ゲームオーバーBGM
-	std::string gameOverBGMPath = "";
+	std::string gameOverBGMPath = "GameOverBGM.mp3";
 	// ゲームオーバー効果音
 	std::string gameOverSEPath = "";
 	// BGMの初期ボリューム

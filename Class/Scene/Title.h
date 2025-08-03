@@ -63,7 +63,7 @@ private: // ** これより先に必要な処理や変数を記述 ** //
 	SEPlayer sePlayer_;
 
 	// BGMのファイルパス
-	std::string bgmPath_ = "";
+	std::string bgmPath_ = "TitleBGM.mp3";
 	// 各種効果音までのファイルパス
 	std::string decideSound_ = "system/select.mp3";
 	std::string endSound_ = "system/end.mp3";
