@@ -29,14 +29,14 @@ Throw::Throw(FollowCamera* followCamera, Sheath* sheathSystem, Player* player, s
 	sheathSystem_->SetIsBreak(false);
 	sheathSystem_->SetIsSheathing(true);
 
-	// 鞘の残像を発生させる
-	ghostTrail_ = std::make_unique<GhostTrail>("player/Sheath.gltf", "SheathMaterial", sheathSystem_->GetSheathWorldTF());
-	ghostTrail_->Initialize();
-	ghostTrail_->SetIsActive(false);
+	//// 鞘の残像を発生させる
+	//ghostTrail_ = std::make_unique<GhostTrail>("player/Sheath.gltf", "SheathMaterial", sheathSystem_->GetSheathWorldTF());
+	//ghostTrail_->Initialize();
+	//ghostTrail_->SetIsActive(false);
 }
 
 Throw::~Throw() {
-	ghostTrail_.reset();
+	//ghostTrail_.reset();
 }
 
 void Throw::Initialize() {
@@ -51,7 +51,7 @@ void Throw::Update() {
 	CheckThrowState();
 
 	// 残像
-	ghostTrail_->Update();
+	//ghostTrail_->Update();
 
 	// 全ての移動処理終了
 	if ((*eventOrders_)[(int)Sheath::SheathState::kThrow].GetIsEnd()) {
@@ -117,7 +117,7 @@ void Throw::Reset() {
 	sheathSystem_->ClearHitTargetNames();
 
 	// 残像トレイル
-	ghostTrail_->Reset();
+	//ghostTrail_->Reset();
 
 	// 鎖
 	sheathSystem_->GetChain()->Reset();
@@ -144,7 +144,7 @@ void Throw::CheckThrowState() {
 			sheathSystem_->chain_->SetIsActive(isActive_);	
 			sheathSystem_->chain_->Initialize();
 			// 残像生成
-			ghostTrail_->SetIsActive(true);
+			//ghostTrail_->SetIsActive(true);
 			// 追従カメラの視野角をあげる
 			followCamera_->StartFovEasing(followCamera_->GetCamera()->fov, 110.0f, 20.0f, 60.0f);
 			// 音再生

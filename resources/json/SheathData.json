@@ -105,6 +105,6 @@
             6.0
         ]
     },
-    "float :CoolTime": 1.0,
+    "float :CoolTime": 5.0,
     "float :MoveRange": 6.0
 }

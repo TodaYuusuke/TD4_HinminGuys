@@ -76,9 +76,6 @@ private: // ** これより先に必要な処理や変数を記述 ** //
 	// 天球(一時的に作っているので要修正)
 	LWP::Resource::RigidModel skydome;
 
-	//ライト
-	LWP::Object::DirectionLight light_;
-
 	//シーン切り替え
 	SceneTransitioner sceneTransitioner_;
 	//オーディオ再生クラス

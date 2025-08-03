@@ -36,7 +36,7 @@
         ]
     },
     "float :DeltaValue": 50.0,
-    "float :IncreaseTime": 6.0,
-    "float :MaxHpValue": 10000.0,
+    "float :IncreaseTime": 10.0,
+    "float :MaxHpValue": 5000.0,
     "float :Multiply": 1.0
 }
