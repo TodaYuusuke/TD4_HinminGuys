@@ -15,8 +15,9 @@ void Title::Initialize() {
 	LWP::Window::ChangeFullScreenMode();
 #endif // !_DEBUG
 
-	// 平行光源を配置(これも一時的に配置)
-	light_.worldTF.translation = { 0,10,0 };
+	// 平行光源を調整
+	LWP::Object::Manager::GetInstance()->GetDirLight()->worldTF.rotation = { 0.8f, 0.0f, 0.0f, 0.6f };
+
 	//タイトルで事前読み込み
 	LWP::Resource::LoadModel("resources/model/Saiji/Saiji_IK.gltf");
 	LWP::Resource::LoadModel("resources/model/Oniheihe/Oniheihe_IK.gltf");
