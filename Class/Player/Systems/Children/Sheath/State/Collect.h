@@ -1,13 +1,14 @@
 #pragma once
 #include "ISheathSystemState.h"
 
+class FollowCamera;
 /// <summary>
 /// 鞘の回収可能状態
 /// </summary>
 class Collect : public ISheathSystemState {
 public:
 	// コンストラクタ
-	Collect(Sheath* sheathSystem, Player* player, std::map<int, EventOrder>* eventOrders);
+	Collect(FollowCamera* followCamera, Sheath* sheathSystem, Player* player, std::map<int, EventOrder>* eventOrders);
 	// デストラクタ
 	~Collect() override;
 

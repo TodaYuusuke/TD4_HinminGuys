@@ -5,7 +5,8 @@
 #include "../../../../GameMask.h"
 #include "../../../Math/MathFunctions.h"
 
-Sheath::Sheath(LWP::Object::Camera* camera, Player* player) {
+Sheath::Sheath(FollowCamera* followCamera, LWP::Object::Camera* camera, Player* player) {
+	followCamera_ = followCamera;
 	pCamera_ = camera;
 	player_ = player;
 	// ヒットストップの管理クラス
@@ -69,7 +70,7 @@ void Sheath::Initialize() {
 	CreateInvinsibleEventOrder();
 
 	// 状態の生成
-	state_ = new Throw(this, player_, &eventOrders_);
+	state_ = new Throw(followCamera_, this, player_, &eventOrders_);
 	state_->Initialize();
 }
 
@@ -272,7 +273,7 @@ void Sheath::Command() {
 	// 鞘破壊状態に移行
 	if (player_->GetUIManager()->GetSheathGauge().GetIsIncrease() && !isBreak_ && !isActive_) {
 		isBreak_ = true;
-		ChangeState(new Break(this, player_, &eventOrders_));
+		ChangeState(new Break(followCamera_, this, player_, &eventOrders_));
 	}
 	// 状態によって変更
 	state_->Command();

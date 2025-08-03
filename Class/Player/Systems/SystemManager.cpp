@@ -1,6 +1,7 @@
 #include "SystemManager.h"
 #include "../../Enemy/EnemyManager.h"
 #include "../Player.h"
+#include "../../Camera/FollowCamera.h"
 
 using namespace LWP;
 using namespace LWP::Math;
@@ -33,7 +34,7 @@ void SystemManager::Initialize() {
 	lockOnSystem_->SetEnemyList(enemyManager_->GetEnemyListPtr());
 	lockOnSystem_->SetFollowCamera(followCamera_);
 	// 鞘機能
-	sheathSystem_ = std::make_unique<Sheath>(pCamera_, player_);
+	sheathSystem_ = std::make_unique<Sheath>(followCamera_, pCamera_, player_);
 	sheathSystem_->CreateJsonFIle();
 	sheathSystem_->Initialize();
 
@@ -62,6 +63,11 @@ void SystemManager::Initialize() {
 
 		// ヒットストップの設定
 		HitStopController::GetInstance()->Start(comboTree_->GetHitStopTime(), 0.0f);
+
+		// 四段目の攻撃の時に当てたらカメラを近づける
+		if (player_->GetAnimation()->GetPlaying("LightAttack4") && !followCamera_->GetFovSystem()->GetIsActive()) {
+			followCamera_->StartFovEasing(90.0f, 70.0f, 20.0f, 10.0f);
+		}
 		};
 	comboTree_->AddCollisionLamda(LWP::Utility::ComboEnum::STAY, attackOnHitFunc_);
 
@@ -143,23 +149,23 @@ void SystemManager::Update() {
 	SwitchCurrentSystem();
 
 	// 鞘機能(ダメージ中は何もしない)
-	//if (systemState_ != SystemState::kDamage) {
-		sheathSystem_->Update();
-		if (sheathSystem_->GetIsActive() && sheathSystem_->GetSheathState()->GetStateName() != "SwordDrawn") {
-			// 速度
-			velocity_ = sheathSystem_->GetVelocity();
-			// 角度
+	sheathSystem_->Update();
+	if (sheathSystem_->GetIsActive() && sheathSystem_->GetSheathState()->GetStateName() != "SwordDrawn") {
+		// 速度
+		velocity_ = sheathSystem_->GetVelocity();
+		// 角度
+		if (sheathSystem_->GetVelocity().Length() >= 0.3f) {
 			radian_ = sheathSystem_->GetRadian();
 			quat_ = LWP::Math::Quaternion::CreateFromAxisAngle(LWP::Math::Vector3{ 0, 1, 0 }, radian_.y);
 		}
-	//}
+	}
 
 	// 各機能のクールタイムの処理
 	coolTimer_->Update();
 
 	// 無敵処理
 	if (invinsibleTime_ >= 0.0f) {
-		invinsibleTime_-= HitStopController::GetInstance()->GetDeltaTime();
+		invinsibleTime_ -= HitStopController::GetInstance()->GetDeltaTime();
 	}
 
 	// 鞘が壊れているならオーラを出す
@@ -267,6 +273,7 @@ void SystemManager::CreateEvasionSystem(ISystem*& system) {
 	// 回避機能
 	Evasion* evasionSystem = new Evasion(pCamera_, player_);
 	evasionSystem->SetJsonData(evasionSystem_->GetJsonData());
+	evasionSystem->SetRotate(radian_);
 	evasionSystem->Initialize();
 	evasionSystem->Command();
 
@@ -291,7 +298,7 @@ void SystemManager::CreateSheathSystem(ISystem*& system) {
 	if (system) { delete system; }
 
 	// 鞘機能
-	Sheath* sheathSystem = new Sheath(pCamera_, player_);
+	Sheath* sheathSystem = new Sheath(followCamera_, pCamera_, player_);
 	sheathSystem->SetJsonData(sheathSystem_->GetJsonData());
 	sheathSystem->Initialize();
 	sheathSystem->Command();
@@ -306,6 +313,7 @@ void SystemManager::CreateDamageResponseSystem(ISystem*& system) {
 	// 鞘機能
 	DamageResponse* damageResponse = new DamageResponse(pCamera_, player_);
 	damageResponse->SetJsonData(damageResponse_->GetJsonData());
+	damageResponse->SetRotate(radian_);
 	damageResponse->Initialize();
 	// 無敵開始
 	damageResponse->StartInvinsible();

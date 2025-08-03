@@ -3,8 +3,11 @@
 #include "../Sheath.h"
 #include "Throw.h"
 #include "../../../../Command/InputHandler.h"
+#include "../../../../../Camera/FollowCamera.h"
+#include "../../../../PlayerAudioNames.h"
 
-Collect::Collect(Sheath* sheathSystem, Player* player, std::map<int, EventOrder>* eventOrders) {
+Collect::Collect(FollowCamera* followCamera, Sheath* sheathSystem, Player* player, std::map<int, EventOrder>* eventOrders) {
+	followCamera_ = followCamera;
 	sheathSystem_ = sheathSystem;
 	player_ = player;
 	// コマンドの登録
@@ -75,7 +78,7 @@ void Collect::Update() {
 		// リストクリア
 		sheathSystem_->ClearNextSystems();
 		// 投げ可能状態に変更
-		sheathSystem_->ChangeState(new Throw(sheathSystem_, player_, eventOrders_));
+		sheathSystem_->ChangeState(new Throw(followCamera_, sheathSystem_, player_, eventOrders_));
 		return;
 	}
 }
@@ -144,10 +147,16 @@ void Collect::Reset() {
 
 void Collect::CollectMove() {
 	// 鞘回収するために自機が動いているときの処理
-	if ((*eventOrders_)[(int)Sheath::SheathState::kCollect].GetCurrentTimeEvent().name == "CollectFinishTime") {
-		// 無敵時間を設定
+	if ((*eventOrders_)[(int)Sheath::SheathState::kCollect].GetCurrentTimeEvent().name == "CollectFinishTime") {	
 		if (!player_->GetSystemManager()->GetSheathAttackCollision().isActive) {
+			// 無敵時間を設定
 			player_->GetSystemManager()->SetInvisibleTime(sheathSystem_->jsonData_.invinsibleFinishTime);
+			// 追従カメラの視野角をあげる
+			followCamera_->StartFovEasing(followCamera_->GetCamera()->fov, 70.0f, 5.0f, 40.0f);
+			// 音再生
+			player_->PlaySE(PlayerAudio::SE::Sheath::returnSheath.fileName, PlayerAudio::SE::Sheath::returnSheath.name, PlayerAudio::SE::Sheath::returnSheath.volume);
+			// 鎖の音再生
+			player_->PlaySE(PlayerAudio::SE::Sheath::swingChain.fileName, PlayerAudio::SE::Sheath::swingChain.name, PlayerAudio::SE::Sheath::swingChain.volume);
 		}
 		// 攻撃判定を出す
 		player_->GetSystemManager()->GetSheathAttackCollision().isActive = true;

@@ -3,13 +3,14 @@
 #include "../../../../../Components/EventOrder.h"
 #include "../Effect/GhostTrail/GhostTrail.h"
 
+class FollowCamera;
 /// <summary>
 /// 鞘を投擲可能状態
 /// </summary>
 class Throw : public ISheathSystemState {
 public:
 	// コンストラクタ
-	Throw(Sheath* sheathSystem, Player* player, std::map<int, EventOrder>* eventOrders);
+	Throw(FollowCamera* followCamera, Sheath* sheathSystem, Player* player, std::map<int, EventOrder>* eventOrders);
 	// デストラクタ
 	~Throw() override;
 

@@ -3,12 +3,14 @@
 #include "Collect.h"
 #include "../../../../Player.h"
 #include "../../../../Math/MathFunctions.h"
+#include "../../../../PlayerAudioNames.h"
 
 using namespace LWP;
 using namespace LWP::Math;
 using namespace LWP::Utility;
 
-SwordDrawn::SwordDrawn(Sheath* sheathSystem, Player* player, std::map<int, EventOrder>* eventOrders) {
+SwordDrawn::SwordDrawn(FollowCamera* followCamera, Sheath* sheathSystem, Player* player, std::map<int, EventOrder>* eventOrders) {
+	followCamera_ = followCamera;
 	sheathSystem_ = sheathSystem;
 	player_ = player;
 	eventOrders_ = eventOrders;
@@ -53,6 +55,16 @@ void SwordDrawn::Update() {
 	dir.y = 0.0f;
 	sheathSystem_->SetSheathRotation(MathFunc::LookRotation(dir) * q);
 
+	// 鎖の音再生
+	if (currentChainSoundFrame_ >= 15) {
+		player_->PlaySE(PlayerAudio::SE::Sheath::swingChain.fileName, PlayerAudio::SE::Sheath::swingChain.name, PlayerAudio::SE::Sheath::swingChain.volume);
+		currentChainSoundFrame_ = 0.0f;
+	}
+	// 待機状態なら音を出さない
+	if (!player_->GetAnimation()->GetPlaying("Idle")) {
+		currentChainSoundFrame_++;
+	}
+
 	// 入力のあったシステム
 	sheathSystem_->SetNextSystems(sheathSystem_->CheckNextSystems());
 	// 何も入力がなければ移動システムを入れる
@@ -62,7 +74,7 @@ void SwordDrawn::Update() {
 }
 
 void SwordDrawn::Command() {
-	sheathSystem_->ChangeState(new Collect(sheathSystem_, player_, eventOrders_));
+	sheathSystem_->ChangeState(new Collect(followCamera_, sheathSystem_, player_, eventOrders_));
 }
 
 void SwordDrawn::AnimCommand()

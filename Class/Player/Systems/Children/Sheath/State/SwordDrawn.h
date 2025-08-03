@@ -8,7 +8,7 @@
 class SwordDrawn : public ISheathSystemState {
 public:
 	// コンストラクタ
-	SwordDrawn(Sheath* sheathSystem, Player* player, std::map<int, EventOrder>* eventOrders);
+	SwordDrawn(FollowCamera* followCamera, Sheath* sheathSystem, Player* player, std::map<int, EventOrder>* eventOrders);
 	// デストラクタ
 	~SwordDrawn() override;
 
@@ -37,5 +37,5 @@ public:
 	void Reset();
 
 private:
-
+	float currentChainSoundFrame_;
 };

@@ -58,6 +58,7 @@ struct SheathJsonData {
 	float coolTime = 0.0f;
 };
 
+class FollowCamera;
 class Sheath : public ISystem {
 public:
 	enum class SheathState {
@@ -69,7 +70,7 @@ public:
 
 public:
 	// コンストラクタ
-	Sheath(LWP::Object::Camera* camera, Player* player);
+	Sheath(FollowCamera* followCamera, LWP::Object::Camera* camera, Player* player);
 	// デストラクタ
 	~Sheath() override = default;
 
@@ -145,7 +146,6 @@ public:
 	/// 攻撃に当たった相手の名前リストをクリア
 	/// </summary>
 	void ClearHitTargetNames() { hitTargetNames_.clear(); }
-
 
 public:
 	/// <summary>
@@ -277,6 +277,9 @@ public:// Getter, Setter
 	/// <param name="isActive"></param>
 	void SetIsSheathModelActive(const bool& isActive) { sheathModel_.isActive = isActive; }
 #pragma endregion
+
+private:// 外部からアドレスを受け取る変数
+	FollowCamera* followCamera_;
 
 public:// jsonに保存する値
 	SheathJsonData jsonData_;

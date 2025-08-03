@@ -2,6 +2,7 @@
 #include "../../../Player.h"
 #include "../Engine/object/core/collision/Collision.h"
 #include "../../../../GameMask.h"
+#include "../../../PlayerAudioNames.h"
 
 using namespace GameMask;
 using namespace LWP::Utility;
@@ -235,6 +236,9 @@ void Parry::CreateCollision() {
 				player_->ResetAnimation();
 				player_->StartAnimation("StrongParry", 0.0f, 0.0f);
 
+				// ジャストパリィ音
+				player_->PlaySE(PlayerAudio::SE::Parry::justParry.fileName, PlayerAudio::SE::Parry::justParry.name, PlayerAudio::SE::Parry::justParry.volume);
+
 				isJustParry_ = true;
 				isGoodParry_ = false;
 				player_->GetSystemManager()->SetIsJustParry(isJustParry_);
@@ -278,6 +282,9 @@ void Parry::CreateCollision() {
 				// ガードアニメーション開始
 				player_->ResetAnimation();
 				player_->StartAnimation("WeakParry", 0.15f, 0.0f);
+
+				// パリィ音
+				player_->PlaySE(PlayerAudio::SE::Parry::goodParry.fileName, PlayerAudio::SE::Parry::goodParry.name, PlayerAudio::SE::Parry::goodParry.volume);
 
 				// 無敵時間を設定
 				player_->GetSystemManager()->SetInvisibleTime(jsonData_.successGoodParryInvinsible);

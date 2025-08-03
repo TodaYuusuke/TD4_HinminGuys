@@ -27,5 +27,41 @@ namespace PlayerAudio {
 			{ "player/missingShot/missingShot1.mp3","missingShot1", 1.0f },
 			{ "player/missingShot/missingShot2.mp3","missingShot2", 1.0f }
 		} };
+		namespace Sheath {
+			// 鞘を戻す
+			inline PlayerAudioPlayData returnSheath = {
+				"player/sheath/returnSheath.mp3","returnSheath", 1.0f
+			};
+			// 鞘投げ
+			inline PlayerAudioPlayData throwSheath = {
+				"player/sheath/throwSheath.mp3","throwSheath", 1.0f
+			};
+			// 鎖
+			inline PlayerAudioPlayData swingChain = {
+				"player/sheath/swingingChain.mp3","swingingChain", 0.6f
+			};
+		};
+		namespace Parry {
+			// ジャストパリィ
+			inline PlayerAudioPlayData justParry = {
+				"player/parry/justParry.mp3","justParry", 1.0f
+			};
+			// 弱パリィ
+			inline PlayerAudioPlayData goodParry = {
+				"player/parry/parry.mp3","goodParry", 1.0f
+			};
+		};
+		namespace Damage {
+			// 被ダメージ
+			inline PlayerAudioPlayData damage = {
+				"player/damage.mp3","damage", 1.0f
+			};
+		};
+		namespace Evasion {
+			// 回避
+			inline PlayerAudioPlayData dashWind = {
+				"player/dashWInd.mp3","dashWind", 1.0f
+			};
+		};
 	};
 };

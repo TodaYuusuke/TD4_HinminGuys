@@ -31,7 +31,7 @@ void LockOnCamera::RotateUpdate() {
 	// ロックオン対象との距離
 	float lockOnTargetDist = (followCamera_->GetLockOnData().targetTransform->translation - followCamera_->GetTargetPos()).Length();
 
-	if (lockOnTargetDist <= 1.0f) { return; }
+	if (lockOnTargetDist <= 1.8f) { return; }
 
 	lockOnTargetDist = std::clamp<float>(lockOnTargetDist, followCamera_->maxLength / 10.0f, followCamera_->maxLength);
 

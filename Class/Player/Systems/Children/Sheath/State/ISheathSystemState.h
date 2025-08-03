@@ -3,6 +3,7 @@
 #include "../../../../Command/InputHandler.h"
 #include "../../../../../Components/EventOrder.h"
 
+class FollowCamera;
 class Player;
 class Sheath;
 class ISheathSystemState {
@@ -76,6 +77,7 @@ public:// Getter, Setter
 protected:
 	Player* player_;
 	Sheath* sheathSystem_;
+	FollowCamera* followCamera_;
 	//　キー入力
 	InputHandler* inputHandler_;
 

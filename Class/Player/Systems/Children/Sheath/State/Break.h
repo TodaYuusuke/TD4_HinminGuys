@@ -8,7 +8,7 @@
 class Break : public ISheathSystemState {
 public:
 	// コンストラクタ
-	Break(Sheath* sheathSystem, Player* player, std::map<int, EventOrder>* eventOrders);
+	Break(FollowCamera* followCamera, Sheath* sheathSystem, Player* player, std::map<int, EventOrder>* eventOrders);
 	// デストラクタ
 	~Break() override = default;
 

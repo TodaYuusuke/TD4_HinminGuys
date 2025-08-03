@@ -164,7 +164,6 @@
     <ClCompile Include="Class\Enemy\Childs\Boss\Childs\Ogre\State\OgreSpawn.cpp" />
     <ClCompile Include="Class\Enemy\Childs\Minor\Childs\OniHayha\State\OniHayhaSpawn.cpp" />
     <ClCompile Include="Class\Enemy\Childs\Minor\Childs\Saiji\State\SaijiSpawn.cpp" />
-    <ClCompile Include="Class\Camera\CameraSystems.cpp" />
     <ClCompile Include="Class\Audio\AudioPlayer.cpp" />
     <ClCompile Include="Class\Audio\BGMPlayer.cpp" />
     <ClCompile Include="Class\Audio\SEPlayer.cpp" />
@@ -251,6 +250,7 @@
     <ClCompile Include="Class\Particles\SheathBreak\Children\FlickeringFlash.cpp" />
     <ClCompile Include="Class\Scene\GameSceneManager.cpp" />
     <ClCompile Include="Class\Particles\BossDead\Children\DeadSmoke.cpp" />
+    <ClCompile Include="Class\Camera\FovSystem.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Class\Player\Player.cpp" />
     <ClCompile Include="Class\Player\Systems\Children\Move\Move.cpp" />
@@ -296,11 +296,9 @@
     <ClInclude Include="Class\Scene\GameClear.h" />
     <ClInclude Include="Class\UI\EchoMotion.h" />
     <ClInclude Include="Class\World\World.h" />
-    <ClInclude Include="Class\Camera\CameraSystems.h" />
     <ClInclude Include="Class\Audio\AudioPlayer.h" />
     <ClInclude Include="Class\Audio\BGMPlayer.h" />
     <ClInclude Include="Class\Audio\SEPlayer.h" />
-    <ClInclude Include="Class\Camera\ICameraSystem.h" />
     <ClInclude Include="Class\Enemy\Childs\Boss\Childs\Ogre\Ogre.h" />
     <ClInclude Include="Class\Enemy\Childs\Boss\Childs\Ogre\OgreStateParameter.h" />
     <ClInclude Include="Class\Enemy\Childs\Minor\Childs\OniHayha\OniHayha.h" />
@@ -408,6 +406,7 @@
     <ClInclude Include="Class\Scene\GameSceneManager.h" />
     <ClInclude Include="Class\Particles\BossDead\Children\DeadSmoke.h" />
     <ClInclude Include="Class\Particles\SheathBreak\Children\NoticeCircle.h" />
+    <ClInclude Include="Class\Camera\FovSystem.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />
