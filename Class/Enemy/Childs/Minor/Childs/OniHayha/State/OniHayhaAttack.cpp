@@ -38,6 +38,7 @@ void OniHayha::AttackInit([[maybe_unused]] const States& pre)
 	bulletDirection_ = GetPlayerPosition() - GetPosition();
 	bulletDirection_.y = 0.0f;
 	bulletDirection_ = bulletDirection_.Normalize();
+	bulletCollider_.worldTF.translation = GetPosition();
 
 	stateParameter_.attackParameter.currentFreezingTime = 0.0f;
 
@@ -95,7 +96,7 @@ void OniHayha::AttackUpdate([[maybe_unused]] std::optional<States>& req, [[maybe
 #ifdef _DEBUG
 		tmpSphere_.worldTF.translation = bulletCollider_.worldTF.GetWorldPosition();
 		tmpSphere_.isActive = true;
-		tmpSphereSecond_.worldTF.translation = bulletCollider_.worldTF.GetWorldPosition() + capsule_.end;
+		tmpSphereSecond_.worldTF.translation = capsule_.end;
 		tmpSphereSecond_.isActive = true;
 #endif // _DEBUG
 

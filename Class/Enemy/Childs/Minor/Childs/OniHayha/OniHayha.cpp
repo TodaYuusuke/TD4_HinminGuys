@@ -196,8 +196,6 @@ void OniHayha::CreateBulletCollider()
 
 	// 弾の判定生成
 	bulletCollider_.isActive = false;
-	//ペアレント設定
-	bulletCollider_.SetFollow(&laserModel_.worldTF);
 	// 自機の所属しているマスクを設定
 	bulletCollider_.mask.SetBelongFrag(GetAttack());
 	// 当たり判定をとる対象のマスクを設定
