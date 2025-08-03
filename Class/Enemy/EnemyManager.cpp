@@ -112,7 +112,7 @@ void EnemyManager::Update()
 
 }
 
-void EnemyManager::CreateEnemy(const Vector3& position, EnemyType type)
+void EnemyManager::CreateEnemy(const Vector3& position, EnemyType type, float delayTime)
 {
 
 	//敵の数が20体以上なら発生させない
@@ -131,13 +131,13 @@ void EnemyManager::CreateEnemy(const Vector3& position, EnemyType type)
 	switch (type)
 	{
 	case EnemyType::kSaiji:
-		enemies_.push_back(new Saiji(saijiParameter_.GetStateParameter()));
+		enemies_.push_back(new Saiji(saijiParameter_.GetStateParameter(), delayTime));
 		break;
 	case EnemyType::kOniHayha:
-		enemies_.push_back(new OniHayha(oniHayhaParameter_.GetStateParameter()));
+		enemies_.push_back(new OniHayha(oniHayhaParameter_.GetStateParameter(), delayTime));
 		break;
 	case EnemyType::kOgre:
-		enemies_.push_back(new Ogre(ogreParameter_.GetStateParameter()));
+		enemies_.push_back(new Ogre(ogreParameter_.GetStateParameter(), delayTime));
 		break;
 	default:
 		break;
@@ -319,7 +319,7 @@ void EnemyManager::SpawnFromWaveData(WaveData& waveData)
 
 	for (EnemyData& enemyData : waveData.GetEnemyData()) {
 
-		CreateEnemy(enemyData.position, enemyData.type);
+		CreateEnemy(enemyData.position, enemyData.type, enemyData.delayTime);
 
 	}
 

@@ -32,6 +32,10 @@ namespace OniHayhaState {
 		float currentTime = 0.0f;
 		//スポーン時の開始Y座標
 		float startY = -2.0f;
+		//スポーン待機時間
+		float spawnWaitingTime = 0.0f;
+		//スポーン待機時間カウント
+		float currentSpawnWaitingTime = 0.0f;
 	};
 
 	/// <summary>

@@ -8,7 +8,7 @@ using namespace LWP::Primitive;
 using namespace GameMask;
 using namespace OgreState;
 
-Ogre::Ogre(OgreState::StateParameter& stateParameter) :
+Ogre::Ogre(OgreState::StateParameter& stateParameter, float delayTime) :
 	configParameter_(stateParameter),
 	sphere_(sphereCollider_.SetBroadShape(LWP::Object::Collider::Sphere())),
 	aabbAttack_(aabbAttackCollider_.SetBroadShape(LWP::Object::Collider::AABB())),
@@ -16,6 +16,7 @@ Ogre::Ogre(OgreState::StateParameter& stateParameter) :
 {
 
 	stateParameter_ = stateParameter;
+	stateParameter_.spawnParameter.currentSpawnWaitingTime = delayTime;
 
 }
 

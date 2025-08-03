@@ -9,7 +9,7 @@
 class Ogre : public Boss
 {
 public:
-	Ogre(OgreState::StateParameter& stateParameter);
+	Ogre(OgreState::StateParameter& stateParameter, float delayTime);
 	~Ogre() override;
 
 	void Initialize(Player* player, const Vector3& position, LWP::Object::Camera* camera,

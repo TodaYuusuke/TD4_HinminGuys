@@ -9,7 +9,7 @@
 class Saiji : public Minor
 {
 public:
-	Saiji(SaijiState::StateParameter& stateParameter);
+	Saiji(SaijiState::StateParameter& stateParameter, float delayTime);
 	~Saiji() override;
 
 	void Initialize(Player* player, const Vector3& position, LWP::Object::Camera* camera,

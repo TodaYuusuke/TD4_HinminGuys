@@ -8,7 +8,7 @@
 class OniHayha : public Minor
 {
 public:
-	OniHayha(OniHayhaState::StateParameter& stateParameter);
+	OniHayha(OniHayhaState::StateParameter& stateParameter, float delayTime);
 	~OniHayha() override;
 
 	void Initialize(Player* player, const Vector3& position, LWP::Object::Camera* camera,

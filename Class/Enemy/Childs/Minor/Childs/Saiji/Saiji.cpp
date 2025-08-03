@@ -8,13 +8,14 @@ using namespace LWP::Primitive;
 using namespace GameMask;
 using namespace SaijiState;
 
-Saiji::Saiji(SaijiState::StateParameter& stateParameter) :
+Saiji::Saiji(SaijiState::StateParameter& stateParameter, float delayTime) :
 	configParameter_(stateParameter),
 	aabbAttack_(aabbAttackCollider_.SetBroadShape(LWP::Object::Collider::AABB())),
 	slashEffector_("Effect/SwordSlash.png", { 256.0f, 256.0f }, 26)
 {
 
 	stateParameter_ = stateParameter;
+	stateParameter_.spawnParameter.currentSpawnWaitingTime = delayTime;
 
 }
 

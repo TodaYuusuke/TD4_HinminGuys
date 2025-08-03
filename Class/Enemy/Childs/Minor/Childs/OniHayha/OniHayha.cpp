@@ -8,12 +8,13 @@ using namespace LWP::Primitive;
 using namespace GameMask;
 using namespace OniHayhaState;
 
-OniHayha::OniHayha(OniHayhaState::StateParameter& stateParameter) : 
+OniHayha::OniHayha(OniHayhaState::StateParameter& stateParameter, float delayTime) :
 	configParameter_(stateParameter),
 	capsule_(bulletCollider_.SetBroadShape(LWP::Object::Collider::Capsule()))
 {
 
 	stateParameter_ = stateParameter;
+	stateParameter_.spawnParameter.currentSpawnWaitingTime = delayTime;
 
 }
 

@@ -47,7 +47,7 @@ public:
 	//ダメージエフェクトエミッター取得
 	DamageEffectEmitter& GetDamageEffectEmitter() { return *damageEffectEmitter_; }
 	//敵追加、配置
-	void CreateEnemy(const Vector3& position, EnemyType type);
+	void CreateEnemy(const Vector3& position, EnemyType type, float delayTime = 0.0f);
 	//リストのクリア
 	void ClearList();
 	//デバッグウィンドウ
