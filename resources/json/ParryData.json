@@ -21,6 +21,7 @@
         "Group :SheathDecrementPercent": {
             "float :GoodParry": 5.0,
             "float :JustParry": 25.0
-        }
+        },
+        "float :CoolTime": 0.5
     }
 }

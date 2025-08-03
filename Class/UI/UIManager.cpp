@@ -102,16 +102,6 @@ void UIManager::Initialize() {
 }
 
 void UIManager::Update() {
-	// 回避中はダッシュUIに変更
-	//if (player_->GetSystemManager()->GetIsEnableDash()) {
-	//	guideUI_[1].isActive = false;
-		//guideUI_[2].isActive = true;
-	//}
-	//else {
-		//guideUI_[2].isActive = false;
-		//guideUI_[1].isActive = true;
-	//}
-
 	// クールタイムのフィルタ
 	CoolTimeFilterUpdate();
 
