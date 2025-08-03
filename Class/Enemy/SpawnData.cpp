@@ -134,8 +134,11 @@ void SpawnData::Save()
 	//全ウェーブの保存
 	for (int32_t i = startWaveCount_; WaveData& waveData : waveData_) {
 
+		std::string num = std::to_string(i);
+		num.insert(0, 4 - num.length(), '0');
+
 		//ウェーブ+ウェーブ番号+ウェーブ内の敵数の順に文字列を作る
-		std::string groupName = "Wave|" + std::to_string(i);
+		std::string groupName = "Wave|" + num;
 
 		json_.BeginGroup(groupName);
 

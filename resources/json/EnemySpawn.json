@@ -1,5 +1,5 @@
 {
-    "Group :Wave|1": {
+    "Group :Wave|0001": {
         "Group :Enemy|1": {
             "Vector3 :position": [
                 0.0,
@@ -10,18 +10,7 @@
             "string :type": "Saiji"
         }
     },
-    "Group :Wave|10": {
-        "Group :Enemy|1": {
-            "Vector3 :position": [
-                0.0,
-                0.0,
-                0.0
-            ],
-            "float :delayTime": 0.0,
-            "string :type": "Ogre"
-        }
-    },
-    "Group :Wave|2": {
+    "Group :Wave|0002": {
         "Group :Enemy|1": {
             "Vector3 :position": [
                 1.7000000476837158,
@@ -41,7 +30,7 @@
             "string :type": "Saiji"
         }
     },
-    "Group :Wave|3": {
+    "Group :Wave|0003": {
         "Group :Enemy|1": {
             "Vector3 :position": [
                 0.0,
@@ -97,7 +86,7 @@
             "string :type": "Saiji"
         }
     },
-    "Group :Wave|4": {
+    "Group :Wave|0004": {
         "Group :Enemy|1": {
             "Vector3 :position": [
                 0.0,
@@ -135,7 +124,7 @@
             "string :type": "Saiji"
         }
     },
-    "Group :Wave|5": {
+    "Group :Wave|0005": {
         "Group :Enemy|1": {
             "Vector3 :position": [
                 0.0,
@@ -155,7 +144,7 @@
             "string :type": "OniHayha"
         }
     },
-    "Group :Wave|6": {
+    "Group :Wave|0006": {
         "Group :Enemy|1": {
             "Vector3 :position": [
                 0.0,
@@ -202,7 +191,7 @@
             "string :type": "OniHayha"
         }
     },
-    "Group :Wave|7": {
+    "Group :Wave|0007": {
         "Group :Enemy|1": {
             "Vector3 :position": [
                 -2.0,
@@ -240,7 +229,7 @@
             "string :type": "OniHayha"
         }
     },
-    "Group :Wave|8": {
+    "Group :Wave|0008": {
         "Group :Enemy|1": {
             "Vector3 :position": [
                 0.0,
@@ -296,7 +285,7 @@
             "string :type": "OniHayha"
         }
     },
-    "Group :Wave|9": {
+    "Group :Wave|0009": {
         "Group :Enemy|1": {
             "Vector3 :position": [
                 0.0,
@@ -350,6 +339,17 @@
             ],
             "float :delayTime": 0.0,
             "string :type": "Saiji"
+        }
+    },
+    "Group :Wave|0010": {
+        "Group :Enemy|1": {
+            "Vector3 :position": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "float :delayTime": 0.0,
+            "string :type": "Ogre"
         }
     }
 }
