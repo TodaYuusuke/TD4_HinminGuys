@@ -25,5 +25,5 @@
     ],
     "float :CoolTime": 0.0,
     "float :FinishTime": 0.20000000298023224,
-    "float :MoveMultiply": 2.0
+    "float :MoveMultiply": 1.0
 }

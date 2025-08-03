@@ -1,7 +1,7 @@
 {
     "Group :AttackValue": {
-        "float :Collect": 50.0,
-        "float :Dash": 50.0,
+        "float :Collect": 300.0,
+        "float :Dash": 300.0,
         "float :Sheath": 50.0
     },
     "Group :AuraParticle": {
