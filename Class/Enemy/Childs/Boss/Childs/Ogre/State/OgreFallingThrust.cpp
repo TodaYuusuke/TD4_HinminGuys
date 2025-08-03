@@ -35,11 +35,8 @@ void Ogre::FallingThrustInit([[maybe_unused]] const States& pre)
 	preState_ = States::kIdle;
 	//球で実装
 	sphereCollider_.worldTF.translation = GetFallingThrust().attackData.attackPosition;
-	sphereCollider_.worldTF.scale = {
-		GetFallingThrust().attackData.attackScale,
-		GetFallingThrust().attackData.attackScale,
-		GetFallingThrust().attackData.attackScale
-	};
+	
+	sphere_.radius = GetFallingThrust().attackData.attackScale;
 	//エフェクトフラグリセット
 	isActivationParryEffect_ = false;
 	//プレイヤーの向きに回転
@@ -57,13 +54,14 @@ void Ogre::FallingThrustInit([[maybe_unused]] const States& pre)
 #ifdef _DEBUG
 	sphere_.isShowWireFrame = false;
 	tmpSphere_.isActive = false;
+	tmpSphere_.worldTF.scale = Vector3{ 1.0f,1.0f,1.0f } * sphere_.radius;
 #endif // _DEBUG
 	GetFallingThrust().currentTime = 0.0f;
 	cautionCircle_.isActive = true;
 	cautionCircle_.worldTF.scale = {
-		GetFallingThrust().attackData.attackScale,
-		GetFallingThrust().attackData.attackScale,
-		GetFallingThrust().attackData.attackScale
+		GetFallingThrust().attackData.attackScale * 0.85f,
+		GetFallingThrust().attackData.attackScale * 0.85f,
+		GetFallingThrust().attackData.attackScale * 0.85f
 	};
 	cautionCircle_.worldTF.translation = GetPlayerPosition() + Vector3{ 0.0f,0.1f,0.0f };
 	//SE発生フラグリセット
@@ -173,7 +171,7 @@ void Ogre::FallingThrustUpdate([[maybe_unused]] std::optional<States>& req, [[ma
 			sphereCollider_.isActive = true;
 #ifdef _DEBUG
 			sphere_.isShowWireFrame = true;
-			tmpSphere_.isActive = true;
+			tmpSphere_.isActive = false;
 #endif // _DEBUG
 		}
 		else {

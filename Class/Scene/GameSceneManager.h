@@ -108,7 +108,7 @@ private: // メンバ変数
 	// ゲームオーバー効果音
 	std::string gameOverSEPath = "";
 	// BGMの初期ボリューム
-	float bgmVolume_ = 1.0f;
+	float bgmVolume_ = 0.5f;
 
 	// 決定音までのファイルパス
 	std::string decideSound_ = "system/select.mp3";

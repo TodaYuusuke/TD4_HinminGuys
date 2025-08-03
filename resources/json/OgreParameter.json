@@ -33,7 +33,7 @@
                 2.0
             ],
             "float :AssaultTime": 0.30000001192092896,
-            "float :AttackScale": 1.600000023841858,
+            "float :AttackScale": 1.0,
             "float :DivingTime": 2.0,
             "float :EffectPlayTime": 0.5,
             "float :GapTime": 3.0,
@@ -57,7 +57,7 @@
                 0.0,
                 0.0
             ],
-            "float :AttackScale": 1.0,
+            "float :AttackScale": 3.0,
             "float :AttackTime": 0.10000000149011612,
             "float :EndAcceptTime": 0.1899999976158142,
             "float :EndMotionTime": 0.5,
@@ -75,11 +75,13 @@
         },
         "Group :Idle": {
             "float :FollowingDist": 4.0,
-            "float :StandTime": 1.0
+            "float :MinStandTime": 1.0,
+            "float :StandTime": 3.0
         },
         "Group :Move": {
             "float :AttackDist": 1.0,
-            "float :DefaultSpeed": 2.0,
+            "float :DefaultSpeed": 3.0,
+            "float :JumpAttackLimit": 5.0,
             "float :RunTime": 4.0,
             "int32_t :LightTransitionCount": 2,
             "int32_t :MediumTransitionCount": 1
@@ -111,23 +113,23 @@
             ],
             "Vector3 :AttackPosition1": [
                 0.0,
-                0.0,
-                0.5
+                1.0,
+                1.0
             ],
             "Vector3 :AttackPosition2": [
                 0.0,
-                0.0,
-                0.5
+                1.0,
+                1.0
             ],
             "Vector3 :AttackPosition3": [
                 0.0,
-                0.0,
-                0.5
+                1.0,
+                1.0
             ],
             "Vector3 :AttackPosition4": [
                 0.0,
                 0.0,
-                0.5
+                0.0
             ],
             "Vector3 :EffectOffset1": [
                 0.0,
@@ -214,9 +216,9 @@
             "float :AttackDistance3": 1.0,
             "float :AttackDistance4": 1.0,
             "float :AttackScale1": 1.0,
-            "float :AttackScale2": 1.0,
+            "float :AttackScale2": 1.2000000476837158,
             "float :AttackScale3": 1.0,
-            "float :AttackScale4": 1.0,
+            "float :AttackScale4": 1.5,
             "float :EffectPlayTime1": 0.30000001192092896,
             "float :EffectPlayTime2": 0.30000001192092896,
             "float :EffectPlayTime3": 0.30000001192092896,
@@ -275,7 +277,7 @@
                 2.0
             ],
             "float :AttackDistance": 1.0,
-            "float :AttackScale": 1.0,
+            "float :AttackScale": 1.5,
             "float :EffectPlayTime": 0.5,
             "float :EndAcceptTime": 0.800000011920929,
             "float :EndMotionTime": 1.0,
@@ -284,7 +286,7 @@
             "float :StartAcceptTime": 0.5
         },
         "Group :SpawnEnemy": {
-            "float :SEPlayTime": 0.12999999523162842
+            "float :SEPlayTime": 0.699999988079071
         },
         "Group :SwingDownAttack": {
             "Color :EffectColor": [
@@ -296,7 +298,7 @@
             "Vector3 :AttackPosition": [
                 0.0,
                 1.0,
-                0.5
+                1.0
             ],
             "Vector3 :EffectOffset": [
                 0.0,
@@ -319,7 +321,7 @@
                 2.0
             ],
             "float :AttackDistance": 0.800000011920929,
-            "float :AttackScale": 0.5,
+            "float :AttackScale": 1.0,
             "float :EffectPlayTime": 0.30000001192092896,
             "float :EndAcceptTime": 0.6000000238418579,
             "float :EndMotionTime": 1.0,

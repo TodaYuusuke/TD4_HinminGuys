@@ -160,6 +160,10 @@ private:
 	OgreState::States nextAttackState_;
 	//直前のステート保存
 	OgreState::States preState_;
+	//ノックバックに必要な攻撃回数
+	int32_t needAttackCount_ = 2;
+	//現在の攻撃回数
+	int32_t currentAttackCount_ = 0;
 
 	//状態
 	LWP::Utility::StatePattern<OgreState::States, int(OgreState::States::kMax)> state_;

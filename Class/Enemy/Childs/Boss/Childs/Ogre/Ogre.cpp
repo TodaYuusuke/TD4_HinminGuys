@@ -85,11 +85,20 @@ void Ogre::Initialize(Player* player, const Vector3& position, LWP::Object::Came
 		//SE鳴らす
 		sePlayer_->PlaySE("enemy/attack_5.mp3", "hit", 1.0f);
 
-		//ステートをセット(攻撃中はリアクションしない)
+		//スーパーアーマーを利用するステート以外の時
 		if (not IsSuperArmorState()) {
-			state_.request = States::kHitReaction;
-			//今後プレイヤーから取得する
-			SetKnockBackValue(1.0f);
+
+			//攻撃カウント増加
+			currentAttackCount_++;
+			//回数を超えたらノックバック
+			if (currentAttackCount_ >= needAttackCount_) {
+				currentAttackCount_ = 0;
+				needAttackCount_++;
+				state_.request = States::kHitReaction;
+				//今後プレイヤーから取得する
+				SetKnockBackValue(1.0f);
+			}
+
 		}
 
 		//コライダーを一時的にオフ、クールタイム設定

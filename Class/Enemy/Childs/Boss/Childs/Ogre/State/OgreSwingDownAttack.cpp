@@ -34,7 +34,12 @@ void Ogre::SwingDownAttackInit([[maybe_unused]] const States& pre)
 
 	//AABBで攻撃判定実装
 	aabbAttackCollider_.worldTF.translation = GetSwingDownAttack().attackData.attackPosition;
-	aabbAttackCollider_.worldTF.scale = {
+	aabbAttack_.min = {
+		-GetSwingDownAttack().attackData.attackScale,
+		-GetSwingDownAttack().attackData.attackScale,
+		-GetSwingDownAttack().attackData.attackScale
+	};
+	aabbAttack_.max = {
 		GetSwingDownAttack().attackData.attackScale,
 		GetSwingDownAttack().attackData.attackScale,
 		GetSwingDownAttack().attackData.attackScale
@@ -109,7 +114,7 @@ void Ogre::SwingDownAttackUpdate([[maybe_unused]] std::optional<States>& req, [[
 		aabbAttackCollider_.isActive = true;
 #ifdef _DEBUG
 		aabbAttack_.isShowWireFrame = true;
-		box_.isActive = true;
+		box_.isActive = false;
 #endif // _DEBUG
 	}
 	//開始時間未満も判定を付けない
@@ -132,7 +137,7 @@ void Ogre::SwingDownAttackUpdate([[maybe_unused]] std::optional<States>& req, [[
 		aabbAttackCollider_.isActive = false;
 #ifdef _DEBUG
 		aabbAttack_.isShowWireFrame = false;
-		box_.isActive = true;
+		box_.isActive = false;
 #endif // _DEBUG
 	}
 

@@ -77,7 +77,9 @@ namespace OgreState {
 	/// </summary>
 	struct IdleParameter {
 		//待機時間
-		float standTime = 1.0f;
+		float standTime = 3.0f;
+		//最小待機時間
+		float minStandTime = 1.0f;
 		//追従モーションに移行する距離
 		float followingDist = 4.0f;
 		//カウント
@@ -96,6 +98,10 @@ namespace OgreState {
 		float defaultSpeed = 3.0f;
 		//一定時間を超えたときのスピード
 		float boostSpeed = 6.0f;
+		//ジャンプ攻撃を仕掛けるまでの時間
+		float jumpAttackLimit = 10.0f;
+		//ジャンプ攻撃のタイムカウント
+		float jumpAttackCount = 0.0f;
 		//弱攻撃からの遷移に必要なカウント
 		int32_t lightTransitionCount = 2;
 		//中攻撃からの遷移に必要なカウント

@@ -34,11 +34,12 @@ void Ogre::RotatingSlashInit([[maybe_unused]] const States& pre)
 
 	//球で攻撃判定実装
 	sphereCollider_.worldTF.translation = GetRotatingSlash().attackData.attackPosition;
-	sphereCollider_.worldTF.scale = {
+	/*sphereCollider_.worldTF.scale = {
 		GetRotatingSlash().attackData.attackScale,
 		GetRotatingSlash().attackData.attackScale,
 		GetRotatingSlash().attackData.attackScale
-	};
+	};*/
+	sphere_.radius = GetRotatingSlash().attackData.attackScale;
 	//エフェクトフラグリセット
 	isActivationParryEffect_ = false;
 	//プレイヤーの向きに回転
@@ -47,6 +48,11 @@ void Ogre::RotatingSlashInit([[maybe_unused]] const States& pre)
 	isAttack_ = true;
 	isAttackPhase_ = true;
 	GetRotatingSlash().attackData.isPlayedSE = false;
+
+#ifdef _DEBUG
+	tmpSphere_.worldTF.scale = Vector3{ 1.0f,1.0f,1.0f } * sphere_.radius;
+#endif // _DEBUG
+
 
 }
 
@@ -107,7 +113,7 @@ void Ogre::RotatingSlashUpdate([[maybe_unused]] std::optional<States>& req, [[ma
 		sphereCollider_.isActive = true;
 #ifdef _DEBUG
 		sphere_.isShowWireFrame = true;
-		tmpSphere_.isActive = true;
+		tmpSphere_.isActive = false;
 #endif // _DEBUG
 	}
 	//開始時間未満も判定を付けない

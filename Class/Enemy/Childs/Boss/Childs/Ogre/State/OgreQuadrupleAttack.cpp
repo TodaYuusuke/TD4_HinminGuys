@@ -41,7 +41,12 @@ void Ogre::QuadrupleAttackInit([[maybe_unused]] const States& pre)
 
 	//AABBで攻撃判定実装
 	aabbAttackCollider_.worldTF.translation = GetQuadrupleAttack().multipleAttackData[GetQuadrupleAttack().currentAttackCount].attackPosition;
-	aabbAttackCollider_.worldTF.scale = {
+	aabbAttack_.min = {
+		-GetQuadrupleAttack().multipleAttackData[GetQuadrupleAttack().currentAttackCount].attackScale,
+		-GetQuadrupleAttack().multipleAttackData[GetQuadrupleAttack().currentAttackCount].attackScale,
+		-GetQuadrupleAttack().multipleAttackData[GetQuadrupleAttack().currentAttackCount].attackScale
+	};
+	aabbAttack_.max = {
 		GetQuadrupleAttack().multipleAttackData[GetQuadrupleAttack().currentAttackCount].attackScale,
 		GetQuadrupleAttack().multipleAttackData[GetQuadrupleAttack().currentAttackCount].attackScale,
 		GetQuadrupleAttack().multipleAttackData[GetQuadrupleAttack().currentAttackCount].attackScale
@@ -119,7 +124,7 @@ void Ogre::QuadrupleAttackUpdate([[maybe_unused]] std::optional<States>& req, [[
 			aabbAttackCollider_.isActive = true;
 #ifdef _DEBUG
 			aabbAttack_.isShowWireFrame = true;
-			box_.isActive = true;
+			box_.isActive = false;
 #endif // _DEBUG
 		}
 		//開始時間未満も判定を付けない
@@ -160,7 +165,13 @@ void Ogre::QuadrupleAttackUpdate([[maybe_unused]] std::optional<States>& req, [[
 
 				//攻撃判定をセット
 				aabbAttackCollider_.worldTF.translation = GetQuadrupleAttack().multipleAttackData[GetQuadrupleAttack().currentAttackCount].attackPosition;
-				aabbAttackCollider_.worldTF.scale = {
+				
+				aabbAttack_.min = {
+					-GetQuadrupleAttack().multipleAttackData[GetQuadrupleAttack().currentAttackCount].attackScale,
+					-GetQuadrupleAttack().multipleAttackData[GetQuadrupleAttack().currentAttackCount].attackScale,
+					-GetQuadrupleAttack().multipleAttackData[GetQuadrupleAttack().currentAttackCount].attackScale
+				};
+				aabbAttack_.max = {
 					GetQuadrupleAttack().multipleAttackData[GetQuadrupleAttack().currentAttackCount].attackScale,
 					GetQuadrupleAttack().multipleAttackData[GetQuadrupleAttack().currentAttackCount].attackScale,
 					GetQuadrupleAttack().multipleAttackData[GetQuadrupleAttack().currentAttackCount].attackScale

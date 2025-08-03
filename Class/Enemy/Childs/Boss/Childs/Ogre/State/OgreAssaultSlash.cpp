@@ -38,7 +38,13 @@ void Ogre::AssaultSlashInit([[maybe_unused]] const States& pre)
 
 	//AABB実装
 	aabbAttackCollider_.worldTF.translation = GetAssaultSlash().attackData.attackPosition;
-	aabbAttackCollider_.worldTF.scale = {
+	
+	aabbAttack_.min = {
+		-GetAssaultSlash().attackData.attackScale,
+		-GetAssaultSlash().attackData.attackScale,
+		-GetAssaultSlash().attackData.attackScale
+	};
+	aabbAttack_.max = {
 		GetAssaultSlash().attackData.attackScale,
 		GetAssaultSlash().attackData.attackScale,
 		GetAssaultSlash().attackData.attackScale
