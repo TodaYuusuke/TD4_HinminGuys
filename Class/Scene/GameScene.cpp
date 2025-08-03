@@ -107,10 +107,6 @@ void GameScene::Initialize() {
 
 	// ゲームシーンマネージャーの初期化
 	gameSceneManager_.Init();
-	//BGM再生
-	bgmPlayer_.PlayBGM("BattleBGM.mp3", "Battle", 0.2f);
-
-	//testBillboard_.Init();
 }
 
 // 更新
