@@ -263,7 +263,7 @@ void Evasion::CheckEvasionState() {
 
 void Evasion::CheckDash() {
 	// 長押ししている間
-	if (LWP::Input::Pad::GetPress(Command::GamePad::Evasion) || LWP::Input::Keyboard::GetPress(Command::Key::Evasion)) {
+	if (LWP::Input::Pad::GetPress(Command::GamePad::Evasion) || LWP::Input::Pad::GetPress(Command::GamePad::Evasion2) || LWP::Input::Keyboard::GetPress(Command::Key::Evasion)) {
 		pressTime_++;
 		// ダッシュ可能かを設定
 		player_->GetSystemManager()->SetIsEnableDash(GetIsDash());
