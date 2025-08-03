@@ -22,6 +22,6 @@
             "float :GoodParry": 5.0,
             "float :JustParry": 25.0
         },
-        "float :CoolTime": 0.5
+        "float :CoolTime": 0.20000000298023224
     }
 }
