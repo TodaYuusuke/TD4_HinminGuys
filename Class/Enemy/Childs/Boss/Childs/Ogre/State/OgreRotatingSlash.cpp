@@ -22,6 +22,9 @@ void Ogre::RotatingSlashFinalize([[maybe_unused]] const States& pre) {
 	tmpSphere_.isActive = false;
 #endif // _DEBUG
 
+	//必要回数リセット
+	needAttackCount_ = 2;
+
 }
 
 void Ogre::RotatingSlashInit([[maybe_unused]] const States& pre)

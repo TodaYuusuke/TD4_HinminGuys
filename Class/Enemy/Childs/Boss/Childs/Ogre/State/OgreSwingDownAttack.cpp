@@ -22,6 +22,9 @@ void Ogre::SwingDownAttackFinalize([[maybe_unused]] const States& pre) {
 	box_.isActive = false;
 #endif // _DEBUG
 
+	//必要回数リセット
+	needAttackCount_ = 2;
+
 }
 
 void Ogre::SwingDownAttackInit([[maybe_unused]] const States& pre)

@@ -23,8 +23,6 @@ void Ogre::IdleInit([[maybe_unused]] const States& pre)
 	animation_.Play("Idle", 0.6f)
 		.Loop(true);
 	preState_ = States::kIdle;
-	//必要回数リセット
-	needAttackCount_ = 2;
 
 }
 

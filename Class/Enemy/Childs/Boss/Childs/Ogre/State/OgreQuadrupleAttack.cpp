@@ -26,6 +26,9 @@ void Ogre::QuadrupleAttackFinalize([[maybe_unused]] const States& pre) {
 	box_.isActive = false;
 #endif // _DEBUG
 
+	//必要回数リセット
+	needAttackCount_ = 2;
+
 }
 
 void Ogre::QuadrupleAttackInit([[maybe_unused]] const States& pre)

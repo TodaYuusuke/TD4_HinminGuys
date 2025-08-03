@@ -26,6 +26,9 @@ void Ogre::AssaultSlashFinalize([[maybe_unused]] const States& pre) {
 
 	model_.worldTF.translation.y = 0.0f;
 
+	//必要回数リセット
+	needAttackCount_ = 2;
+
 }
 
 void Ogre::AssaultSlashInit([[maybe_unused]] const States& pre)
