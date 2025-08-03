@@ -191,6 +191,8 @@ void Parry::CreateJsonFIle() {
 		.AddValue<float>("Movement", &jsonData_.justParryKnockBackMovement)
 		.EndGroup()
 
+		.AddValue<float>("CoolTime", &jsonData_.coolTime)
+
 		.EndGroup()
 		.CheckJsonFile();
 }
